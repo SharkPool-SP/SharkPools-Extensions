@@ -1,6 +1,6 @@
 /*
-* v1.0 | Created by @0znzw and Sharkpool.
-* Original non functional version by GPT-3.
+* v1.0 | Created by @0znzw.
+* Original non functional version by GPT-3 and Sharkpool.
 * Do not remove this comment
 */
 (function (Scratch) {
