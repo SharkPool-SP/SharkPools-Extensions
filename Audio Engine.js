@@ -26,7 +26,7 @@
 	color1: '#848484',
 	menuIconURI,
 	blockIconURI,
-        blocks: [
+blocks: [
           {
             opcode: 'importSound',
             blockType: Scratch.BlockType.COMMAND,
@@ -182,6 +182,18 @@
               },
             },
           },
+          // New block to report the current time of a playing sound
+          {
+            opcode: 'currentSoundTime',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current time of sound [NAME]',
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+            },
+          },
         ],
         menus: {
           pauseUnpauseMenu: ['paused', 'unpaused'],
@@ -258,8 +270,7 @@
     }
 
     setSoundSpeed(args) {
-      let { NAME, SPEED } = args;
-      SPEED = Math.max(0, SPEED); // Ensure SPEED is within the valid range (minimum 0)
+      const { NAME, SPEED } = args;
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
@@ -269,21 +280,24 @@
     }
 
     setSoundPitch(args) {
-      let { NAME, PITCH } = args;
-      PITCH = Math.max(0, PITCH); // Ensure PITCH is within the valid range (minimum 0)
+      const { NAME, PITCH } = args;
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
-          audio.playbackRate = PITCH;
+          audio.mozPreservesPitch = false;
+          audio.playbackRate = 1;
+          const semitoneRatio = Math.pow(2, 1 / 12);
+          const currentPitch = Math.pow(semitoneRatio, PITCH);
+          audio.playbackRate = currentPitch;
         });
       }
     }
 
     toggleLoopSound(args) {
       const { NAME, LOOP_STATE } = args;
-      const loop = LOOP_STATE === 'loopable';
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
+        const loop = LOOP_STATE === 'loopable';
         soundInstances.forEach((audio) => {
           audio.loop = loop;
         });
@@ -292,13 +306,13 @@
 
     pauseUnpauseSound(args) {
       const { NAME, PAUSE_UNPAUSE } = args;
-      const paused = PAUSE_UNPAUSE === 'paused';
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
+        const pause = PAUSE_UNPAUSE === 'paused';
         soundInstances.forEach((audio) => {
-          if (paused) {
+          if (pause && !audio.paused) {
             audio.pause();
-          } else {
+          } else if (!pause && audio.paused) {
             audio.play();
           }
         });
@@ -309,15 +323,16 @@
       const { NAME, PROPERTY } = args;
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
-        const audio = soundInstances[0]; // For simplicity, we'll only return the property of the first sound instance
+        const audio = soundInstances[0];
         switch (PROPERTY) {
           case 'length':
             return audio.duration;
           case 'volume':
             return audio.volume * 100;
           case 'speed':
-          case 'pitch':
             return audio.playbackRate;
+          case 'pitch':
+            return this.getPitchFromAudio(audio);
           case 'paused?':
             return audio.paused;
           case 'looping?':
@@ -326,8 +341,23 @@
       }
       return 0;
     }
+
+    getPitchFromAudio(audio) {
+      const semitoneRatio = Math.pow(2, 1 / 12);
+      const currentPitch = Math.log(audio.playbackRate) / Math.log(semitoneRatio);
+      return Math.round(currentPitch * 10) / 10;
+    }
+
+    currentSoundTime(args) {
+      const { NAME } = args;
+      const soundInstances = this.sounds[NAME];
+      if (soundInstances && soundInstances.length > 0) {
+        const audio = soundInstances[0];
+        return audio.currentTime;
+      }
+      return 0;
+    }
   }
 
   Scratch.extensions.register(new AudioEngine());
-
 })(Scratch);
