@@ -73,7 +73,7 @@
             {
               opcode: 'openYouTubeLinkInNewWindow',
               blockType: Scratch.BlockType.COMMAND,
-              text: 'open YouTube link: https://www.yout-ube.com/watch?v=[ID] in new window with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start',
+              text: 'open YouTube video window with ID: [ID] and width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start',
               arguments: {
                 ID: {
                   type: Scratch.ArgumentType.STRING,
@@ -100,7 +100,7 @@
             {
               opcode: 'openYouTubeLinkInNewWindowAtTime',
               blockType: Scratch.BlockType.COMMAND,
-              text: 'open YouTube link: https://www.yout-ube.com/watch?v=[ID] in new window with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play the video from time [MINUTES]:[SECONDS]',
+              text: 'open YouTube video window with ID: [ID] and width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]',
               arguments: {
                 ID: {
                   type: Scratch.ArgumentType.STRING,
