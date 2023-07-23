@@ -73,7 +73,7 @@
             {
               opcode: 'openYouTubeLinkInNewWindow',
               blockType: Scratch.BlockType.COMMAND,
-              text: 'open YouTube video window with ID: [ID] and width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start',
+              text: 'open YouTube video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start',
               arguments: {
                 ID: {
                   type: Scratch.ArgumentType.STRING,
@@ -100,7 +100,7 @@
             {
               opcode: 'openYouTubeLinkInNewWindowAtTime',
               blockType: Scratch.BlockType.COMMAND,
-              text: 'open YouTube video window with ID: [ID] and width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]',
+              text: 'open YouTube video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]',
               arguments: {
                 ID: {
                   type: Scratch.ArgumentType.STRING,
