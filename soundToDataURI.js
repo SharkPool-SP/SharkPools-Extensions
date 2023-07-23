@@ -1,21 +1,21 @@
 /*
-* v1.0 | Created by @0znzw.
+* v1.1 | Created by @0znzw.
 * Original non functional version by GPT-3 and Sharkpool.
 * Do not remove this comment
 */
 (function (Scratch) {
     'use strict';
 
-    class SoundToDataUrl {
+    class SoundToDataUrI {
         getInfo() {
             return {
                 id: '0ASPsoundDataUrl',
                 color1: "#009dff",
-                name: "Sound to Data URL",
+                name: "Sound to Data URI",
                 blocks: [{
-                    opcode: 'soundToDataUrl',
+                    opcode: 'soundToDataUri',
                     blockType: Scratch.BlockType.REPORTER,
-                    text: 'convert sound [SOUND] to data URL',
+                    text: 'convert sound [SOUND] to data URI',
                     arguments: {
                         SOUND: {
                             type: Scratch.ArgumentType.SOUND
@@ -25,7 +25,7 @@
             };
         }
 
-        soundToDataUrl(args, util) {
+        soundToDataUri(args, util) {
             const index = this._getSoundIndex(args.SOUND, util);
             if (index < 0) return '';
             const sprite = util.target.sprite;
@@ -41,5 +41,5 @@
         }
     }
 
-    Scratch.extensions.register(new SoundToDataUrl());
+    Scratch.extensions.register(new SoundToDataUrI());
 })(Scratch);
