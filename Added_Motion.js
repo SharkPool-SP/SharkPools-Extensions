@@ -19,7 +19,6 @@
         color2: '#3373cc',
 	menuIconURI,
         blocks: [
-          '---',
           {
             opcode: 'moveinangledirection',
             blockType: Scratch.BlockType.COMMAND,
