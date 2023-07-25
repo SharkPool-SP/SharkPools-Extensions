@@ -1,5 +1,6 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
+* Version 1.2
 * Massive thank you to RobTopGames for creating Geometry Dash
 * Also huge thanks to ColonGD (https://gdcolon.com/) for creating open-source GD API
 * Do not remove this comment
@@ -20,10 +21,15 @@
       return {
         id: 'GDapiSP',
         name: 'Geometry Dash API',
-	menuIconURI,
-	blockIconURI,
-	color1: '#004de8',
+        docsURI: 'https://docs.google.com/document/d/1QfbpQhi-0Kabficb_9sFgv6x5adfIEQ-MD9jMX0DwVM/edit?usp=sharing',
+	    menuIconURI,
+	    blockIconURI,
+	    color1: '#004de8',
         blocks: [
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Search Levels by URL',
+          },
           {
             opcode: 'createSearchURL',
             blockType: Scratch.BlockType.REPORTER,
@@ -49,7 +55,7 @@
           {
             opcode: 'levelLength',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'level length with [size1] to [size2]',
+            text: 'level length from [size1] to [size2]',
             arguments: {
               size1: {
                 type: Scratch.ArgumentType.STRING,
@@ -66,7 +72,7 @@
           {
             opcode: 'levelDifficulty',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'level difficulty with [difficulty1] to [difficulty2]',
+            text: 'level difficulty from [difficulty1] to [difficulty2]',
             arguments: {
               difficulty1: {
                 type: Scratch.ArgumentType.STRING,
@@ -143,6 +149,10 @@
                 defaultValue: '396093'
               }
             }
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Level Data Fetching',
           },
           {
             opcode: 'fetchDataFromID',
