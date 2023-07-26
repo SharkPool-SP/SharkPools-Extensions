@@ -1,7 +1,7 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
-* Version 1.2
 * Massive thank you to RobTopGames for creating Geometry Dash
+* Version 1.2.1
 * Also huge thanks to ColonGD (https://gdcolon.com/) for creating open-source GD API
 * Do not remove this comment
 */
@@ -185,14 +185,15 @@
     }
 
     createSearchURL(args) {
-      const baseURL = 'https://gdbrowser.com';
+      const baseURL = 'https://gdbrowser.com/search/';
       const input = args.input;
-      return baseURL + '/' + input;
+      const urlfixer = input.replace('&','?');
+      return baseURL + urlfixer;
     }
 
     buildURL(args) {
       const query = args.query;
-      return 'search/' + query;
+      return query;
     }
 
     levelLength(args) {
@@ -207,7 +208,7 @@
       const start = sizeMapping[args.size1] || 0;
       const end = sizeMapping[args.size2] || 0;
 
-      const lengthParams = `?length=${Array.from({ length: end - start + 1 }, (_, i) => start + i).join(',')}`;
+      const lengthParams = `&length=${Array.from({ length: end - start + 1 }, (_, i) => start + i).join(',')}`;
       return lengthParams;
     }
 
@@ -226,7 +227,7 @@
       const start = difficultyMapping[args.difficulty1.split(' ')[0]] || 0;
       const end = difficultyMapping[args.difficulty2.split(' ')[0]] || 0;
 
-      const difficultyParams = `?diff=${Array.from({ length: end - start + 1 }, (_, i) => start + i).join(',')}`;
+      const difficultyParams = `&diff=${Array.from({ length: end - start + 1 }, (_, i) => start + i).join(',')}`;
       return difficultyParams;
     }
 
@@ -240,29 +241,29 @@
       };
 
       const demon = demonMapping[args.demon] || 0;
-      const demonParam = `?demonFilter=${demon}`;
+      const demonParam = `&demonFilter=${demon}`;
       return demonParam;
     }
 
     rating(args) {
-      const ratingParam = `?${args.rating}`;
+      const ratingParam = `&${args.rating}`;
       return ratingParam;
     }
 
     enableTag(args) {
       const tag = args.tag;
-      return `?${tag}`;
+      return `&${tag}`;
     }
 
     enableTypeTag(args) {
       const typeTag = args.typeTag;
-      return `?type=${typeTag}`;
+      return `&type=${typeTag}`;
     }
 
     addSongFromID(args) {
       const menu = args.menu;
       const id = args.id;
-      let url = `?songID=${id}`;
+      let url = `&songID=${id}`;
 
       if (menu === 'Custom') {
         url += '&customSong';
