@@ -26,8 +26,8 @@
 	color1: '#848484',
 	menuIconURI,
 	blockIconURI,
-blocks: [
-          {
+	blocks: [
+	  {
             opcode: 'importSound',
             blockType: Scratch.BlockType.COMMAND,
             text: 'import sound from URL [URL] named [NAME]',
@@ -41,6 +41,10 @@ blocks: [
                 defaultValue: 'MySound',
               },
             },
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Audio Playback',
           },
           {
             opcode: 'playSound',
@@ -90,6 +94,26 @@ blocks: [
             text: 'stop all sounds',
           },
           {
+            opcode: 'pauseUnpauseSound',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set sound [NAME] to [PAUSE_UNPAUSE]',
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+              PAUSE_UNPAUSE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'pauseUnpauseMenu',
+                defaultValue: 'paused',
+              },
+            },
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Audio Effects',
+          },
+          {
             opcode: 'setSoundVolume',
             blockType: Scratch.BlockType.COMMAND,
             text: 'set volume of sound [NAME] to [VOLUME]',
@@ -135,6 +159,10 @@ blocks: [
             },
           },
           {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Audio Operations',
+          },
+          {
             opcode: 'toggleLoopSound',
             blockType: Scratch.BlockType.COMMAND,
             text: 'set sound [NAME] to [LOOP_STATE]',
@@ -147,22 +175,6 @@ blocks: [
                 type: Scratch.ArgumentType.STRING,
                 menu: 'loopMenu',
                 defaultValue: 'loopable',
-              },
-            },
-          },
-          {
-            opcode: 'pauseUnpauseSound',
-            blockType: Scratch.BlockType.COMMAND,
-            text: 'set sound [NAME] to [PAUSE_UNPAUSE]',
-            arguments: {
-              NAME: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: 'MySound',
-              },
-              PAUSE_UNPAUSE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: 'pauseUnpauseMenu',
-                defaultValue: 'paused',
               },
             },
           },
