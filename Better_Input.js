@@ -293,7 +293,7 @@
 
       const questionText = document.createElement('div');
       questionText.classList.add('question');
-      questionText.style.fontSize = '16px';
+      questionText.style.fontSize = this.fontSize;
       questionText.style.marginBottom = '10px';
       questionText.style.color = this.questionColor;
       questionText.textContent = question;
