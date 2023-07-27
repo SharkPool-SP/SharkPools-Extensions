@@ -174,13 +174,13 @@
         {
           opcode: 'setColorSettings',
           blockType: Scratch.BlockType.COMMAND,
-          text: 'set colors [COLOR_TYPE] to [COLOR]',
+          text: 'set [COLOR_TYPE] color to [COLOR]',
           blockIconURI: colorIcon,
           arguments: {
             COLOR_TYPE: {
               type: Scratch.ArgumentType.STRING,
               menu: 'colorSettingsMenu',
-              defaultValue: 'questionColor',
+              defaultValue: 'Question Color',
             },
             COLOR: {
               type: Scratch.ArgumentType.COLOR,
@@ -194,7 +194,7 @@
         fontMenu: ['Arial', 'Times New Roman', 'Comic Sans MS', 'Verdana', 'Courier New', 'Impact', 'Cursive'],
         cancelMenu: ['Enable', 'Disable'],
         inputActionMenu: ['Enable', 'Disable'],
-        colorSettingsMenu: ['questionColor', 'inputColor', 'textBoxColor', 'inputBackgroundColor', 'inputOutlineColor', 'submitButtonColor', 'cancelButtonColor', 'submitButtonTextColor', 'cancelButtonTextColor'],
+        colorSettingsMenu: ['Question Color', 'Input Color', 'Textbox Color', 'Input Background Color', 'Input Outline Color', 'Submit Button Color', 'Cancel Button Color', 'Submit Button Text Color', 'Cancel Button Text Color'],
         },
       };
     }
@@ -204,31 +204,31 @@
       const colorValue = args.COLOR;
       
       switch (colorType) {
-        case 'questionColor':
+        case 'Question Color':
           this.questionColor = colorValue;
           break;
-        case 'inputColor':
+        case 'Input Color':
           this.inputColor = colorValue;
           break;
-        case 'textBoxColor':
+        case 'Textbox Color':
           this.textBoxColor = colorValue;
           break;
-        case 'inputBackgroundColor':
+        case 'Input Background Color':
           this.inputBackgroundColor = colorValue;
           break;
-        case 'inputOutlineColor':
+        case 'Input Outline Color':
           this.inputOutlineColor = colorValue;
           break;
-        case 'submitButtonColor':
+        case 'Submit Button Color':
           this.submitButtonColor = colorValue;
           break;
-        case 'cancelButtonColor':
+        case 'Cancel Button Color':
           this.cancelButtonColor = colorValue;
           break;
-        case 'submitButtonTextColor':
+        case 'Submit Button Text Color':
           this.submitButtonTextColor = colorValue;
           break;
-        case 'cancelButtonTextColor':
+        case 'Cancel Button Text Color':
           this.cancelButtonTextColor = colorValue;
           break;
         default:
