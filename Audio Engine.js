@@ -1,4 +1,4 @@
-//Audio Engine Extension was made by SharkPool
+//Audio Engine Extension was made by SharkPool (Version 1.1)
 //Credit to HOME for the song 'Resonance' being used as the default audio link
 
 (function (Scratch) {
@@ -182,11 +182,21 @@ blocks: [
               },
             },
           },
-          // New block to report the current time of a playing sound
           {
             opcode: 'currentSoundTime',
             blockType: Scratch.BlockType.REPORTER,
             text: 'current time of sound [NAME]',
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+            },
+          },
+          {
+            opcode: 'soundExists',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: 'sound [NAME] exists',
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -317,6 +327,11 @@ blocks: [
           }
         });
       }
+    }
+    
+    soundExists(args) {
+      const { NAME } = args;
+      return this.sounds.hasOwnProperty(NAME);
     }
 
     soundProperty(args) {
