@@ -1,5 +1,5 @@
 //This extension was made by SharkPool
-//Version 1.1 (simplifications to blocks)
+//Version 1.2 (Bug Fixes and More Blocks)
 //Do NOT delete these comments
 
 (function(Scratch) {
@@ -34,9 +34,16 @@
     this.cancelButtonText = 'Cancel'; // Default cancel button text
     this.submitButtonColor = '#0074D9'; // Default submit button color
     this.cancelButtonColor = '#d9534f'; // Default cancel button color
+    this.textBoxBorderRadius = 5; // Default border radius for textbox
+    this.cancelButtonBorderRadius = 5; // Default border radius for cancel button
+    this.submitButtonBorderRadius = 5; // Default border radius for submit button
     this.isInputEnabled = true; // Enable input box by default
     this.submitButtonTextColor = '#ffffff'; // Default submit button text color
     this.cancelButtonTextColor = '#ffffff'; // Default cancel button text color
+    this.textBoxX = 0;
+    this.textBoxY = 0;
+    this.askBoxCount = 0;
+    
   }
   
     getInfo() {
@@ -77,6 +84,11 @@
           opcode: 'getUserInput',
           blockType: Scratch.BlockType.REPORTER,
           text: 'user input',
+        },
+        {
+          opcode: "removeAskBoxes",
+          blockType: Scratch.BlockType.COMMAND,
+          text: "remove all ask boxes",
         },
         {
           opcode: 'setFontSize',
@@ -168,6 +180,39 @@
           },
         },
         {
+          opcode: "setBorderRadius",
+          blockType: Scratch.BlockType.COMMAND,
+          text: "set [ELEMENT] border radius to [VALUE]",
+          blockIconURI: formatIcon,
+          arguments: {
+            ELEMENT: {
+              type: Scratch.ArgumentType.STRING,
+              menu: "elementMenu",
+              defaultValue: "Textbox",
+            },
+            VALUE: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 5,
+            },
+          },
+        },
+        {
+          opcode: "setPosition",
+          blockType: Scratch.BlockType.COMMAND,
+          text: "set textbox position to x: [X] y: [Y]",
+          blockIconURI: formatIcon,
+          arguments: {
+            X: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 0,
+            },
+            Y: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 0,
+            },
+          },
+        },
+        {
         blockType: Scratch.BlockType.LABEL,
         text: 'Color Setting',
         },
@@ -194,6 +239,7 @@
         fontMenu: ['Arial', 'Times New Roman', 'Comic Sans MS', 'Verdana', 'Courier New', 'Impact', 'Cursive'],
         cancelMenu: ['Enable', 'Disable'],
         inputActionMenu: ['Enable', 'Disable'],
+        elementMenu: ["Textbox", "Cancel Button", "Submit Button"],
         colorSettingsMenu: ['Question Color', 'Input Color', 'Textbox Color', 'Input Background Color', 'Input Outline Color', 'Submit Button Color', 'Cancel Button Color', 'Submit Button Text Color', 'Cancel Button Text Color'],
         },
       };
@@ -235,6 +281,35 @@
           break;
       }
     }
+
+    setBorderRadius(args) {
+      const element = args.ELEMENT;
+      let value = args.VALUE;
+
+      if (value < 0) {
+        value = 0;
+      }
+
+      switch (element) {
+        case "Textbox":
+          this.textBoxBorderRadius = value;
+          break;
+        case "Cancel Button":
+          this.cancelButtonBorderRadius = value;
+          break;
+        case "Submit Button":
+          this.submitButtonBorderRadius = value;
+          break;
+        default:
+          break;
+      }
+    }
+    
+  setPosition(args) {
+    this.textBoxX = args.X;
+    this.textBoxY = args.Y * -1;
+  }
+    
   setFontSize(args) {
     this.fontSize = args.SIZE + 'px';
   }
@@ -271,21 +346,43 @@
     });
   }
 
+  removeAskBoxes() {
+    const askBoxes = document.querySelectorAll(".ask-box");
+    askBoxes.forEach((box) => {
+      box.parentNode.removeChild(box);
+    });
+    
+    if (this.askBoxPromise) {
+      this.askBoxPromise.resolve("removed");
+      this.askBoxPromise = null;
+    }
+    this.askBoxCount = 0;
+    this.userInput = 'removed';
+  }
+    
   askAndWait(args) {
     const question = args.question;
     this.isWaitingForInput = true;
     this.userInput = null;
+    this.askBoxCount++;
+    if (this.askBoxPromise) {
+      this.askBoxPromise.resolve("removed");
+    }
 
+    this.askBoxPromise = {};
+    
     return new Promise((resolve) => {
+      this.askBoxPromise.resolve = resolve;
       const overlay = document.createElement('div');
       overlay.classList.add('ask-box'); // Add class for styling purposes
       overlay.style.position = 'fixed';
-      overlay.style.top = '50%';
-      overlay.style.left = '50%';
+      overlay.style.left = `${50 + this.textBoxX}%`;
+      overlay.style.top = `${50 + this.textBoxY}%`;
       overlay.style.transform = 'translate(-50%, -50%)';
+      overlay.style.zIndex = "9999"; 
       overlay.style.backgroundColor = this.textBoxColor; // Set text box color
       overlay.style.boxShadow = '0 0 5px rgba(0, 0, 0, 0.3)';
-      overlay.style.borderRadius = '5px';
+      overlay.style.borderRadius = this.textBoxBorderRadius + 'px';
       overlay.style.padding = '15px';
       overlay.style.fontSize = this.fontSize; // Set font size
       overlay.style.textAlign = this.textAlign; // Set text alignment
@@ -315,7 +412,7 @@
       submitButton.style.backgroundColor = this.submitButtonColor;
       submitButton.style.color = this.submitButtonTextColor;
       submitButton.style.border = 'none';
-      submitButton.style.borderRadius = '4px';
+      submitButton.style.borderRadius = this.submitButtonBorderRadius + 'px';
       submitButton.style.cursor = 'pointer';
       submitButton.textContent = this.submitButtonText;
 
@@ -332,7 +429,7 @@
       cancelButton.style.backgroundColor = this.cancelButtonColor;
       cancelButton.style.color = this.cancelButtonTextColor;
       cancelButton.style.border = 'none';
-      cancelButton.style.borderRadius = '4px';
+      cancelButton.style.borderRadius = this.cancelButtonBorderRadius + 'px';
       cancelButton.style.cursor = 'pointer';
       cancelButton.textContent = this.cancelButtonText;
       cancelButton.style.display = this.showCancelButton ? 'inline-block' : 'none'; // Show/hide cancel button
@@ -356,6 +453,28 @@
 
       document.body.appendChild(overlay);
       inputField.focus();
+      
+      const resizeHandler = () => {
+        if (this.textBoxX !== null && this.textBoxY !== null) {
+          overlay.style.left = `${50 + this.textBoxX}%`;
+          overlay.style.top = `${50 + this.textBoxY}%`;
+        } else {
+          overlay.style.left = "50%";
+          overlay.style.top = "50%";
+        }
+      };
+
+      document.addEventListener("fullscreenchange", resizeHandler);
+      document.addEventListener("webkitfullscreenchange", resizeHandler);
+      document.addEventListener("mozfullscreenchange", resizeHandler);
+      document.addEventListener("MSFullscreenChange", resizeHandler);
+
+      overlay.addEventListener("DOMNodeRemoved", () => {
+        document.removeEventListener("fullscreenchange", resizeHandler);
+        document.removeEventListener("webkitfullscreenchange", resizeHandler);
+        document.removeEventListener("mozfullscreenchange", resizeHandler);
+        document.removeEventListener("MSFullscreenChange", resizeHandler);
+      });
     });
   }
 
