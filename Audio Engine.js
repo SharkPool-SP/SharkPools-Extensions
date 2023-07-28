@@ -208,7 +208,7 @@
           {
             opcode: 'soundExists',
             blockType: Scratch.BlockType.BOOLEAN,
-            text: 'sound [NAME] exists',
+            text: 'sound [NAME] exists?',
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
