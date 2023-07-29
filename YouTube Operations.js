@@ -1,5 +1,5 @@
 /*
-* v1.3| Created by SharkPool and help from Nekl300.
+* v1.3.1 (Bug Fixes)| Created by SharkPool and help from Nekl300.
 * https://www.youtube.com/c/SharkPoolthe1
 * Do not remove this comment
 */
@@ -184,11 +184,22 @@
   
       extractVideoID(args) {
         const url = args.URL;
-        const urlObj = new URL(url);
-        const videoId = urlObj.searchParams.get('v');
-        return videoId || '';
+      
+        if (!url.includes('youtu.be')) {
+          if (url.includes('https://www.youtube.com/watch?v')) {
+            const convertedUrl = url.replace('www.youtube.com', 'youtu.be');
+            const convertedUrlObj = new URL(convertedUrl);
+            const videoId = convertedUrlObj.searchParams.get('v');
+            return videoId || 'invalid link';
+          } else {
+            return 'invalid link';
+          }
+        }
+      
+        const videoId = url.split('/').pop().split('&')[0];
+        return videoId || 'invalid link';
       }
-  
+
       async fetchDateCreated(videoId) {
         try {
           const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/video/${videoId}`);
