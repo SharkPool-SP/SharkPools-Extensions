@@ -200,6 +200,10 @@
           },
         },
         {
+        blockType: Scratch.BlockType.LABEL,
+        text: 'Positioning',
+        },
+        {
           opcode: "setPosition",
           blockType: Scratch.BlockType.COMMAND,
           text: "set textbox position to x: [X] y: [Y]",
@@ -214,6 +218,34 @@
               defaultValue: 0,
             },
           },
+        },
+        {
+          opcode: "changePosition",
+          blockType: Scratch.BlockType.COMMAND,
+          text: "change textbox position by x: [X] y: [Y]",
+          blockIconURI: formatIcon,
+          arguments: {
+            X: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 0,
+            },
+            Y: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 0,
+            },
+          },
+        },
+        {
+          opcode: 'getXpos',
+          blockType: Scratch.BlockType.REPORTER,
+          blockIconURI: formatIcon,
+          text: 'x position',
+        },
+        {
+          opcode: 'getYpos',
+          blockType: Scratch.BlockType.REPORTER,
+          blockIconURI: formatIcon,
+          text: 'y position',
         },
         {
         blockType: Scratch.BlockType.LABEL,
@@ -437,6 +469,32 @@
   setPosition(args) {
     this.textBoxX = args.X;
     this.textBoxY = args.Y * -1;
+    
+        
+    const overlays = document.querySelectorAll(".ask-box");
+    overlays.forEach((overlay) => {
+      this.updateOverlayPosition(overlay);
+    });
+  }
+  
+  changePosition(args) {
+    this.textBoxX = this.textBoxX + args.X;
+    this.textBoxY = this.textBoxY + args.Y * -1;
+    
+    const overlays = document.querySelectorAll(".ask-box");
+    overlays.forEach((overlay) => {
+      this.updateOverlayPosition(overlay);
+    });
+  }
+  
+  updateOverlayPosition(overlay) {
+    if (this.textBoxX !== null && this.textBoxY !== null) {
+      overlay.style.left = `${41 + this.textBoxX}%`;
+      overlay.style.top = `${44 + this.textBoxY}%`;
+    } else {
+      overlay.style.left = "50%";
+      overlay.style.top = "50%";
+    }
   }
   
   setMaxBoxCount(args) {
@@ -796,8 +854,8 @@
       
         const resizeHandler = () => {
           if (this.textBoxX !== null && this.textBoxY !== null) {
-            overlay.style.left = `${50 + this.textBoxX}%`;
-            overlay.style.top = `${50 + this.textBoxY}%`;
+            overlay.style.left = `${41 + this.textBoxX}%`;
+            overlay.style.top = `${44 + this.textBoxY}%`;
           } else {
             overlay.style.left = "50%";
             overlay.style.top = "50%";
@@ -838,6 +896,14 @@
   
   getMaxCount() {
     return this.maxBoxCount;
+  }
+  
+  getXpos() {
+    return this.textBoxX;
+  }
+  
+  getYpos() {
+    return this.textBoxY;
   }
   
   setSubmitEvent(args) {
