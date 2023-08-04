@@ -1,6 +1,6 @@
 /*
 * This extension was made by SharkPool
-* Version 1.6 (More Buttons)
+* Version 1.61 (Emergency DOM fixes and Force Input Block)
 * Do NOT delete these comments
 */
 
@@ -58,7 +58,9 @@
     this.textBoxX = 0;
     this.textBoxY = 0;
     this.askBoxCount = 0;
-    this.maxBoxCount = 1; 
+    this.maxBoxCount = 1;
+    this.forceInput = 'Disabled';
+    this.overlayInput = null
   }
   
     getInfo() {
@@ -269,6 +271,19 @@
         text: 'Operations',
         },
         {
+          opcode: 'setSubmitEvent',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'set force input to [ENTER]',
+          blockIconURI: formatIcon,
+          arguments: {
+            ENTER: {
+              type: Scratch.ArgumentType.STRING,
+              menu: 'enterMenu',
+              defaultValue: 'Disabled',
+            },
+          },
+        },
+        {
           opcode: 'setMaxBoxCount',
           blockType: Scratch.BlockType.COMMAND,
           text: 'set max box count to: [MAX]',
@@ -294,6 +309,7 @@
       menus: {
         alignmentMenu: ['left', 'right', 'center'],
         fontMenu: ['Arial', 'Times New Roman', 'Comic Sans MS', 'Verdana', 'Courier New', 'Impact', 'Cursive', 'Lucida Console', 'Scratch','Arial Black', 'Calibri', 'Consolas', 'Handwriting', 'Marker','Curly', 'Pixel'],
+        enterMenu: ['Disabled', 'Enter Key', 'Shift + Enter key'],
         inputActionMenu: ['Enabled', 'Disabled'],
         enterEffectMenu: ['None', 'Fade in', 'Grow'],
         exitEffectMenu: ['None', 'Fade out', 'Shrink'],
@@ -595,6 +611,46 @@
         overlay.style.fontSize = this.fontSize;
         overlay.style.textAlign = this.textAlign;
         overlay.style.fontFamily = this.fontFamily;
+        
+        if (this.forceInput !== 'Disabled') {
+          let overlayInput;
+        
+          if (this.forceInput === 'Enter Key') {
+            overlayInput = 'Enter';
+          } else {
+           overlayInput = 'ShiftEnter';
+          }
+        
+          const handleKeydown = (event) => {
+            if (
+              (overlayInput === 'Enter' && event.key === 'Enter') ||
+              (overlayInput === 'ShiftEnter' && event.shiftKey && event.key === 'Enter')
+           ) {
+             this.userInput = inputField.value;
+             this.isWaitingForInput = false;
+             if (this.exitEffect) {
+              this.applyExitEffect(overlay);
+             } else {
+               document.body.removeChild(overlay);
+               resolve();
+             }
+            this.askBoxCount--;
+          }
+         };
+
+         const observer = new MutationObserver((mutationsList) => {
+           for (const mutation of mutationsList) {
+             if (mutation.type === 'childList' && !document.contains(overlay)) {
+               document.removeEventListener('keydown', handleKeydown);
+               observer.disconnect();
+             }
+           }
+        });
+
+        observer.observe(document.body, { childList: true });
+
+        document.addEventListener('keydown', handleKeydown);
+        }  
 
         const questionText = document.createElement('div');
         questionText.classList.add('question');
@@ -752,13 +808,22 @@
         document.addEventListener("webkitfullscreenchange", resizeHandler);
         document.addEventListener("mozfullscreenchange", resizeHandler);
         document.addEventListener("MSFullscreenChange", resizeHandler);
-
-        overlay.addEventListener("DOMNodeRemoved", () => {
-          document.removeEventListener("fullscreenchange", resizeHandler);
-          document.removeEventListener("webkitfullscreenchange", resizeHandler);
-          document.removeEventListener("mozfullscreenchange", resizeHandler);
-          document.removeEventListener("MSFullscreenChange", resizeHandler);
+        
+        const observer = new MutationObserver((mutationsList) => {
+          for (const mutation of mutationsList) {
+            if (mutation.type === "childList" && !document.contains(overlay)) {
+              document.removeEventListener("fullscreenchange", resizeHandler);
+              document.removeEventListener("webkitfullscreenchange", resizeHandler);
+              document.removeEventListener("mozfullscreenchange", resizeHandler);
+              document.removeEventListener("MSFullscreenChange", resizeHandler);
+              observer.disconnect();
+            }
+          }
         });
+        
+        observer.observe(document.body, { childList: true });
+        document.body.appendChild(overlay);
+        inputField.focus();
       });
     }
   }
@@ -773,6 +838,10 @@
   
   getMaxCount() {
     return this.maxBoxCount;
+  }
+  
+  setSubmitEvent(args) {
+      this.forceInput = args.ENTER;
   }
 }
 
