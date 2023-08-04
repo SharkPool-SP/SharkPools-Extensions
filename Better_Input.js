@@ -1,6 +1,6 @@
 /*
 * This extension was made by SharkPool
-* Version 1.61 (Emergency DOM fixes and Force Input Block)
+* Version 1.7 (Emergency DOM fixes, Force Input Block, More Positioning, and Image setting)
 * Do NOT delete these comments
 */
 
@@ -61,6 +61,7 @@
     this.maxBoxCount = 1;
     this.forceInput = 'Disabled';
     this.overlayInput = null
+    this.overlayImage = null
   }
   
     getInfo() {
@@ -106,17 +107,6 @@
           opcode: "removeAskBoxes",
           blockType: Scratch.BlockType.COMMAND,
           text: "remove all ask boxes",
-        },
-        {
-          opcode: 'setFontSize',
-          blockType: Scratch.BlockType.COMMAND,
-          text: 'set font size to [SIZE]',
-          arguments: {
-            SIZE: {
-              type: Scratch.ArgumentType.NUMBER,
-              defaultValue: 14,
-            },
-          },
         },
         {
           opcode: 'setButtonText',
@@ -183,19 +173,14 @@
           },
         },
         {
-          opcode: "setBorderRadius",
+          opcode: 'setFontSize',
           blockType: Scratch.BlockType.COMMAND,
-          text: "set [ELEMENT] border radius to [VALUE]",
+          text: 'set font size to [SIZE]',
           blockIconURI: formatIcon,
           arguments: {
-            ELEMENT: {
-              type: Scratch.ArgumentType.STRING,
-              menu: "elementMenu",
-              defaultValue: "Textbox",
-            },
-            VALUE: {
+            SIZE: {
               type: Scratch.ArgumentType.NUMBER,
-              defaultValue: 5,
+              defaultValue: 14,
             },
           },
         },
@@ -249,7 +234,7 @@
         },
         {
         blockType: Scratch.BlockType.LABEL,
-        text: 'Color Setting',
+        text: 'Visual Settings',
         },
         {
           opcode: 'setColorSettings',
@@ -265,6 +250,35 @@
             COLOR: {
               type: Scratch.ArgumentType.COLOR,
               defaultValue: '#000000',
+            },
+          },
+        },
+        {
+          opcode: "setBorderRadius",
+          blockType: Scratch.BlockType.COMMAND,
+          text: "set [ELEMENT] border radius to [VALUE]",
+          blockIconURI: colorIcon,
+          arguments: {
+            ELEMENT: {
+              type: Scratch.ArgumentType.STRING,
+              menu: "elementMenu",
+              defaultValue: "Textbox",
+            },
+            VALUE: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 5,
+            },
+          },
+        },
+        {
+          opcode: "setImage",
+          blockType: Scratch.BlockType.COMMAND,
+          text: "set background image to [IMAGE]",
+          blockIconURI: colorIcon,
+          arguments: {
+            IMAGE: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'input-url-or-uri-here',
             },
           },
         },
@@ -306,7 +320,6 @@
           opcode: 'setSubmitEvent',
           blockType: Scratch.BlockType.COMMAND,
           text: 'set force input to [ENTER]',
-          blockIconURI: formatIcon,
           arguments: {
             ENTER: {
               type: Scratch.ArgumentType.STRING,
@@ -319,7 +332,6 @@
           opcode: 'setMaxBoxCount',
           blockType: Scratch.BlockType.COMMAND,
           text: 'set max box count to: [MAX]',
-          blockIconURI: formatIcon,
           arguments: {
             MAX: {
               type: Scratch.ArgumentType.NUMBER,
@@ -347,8 +359,8 @@
         exitEffectMenu: ['None', 'Fade out', 'Shrink'],
         buttonMenu: ['Button 1','Button 2', 'Button 3', 'Button 4'],
         enableMenu: ['Input Box','Button 2', 'Button 3', 'Button 4'],
-        elementMenu: ['Textbox', 'Input Box', 'Cancel Button', 'Submit Button', 'Button 3', 'Button 4'],
-        colorSettingsMenu: ['Question', 'Input Text', 'Textbox', 'Input Background', 'Input Outline', 'Submit Button', 'Cancel Button', 'Button 3', 'Button 4', 'Submit Button Text', 'Cancel Button Text', 'Button 3 Text', 'Button 4 Text'],
+        elementMenu: ['Textbox', 'Input Box', 'Button 1', 'Button 2', 'Button 3', 'Button 4'],
+        colorSettingsMenu: ['Question', 'Input Text', 'Textbox', 'Input Background', 'Input Outline', 'Button 1', 'Button 2', 'Button 3', 'Button 4', 'Button 1 Text', 'Button 2 Text', 'Button 3 Text', 'Button 4 Text'],
         },
       };
     }
@@ -366,6 +378,7 @@
         break;
       case 'Textbox':
         this.textBoxColor = colorValue;
+        this.overlayImage = null;
         break;
       case 'Input Background':
         this.inputBackgroundColor = colorValue;
@@ -373,22 +386,26 @@
       case 'Input Outline':
         this.inputOutlineColor = colorValue;
         break;
-      case 'Submit Button':
+      case 'Button 1':
         this.submitButtonColor = colorValue;
+        this.Btn1Image = null;
         break;
-      case 'Cancel Button':
+      case 'Button 2':
         this.cancelButtonColor = colorValue;
+        this.Btn2Image = null;
         break;
       case 'Button 3':
         this.button3Color = colorValue;
+        this.Btn3Image = null;
         break;
       case 'Button 4':
         this.button4Color = colorValue;
+        this.Btn4Image = null;
         break;
-      case 'Submit Button Text':
+      case 'Button 1 Text':
         this.submitButtonTextColor = colorValue;
         break;
-      case 'Cancel Button Text':
+      case 'Button 2 Text':
         this.cancelButtonTextColor = colorValue;
         break;
       case 'Button 3 Text':
@@ -412,10 +429,10 @@
       case "Textbox":
         this.textBoxBorderRadius = value;
         break;
-      case "Cancel Button":
+      case "Button 1":
         this.cancelButtonBorderRadius = value;
         break;
-      case "Submit Button":
+      case "Button 2":
         this.submitButtonBorderRadius = value;
         break;
       case "Button 3":
@@ -670,6 +687,15 @@
         overlay.style.textAlign = this.textAlign;
         overlay.style.fontFamily = this.fontFamily;
         
+        const overlayImageContainer = document.createElement('div');
+        overlayImageContainer.style.background = `url(${this.overlayImage})`;
+        overlayImageContainer.style.width = '100%';
+        overlayImageContainer.style.height = '100%';
+        overlayImageContainer.style.position = 'absolute';
+        overlayImageContainer.style.top = '0';
+        overlayImageContainer.style.left = '0';
+        overlayImageContainer.style.zIndex = '-1'; 
+        
         if (this.forceInput !== 'Disabled') {
           let overlayInput;
         
@@ -690,9 +716,10 @@
               this.applyExitEffect(overlay);
              } else {
                document.body.removeChild(overlay);
-               resolve();
+
              }
-            this.askBoxCount--;
+             resolve();
+             this.askBoxCount--;
           }
          };
 
@@ -751,8 +778,8 @@
             this.applyExitEffect(overlay);
           } else {
             document.body.removeChild(overlay);
-            resolve();
           }
+          resolve();
           this.askBoxCount--;
         });
 
@@ -777,8 +804,8 @@
             this.applyExitEffect(overlay);
           } else {
             document.body.removeChild(overlay);
-            resolve();
           }
+          resolve();
           this.askBoxCount--;
         });
         
@@ -801,8 +828,8 @@
             this.applyExitEffect(overlay);
           } else {
             document.body.removeChild(overlay);
-            resolve();
           }
+          resolve();
           this.askBoxCount--;
         });
         
@@ -825,11 +852,10 @@
             this.applyExitEffect(overlay);
           } else {
             document.body.removeChild(overlay);
-            resolve();
           }
+          resolve();
           this.askBoxCount--;
         });
-
 
         overlay.appendChild(questionText);
       
@@ -841,6 +867,7 @@
         overlay.appendChild(cancelButton);
         overlay.appendChild(Button3);
         overlay.appendChild(Button4);
+        overlay.appendChild(overlayImageContainer); 
 
         document.body.appendChild(overlay);
         inputField.focus();
@@ -908,6 +935,10 @@
   
   setSubmitEvent(args) {
       this.forceInput = args.ENTER;
+  }
+  
+  setImage(args) {
+    this.overlayImage = args.IMAGE;
   }
 }
 
