@@ -1,6 +1,6 @@
 /*
 * This extension was made by SharkPool
-* Version 1.74 (Emergency DOM fixes, Force Input Block, More Positioning, and Image setting)
+* Version 1.8 (Bug fixes and Dropdown-able Menus)
 * Do NOT delete these comments
 */
 
@@ -45,7 +45,7 @@
     this.cancelButtonColor = '#d9534f';
     this.button3Color = '#0074D9';
     this.button4Color = '#d9534f';
-    this.optionbuttonColor = '#6b6b6b';
+    this.optionbuttonColor = '#5f5f5f';
     this.cancelButtonBorderRadius = 5; 
     this.submitButtonBorderRadius = 5;
     this.button3BorderRadius = 5; 
@@ -429,7 +429,7 @@
         this.button4Color = colorValue;
         break;
       case 'Dropdown Buttons':
-        this.optionButtonColor = colorValue;
+        this.optionbuttonColor = colorValue;
         break;
       case 'Button 1 Text':
         this.submitButtonTextColor = colorValue;
@@ -477,7 +477,7 @@
         this.inputBoxRadius = value;
         break;
       case "Dropdown Buttons":
-        this.optionButtonBorderRadius = value;
+        this.optionbuttonBorderRadius = value;
         break;
     }
   }
@@ -907,9 +907,10 @@
         dropdownButton.className = 'dropdown-button';
         dropdownButton.textContent = this.DropdownText;
         dropdownButton.style.padding = '5px 10px';
-        dropdownButton.style.backgroundColor = this.optionButtonColor;
+        dropdownButton.style.backgroundColor = this.optionbuttonColor;
         dropdownButton.style.color = this.optionButtonTextColor;
-        dropdownButton.style.borderRadius = this.optionButtonBorderRadius + 'px';
+        dropdownButton.style.border = 'none';
+        dropdownButton.style.borderRadius = this.optionbuttonBorderRadius + 'px';
 
         const dropdownContent = document.createElement('div');
         dropdownContent.className = 'dropdown-content';
@@ -924,9 +925,10 @@
           optionButton.style.marginRight = '5px';
           optionButton.style.marginTop = '10px';
           optionButton.style.padding = '5px 10px';
-          optionButton.style.backgroundColor = this.optionButtonColor;
+          optionButton.style.backgroundColor = this.optionbuttonColor;
           optionButton.style.color = this.optionButtonTextColor;
-          optionButton.style.borderRadius = this.optionButtonBorderRadius + 'px';
+          optionButton.style.border = 'none';
+          optionButton.style.borderRadius = this.optionbuttonBorderRadius + 'px';
           optionButton.textContent = `${options[i - 1]}`;
           optionButton.addEventListener('click', () => {
             inputField.value = `${options[i - 1]}`;
