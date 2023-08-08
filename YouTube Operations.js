@@ -1,5 +1,5 @@
 /*
-* v1.3.1 (Bug Fixes)| Created by SharkPool and help from Nekl300.
+* v1.3.5 (Bug Fixes)| Created by SharkPool and help from Nekl300.
 * https://www.youtube.com/c/SharkPoolthe1
 * Do not remove this comment
 */
@@ -156,7 +156,7 @@
           const videoId = args.VIDEO_ID;
           const stat = args.STAT.toLowerCase().replace(' ', '');
   
-          const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`);
+          const response = await fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`);
   
           if (response.ok) {
             const jsonData = await response.json();
@@ -202,7 +202,7 @@
 
       async fetchDateCreated(videoId) {
         try {
-          const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/video/${videoId}`);
+          const response = await fetch(`https://returnyoutubedislikeapi.com/video/${videoId}`);
           if (response.ok) {
             const jsonData = await response.json();
             return jsonData.dateCreated;
@@ -255,7 +255,7 @@
         const stat = args.STAT.toLowerCase().replace(' ', '');
         try {
             const videoId = args.VIDEO_ID;
-            const response = await Scratch.fetch("https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D"+videoId+"&format=json");
+            const response = await fetch("https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D"+videoId+"&format=json");
 
             if (response.ok) {
                 const jsonData = await response.json()
