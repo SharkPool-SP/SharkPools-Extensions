@@ -1,5 +1,5 @@
 /*
-* v1.2 | Created by SharkPool and help from Nekl300.
+* v1.3.5 (Bug Fixes)| Created by SharkPool and help from Nekl300.
 * https://www.youtube.com/c/SharkPoolthe1
 * Do not remove this comment
 */
@@ -73,7 +73,7 @@
             {
               opcode: 'openYouTubeLinkInNewWindow',
               blockType: Scratch.BlockType.COMMAND,
-              text: 'open YouTube link: https://www.yout-ube.com/watch?v=[ID] in new window with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start',
+              text: 'open YouTube video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start',
               arguments: {
                 ID: {
                   type: Scratch.ArgumentType.STRING,
@@ -100,7 +100,7 @@
             {
               opcode: 'openYouTubeLinkInNewWindowAtTime',
               blockType: Scratch.BlockType.COMMAND,
-              text: 'open YouTube link: https://www.yout-ube.com/watch?v=[ID] in new window with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play the video from time [MINUTES]:[SECONDS]',
+              text: 'open YouTube video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]',
               arguments: {
                 ID: {
                   type: Scratch.ArgumentType.STRING,
@@ -156,7 +156,7 @@
           const videoId = args.VIDEO_ID;
           const stat = args.STAT.toLowerCase().replace(' ', '');
   
-          const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`);
+          const response = await fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`);
   
           if (response.ok) {
             const jsonData = await response.json();
@@ -184,14 +184,25 @@
   
       extractVideoID(args) {
         const url = args.URL;
-        const urlObj = new URL(url);
-        const videoId = urlObj.searchParams.get('v');
-        return videoId || '';
+      
+        if (!url.includes('youtu.be')) {
+          if (url.includes('https://www.youtube.com/watch?v')) {
+            const convertedUrl = url.replace('www.youtube.com', 'youtu.be');
+            const convertedUrlObj = new URL(convertedUrl);
+            const videoId = convertedUrlObj.searchParams.get('v');
+            return videoId || 'invalid link';
+          } else {
+            return 'invalid link';
+          }
+        }
+      
+        const videoId = url.split('/').pop().split('&')[0];
+        return videoId || 'invalid link';
       }
-  
+
       async fetchDateCreated(videoId) {
         try {
-          const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/video/${videoId}`);
+          const response = await fetch(`https://returnyoutubedislikeapi.com/video/${videoId}`);
           if (response.ok) {
             const jsonData = await response.json();
             return jsonData.dateCreated;
@@ -244,7 +255,7 @@
         const stat = args.STAT.toLowerCase().replace(' ', '');
         try {
             const videoId = args.VIDEO_ID;
-            const response = await Scratch.fetch("https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D"+videoId+"&format=json");
+            const response = await fetch("https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D"+videoId+"&format=json");
 
             if (response.ok) {
                 const jsonData = await response.json()
