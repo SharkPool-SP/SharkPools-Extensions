@@ -1,7 +1,7 @@
 /*
 * All blocks in this extension were made by SharkPool
 * Subscribe to my YouTube! https://www.youtube.com/@SharkPool_SP
-* Credit to Echoless and Hellow123 for Extension Idea
+* Credit to Echoless and Hellow123 for Extension Ideas
 */
 
 (function(Scratch) {
