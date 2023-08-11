@@ -1,3 +1,9 @@
+/*
+* This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
+* Version 1.0
+* Do not remove this comment
+*/
+
 (function (Scratch) {
   'use strict';
 
