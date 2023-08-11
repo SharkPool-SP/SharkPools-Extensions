@@ -2,7 +2,7 @@
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
 * Massive thank you to RobTopGames for creating Geometry Dash
 * Version 1.2.1
-* Also huge thanks to ColonGD (https://gdcolon.com/) for creating open-source GD API
+* Also huge thanks to ColonGD (https://gdcolon.com/) for creating an open-source GD API
 * Do not remove this comment
 */
 (function (Scratch) {
