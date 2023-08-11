@@ -1,6 +1,6 @@
 /*
 * This Extension was made by SharkPool
-* The blocks featured in this extension was originally merged with Time.js by -SPIC- but were removed due to credit issues
+* The blocks featured in this extension were originally merged with Time.js by -SPIC- but were removed due to credit issues
 * Do not delete this comment
 */
 
