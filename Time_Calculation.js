@@ -1,77 +1,28 @@
-//original extension by -SPIC- | Updated by SharkPool
+/*
+* This Extension was made by SharkPool
+* The blocks featured in this extension was originally merged with Time.js by -SPIC- but were removed due to credit issues
+* Do not delete this comment
+*/
+
 (function (Scratch) {
     'use strict';
 
-    const icon = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI4MS44ODU0IiBoZWlnaHQ9IjgwLjYwMzA4IiB2aWV3Qm94PSIwLDAsODEuODg1NCw4MC42MDMwOCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE5OS4wNTczLC0xMzkuNjk4NDYpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTI4MC45NDI3LDE4MGMwLDIyLjI1NzkyIC0xOC4zMzA2Nyw0MC4zMDE1NCAtNDAuOTQyNyw0MC4zMDE1NGMtMjIuNjEyMDMsMCAtNDAuOTQyNywtMTguMDQzNjEgLTQwLjk0MjcsLTQwLjMwMTU0YzAsLTIyLjI1NzkyIDE4LjMzMDY3LC00MC4zMDE1NCA0MC45NDI3LC00MC4zMDE1NGMyMi42MTIwMywwIDQwLjk0MjcsMTguMDQzNjEgNDAuOTQyNyw0MC4zMDE1NHoiIGZpbGw9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMCIvPjxwYXRoIGQ9Ik0yNjYuNTM0MzcsMTgwYzAsMTQuNjQxMjkgLTExLjg5MzA4LDI2LjUzNDM3IC0yNi41MzQzNywyNi41MzQzN2MtMTQuNjQxMjksMCAtMjYuNTM0MzcsLTExLjg5MzA4IC0yNi41MzQzNywtMjYuNTM0MzdjMCwtMTQuNjQxMjkgMTEuODkzMDgsLTI2LjUzNDM3IDI2LjUzNDM3LC0yNi41MzQzN2MxNC42NDEyOSwwIDI2LjUzNDM3LDExLjg5MzA4IDI2LjUzNDM3LDI2LjUzNDM3ek0yNTMuMjE5OCwxODUuOTcwMjNsLTExLjMyNDQ5LC02LjUzODgzdi0xNC41OTM5aC0zLjc5MDYydjE3LjA1NzgxaDAuNTIxMjFsMTIuNjk4NTksNy4zNDQzM3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjQwLjk0MjY5NjA1MzgwMTE0OjQwLjMwMTUzNTI2NTQ4NjcwNi0tPg==';
-    const icon2 = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNzUiIGhlaWdodD0iMTc1IiB2aWV3Qm94PSIwLDAsMTc1LDE3NSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE1Mi41LC05Mi41KSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsPSIjZmZmZmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTMyNy41LDE4MGMwLDQ4LjI4MTI1IC0zOS4yMTg3NSw4Ny41IC04Ny41LDg3LjVjLTQ4LjI4MTI1LDAgLTg3LjUsLTM5LjIxODc1IC04Ny41LC04Ny41YzAsLTQ4LjI4MTI1IDM5LjIxODc1LC04Ny41IDg3LjUsLTg3LjVjNDguMjgxMjUsMCA4Ny41LDM5LjIxODc1IDg3LjUsODcuNXpNMjgzLjU5Mzc1LDE5OS42ODc1bC0zNy4zNDM3NSwtMjEuNTYyNXYtNDguMTI1aC0xMi41djU2LjI1aDEuNzE4NzVsNDEuODc1LDI0LjIxODc1eiIvPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjg3LjU6ODcuNS0tPg==';
+    const menuIconURI = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwLDAsMTA3LjUyMzI5LDExMC41OTgyOCIgaGVpZ2h0PSIxMTAuNTk4MjgiIHdpZHRoPSIxMDcuNTIzMjkiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4Ny43NTE3MSwtMTI3Ljc1MTcxKSI+PGcgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIGZpbGwtcnVsZT0ibm9uemVybyIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9Ij48cGF0aCBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZT0ibm9uZSIgZmlsbD0iIzViNTRkMCIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGQ9Ik0yNDAsMjMyLjI0ODI5Yy0yOC44NTU5MywwIC01Mi4yNDgyOSwtMjMuMzkyMzYgLTUyLjI0ODI5LC01Mi4yNDgyOWMwLC0yOC44NTU5MyAyMy4zOTIzNiwtNTIuMjQ4MjggNTIuMjQ4MjksLTUyLjI0ODI4YzI4Ljg1NTkzLDAgNTIuMjQ4MjksMjMuMzkyMzUgNTIuMjQ4MjksNTIuMjQ4MjljMCwyOC44NTU5MyAtMjMuMzkyMzYsNTIuMjQ4MjkgLTUyLjI0ODI5LDUyLjI0ODI5eiI+PC9wYXRoPjxwYXRoIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSJub25lIiBmaWxsPSIjZmZmZmZmIiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZD0iTTIyNC41NTM4OCwyMTEuNzA1MjFjLTE3LjUxMDMsLTguNTMwNjYgLTI0Ljc4OTc1LC0yOS42NDEwMyAtMTYuMjU5MDgsLTQ3LjE1MTMzYzguNTMwNjYsLTE3LjUxMDMgMjkuNjQxMDMsLTI0Ljc4OTc1IDQ3LjE1MTMzLC0xNi4yNTkwOGMxNy41MTAzMSw4LjUzMDY2IDI0Ljc4OTc1LDI5LjY0MTAzIDE2LjI1OTA5LDQ3LjE1MTMzYy04LjUzMDY2LDE3LjUxMDMgLTI5LjY0MTAzLDI0Ljc4OTc1IC00Ny4xNTEzNCwxNi4yNTkwOXoiPjwvcGF0aD48cGF0aCBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZT0ibm9uZSIgZmlsbD0iIzViNTRkMCIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGQ9Ik0yNDMuOTcwMTcsMTc4LjA5MTE5Yy0wLjYzNTY1LDAuNjc5MjMgLTMuMTMyMzYsLTAuNDk0ODcgLTIuOTgxNTQsLTEuNDYzODljMC4zNzMwNSwtMi4zOTY3OCAyLjg3NTkyLC0xMy45NDg2MyAyLjg3NTkyLC0xMy45NDg2M2MwLDAgOC40MjE4MSwtOC44NzE5MiAxMC4wODY1MywtMTAuNjUwNzdjMC42Nzk0NywtMC43MjYwNiAxLjIzNDcsLTAuNDU1NTYgMS4wODE3NywwLjUyNzAyYy0wLjg4ODEzLDUuNzA2IC0yLjI5OTM5LDE0Ljc3Mjk1IC0yLjI5OTM5LDE0Ljc3Mjk1YzAsMCAtNy4xMzM4NCw5LjAyMjE2IC04Ljc2MzI5LDEwLjc2MzMyeiI+PC9wYXRoPjxwYXRoIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSJub25lIiBmaWxsPSIjNWI1NGQwIiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZD0iTTIzNi41MDcyNywxNzguOTg4NTFjMC42MjkzNSwwLjIxNjczIDAuNzI0NSwyLjY3OTgyIDAuMDYxMDQsMi45MDgzYy0xLjY0MTAxLDAuNTY1MTIgLTEwLjI3OTk4LDIuNDE5MDEgLTEwLjI3OTk4LDIuNDE5MDFjLTEuMjk4MjYsLTAuNDQ3MDkgLTguMjU3MzksLTIuODQzNjUgLTkuOTA1NjIsLTMuNDExMjZjLTAuNjcyNzQsLTAuMjMxNjcgLTAuNjcyNzQsLTAuNzIwMjggMCwtMC45NTE5NWMxLjY0ODIzLC0wLjU2NzYxIDEwLjExNDY2LC0zLjQ4MzI2IDEwLjExNDY2LC0zLjQ4MzI2YzAsMCA4LjM5NjYsMS45NjM1OCAxMC4wMDk5MSwyLjUxOTE3eiI+PC9wYXRoPjxwYXRoIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSJub25lIiBmaWxsPSIjNWI1NGQwIiBkPSJNMjM0LjMwOTUzLDE4MGMwLC0zLjE0Mjc2IDIuNTQ3NzEsLTUuNjkwNDcgNS42OTA0NywtNS42OTA0N2MzLjE0Mjc2LDAgNS42OTA0NywyLjU0NzcxIDUuNjkwNDcsNS42OTA0N2MwLDMuMTQyNzYgLTIuNTQ3NzEsNS42OTA0NyAtNS42OTA0Nyw1LjY5MDQ3Yy0zLjE0Mjc2LDAgLTUuNjkwNDcsLTIuNTQ3NzEgLTUuNjkwNDcsLTUuNjkwNDd6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2U9IiM1YjU0ZDAiIGZpbGw9IiM1YjU0ZDAiIGQ9Ik0yNDYuMjc1LDIwOC4wNzkxN2MwLC0yLjI4Mjc4IDEuODUwNTYsLTQuMTMzMzMgNC4xMzMzMywtNC4xMzMzM2wzOC4yMzMzMywwYzIuMjgyNzgsMCA0LjEzMzMzLDEuODUwNTYgNC4xMzMzMyw0LjEzMzMzbDAsOS4wNDE2N2MwLDIuMjgyNzggLTEuODUwNTYsNC4xMzMzMyAtNC4xMzMzMyw0LjEzMzMzbC0zOC4yMzMzMywwYy0yLjI4Mjc4LDAgLTQuMTMzMzMsLTEuODUwNTYgLTQuMTMzMzMsLTQuMTMzMzN6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2U9IiM1YjU0ZDAiIGZpbGw9IiM1YjU0ZDAiIGQ9Ik0yNjUuMDA0MTcsMjM1Ljg1Yy0yLjI4Mjc4LDAgLTQuMTMzMzMsLTEuODUwNTYgLTQuMTMzMzMsLTQuMTMzMzN2LTM4LjIzMzMzYzAsLTIuMjgyNzggMS44NTA1NiwtNC4xMzMzMyA0LjEzMzMzLC00LjEzMzMzaDkuMDQxNjdjMi4yODI3OCwwIDQuMTMzMzMsMS44NTA1NiA0LjEzMzMzLDQuMTMzMzN2MzguMjMzMzNjMCwyLjI4Mjc4IC0xLjg1MDU2LDQuMTMzMzMgLTQuMTMzMzMsNC4xMzMzM3oiPjwvcGF0aD48cGF0aCBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZT0ibm9uZSIgZmlsbD0iI2ZmZmZmZiIgZD0iTTI2Ny45LDIzMS44NWMtMi4yMDkxNCwwIC00LC0xLjc5MDg2IC00LC00di0zMC43NWMwLC0yLjIwOTE0IDEuNzkwODYsLTQgNCwtNGgzLjI1YzIuMjA5MTQsMCA0LDEuNzkwODYgNCw0djMwLjc1YzAsMi4yMDkxNCAtMS43OTA4Niw0IC00LDR6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9Im5vbmUiIGZpbGw9IiNmZmZmZmYiIGQ9Ik0yNTAuMjc1LDIxMC45NzVjMCwtMi4yMDkxNCAxLjc5MDg2LC00IDQsLTRoMzAuNzVjMi4yMDkxNCwwIDQsMS43OTA4NiA0LDR2My4yNWMwLDIuMjA5MTQgLTEuNzkwODYsNCAtNCw0bC0zMC43NSwwYy0yLjIwOTE0LDAgLTQsLTEuNzkwODYgLTQsLTR6Ij48L3BhdGg+PC9nPjwvZz48L3N2Zz48IS0tcm90YXRpb25DZW50ZXI6NTIuMjQ4Mjg1MDAwMDAwMDE6NTIuMjQ4Mjg0OTk5OTk5OTk2LS0+';
+    const blockIconURI = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwLDAsODEuMzAwNTgsODIuODc1NTkiIGhlaWdodD0iODIuODc1NTkiIHdpZHRoPSI4MS4zMDA1OCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjA0LjcyNDQyLC0xNDQuNzI0NDIpIj48ZyBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLXdpZHRoPSIwIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSI+PHBhdGggc3Ryb2tlPSJub25lIiBmaWxsPSIjZmZmZmZmIiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZD0iTTIyNC41NTM4OCwyMTEuNzA1MjJjLTE3LjUxMDMsLTguNTMwNjYgLTI0Ljc4OTc1LC0yOS42NDEwMyAtMTYuMjU5MDgsLTQ3LjE1MTMzYzguNTMwNjYsLTE3LjUxMDMgMjkuNjQxMDMsLTI0Ljc4OTc1IDQ3LjE1MTMzLC0xNi4yNTkwOGMxNy41MTAzMSw4LjUzMDY2IDI0Ljc4OTc1LDI5LjY0MTAzIDE2LjI1OTA5LDQ3LjE1MTMzYy04LjUzMDY2LDE3LjUxMDMgLTI5LjY0MTAzLDI0Ljc4OTc1IC00Ny4xNTEzNCwxNi4yNTkwOXoiPjwvcGF0aD48cGF0aCBzdHJva2U9Im5vbmUiIGZpbGw9IiM1YjU0ZDAiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBkPSJNMjQzLjk3MDE4LDE3OC4wOTEyYy0wLjYzNTY1LDAuNjc5MjMgLTMuMTMyMzYsLTAuNDk0ODcgLTIuOTgxNTQsLTEuNDYzODljMC4zNzMwNSwtMi4zOTY3OCAyLjg3NTkyLC0xMy45NDg2MyAyLjg3NTkyLC0xMy45NDg2M2MwLDAgOC40MjE4MSwtOC44NzE5MiAxMC4wODY1MywtMTAuNjUwNzdjMC42Nzk0NywtMC43MjYwNiAxLjIzNDcsLTAuNDU1NTYgMS4wODE3NywwLjUyNzAyYy0wLjg4ODEzLDUuNzA2IC0yLjI5OTM5LDE0Ljc3Mjk1IC0yLjI5OTM5LDE0Ljc3Mjk1YzAsMCAtNy4xMzM4NCw5LjAyMjE2IC04Ljc2MzI5LDEwLjc2MzMyeiI+PC9wYXRoPjxwYXRoIHN0cm9rZT0ibm9uZSIgZmlsbD0iIzViNTRkMCIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGQ9Ik0yMzYuNTA3MjgsMTc4Ljk4ODUyYzAuNjI5MzUsMC4yMTY3MyAwLjcyNDUsMi42Nzk4MiAwLjA2MTA0LDIuOTA4M2MtMS42NDEwMSwwLjU2NTEyIC0xMC4yNzk5OCwyLjQxOTAxIC0xMC4yNzk5OCwyLjQxOTAxYy0xLjI5ODI2LC0wLjQ0NzA5IC04LjI1NzM5LC0yLjg0MzY1IC05LjkwNTYyLC0zLjQxMTI2Yy0wLjY3Mjc0LC0wLjIzMTY3IC0wLjY3Mjc0LC0wLjcyMDI4IDAsLTAuOTUxOTVjMS42NDgyMywtMC41Njc2MSAxMC4xMTQ2NiwtMy40ODMyNiAxMC4xMTQ2NiwtMy40ODMyNmMwLDAgOC4zOTY2LDEuOTYzNTggMTAuMDA5OTEsMi41MTkxN3oiPjwvcGF0aD48cGF0aCBzdHJva2U9Im5vbmUiIGZpbGw9IiM1YjU0ZDAiIGQ9Ik0yMzQuMzA5NTQsMTgwLjAwMDAxYzAsLTMuMTQyNzYgMi41NDc3MSwtNS42OTA0NyA1LjY5MDQ3LC01LjY5MDQ3YzMuMTQyNzYsMCA1LjY5MDQ3LDIuNTQ3NzEgNS42OTA0Nyw1LjY5MDQ3YzAsMy4xNDI3NiAtMi41NDc3MSw1LjY5MDQ3IC01LjY5MDQ3LDUuNjkwNDdjLTMuMTQyNzYsMCAtNS42OTA0NywtMi41NDc3MSAtNS42OTA0NywtNS42OTA0N3oiPjwvcGF0aD48cGF0aCBzdHJva2U9IiM1YjU0ZDAiIGZpbGw9IiM1YjU0ZDAiIGQ9Ik0yMzkuNTI1MDEsMTk5LjgyOTE4YzAsLTIuMjgyNzggMS44NTA1NiwtNC4xMzMzMyA0LjEzMzMzLC00LjEzMzMzaDM4LjIzMzMzYzIuMjgyNzgsMCA0LjEzMzMzLDEuODUwNTYgNC4xMzMzMyw0LjEzMzMzdjkuMDQxNjdjMCwyLjI4Mjc4IC0xLjg1MDU2LDQuMTMzMzMgLTQuMTMzMzMsNC4xMzMzM2gtMzguMjMzMzNjLTIuMjgyNzgsMCAtNC4xMzMzMywtMS44NTA1NiAtNC4xMzMzMywtNC4xMzMzM3oiPjwvcGF0aD48cGF0aCBzdHJva2U9IiM1YjU0ZDAiIGZpbGw9IiM1YjU0ZDAiIGQ9Ik0yNTguMjU0MTcsMjI3LjYwMDAxYy0yLjI4Mjc4LDAgLTQuMTMzMzMsLTEuODUwNTYgLTQuMTMzMzMsLTQuMTMzMzN2LTM4LjIzMzMzYzAsLTIuMjgyNzggMS44NTA1NiwtNC4xMzMzMyA0LjEzMzMzLC00LjEzMzMzaDkuMDQxNjdjMi4yODI3OCwwIDQuMTMzMzMsMS44NTA1NiA0LjEzMzMzLDQuMTMzMzN2MzguMjMzMzNjMCwyLjI4Mjc4IC0xLjg1MDU2LDQuMTMzMzMgLTQuMTMzMzMsNC4xMzMzM3oiPjwvcGF0aD48cGF0aCBzdHJva2U9Im5vbmUiIGZpbGw9IiNmZmZmZmYiIGQ9Ik0yNjEuMTUsMjIzLjYwMDAxYy0yLjIwOTE0LDAgLTQsLTEuNzkwODYgLTQsLTR2LTMwLjc1YzAsLTIuMjA5MTQgMS43OTA4NiwtNCA0LC00aDMuMjVjMi4yMDkxNCwwIDQsMS43OTA4NiA0LDR2MzAuNzVjMCwyLjIwOTE0IC0xLjc5MDg2LDQgLTQsNHoiPjwvcGF0aD48cGF0aCBzdHJva2U9Im5vbmUiIGZpbGw9IiNmZmZmZmYiIGQ9Ik0yNDMuNTI1MDEsMjAyLjcyNTAxYzAsLTIuMjA5MTQgMS43OTA4NiwtNCA0LC00aDMwLjc1YzIuMjA5MTQsMCA0LDEuNzkwODYgNCw0djMuMjVjMCwyLjIwOTE0IC0xLjc5MDg2LDQgLTQsNGgtMzAuNzVjLTIuMjA5MTQsMCAtNCwtMS43OTA4NiAtNCwtNHoiPjwvcGF0aD48L2c+PC9nPjwvc3ZnPjwhLS1yb3RhdGlvbkNlbnRlcjozNS4yNzU1ODMxOTMwMDM0NTY6MzUuMjc1NTgzMTkzMDAzNC0tPg==';
 
-    class Time {
-        constructor(runtime) {
-            this.runtime = runtime;
-        }
-
+    class TimeCalc {
         getInfo() {
             return {
-                id: 'sipctime',
-                name: 'Time',
-                color1: '#ff8000',
-                color2: '#804000',
-                color3: '#804000',
-                menuIconURI: icon,
-                blockIconURI: icon2,
+                id: 'SPtimeCalc',
+                name: 'Time Calculation',
+                color1: '#5b54d0',
+                color2: '#373279',
+                color3: '#373279',
+                menuIconURI,
+                blockIconURI,
                 blocks: [
                     {
-                        opcode: 'timestamp',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: 'the current timestamp',
-                        arguments: {}
-                    },
-                    {
-                        opcode: 'timezone',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: 'the current time zone',
-                        arguments: {}
-                    },
-                    {
-                        opcode: 'timedata',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: 'extract [TIMEDATA] from [TIMESTAMP]',
-                        arguments: {
-                            TIMESTAMP: {
-                                type: Scratch.ArgumentType.NUMBER,
-                                defaultValue: '1145141980000'
-                            },
-                            TIMEDATA: {
-                                type: Scratch.ArgumentType.STRING,
-                                menu: 'time',
-                                defaultValue: 'Year'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'timestamptotime',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: 'convert [TIMESTAMP] to a datetime',
-                        arguments: {
-                            TIMESTAMP: {
-                                type: Scratch.ArgumentType.NUMBER,
-                                defaultValue: '1145141980000'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'timetotimestamp',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: 'convert [TIME] to a timestamp',
-                        arguments: {
-                            TIME: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '2006-04-16 06:59:40'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'calculatetimedurationfromdate', //This block and the ones that follow were made by SharkPool
+                        opcode: 'calculatetimedurationfromdate',
                         blockType: Scratch.BlockType.REPORTER,
                         text: 'time duration from [DATE] to current date in [TIME_MENU]',
                         arguments: {
@@ -180,60 +131,9 @@
             };
         }
 
-        timestamp() {
-            return Date.now();
-        }
-
-        timezone() {
-            return 'UTC+' + new Date().getTimezoneOffset() / -60;
-        }
-
-        timedata(args) {
-            const timestamp = args.TIMESTAMP ? args.TIMESTAMP : null;
-            const date = new Date(timestamp);
-
-            switch (args.TIMEDATA) {
-                case 'Year':
-                    return date.getFullYear();
-                case 'Month':
-                    return ('0' + (date.getMonth() + 1)).slice(-2);
-                case 'Day':
-                    return ('0' + date.getDate()).slice(-2);
-                case 'Hour':
-                    return ('0' + date.getHours()).slice(-2);
-                case 'Minute':
-                    return ('0' + date.getMinutes()).slice(-2);
-                case 'Second':
-                    return ('0' + date.getSeconds()).slice(-2);
-                default:
-                    return '';
-            }
-        }
-
-        timestamptotime(args) {
-            const timestamp = args.TIMESTAMP ? args.TIMESTAMP : null;
-            const date = new Date(timestamp);
-
-            const year = date.getFullYear();
-            const month = ('0' + (date.getMonth() + 1)).slice(-2);
-            const day = ('0' + date.getDate()).slice(-2);
-            const hour = ('0' + date.getHours()).slice(-2);
-            const minute = ('0' + date.getMinutes()).slice(-2);
-            const second = ('0' + date.getSeconds()).slice(-2);
-
-            return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-        }
-
-        timetotimestamp(args) {
-            const time = args.TIME ? args.TIME : null;
-            const date = new Date(time);
-            return date.getTime();
-        }
-
         calculatetimedurationfromdate(args) {
             const dateString = args.DATE ? args.DATE : null;
-            const timeMenu = args.TIME_MENU ? args.TIME_MENU : null;
-
+            const timeMenu = args.TIME_MENU;
             const startDate = new Date(dateString);
             const endDate = new Date();
             const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
@@ -259,8 +159,7 @@
         calculatetimedurationfromtime(args) {
             const startHour = args.START_HOUR ? args.START_HOUR : null;
             const startMinute = args.START_MINUTE ? args.START_MINUTE : null;
-            const timeMenu = args.TIME_MENU ? args.TIME_MENU : null;
-
+            const timeMenu = args.TIME_MENU;
             const startDate = new Date();
             startDate.setHours(startHour, startMinute, 0, 0);
             const endDate = new Date();
@@ -287,8 +186,7 @@
         calculatetimedifference(args) {
             const startTime = args.START_TIME ? args.START_TIME : null;
             const endTime = args.END_TIME ? args.END_TIME : null;
-            const timeMenu = args.TIME_MENU ? args.TIME_MENU : null;
-
+            const timeMenu = args.TIME_MENU;
             const startDate = new Date();
             const endDate = new Date();
             const startHour = parseInt(startTime.split(':')[0]);
@@ -329,7 +227,7 @@
         }
 
         daysinmonth(args) {
-            const month = args.MONTH ? args.MONTH : null;
+            const month = args.MONTH;
             const year = args.YEAR ? args.YEAR : null;
             const date = new Date(year, this._getMonthIndex(month) + 1, 0);
             return date.getDate();
@@ -353,6 +251,5 @@
             return months.indexOf(month);
         }
     }
-
-    Scratch.extensions.register(new  Time());
+    Scratch.extensions.register(new TimeCalc());
 })(Scratch);
