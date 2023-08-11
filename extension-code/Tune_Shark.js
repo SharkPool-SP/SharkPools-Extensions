@@ -1,5 +1,5 @@
 /*
-* Tune Shark Extension was made by SharkPool (Version 1.1.5)
+* This Extension was made by SharkPool (Version 1.1.5)
 * Credit to HOME for the song 'Resonance' being used as the default audio link
 * Credit to LilyMakesThings for some block Ideas
 * Do Not Delete this Comment
