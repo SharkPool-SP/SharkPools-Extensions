@@ -1,7 +1,7 @@
 /*
 * This extension was made by SharkPool
 * Version 2.0 (Sliders, Bug Fixes, Better Force Input, and more Fonts)
-* Next Update: None right now
+* Next Update: CSS Effects n stuff
 * Do NOT delete these comments
 */
 
