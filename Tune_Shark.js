@@ -1,11 +1,14 @@
-//Audio Engine Extension was made by SharkPool (Version 1.1)
-//Credit to HOME for the song 'Resonance' being used as the default audio link
-
+/*
+* Tune Shark Extension was made by SharkPool (Version 1.1.5)
+* Credit to HOME for the song 'Resonance' being used as the default audio link
+* Credit to LilyMakesThings for some block Ideas
+* Do Not Delete this Comment
+*/
 (function (Scratch) {
   'use strict';
 
   if (!Scratch.extensions.unsandboxed) {
-    throw new Error('Sound Engine extension must be run unsandboxed');
+    throw new Error('Tune Shark extension must be run unsandboxed');
   }
 
   const menuIconURI =
@@ -14,15 +17,15 @@
   const blockIconURI =
 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI4Ni4zNDQ5MiIgaGVpZ2h0PSI3OC45NzQwMSIgdmlld0JveD0iMCwwLDg2LjM0NDkyLDc4Ljk3NDAxIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjU2LjgyNzU0LC0xNjAuNTEyOTkpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTI1Ni44Mjc1NCwyMzkuNDg3MDF2LTc4Ljk3NDAxaDg2LjM0NDkydjc4Ljk3NDAxeiIgZmlsbD0iIzg0ODQ4NCIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTMyMS43MTUyLDIxNC4zNDg2NWwtMC4wMDE3NywtMC4wMDIzNmMtMC4wNjg0NCwzLjcwOTM1IC0zLjMzNzA2LDcuMjc4ODcgLTguMDE2MzgsOC40MTU4MWMtNS4zNTksMS4zMDE1NSAtMTAuNTM4MDUsLTEuMDgwMyAtMTEuNTY3NjEsLTUuMzIwNjVjLTEuMDMwMTUsLTQuMjQwOTUgMi40NzkxOSwtOC43MzI2NCA3LjgzODIsLTEwLjAzNDE5YzIuNDQwMjUsLTAuNTkyOTUgNC44NDA5OCwtMC40MjAwOCA2LjgzMTY1LDAuMzQyMnYtMjAuNTYxMDNjLTE0Ljg0OTgsMS4wMDM2IC0yNi4yOTgyMyw1LjAwNjE4IC0yNi4yOTgyMyw1LjAwNjE4djI3LjY0NDYyYzAuNDkwMjksNC4wMTM3OSAtMi45MTYzOSw4LjA3Nzc0IC03Ljk2OTE4LDkuMzA1NTRjLTUuMzU4NDEsMS4zMDE1NSAtMTAuNTM3NDYsLTEuMDgwODkgLTExLjU2NzYxLC01LjMyMTI0Yy0xLjAzMDE1LC00LjI0MDM2IDIuNDc5MTksLTguNzMyMDUgNy44MzgyLC0xMC4wMzQxOWMyLjQ4NTY4LC0wLjYwNDE2IDQuOTMzMDIsLTAuNDE0NzcgNi45NDU1MiwwLjM4NDA5bDAuMDExOCwtMzYuOTk4NTNjMCwwIDE2LjE4OTcsLTcuMjkwNjcgMzUuOTU1NDEsLTYuNjMzNDF6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvZz48L3N2Zz4=';
 
-  class AudioEngine {
+  class SPtuneShark {
     constructor() {
       this.sounds = {};
     }
 
     getInfo() {
       return {
-        id: 'SharkPoolAudioEngine',
-        name: 'Audio Engine',
+        id: 'SPtuneShark',
+        name: 'Tune Shark',
 	color1: '#848484',
 	menuIconURI,
 	blockIconURI,
@@ -30,7 +33,7 @@
 	  {
             opcode: 'importSound',
             blockType: Scratch.BlockType.COMMAND,
-            text: 'import sound from URL [URL] named [NAME]',
+            text: 'import sound from URL/URI [URL] named [NAME]',
             arguments: {
               URL: {
                 type: Scratch.ArgumentType.STRING,
@@ -386,5 +389,5 @@
     }
   }
 
-  Scratch.extensions.register(new AudioEngine());
+  Scratch.extensions.register(new SPtuneShark());
 })(Scratch);
