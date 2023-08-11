@@ -1,6 +1,6 @@
 /*
 * This extension was made by SharkPool
-* Credit to Griffpatch and the Scratch Team for the Scratch Cat Icon
+* Credit to Griffpatch and the Scratch Team for the Scratch Cat Mascot
 * Inspired by the S-Grab Extension by NexusKitten
 * Do not remove this comment
 */
