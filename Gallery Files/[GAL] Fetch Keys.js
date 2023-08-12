@@ -11,7 +11,8 @@
     "Ext.Geometry-Dash-API.all.utilities.fetching",
     "Ext.Sound-Waves.all.utilities",
     "Ext.Hyper-Sense.all.utilities.expanded",
-    "Ext.Better-Input.all.utilities.expanded"
+    "Ext.Better-Input.all.utilities.expanded",
+    "Ext.example.all.utilities.expanded.fetching"
   ],
   "EXT credits": [
     "This extension was made by SharkPool",
