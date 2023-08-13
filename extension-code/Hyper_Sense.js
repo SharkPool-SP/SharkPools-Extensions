@@ -1,6 +1,6 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
-* Version 1.0
+* Version 1.1
 * Do not remove this comment
 */
 
