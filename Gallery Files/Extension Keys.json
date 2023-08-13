@@ -21,7 +21,7 @@
       "tags": ".all.expanded.fetching"
     },
     "Niche-Toolbox": {
-      "credits": "This extension was made by Oznzw. It merged Color at X&Y and Sound to Data.URI to one with new blocks!",
+      "credits": "This extension was made by 0znzw. It merged Color at X&Y and Sound to Data.URI to one with new blocks!",
       "url": "https://raw.githubusercontent.com/SurvExe1Pc/unsafe-extensions/main/extensions/0znzw/NicheToolbox.js",
       "tags": ".all.utilities"
     },
@@ -70,6 +70,7 @@
     "https://turbowarp.org",
     "https://www.youtube.com/channel/UC26hvmetqYgNB3oFewV_gtg",
     "SharkPool's Extension Collection",
-    "SharkPool's collection of Turbowarp Extensions that were either made or contributed to by SharkPool. Hover over an extension for details."
+    "SharkPool's collection of Turbowarp Extensions that were either made or contributed to by SharkPool. Hover over an extension for details.",
+    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/[].svg"
   ]
 }
