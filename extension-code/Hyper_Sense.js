@@ -1,6 +1,6 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
-* Version 1.0
+* Version 1.1
 * Do not remove this comment
 */
 
@@ -22,7 +22,7 @@
       this.maxValue = 100;
       this.loudnessArray = [];
       document.addEventListener('wheel', this.handleScroll);
-      this.initMicrophone();
+      this.isMicrophoneEnabled = false;
     }
 
     getInfo() {
@@ -70,12 +70,27 @@
             text: 'my sprite name',
             disableMonitor: true,
           },
+	  {
+            opcode: 'toggleMicrophone',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'toggle microphone [STATE]',
+            arguments: {
+              STATE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'microphoneStates',
+                defaultValue: 'enable',
+              },
+            },
+          },
           {
             opcode: 'averageMicrophoneLoudness',
             blockType: Scratch.BlockType.REPORTER,
             text: 'average microphone loudness',
           },
         ],
+	menus: {
+          microphoneStates: ['enable', 'disable']
+	}
       };
     }
 
@@ -108,15 +123,17 @@
     }
 
     initMicrophone() {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(this.handleMicrophoneSuccess)
-        .catch(this.handleMicrophoneError);
+      if (this.isMicrophoneEnabled) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(this.handleMicrophoneSuccess)
+          .catch(this.handleMicrophoneError);
+      }
     }
 
     handleMicrophoneSuccess = (stream) => {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const microphone = audioContext.createMediaStreamSource(stream);
-      const analyser = audioContext.createAnalyser();
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const microphone = this.audioContext.createMediaStreamSource(stream);
+      const analyser = this.audioContext.createAnalyser();
       analyser.fftSize = 256;
 
       microphone.connect(analyser);
@@ -159,6 +176,27 @@
 
     calculateAverageLoudness(loudnessArray) {
       return loudnessArray.reduce((acc, loudness) => acc + loudness, 0) / loudnessArray.length +1;
+    }
+
+    toggleMicrophone(args) {
+      if (args.STATE === 'enable') {
+        this.isMicrophoneEnabled = true;
+        this.initMicrophone();
+      } else {
+        this.isMicrophoneEnabled = false;
+        this.disableMicrophone();
+      }
+    }
+
+    disableMicrophone() {
+      if (this.audioContext) {
+        this.audioContext.close().then(() => {
+          this.audioContext = null;
+          this.loudnessArray = [];
+        }).catch(error => {
+          console.error('Error while closing audio context:', error);
+        });
+      }
     }
   }
 
