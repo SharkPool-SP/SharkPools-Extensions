@@ -72,5 +72,9 @@
     "SharkPool's Extension Collection",
     "SharkPool's collection of Turbowarp Extensions that were either made or contributed to by SharkPool. Hover over an extension for details.",
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg"
-  ]
+  ],
+  "site": {
+    "is up": true,
+    "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html/"
+  }
 }
