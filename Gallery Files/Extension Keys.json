@@ -60,11 +60,6 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better_Input.js",
       "tags": ".all.utilities.expanded"
     },
-    "Camera-Sensing-Plus": {
-      "credits": "This extension was made by SharkPool",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
-      "tags": ".all.utilities.expanded.fetching"
-    },
     "Example": {
       "credits": "",
       "url": "",
