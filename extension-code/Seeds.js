@@ -2,6 +2,7 @@
 * All blocks in this extension were made by SharkPool
 * Subscribe to my YouTube! https://www.youtube.com/@SharkPool_SP
 * Credit to Echoless and Hellow123 for Extension Ideas
+* Version 1.1
 */
 
 (function(Scratch) {
@@ -25,14 +26,61 @@ class SeedsSP {
     return {
       id: 'SeedsSP',
       name: 'Seeds',
+      docsURI: 'https://docs.google.com/document/d/19Xo41od1j6AhFrOQ3_NrJl-OC8cp3Z2FEm3V9lIYSCQ/edit?usp=sharing',
       color1: '#e64e28',
       menuIconURI,
       blockIconURI,
       blocks: [
         {
+          blockType: Scratch.BlockType.LABEL,
+          text: 'Operations',
+        },
+        {
+          opcode: 'reportSeed',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'report seed ID [SEED_NAME] as [REPORT]',
+          arguments: {
+            SEED_NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'seed1',
+            },
+            REPORT: {
+              type: Scratch.ArgumentType.STRING,
+              menu: 'REPORT_TYPE',
+              defaultValue: 'code',
+            },
+          },
+        },
+        {
+          opcode: 'resetSeed',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'reset ID [SEED_NAME]',
+          arguments: {
+            SEED_NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'seed1',
+            },
+          },
+        },
+        {
+          opcode: 'toArray',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Seed ID [SEED_NAME] to Array',
+          arguments: {
+            SEED_NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'seed1',
+            },
+          },
+        },
+        {
+          blockType: Scratch.BlockType.LABEL,
+          text: 'Number Randomizer',
+        },
+        {
           opcode: 'genSeed',
           blockType: Scratch.BlockType.COMMAND,
-          text: 'generate new seed ID [NAME] with length [LENGTH] from [MIN] to [MAX]',
+          text: 'generate number with ID [NAME] from [MIN] to [MAX] and length [LENGTH]',
           arguments: {
             NAME: {
               type: Scratch.ArgumentType.STRING,
@@ -53,44 +101,17 @@ class SeedsSP {
           }
         },
         {
-          opcode: 'reportSeed',
-          blockType: Scratch.BlockType.REPORTER,
-          text: 'seed ID [SEED_NAME] report as [REPORT]',
-          arguments: {
-            SEED_NAME: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: 'seed1',
-            },
-            REPORT: {
-              type: Scratch.ArgumentType.STRING,
-              menu: 'REPORT_TYPE',
-              defaultValue: 'code',
-            },
-          },
-        },
-        {
-          opcode: 'resetSeed',
-          blockType: Scratch.BlockType.COMMAND,
-          text: 'reset seed ID [SEED_NAME]',
-          arguments: {
-            SEED_NAME: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: 'seed1',
-            },
-          },
-        },
-        {
           blockType: Scratch.BlockType.LABEL,
-          text: 'Noise Generation',
+          text: 'Basic Terrain Generation',
         },
         {
-          opcode: 'genNoise',
+          opcode: 'genTerrain',
           blockType: Scratch.BlockType.COMMAND,
-          text: 'generate new seed [NAME] with length [LENGTH] from lowpoint [MIN] and peak [MAX]',
+          text: 'generate new terrain with ID [NAME] length [LENGTH] with lowpoint [MIN] and peak [MAX]',
            arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: 'noise1',
+                defaultValue: 'seed1',
               },
               LENGTH: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -111,9 +132,13 @@ class SeedsSP {
           text: 'Pseudorandom Noise Generation',
         },
         {
+          blockType: Scratch.BlockType.LABEL,
+          text: '!Read Documentation for more Info!',
+        },
+        {
           opcode: 'genCoolNoise',
           blockType: Scratch.BlockType.COMMAND,
-          text: 'generate noise with seed [NAME] and key [KEY] repeated [REPEAT] times',
+          text: 'generate noise with ID [NAME] seed [KEY] repeated [REPEAT] times',
            arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -133,7 +158,7 @@ class SeedsSP {
         {
             opcode: 'genAcceptedNoise',
             blockType: Scratch.BlockType.COMMAND,
-            text: 'generate noise with seed [NAME] and key [KEY] repeated [REPEAT] times with accepted numbers: [ALLOW]',
+            text: 'generate noise with ID [NAME] seed [KEY] repeated [REPEAT] times with accepted numbers: [ALLOW]',
             arguments: {
                 NAME: {
                     type: Scratch.ArgumentType.STRING,
@@ -176,7 +201,7 @@ class SeedsSP {
     const length = Math.round(args.LENGTH);
     const min = Math.round(args.MIN);
     const max = Math.round(args.MAX);
-    const settings = args.NAME + '=' + length + '|' + min + '|' + max;
+    const settings = ' Settings: ' + min + ' -> ' + max + '| Length: ' + length;
 
     let generatedSeed = '';
     for (let i = 0; i < length; i++) {
@@ -184,7 +209,7 @@ class SeedsSP {
       generatedSeed += randomNum;
     }
 
-    this.seeds[seedName] = settings + '{' + generatedSeed + '}';
+    this.seeds[seedName] = args.NAME + '={' + generatedSeed + '}' + settings;
   }
 
   reportSeed(args) {
@@ -210,7 +235,7 @@ class SeedsSP {
     delete this.seeds[seedName];
   }
   
-  genNoise(args) {
+  genTerrain(args) {
     const noiseName = args.NAME;
     const min = Math.round(args.MIN);
     const max = Math.round(args.MAX);
@@ -219,7 +244,7 @@ class SeedsSP {
         args.LENGTH = 1;
     }
     const length = Math.round(args.LENGTH);
-    const settings = args.NAME + '=' + length + '|' + min + '|' + max;
+    const settings = ' Length: ' + length + '| Settings: ' + min + '|' + max;
 
     let generatedNoise = '';
     let currentValue = middleHeight;
@@ -236,7 +261,7 @@ class SeedsSP {
         }
     }
 
-    this.seeds[noiseName] = settings + '{' + generatedNoise + '}';
+    this.seeds[noiseName] = args.NAME + '={' + generatedNoise + '}' + settings;
   }
   
   genCoolNoise(args) {
@@ -244,14 +269,14 @@ class SeedsSP {
       const repeat = Math.round(args.REPEAT);
       let generatedNoise = '';
       let key = args.KEY === 'current millisecond' ? BigInt(Date.now() % 1000) : BigInt(args.KEY);
-      const settings = args.NAME + '=' + key + '|' + repeat;
+      const settings = ' Seed: ' + key + '| Repeat: ' + repeat;
 
       for (let i = 0; i < repeat; i++) {
           const squaredKey = key * key;
           const squaredKeyString = squaredKey.toString();
 
           if (squaredKeyString.length < 3) {
-              generatedNoise = 'Error: Bad Number';
+              generatedNoise = 'Error: Bad Seed';
               break;
           }
 
@@ -263,7 +288,7 @@ class SeedsSP {
           }
           key = BigInt(noiseValue);
       }
-      this.seeds[noiseName] = settings + '{' + generatedNoise + '}';
+      this.seeds[noiseName] = args.NAME + '={' + generatedNoise + '}' + settings;
   }
 
   genAcceptedNoise(args) {
@@ -279,14 +304,14 @@ class SeedsSP {
 
       let generatedNoise = '';
       let key = args.KEY === 'current millisecond' ? BigInt(Date.now() % 1000) : args.KEY;
-      const settings = args.NAME + '=' + key + '|' + repeat + '|-[' + args.ALLOW + ']-';
+      const settings = ' Seed: ' + key + '| Settings: ' + repeat + '| Accepted Numbers -[' + args.ALLOW + ']-';
 
       for (let i = 0; i < repeat; i++) {
           const squaredKey = key * key;
           const squaredKeyString = squaredKey.toString();
 
           if (squaredKeyString.length < 3) {
-              generatedNoise = 'Error: Bad Number';
+              generatedNoise = 'Error: Bad Seed';
               break;
           }
 
@@ -325,7 +350,22 @@ class SeedsSP {
           }
           key = noiseValue;
       }
-      this.seeds[noiseName] = settings + '{' + generatedNoise + '}';
+      this.seeds[noiseName] = args.NAME + '={' + generatedNoise + '}' + settings;
+  }
+  
+  toArray(args) {
+    const seedName = args.SEED_NAME;
+    if (this.seeds[seedName] === undefined) {
+      return 'non-existing seed';
+    } else {
+      const seedValue = this.seeds[seedName];
+      const startIndex = seedValue.indexOf('{');
+      const endIndex = seedValue.indexOf('}');
+            
+      const extractedValue = seedValue.substring(startIndex + 1, endIndex);
+      const formattedValue = extractedValue.replace(/,/g, '", "');
+      return '["' + formattedValue + '"]';
+    }
   }
 }
 
