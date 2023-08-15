@@ -18,7 +18,6 @@
   
 class SeedsSP {
   constructor() {
-    this.runtime = Scratch.vm.runtime;
     this.seeds = {};
   }
   
