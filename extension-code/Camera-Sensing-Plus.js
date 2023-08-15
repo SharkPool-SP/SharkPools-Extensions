@@ -12,6 +12,13 @@
     throw new Error('Camera Sensing Plus must run unsandboxed');
   }
   
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return [r, g, b];
+  }
+  
     const menuIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDYuNTQ0NTgiIGhlaWdodD0iMTA2LjU0NDU4IiB2aWV3Qm94PSIwLDAsMTA2LjU0NDU4LDEwNi41NDQ1OCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4Ni43Mjc3MSwtMTI2LjcyNzcxKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0xODYuNzI3NzEsMTgwYzAsLTI5LjQyMTQ3IDIzLjg1MDgyLC01My4yNzIyOSA1My4yNzIyOSwtNTMuMjcyMjljMjkuNDIxNDcsMCA1My4yNzIyOSwyMy44NTA4MiA1My4yNzIyOSw1My4yNzIyOWMwLDI5LjQyMTQ3IC0yMy44NTA4Miw1My4yNzIyOSAtNTMuMjcyMjksNTMuMjcyMjljLTI5LjQyMTQ3LDAgLTUzLjI3MjI5LC0yMy44NTA4MiAtNTMuMjcyMjksLTUzLjI3MjI5eiIgZmlsbD0iIzAwYjJhNCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTI1MS44NzE4NSwxNjYuNzYyMDVjMC4xNzQ4NSwwLjM1NzY2IDAuMzEwMjgsMC42NzM2NSAwLjMxMDI4LDAuNTg1MDR2MjQuODIzODFjMCwwLjY4MDkgLTAuNTYxNTgsMS4yMDUwNCAtMS4yMDUwNCwxLjIwNTA0Yy0wLjExNjgyLDAgLTAuMzA0MTgsLTAuMDgwMzEgLTAuMzUyOTQsLTAuMTI5MDdsLTAuMjMyMTEsLTAuMTgxMjJsLTE1LjA4MDQ3LC05LjA0ODI4djUuNTAyNDRjMCw0LjY5MTMzIC0zLjg1MjExLDguNjc2MjggLTguNDM1MjcsOC42NzYyOGgtMjEuNDQ5NzFjLTQuODU3NTIsLTAuMjEyMzQgLTguNjc2MjgsLTQuMDMxMDkgLTguNjc2MjgsLTguNjc2Mjh2LTE5LjAzOTYyYzAsLTQuODc3NjYgMy43OTg2MSwtOC42NzYyOCA4LjY3NjI4LC04LjY3NjI4aDIxLjQ0OTcxYzQuNjY4NzYsMCA4LjQzNTI3LDMuODMxNDYgOC40MzUyNyw4LjY3NjI4djUuNTkxMThsMTQuODc0OSwtOS42NDExM2MwLjY0OTg3LC0wLjM4OTA5IDEuMzM1MDcsLTAuMjUyMDMgMS42ODUzNywwLjMzMTh6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMjcxLjk5NDkyLDE3MC44MTg1NHYxOC4zNjI5TTI4MS4xNzYzNywxODBoLTE4LjM2MzI2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMTEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNzEuOTk0OTIsMTg5LjE4MTQ1di0xOC4zNjI5TTI4MS4xNzYzNywxODBoLTE4LjM2MzI2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGIyYTQiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9nPjwvZz48L3N2Zz4=';
   
     const blockIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI2Ni42OTIxOCIgaGVpZ2h0PSI2Ni42OTIxOCIgdmlld0JveD0iMCwwLDY2LjY5MjE4LDY2LjY5MjE4Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjA2LjY1MzkxLC0xNDYuNjUzOTEpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIwNi42NTM5MSwyMTMuMzQ2MDl2LTY2LjY5MjE4aDY2LjY5MjE4djY2LjY5MjE4eiIgZmlsbD0iIzAwYjJhNCIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTI2NC4yNjkzNywxNjguMjc3YzAuMTU0ODQsMC4zMTY3MyAwLjI3NDc3LDAuNTk2NTYgMC4yNzQ3NywwLjUxODA5djIxLjk4M2MwLDAuNjAyOTggLTAuNDk3MzEsMS4wNjcxNCAtMS4wNjcxNCwxLjA2NzE0Yy0wLjEwMzQ1LDAgLTAuMjY5MzcsLTAuMDcxMTIgLTAuMzEyNTUsLTAuMTE0M2wtMC4yMDU1NSwtMC4xNjA0OGwtMTMuMzU0NjgsLTguMDEyODF2NC44NzI3NWMwLDQuMTU0NDYgLTMuNDExMjgsNy42ODMzOCAtNy40Njk5NSw3LjY4MzM4aC0xOC45OTUwM2MtNC4zMDE2MywtMC4xODgwNCAtNy42ODMzOCwtMy41Njk3OCAtNy42ODMzOCwtNy42ODMzOHYtMTYuODYwNzVjMCwtNC4zMTk0NyAzLjM2MzksLTcuNjgzMzggNy42ODMzOCwtNy42ODMzOGgxOC45OTUwM2M0LjEzNDQ3LDAgNy40Njk5NSwzLjM5Mjk5IDcuNDY5OTUsNy42ODMzOHY0Ljk1MTMzbDEzLjE3MjYzLC04LjUzNzgxYzAuNTc1NSwtMC4zNDQ1NiAxLjE4MjI5LC0wLjIyMzE5IDEuNDkyNSwwLjI5MzgzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIi8+PC9nPjwvZz48L3N2Zz4=';
@@ -22,6 +29,8 @@
     constructor() {
       this.camWidth = '640';
       this.camHeight = '480';
+      this.cutoutX = '0';
+      this.cutoutY = '0';
     }
   
     getInfo() {
@@ -55,6 +64,11 @@
             disableMonitor: true
           },
           {
+            opcode: 'camStatus',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: 'is camera on?',
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
             text: '^ Use Skins/Import Image to display',
           },
@@ -62,6 +76,80 @@
               blockType: Scratch.BlockType.LABEL,
             text: 'Camera Settings',
           },
+          {
+            opcode: 'removeColorFromImage',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'remove color [COLOR] from [DATA_URI]',
+            arguments: {
+              COLOR: {
+                type: Scratch.ArgumentType.COLOR,
+                defaultValue: '#FF0000'
+              },
+              DATA_URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'insert-data.uri'
+              }
+            }
+          },
+          {
+            opcode: 'clipImage',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'cut out [CUTOUT_DATA_URI] from [MAIN_DATA_URI]',
+            arguments: {
+              MAIN_DATA_URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'insert-data.uri-here'
+              },
+              CUTOUT_DATA_URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'insert-cutout-data.uri-here'
+              }
+            }
+          },
+          {
+            opcode: 'setCutout',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set cutout position to x [X] y [Y]',
+            arguments: {
+              X: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '0'
+              },
+              Y: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '0'
+              }
+            }
+          },
+          {
+            opcode: 'changeCutout',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'change cutout position by x [X] y [Y]',
+            arguments: {
+              X: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '0'
+              },
+              Y: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '0'
+              }
+            }
+          },
+          {
+            opcode: 'currentCut',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current cutout [POS]',
+            arguments: {
+              POS: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'positions',
+                defaultValue: 'x'
+              }
+          },
+          
+          '---',
+                    
           {
             opcode: 'setResolution',
             blockType: Scratch.BlockType.COMMAND,
@@ -108,6 +196,7 @@
         menus: {
           onOffMenu: ['on', 'off'],
           widthHeight: ['width', 'height']
+          positions: ['x', 'y']
         }
       };
     }
@@ -143,6 +232,24 @@
       this.camWidth = args.WIDTH;
       this.camHeight = args.HEIGHT;
     }
+    
+    setCutout(args) {
+      this.cutoutX = args.X;
+      this.cutoutY = args.Y;
+    }
+    
+    changeCutout(args) {
+      this.cutoutX = args.X + this.cutoutX;
+      this.cutoutY = -1 * args.Y + this.cutoutY;
+    }
+    
+    currentCut(args) {
+      if (args.POS === 'x') {
+        return this.cutoutX;
+      } else {
+        return this.cutoutY;
+      }
+    }
   
     defaultRes(args) {
       if (!this.videoElement || !this.mediaStream) {
@@ -162,6 +269,10 @@
         return this.camHeight;
       }
     }
+    
+    camStatus(args) {
+      return !this.videoElement || !this.mediaStream;
+    }
 
     captureWebcamFootage() {
       if (this.videoElement) {
@@ -176,6 +287,66 @@
         console.error('Camera is not turned on.');
         return '';
       }
+    }
+    
+    removeColorFromImage(args) {
+      const hexColorToBeRemoved = args.COLOR;
+      const colorToBeRemoved = hexToRgb(hexColorToBeRemoved);
+      const dataURI = args.DATA_URI;
+      const canvasElement = document.createElement('canvas');
+      const context = canvasElement.getContext('2d');
+      const imageElement = new Image();
+
+      return new Promise(resolve => {
+        imageElement.onload = () => {
+          canvasElement.width = imageElement.width;
+          canvasElement.height = imageElement.height;
+          context.drawImage(imageElement, 0, 0);
+          const imageData = context.getImageData(0, 0, canvasElement.width, canvasElement.height);
+          const data = imageData.data;
+
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            if (r === colorToBeRemoved[0] && g === colorToBeRemoved[1] && b === colorToBeRemoved[2]) {
+              data[i + 3] = 0;
+            }
+          }
+
+          context.putImageData(imageData, 0, 0);
+          const newDataURI = canvasElement.toDataURL('image/png');
+          resolve(newDataURI);
+        };
+
+        imageElement.src = dataURI;
+      });
+    }
+    
+    clipImage(args) {
+      const mainDataURI = args.MAIN_DATA_URI;
+      const cutoutDataURI = args.CUTOUT_DATA_URI;
+
+      const mainImage = new Image();
+      mainImage.src = mainDataURI;
+      
+      const cutoutImage = new Image();
+      cutoutImage.src = cutoutDataURI;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = mainImage.width;
+      canvas.height = mainImage.height;
+      const context = canvas.getContext('2d');
+
+      context.drawImage(mainImage, 0, 0);
+
+      context.globalCompositeOperation = 'destination-in';
+      context.drawImage(cutoutImage, this.cutoutX, this.cutoutY);
+
+      context.globalCompositeOperation = 'source-over';
+
+      const clippedDataURI = canvas.toDataURL('image/png');
+      return clippedDataURI;
     }
   }
 
