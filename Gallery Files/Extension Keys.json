@@ -80,6 +80,6 @@
   ],
   "site": {
     "is up": true,
-    "down url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/pages/Server%20down%20Stat.html"
+    "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html"
   }
 }
