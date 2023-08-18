@@ -102,7 +102,6 @@ class ParticleToolsSP {
           opcode: 'reportCnt',
           blockType: Scratch.BlockType.REPORTER,
           text: 'number of particle IDs',
-          disableMonitor: true
         },
         {
         blockType: Scratch.BlockType.LABEL,
