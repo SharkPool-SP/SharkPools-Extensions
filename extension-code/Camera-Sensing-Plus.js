@@ -65,7 +65,7 @@
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: '↳ Use Skins/Import Image to display',
+            text: '↳ Use Skins/Import Image to Display',
           },
           {
             opcode: 'camStatus',
@@ -109,6 +109,10 @@
                 defaultValue: 'insert-cutout-data.uri-here'
               }
             }
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: '↳ Might Affect Camera Speed',
           },
           {
             opcode: 'setCutout',
@@ -333,29 +337,28 @@
     }
     
     clipImage(args) {
-      const mainDataURI = args.MAIN_DATA_URI;
-      const cutoutDataURI = args.CUTOUT_DATA_URI;
+      return new Promise((resolve, reject) => {
+        const mainImage = new Image();
+        mainImage.onload = () => {
+          const cutoutImage = new Image();
+          cutoutImage.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = mainImage.width;
+            canvas.height = mainImage.height;
+            const context = canvas.getContext('2d');
 
-      const mainImage = new Image();
-      mainImage.src = mainDataURI;
-      
-      const cutoutImage = new Image();
-      cutoutImage.src = cutoutDataURI;
+            context.drawImage(mainImage, 0, 0);
+            context.globalCompositeOperation = 'destination-in';
+            context.drawImage(cutoutImage, this.cutoutX, this.cutoutY * -1);
+            context.globalCompositeOperation = 'source-over';
 
-      const canvas = document.createElement('canvas');
-      canvas.width = mainImage.width;
-      canvas.height = mainImage.height;
-      const context = canvas.getContext('2d');
-
-      context.drawImage(mainImage, 0, 0);
-
-      context.globalCompositeOperation = 'destination-in';
-      context.drawImage(cutoutImage, this.cutoutX, this.cutoutY * -1);
-
-      context.globalCompositeOperation = 'source-over';
-
-      const clippedDataURI = canvas.toDataURL('image/png');
-      return clippedDataURI;
+            const clippedDataURI = canvas.toDataURL('image/png');
+            resolve(clippedDataURI);
+          };
+          cutoutImage.src = args.CUTOUT_DATA_URI;
+        };
+        mainImage.src = args.MAIN_DATA_URI;
+      });
     }
   }
 
