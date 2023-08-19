@@ -641,7 +641,7 @@
     isDropdown(args) {
       return this.isDropdownOpen;
     }
-    
+
     showEffect(args) {
       const effect = args.EFFECT;
       return this[effect];
@@ -650,7 +650,7 @@
     setEffect(args) {
       const effect = args.EFFECT;
       this[effect] = args.AMT;
-      
+
       this.activeOverlays.forEach((overlay) => {
         this.updateEffect(overlay);
       });
@@ -1173,7 +1173,7 @@
           const optionList = this.optionList;
           const numOfOptions = optionList.split(this.splitKey).length;
           const options = this.optionList.split(this.splitKey);
-          const listing = Math.floor((optionList.length/2) / numOfOptions) -1;
+          const listing = Math.floor((optionList.length / 2) / numOfOptions) - 1;
           for (let i = 1; i <= numOfOptions; i++) {
             const optionButton = document.createElement("button");
             optionButton.style.marginRight = "5px";
