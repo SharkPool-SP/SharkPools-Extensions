@@ -65,6 +65,11 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching"
     },
+    "Particle-Tools": {
+      "credits": "This extension was made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
+      "tags": ".all.utilities"
+    },
     "Example": {
       "credits": "",
       "url": "",
