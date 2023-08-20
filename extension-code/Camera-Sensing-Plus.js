@@ -1,6 +1,6 @@
 /*
 * This extension was made by SharkPool
-* Version 1.0
+* Version 1.1
 * Thank you LilyMakesThings, TheShovel, and ObviousAlex for Image Loading Blocks :)
 * Do NOT delete these comments
 */
@@ -78,13 +78,32 @@
             text: 'Camera Settings',
           },
           {
-            opcode: 'removeColorFromImage',
+            opcode: 'deleteColor',
             blockType: Scratch.BlockType.REPORTER,
             text: 'remove color [COLOR] from [DATA_URI]',
             arguments: {
               COLOR: {
                 type: Scratch.ArgumentType.COLOR,
                 defaultValue: '#FF0000'
+              },
+              DATA_URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'insert-data.uri'
+              }
+            }
+          },
+          {
+            opcode: 'replaceColor',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'replace color [COLOR] with [REPLACE_COLOR] from [DATA_URI]',
+            arguments: {
+              COLOR: {
+                type: Scratch.ArgumentType.COLOR,
+                defaultValue: '#FF0000'
+              },
+              REPLACE_COLOR: {
+                type: Scratch.ArgumentType.COLOR,
+                defaultValue: '#00ff22'
               },
               DATA_URI: {
                 type: Scratch.ArgumentType.STRING,
@@ -112,7 +131,7 @@
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: '↳ Might Affect Camera Speed',
+            text: '↳ Above Blocks Affect Camera Speed',
           },
           {
             opcode: 'setCutout',
@@ -301,8 +320,8 @@
         return '';
       }
     }
-    
-    removeColorFromImage(args) {
+
+    deleteColor(args) {
       const hexColorToBeRemoved = args.COLOR;
       const colorToBeRemoved = hexToRgb(hexColorToBeRemoved);
       const dataURI = args.DATA_URI;
@@ -326,12 +345,46 @@
               data[i + 3] = 0;
             }
           }
-
           context.putImageData(imageData, 0, 0);
           const newDataURI = canvasElement.toDataURL('image/png');
           resolve(newDataURI);
         };
+        imageElement.src = dataURI;
+      });
+    }
 
+    replaceColor(args) {
+      const hexColorToBeRemoved = args.COLOR;
+      const ColorReplaced = args.REPLACE_COLOR;
+      const colorToBeRemoved = hexToRgb(hexColorToBeRemoved);
+      const colorToBeReplaced = hexToRgb(ColorReplaced);
+      const dataURI = args.DATA_URI;
+      const canvasElement = document.createElement('canvas');
+      const context = canvasElement.getContext('2d');
+      const imageElement = new Image();
+
+      return new Promise(resolve => {
+        imageElement.onload = () => {
+          canvasElement.width = imageElement.width;
+          canvasElement.height = imageElement.height;
+          context.drawImage(imageElement, 0, 0);
+          const imageData = context.getImageData(0, 0, canvasElement.width, canvasElement.height);
+          const data = imageData.data;
+
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            if (r === colorToBeRemoved[0] && g === colorToBeRemoved[1] && b === colorToBeRemoved[2]) {
+              data[i] = colorToBeReplaced[0];
+              data[i + 1] = colorToBeReplaced[1];
+              data[i + 2] = colorToBeReplaced[2];
+            }
+          }
+          context.putImageData(imageData, 0, 0);
+          const newDataURI = canvasElement.toDataURL('image/png');
+          resolve(newDataURI);
+        };
         imageElement.src = dataURI;
       });
     }
