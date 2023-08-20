@@ -3,12 +3,67 @@
 * https://www.youtube.com/c/SharkPoolthe1
 * Do not remove this comment
 */
+
 (function (Scratch) {
     'use strict';
 
     const vm = Scratch.vm;
     
     const menuIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==';
+
+    function rgbToHsl(r, g, b) {
+      r /= 255;
+      g /= 255;
+      b /= 255;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const diff = max - min;
+  
+      let h, s, l = (max + min) / 2;
+
+      if (diff === 0) {
+        h = s = 0; // achromatic
+      } else {
+        s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
+        switch (max) {
+          case r: h = (g - b) / diff + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / diff + 2; break;
+          case b: h = (r - g) / diff + 4; break;
+        }
+        h /= 6;
+      }
+      return [h, s, l];
+    }
+
+    function hslToRgb(h, s, l) {
+      let r, g, b;
+
+      if (s === 0) {
+        r = g = b = l; // achromatic
+      } else {
+        const hue2rgb = (p, q, t) => {
+         if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1 / 6) return p + (q - p) * 6 * t;
+          if (t < 1 / 2) return q;
+          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+          return p;
+        };
+
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1 / 3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1 / 3);
+      }
+      return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    function componentToHex(c) {
+      const hex = c.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    }
 
     class Sharktilities {
         getInfo() {
@@ -481,16 +536,16 @@
     
     hexBrightness(args) {
       const hexColor = args.COLOR.replace(/^#/, '');
-
       const r = parseInt(hexColor.substring(0, 2), 16);
       const g = parseInt(hexColor.substring(2, 4), 16);
       const b = parseInt(hexColor.substring(4, 6), 16);
-
-      const newR = Math.min(255, Math.max(0, r + args.CHANGE));
-      const newG = Math.min(255, Math.max(0, g + args.CHANGE));
-      const newB = Math.min(255, Math.max(0, b + args.CHANGE));
-
-      const newHexColor = `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+      
+      const CHANGE = args.CHANGE / 100;
+    
+      const hslColor = rgbToHsl(r, g, b);
+      const newLightness = Math.min(1, Math.max(0, hslColor[2] + CHANGE));
+      const newRgbColor = hslToRgb(hslColor[0], hslColor[1], newLightness);
+      const newHexColor = `#${componentToHex(newRgbColor[0])}${componentToHex(newRgbColor[1])}${componentToHex(newRgbColor[2])}`;
 
       return newHexColor;
     }
