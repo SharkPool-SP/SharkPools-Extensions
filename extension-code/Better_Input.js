@@ -1300,7 +1300,6 @@
           dropdownButton.style.border = "none";
           dropdownButton.style.borderRadius =
           this.optionbuttonBorderRadius + "px";
-
           const dropdownContent = document.createElement("div");
           dropdownContent.className = "dropdown-content";
           this.isDropdownOpen = false;
@@ -1391,6 +1390,7 @@
           });
 
           overlay.appendChild(questionText);
+
           if (this.isInputEnabled !== "Disabled") {
             if (this.isInputEnabled === "Enabled") {
               overlay.appendChild(inputField);
@@ -1403,6 +1403,7 @@
               overlay.appendChild(document.createElement("br"));
             }
           }
+
           overlay.appendChild(submitButton);
           overlay.appendChild(cancelButton);
           overlay.appendChild(Button3);
