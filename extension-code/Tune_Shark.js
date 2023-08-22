@@ -1,7 +1,8 @@
 /*
-* This Extension was made by SharkPool (Version 2.0)
+* This Extension was made by SharkPool (Version 2.0.1)
 * Credit to HOME for the song 'Resonance' being used as the default audio link
 * Credit to LilyMakesThings for some block Ideas
+* Hopefully we can add DB detection to the extension...
 * Do Not Delete this Comment
 */
 
@@ -11,6 +12,8 @@
   if (!Scratch.extensions.unsandboxed) {
     throw new Error('Tune Shark extension must be run unsandboxed');
   }
+  
+  let enableBlock = true;
 
   const menuIconURI =
 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwLDAsMTAyLjE4NTE4LDEwMi4xODUxOCIgaGVpZ2h0PSIxMDIuMTg1MTgiIHdpZHRoPSIxMDIuMTg1MTgiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI0OC45MDc0MSwtMTQ4LjkwNzQxKSI+PGcgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9Ij48cGF0aCBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0iIzg0ODQ4NCIgZD0iTTI0OC45MDc0MSwyMDBjMCwtMjguMjE3NjYgMjIuODc0OTMsLTUxLjA5MjU5IDUxLjA5MjU5LC01MS4wOTI1OWMyOC4yMTc2NiwwIDUxLjA5MjU5LDIyLjg3NDkzIDUxLjA5MjU5LDUxLjA5MjU5YzAsMjguMjE3NjYgLTIyLjg3NDkzLDUxLjA5MjU5IC01MS4wOTI1OSw1MS4wOTI1OWMtMjguMjE3NjYsMCAtNTEuMDkyNTksLTIyLjg3NDkzIC01MS4wOTI1OSwtNTEuMDkyNTl6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSJub25lIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNmZmZmZmYiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBkPSJNMzIyLjMxMzMsMjMyLjkyMTI4bC0wLjAwMDQzLC0wLjAwMjA4Yy0xLjE4NCwyLjM5NTg3IC00LjQxMDE4LDMuNzE3NjMgLTcuODA4MywzLjAyMTA3Yy0zLjg5MTU1LC0wLjc5ODA4IC02LjUzNDQyLC0zLjk0MDg3IC01LjkwMjczLC03LjAxOTk5YzAuNjMxNDgsLTMuMDc5NyA0LjI5Nzc3LC00LjkyODM3IDguMTg5MzMsLTQuMTMwMjljMS43NzIxMiwwLjM2MzIzIDMuMjgzMjYsMS4yMTMzIDQuMzQ2MTcsMi4zMjE0NWw2LjMxNTc1LC0xMy4zOTY5Yy05Ljk4MzkyLC0zLjkwNzUxIC0xOC42NzI4MywtNC44MTYxOCAtMTguNjcyODMsLTQuODE2MThsLTguNDkxNjIsMTguMDEyMzRjLTAuOTEzNDYsMi43NjU4NiAtNC4zODE0Nyw0LjM2NzM2IC04LjA1MDg1LDMuNjE1MjljLTMuODkxMTYsLTAuNzk3OSAtNi41MzM4NSwtMy45NDEwNyAtNS45MDI1NSwtNy4wMjAzOGMwLjYzMTMsLTMuMDc5MzEgNC4yOTc1OSwtNC45Mjc5OSA4LjE4OTMzLC00LjEzMDI5YzEuODA1MTcsMC4zNjk4OCAzLjM0MTYsMS4yNDUwMyA0LjQwNzQ5LDIuMzgzNzJsMTEuMzcyNTUsLTI0LjEwMzQyYzAsMCAxMi43ODgxNiwwLjIyMjY0IDI1LjQ2NDk3LDYuNzIyMzN6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2U9IiNmZmZmZmYiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0ibm9uZSIgZD0iTTI3NC44MTgyNSwxNzguMTkxNTZsMy42ODc2LDIxLjYwMzkyIj48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0iI2ZmZmZmZiIgZD0iTTI4MC4wMzkzOCwyMDAuNDM3NDVjMS4yNTk2NywyLjM3NzYgLTAuNzA0MDcsNS41MTAwNyAtNC4zODYxMyw2Ljk5NjU3Yy0zLjY4MjA2LDEuNDg2NSAtNy42ODgxMywwLjc2NDExIC04Ljk0NzgsLTEuNjEzNDljLTEuMjU5NjcsLTIuMzc3NiAwLjcwNDA3LC01LjUxMDA3IDQuMzg2MTMsLTYuOTk2NTdjMy42ODIwNiwtMS40ODY1IDcuNjg4MTMsLTAuNzY0MTEgOC45NDc4LDEuNjEzNDl6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSIjMDAwMDAwIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNmZmZmZmYiIGQ9Ik0yNzIuNzg3MTQsMTc1Ljc0Njk1YzAsMCA4Ljg1MzU3LC0xLjU1NTA0IDExLjI3NzM3LDIuNTI2NzVjMi4xNjY1NywzLjY0ODg1IDAuMDY1MjcsNy45MzA3OCAwLjE5MzQ3LDkuMjM4MDdjMC4xMjgyLDEuMzA3MjkgMS45ODQwNSwxLjAxMTU5IDEuOTg0MDUsMS4wMTE1OWwtMC4wMTIxLDEuNTI3MTFjMCwwIC0yLjYxMjk1LDAuNjEwMjggLTMuMTEyNCwtMS4yMDMzMmMtMC40OTk0NSwtMS44MTM1OSAtMC41MTAzOSwtNS40NTMzNiAtMi41NzU2MiwtNy41MDUzMmMtMi4wNjU4MSwtMi4wNTE3NyAtNi44NzUwOSwtMC42OTIwNyAtNi44NzUwOSwtMC42OTIwNyI+PC9wYXRoPjxwYXRoIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZmlsbD0iI2ZmZmZmZiIgZD0iTTMwOS4wNzk1NCwxODQuNjY2ODFjLTAuMzI1ODksMi4wNjkyNCAtMi4yOTkxMywzLjIzMzIzIC00LjA5MzM3LDMuOTEwMThjLTEuNjEyMDYsMC43MDk1MSAtMy40Njg4LDAuOTg0OTkgLTUuMTU1MTQsMC4zNjE0NWMtMS41OTQ2MiwtMC4zNzIyOSAtMy4xMTUzOCwtMS43NjU0OSAtMi45MjYyLC0zLjUxNTE2YzAuMTUwOSwtMi4wMzc0NiAxLjg1MzI3LC0zLjczNTEyIDMuNzU0NjEsLTQuMzA0MzZjMS44OTQ4NiwtMC43ODA5NiA0LjE1NTczLC0wLjcxMzc3IDUuOTY1MTcsMC4yNTI5MmMwLjg5MTg1LDAuNDEyNTQgMi4xMzkwOCwtMTMuODE3NjMgMi45NjU3NiwtMjAuMTExODRjMC4wOTgxOSwtMC42MjcxNCAyLjUyNDk2LC0wLjQ2MDE3IDIuNDU1NTMsMC4xNDc2YzAsMCAtMS44MTEyLDE1LjE2Nzc0IC0yLjk2NjM3LDIzLjI1OTIxeiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjUxLjA5MjU5OjUxLjA5MjU5LS0+';
@@ -46,6 +49,28 @@
               URL: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: 'https://tinyurl.com/Resonance-Home',
+              },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+            },
+          },
+          {
+            func: 'enableTest',
+            blockType: Scratch.BlockType.BUTTON,
+            text: 'Enable Sprite Sound Block',
+            hideFromPalette: !enableBlock,
+          },
+          {
+            opcode: 'importMenuSound',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'import sound [SOUND] named [NAME]',
+            blockIconURI: settingsIconURI,
+            hideFromPalette: enableBlock,
+            arguments: {
+              SOUND: {
+                type: Scratch.ArgumentType.SOUND,
               },
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -430,10 +455,39 @@
       };
     }
 
+    enableTest() {
+      let popup = [
+        'This will enable the "Import Sound from Sprite Menu" Block. WARNING! Although this Block will Import Sounds from the Sprite Libary, it might not always work for every sound.',
+        'Continue?'
+      ];
+      if (confirm(popup.join('\n\n'))) {
+        enableBlock = false;
+        Scratch.vm.extensionManager.refreshBlocks();
+      }
+    }
+    
     importSound(args) {
       const { URL, NAME } = args;
       const audio = new Audio(URL);
       this.sounds[NAME] = [audio];
+    }
+
+    importMenuSound(args, util) {
+      const index = this.SoundIndex(args.SOUND, util);
+      if (index < 0) return '';
+      const sprite = util.target.sprite;
+      const soundDataURI = sprite.sounds[index].asset.encodeDataURI();
+
+      const { URI = soundDataURI, NAME } = args;
+      const audio = new Audio(soundDataURI);
+      this.sounds[NAME] = [audio];
+    }
+
+    SoundIndex(soundName, util) {
+        const sounds = util.target.sprite.sounds;
+        return sounds.indexOf(sounds.filter((sound) => {
+            return sound.name == soundName;
+        })[0]);
     }
 
     playSound(args) {
