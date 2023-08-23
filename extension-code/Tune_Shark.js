@@ -1,5 +1,5 @@
 /*
-* This Extension was made by SharkPool (Version 2.0.1)
+* This Extension was made by SharkPool (Version 2.0.2)
 * Credit to HOME for the song 'Resonance' being used as the default audio link
 * Credit to LilyMakesThings for some block Ideas
 * Hopefully we can add DB detection to the extension...
@@ -585,6 +585,9 @@
     }
 
     setSoundSpeed(args) {
+      if (args.SPEED < 0) {
+        args.SPEED = 0;
+      }
       const { NAME, SPEED } = args;
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
@@ -788,6 +791,9 @@
     }
 
     setSoundSpeeds(args) {
+      if (args.SPEED < 0) {
+        args.SPEED = 0;
+      }
       const { NAMES, SPEED } = args;
       const namesArray = JSON.parse(NAMES);
 
