@@ -1,7 +1,7 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
 * Massive thank you to RobTopGames for creating Geometry Dash
-* Version 1.3
+* Version 1.4
 * Also huge thanks to ColonGD (https://gdcolon.com/) for creating an open-source GD API
 * Do not remove this comment
 */
@@ -32,6 +32,29 @@
             blockType: Scratch.BlockType.LABEL,
             text: 'Search Levels by URL',
           },
+          {
+            opcode: 'reportResults',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fetch [menu] results of page [page] of levels from search [url]',
+            arguments: {
+              url: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'https://gdbrowser.com/search/test',
+              },
+              page: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1,
+              },
+              menu: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'searchFilter',
+                defaultValue: 'Name'
+              },
+            }
+          },
+
+          '---',
+
           {
             opcode: 'createSearchURL',
             blockType: Scratch.BlockType.REPORTER,
@@ -173,6 +196,100 @@
             }
           },
           {
+            opcode: 'featuredLvl',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: 'is level ID: [id] [menu]?',
+            arguments: {
+              id: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '82540637'
+              },
+              menu: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'levelMenu',
+                defaultValue: 'Rated'
+              },
+            }
+          },
+          {
+            opcode: 'getExtraInfo',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fetch extra level info with ID: [id]',
+            arguments: {
+              id: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '82540637'
+              },
+            }
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Profile Fetching',
+          },
+          {
+            opcode: 'fetchDataFromUser',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fetch [menu] count from user: [user]',
+            arguments: {
+              menu: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'userMenu',
+                defaultValue: 'Stars'
+              },
+              user: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'SharkPool',
+              }
+            }
+          },
+          {
+            opcode: 'fetchIconFromUser',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fetch [gamemode] icon ID from user: [user]',
+            arguments: {
+              gamemode: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'userGamemodes',
+                defaultValue: 'Cube'
+              },
+              user: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'SharkPool',
+              }
+            }
+          },
+          {
+            opcode: 'fetchIconColorFromUser',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fetch [color] from user: [user]',
+            arguments: {
+              user: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'SharkPool',
+              },
+              color: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'colorsP',
+                defaultValue: 'Color 1',
+              },
+            }
+          },
+          {
+            opcode: 'fetchPostsJSON',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fetch page [page] of posts JSON from user: [user]',
+            arguments: {
+              user: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'SharkPool',
+              },
+              page: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1,
+              },
+            }
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
             text: 'Asset Fishing',
           },
@@ -185,7 +302,18 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: 'siteMenu',
                 defaultValue: 'Main'
-              }
+              },
+            }
+          },
+          {
+            opcode: 'fetchLevelAsset',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fish for assets from level menu ID: [id]',
+            arguments: {
+              id: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: '82540637'
+              },
             }
           },
           {
@@ -209,6 +337,23 @@
               }
             }
           },
+          {
+            opcode: 'fetchDifficulty',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'fish for difficulty [type] image with rate [menu]',
+            arguments: {
+              type: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'difficulties',
+                defaultValue: 'Unrated'
+              },
+              menu: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'levelMenu',
+                defaultValue: 'Rated'
+              }
+            }
+          }
         ],
         menus: {
           size: {
@@ -243,6 +388,31 @@
               'Insane Demon',
               'Extreme Demon'
             ]
+          },
+          difficulties: {
+            acceptReporters: true,
+            items: [
+              'Unrated',
+              'Auto',
+              'Easy',
+              'Normal',
+              'Hard',
+              'Harder',
+              'Insane',
+              'Easy Demon',
+              'Medium Demon',
+              'Hard Demon',
+              'Insane Demon',
+              'Extreme Demon'
+            ]
+          },
+          colorsP: {
+            acceptReporters: true,
+            items: ['Color 1', 'Color 2', 'Enabled Glow']
+          },
+          searchFilter: {
+            acceptReporters: true,
+            items: ['Name', 'ID', 'All']
           },
           rating: {
             acceptReporters: true,
@@ -309,16 +479,47 @@
               'Jetpack'
             ]
           },
+          userGamemodes: {
+            acceptReporters: true,
+            items: [
+              'Cube',
+              'Ship',
+              'Ball',
+              'UFO',
+              'Wave',
+              'Robot',
+              'Spider',
+              'Death Effect'
+            ]
+          },
           siteMenu: {
             acceptReporters: true,
             items: [
               'Main',
               'Search',
               'Garage',
+              'User Profile',
               'Leaderboard',
               'Achievements',
               'Gauntlets',
-              'Put A Fetch + Search URL Block Here!'
+              'Insert Custom URL Ending Here'
+            ]
+          },
+          levelMenu: {
+            acceptReporters: true,
+            items: ['Rated', 'Featured', 'Epic']
+          },
+          userMenu: {
+            acceptReporters: true,
+            items: [
+              'Stars',
+              'Diamonds',
+              'Secret Coins',
+              'User Coins',
+              'Demons',
+              'Creator Points',
+              'Global Rank',
+              'Trophy'
             ]
           }
         }
@@ -453,15 +654,17 @@
 
     fetchAsset(args) {
       let menu = '';
-      if (args.site === 'Main' || args.site === 'Put A Fetch + Search URL Block Here!') {
+      if (args.site === 'Main' || args.site === 'Insert Custom URL Ending Here') {
         menu = '';
       } else if (args.site === 'Garage') {
         menu = 'iconkit/';
+      } else if (args.site === 'User Profile') {
+        menu = 'u/RobTop';
       } else {
         menu = args.site.toLowerCase();
       }
       menu = "https://gdbrowser.com/" + menu;
-      
+
       return fetch(menu)
         .then((response) => {
           return response.text();
@@ -488,7 +691,7 @@
       if (args.type === 2.2) {
         URL = URL.replace('premade', 'newpremade');
       }
-      
+
       let gamemode;
       if (args.gm === 'Cube') {
         gamemode = 'icon';
@@ -496,13 +699,256 @@
         gamemode = args.gm.toLowerCase();
       }
       URL = URL.replace('@', gamemode);
-      
+
       let icon = args.id;
       if (args.id < 1) {
         icon = 1;
       } 
       URL = URL.replace('^', icon);
       return URL;
+    }
+
+    featuredLvl(args) {
+      const id = args.id;
+      const url = 'https://gdbrowser.com/' + id;
+      const menu = args.menu;
+
+      return fetch(url)
+        .then(response => response.text())
+        .then(data => {
+          switch (menu) {
+            case 'Epic':
+              return data.includes('epic.png');
+            case 'Featured':
+              return data.includes('featured.png');
+            case 'Rated':
+              const stars = data.match(/property="og:description" content=".+\| Stars: (\d+) \|/)?.[1] || '';
+              return (stars > 0);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          return 'Error fetching data';
+        });
+    }
+
+    fetchLevelAsset(args) {
+      const menu = "https://gdbrowser.com/" + args.id;
+
+      return fetch(menu)
+        .then((response) => {
+          return response.text();
+        })
+        .then((text) => {
+          const imageUrls = [];
+          const assetPattern = /\/assets\/([^'"]+)\.(png)/g;
+          let match;
+          while ((match = assetPattern.exec(text)) !== null) {
+            const assetName = match[1];
+            const imageUrl = `https://gdbrowser.com/assets/${assetName}.png`;
+            imageUrls.push(imageUrl);
+          }
+          return '["' + imageUrls.join('", "') + '"]';
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed :(';
+        });
+    }
+
+    fetchDifficulty(args) {
+      let type = args.type.toLowerCase();
+      type = type.replace(' ', '-');
+      if (type.includes('demon')) {
+        const parts = type.split("-");
+        const movedPart = parts.shift();
+        parts.push(movedPart);
+        type = parts.join("-");
+      }
+      const rating = args.menu === 'Rated' ? '' : '-' + args.menu.toLowerCase();
+
+      let url = 'https://gdbrowser.com/assets/difficulties/$#.png'
+      url = url.replace('#', rating);
+      url = url.replace('$', type);
+      return url;
+    }
+
+    fetchDataFromUser(args) {
+      const url = "https://gdbrowser.com/u/" + args.user;
+
+      return fetch(url)
+        .then((response) => {
+          return response.text();
+        })
+        .then((data) => {
+          switch (args.menu) {
+            case 'Stars':
+              return data.match(/property="og:description" content="Stars: (\d+)/)?.[1] || '';
+            case 'Diamonds':
+              return data.match(/property="og:description" content=".+\| Diamonds: (\d+) \|/)?.[1] || '';
+            case 'Creator Points':
+              return data.match(/CP: (\d+)/)?.[1] || '';
+            case 'Secret Coins':
+              return data.match(/property="og:description" content=".+\| Coins: (\d+) \|/)?.[1] || '';
+            case 'User Coins':
+              return data.match(/property="og:description" content=".+\| User Coins: (\d+) \|/)?.[1] || '';
+            case 'Demons':
+              return data.match(/property="og:description" content=".+\| Demons: (\d+) \|/)?.[1] || '';
+            case 'Global Rank':
+              return data.match(/parseInt\("(\d+)"\)/)?.[1] || '';
+            case 'Trophy':
+              const ranking = data.match(/parseInt\("(\d+)"\)/)?.[1] || '';
+              let trophy = 0;
+              if (ranking < 2) trophy = 1;
+              else if (ranking <= 10) trophy = 2;
+              else if (ranking <= 50) trophy = 3;
+              else if (ranking <= 100) trophy = 4;
+              else if (ranking <= 200) trophy = 5;
+              else if (ranking <= 500) trophy = 6;
+              else if (ranking <= 1000) trophy = 7;
+              return trophy;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed :(';
+        });
+    }
+
+    fetchIconFromUser(args) {
+      const url = "https://gdbrowser.com/u/" + args.user;
+      let gamemode = args.gamemode.toLowerCase();
+      if (gamemode === 'cube') {
+        gamemode = 'icon';
+      }
+    
+      return fetch(url)
+        .then((response) => response.text())
+        .then((data) => {
+          switch (gamemode) {
+            case 'icon':
+              return data.match(/gdicon iconID=(\d+) iconForm="icon"/)?.[1] || '';
+            case 'ship':
+              return data.match(/gdicon iconID=(\d+) iconForm="ship"/)?.[1] || '';
+            case 'ball':
+              return data.match(/gdicon iconID=(\d+) iconForm="ball"/)?.[1] || '';
+            case 'ufo':
+              return data.match(/gdicon iconID=(\d+) iconForm="ufo"/)?.[1] || '';
+            case 'wave':
+              return data.match(/gdicon iconID=(\d+) iconForm="wave"/)?.[1] || '';
+            case 'robot':
+              return data.match(/gdicon iconID=(\d+) iconForm="robot"/)?.[1] || '';
+            case 'spider':
+              return data.match(/gdicon iconID=(\d+) iconForm="spider"/)?.[1] || '';
+            case 'death effect':
+              return data.match(/title="Death Effect (\d+)".*?>/)?.[1] || '';
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed :(';
+        });
+    }
+
+    fetchIconColorFromUser(args) {
+      const url = "https://gdbrowser.com/u/" + args.user;
+    
+      return fetch(url)
+        .then((response) => response.text())
+        .then((data) => {
+          switch (args.color) {
+            case 'Color 1':
+              return data.match(/<gdicon.*?iconForm="icon".*?col1="(\d+)".*?>/)?.[1] || '';
+            case 'Color 2':
+              return data.match(/<gdicon.*?iconForm="icon".*?col2="(\d+)".*?>/)?.[1] || '';
+            case 'Enabled Glow':
+              return data.match(/<gdicon.*?iconForm="icon".*?glow="(.*?)".*?>/)?.[1] || '';
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed :(';
+        });
+    }
+
+    fetchPostsJSON(args) {
+      const url = "https://gdbrowser.com/u/" + args.user;
+      args.page = args.page - 1;
+      if (args.page < 0) {
+        args.page = 0
+      }
+    
+      return fetch(url)
+        .then((response) => response.text())
+        .then((data) => {
+          const userID = data.match(/Fetch\(`\.\.\/api\/comments\/(\d+)\?type=profile&page=\${page}`\)/)?.[1] || '';
+          const newURL = `https://gdbrowser.com/api/comments/${userID}?type=profile&page=${args.page}`;
+
+          return fetch(newURL)
+            .then((response) => response.text())
+            .then((data) => {
+              return data;
+            })
+            .catch((error) => {
+              console.error(error);
+              return 'Fetch Failed :(';
+            });
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed :(';
+        });
+    }
+
+    getExtraInfo(args) {
+      const url = "https://gdbrowser.com/api/level/" + args.id;
+
+      return fetch(url)
+        .then((response) => response.text())
+        .then((data) => {
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed :(';
+        });
+    }
+
+    reportResults(args) {
+      args.page = args.page - 1;
+      if (args.page < 0) {
+        args.page = 0
+      }
+      if (args.url.includes('https://gdbrowser.com/')) {
+        args.url = args.url.replace("https://gdbrowser.com/", "");
+      }
+
+      if (!args.url.includes('search/')) {
+        args.url = "search/" + args.url;
+      }
+
+      let result = '';
+      let url = "https://gdbrowser.com/api/" + args.url + `&page=${args.page}`;
+      url = url.replace('&','?');
+    
+      return fetch(url)
+        .then((response) => response.text())
+        .then((data) => {
+          const dataArray = JSON.parse(data);
+
+          switch (args.menu) {
+            case 'Name':
+              return dataArray.map(item => item.name);
+            case 'ID':
+              return dataArray.map(item => item.id);
+            case 'All':
+              return dataArray;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          return 'Fetch Failed! Most likely a bad search link...';
+        });
     }
   }
 
