@@ -24,9 +24,9 @@
         id: 'GDapiSP',
         name: 'Geometry Dash API',
         docsURI: 'https://docs.google.com/document/d/1QfbpQhi-0Kabficb_9sFgv6x5adfIEQ-MD9jMX0DwVM/edit?usp=sharing',
-	      menuIconURI,
-	      blockIconURI,
-	      color1: '#004de8',
+	menuIconURI,
+	blockIconURI,
+	color1: '#004de8',
         blocks: [
           {
             blockType: Scratch.BlockType.LABEL,
