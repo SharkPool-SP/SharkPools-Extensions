@@ -22,88 +22,84 @@
         blockIconURI,
         blocks: [
           {
-            opcode: 'calculatetimedurationfromdate',
+            opcode: "calculatetimedurationfromdate",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'time duration from [DATE] to current date in [TIME_MENU]',
+            text: "difference between [DATE] to current date in [TIME_MENU]",
             arguments: {
               DATE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '2006-04-16'
+                defaultValue: "2006-04-16",
               },
               TIME_MENU: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'Time',
-                defaultValue: 'day'
-              }
-            }
+                menu: "Time",
+                defaultValue: "day",
+              },
+            },
           },
           {
-            opcode: 'calculatetimedurationfromtime',
+            opcode: "calculatetimedurationfromtime",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'time duration from [START_HOUR]:[START_MINUTE] to current time in [TIME_MENU]',
-            arguments: {
-              START_HOUR: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              START_MINUTE: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              TIME_MENU: {
-                type: Scratch.ArgumentType.STRING,
-                menu: 'Time',
-                defaultValue: 'hour'
-              }
-            }
-          },
-          {
-            opcode: 'calculatetimedifference',
-            blockType: Scratch.BlockType.REPORTER,
-            text: 'difference between [START_TIME] and [END_TIME] in [TIME_MENU]',
+            text: "difference between [START_TIME] to current time in [TIME_MENU]",
             arguments: {
               START_TIME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '00:00'
-              },
-              END_TIME: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: '00:00'
+                defaultValue: "00:00",
               },
               TIME_MENU: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'Time',
-                defaultValue: 'hour'
+                menu: "Time",
+                defaultValue: "hour",
               },
-            }
+            },
           },
           {
-            opcode: 'converttotime',
+            opcode: "calculatetimedifference",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'convert [VALUE] to time (day:hour:minute)',
+            text: "difference between [START_TIME] and [END_TIME] in [TIME_MENU]",
+            arguments: {
+              START_TIME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "00:00",
+              },
+              END_TIME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "00:00",
+              },
+              TIME_MENU: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "Time",
+                defaultValue: "hour",
+              },
+            },
+          },
+          {
+            opcode: "converttotime",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "convert [VALUE] to time (day:hour:minute)",
             arguments: {
               VALUE: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
+                defaultValue: 0,
               },
-            }
+            },
           },
           {
-            opcode: 'daysinmonth',
+            opcode: "daysinmonth",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'number of days in [MONTH] [YEAR]',
+            text: "number of days in [MONTH] [YEAR]",
             arguments: {
               MONTH: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'Months',
-                defaultValue: 'January'
+                menu: "Months",
+                defaultValue: "January",
               },
               YEAR: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: '2000'
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: "2000",
               },
-            }
-          }
+            },
+          },
         ],
         menus: {
           Time: {
@@ -113,40 +109,41 @@
           Months: {
             acceptReporters: true,
             items: [
-              'January',
-              'February',
-              'March',
-              'April',
-              'May',
-              'June',
-              'July',
-              'August',
-              'September',
-              'October',
-              'November',
-              'December'
-            ]
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ],
           },
         },
       };
     }
-
     calculateTimeDifference(startDate, endDate, timeMenu) {
       const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
 
       switch (timeMenu) {
-        case 'year':
+        case "year":
           return Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
-        case 'month':
+        case "month":
           return Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
-        case 'day':
+        case "day":
           return Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        case 'hour':
+        case "hour":
           return Math.floor(timeDiff / (1000 * 60 * 60));
-        case 'minute':
+        case "minute":
           return Math.floor(timeDiff / (1000 * 60));
-        case 'second':
+        case "second":
           return Math.floor(timeDiff / 1000);
+        default:
+          return "Invalid Menu Input";
       }
     }
 
@@ -155,17 +152,28 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date(dateString);
       const endDate = new Date();
-      return this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      if (isNaN(difference)) {
+        return "Invalid Time Input";
+      } else {
+        return difference;
+      }
     }
 
     calculatetimedurationfromtime(args) {
-      const startHour = args.START_HOUR ? args.START_HOUR : null;
-      const startMinute = args.START_MINUTE ? args.START_MINUTE : null;
+      const startTime = args.START_TIME ? args.START_TIME : null;
       const timeMenu = args.TIME_MENU;
+      const [startHour, startMinute] = startTime.split(":");
       const startDate = new Date();
-      startDate.setHours(startHour, startMinute, 0, 0);
+      startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
       const endDate = new Date();
-      return this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+
+      if (isNaN(difference)) {
+        return "Invalid Time Input";
+      } else {
+        return difference;
+      }
     }
 
     calculatetimedifference(args) {
@@ -174,13 +182,19 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date();
       const endDate = new Date();
-      const startHour = parseInt(startTime.split(':')[0]);
-      const startMinute = parseInt(startTime.split(':')[1]);
-      const endHour = parseInt(endTime.split(':')[0]);
-      const endMinute = parseInt(endTime.split(':')[1]);
+      const startHour = parseInt(startTime.split(":")[0]);
+      const startMinute = parseInt(startTime.split(":")[1]);
+      const endHour = parseInt(endTime.split(":")[0]);
+      const endMinute = parseInt(endTime.split(":")[1]);
       startDate.setHours(startHour, startMinute, 0, 0);
       endDate.setHours(endHour, endMinute, 0, 0);
-      return this.calculateTimeDifference(startDate, endDate, timeMenu);
+
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      if (isNaN(difference)) {
+        return "Invalid Time Input";
+      } else {
+        return difference;
+      }
     }
 
     converttotime(args) {
@@ -197,24 +211,30 @@
     daysinmonth(args) {
       const month = args.MONTH;
       const year = args.YEAR ? args.YEAR : null;
-      const date = new Date(year, this._getMonthIndex(month) + 1, 0);
+      const monthIndex = this._getMonthIndex(month);
+
+      if (monthIndex === -1) {
+        return "Invalid month";
+      }
+
+      const date = new Date(year, monthIndex + 1, 0);
       return date.getDate();
     }
 
     _getMonthIndex(month) {
       const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
       ];
       return months.indexOf(month);
     }
