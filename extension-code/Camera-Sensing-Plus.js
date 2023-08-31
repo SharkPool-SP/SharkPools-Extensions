@@ -1,6 +1,6 @@
 /*
 * This extension was made by SharkPool
-* Version 1.1
+* Version 1.2
 * Thank you LilyMakesThings, TheShovel, and ObviousAlex for Image Loading Blocks :)
 * Do NOT delete these comments
 */
@@ -117,15 +117,15 @@
           {
             opcode: 'clipImage',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'cut out [CUTOUT_DATA_URI] from [MAIN_DATA_URI]',
+            text: 'cut out [CUTOUT] from [MAIN]',
             arguments: {
-              MAIN_DATA_URI: {
+              MAIN: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: 'insert-data.uri-here'
+                defaultValue: 'data.uri-here'
               },
-              CUTOUT_DATA_URI: {
+              CUTOUT: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: 'insert-cutout-data.uri-here'
+                defaultValue: 'cutout-data.uri-here'
               }
             }
           },
@@ -305,21 +305,31 @@
         return false;
       }
     }
+//FIX THIS
+captureWebcamFootage() {
+  if (this.videoElement) {
+    const canvasElement = document.createElement('canvas');
+    canvasElement.width = this.camWidth;
+    canvasElement.height = this.camHeight;
+    const context = canvasElement.getContext('2d');
 
-    captureWebcamFootage() {
-      if (this.videoElement) {
-        const canvasElement = document.createElement('canvas');
-        canvasElement.width = this.camWidth;
-        canvasElement.height = this.camHeight;
-        const context = canvasElement.getContext('2d');
-        context.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
-        const dataURI = canvasElement.toDataURL('image/png');
-        return dataURI;
-      } else {
-        console.error('Camera is not turned on.');
-        return '';
-      }
+    if (this.flipX) {
+      context.translate(canvasElement.width, 0);
+      context.scale(-1, 1);
     }
+    if (this.flipY) {
+      context.translate(0, canvasElement.height);
+      context.scale(1, -1);
+    }
+
+    context.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
+    const dataURI = canvasElement.toDataURL('image/png');
+    return dataURI;
+  } else {
+    console.error('Camera is not turned on.');
+    return '';
+  }
+}
 
     deleteColor(args) {
       const hexColorToBeRemoved = args.COLOR;
@@ -388,7 +398,7 @@
         imageElement.src = dataURI;
       });
     }
-    
+
     clipImage(args) {
       return new Promise((resolve, reject) => {
         const mainImage = new Image();
@@ -399,18 +409,20 @@
             canvas.width = mainImage.width;
             canvas.height = mainImage.height;
             const context = canvas.getContext('2d');
+            const cutX = this.cutoutX + (mainImage.width / 2) - (cutoutImage.width / 2);
+            const cutY = this.cutoutY - (mainImage.height / 2) + (cutoutImage.height / 2);
 
             context.drawImage(mainImage, 0, 0);
             context.globalCompositeOperation = 'destination-in';
-            context.drawImage(cutoutImage, this.cutoutX, this.cutoutY * -1);
+            context.drawImage(cutoutImage, cutX, cutY * -1);
             context.globalCompositeOperation = 'source-over';
 
             const clippedDataURI = canvas.toDataURL('image/png');
             resolve(clippedDataURI);
           };
-          cutoutImage.src = args.CUTOUT_DATA_URI;
+          cutoutImage.src = args.CUTOUT;
         };
-        mainImage.src = args.MAIN_DATA_URI;
+        mainImage.src = args.MAIN;
       });
     }
   }
