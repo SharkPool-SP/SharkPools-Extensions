@@ -3,7 +3,7 @@
 // Description: Apply a variety of new effects to the data URI of Images or Costumes.
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.1.0.0
+// Version V.1.1.0
 
 (function (Scratch) {
   'use strict';
@@ -51,7 +51,7 @@
           {
             opcode: 'applyHueEffect',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'apply hue effect R [R] G [G] B [B] to URI [SVG]',
+            text: 'apply hue R [R] G [G] B [B] to URI [SVG]',
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
@@ -147,7 +147,7 @@
           {
             opcode: 'applyLineGlitchEffect',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'set line glitch of URI [SVG] to [PERCENTAGE]% on [DIRECT] and line width [WIDTH]',
+            text: 'set line glitch of URI [SVG] to [PERCENTAGE]% on [DIRECT] axis and line width [WIDTH]',
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
@@ -165,6 +165,34 @@
               WIDTH: {
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 5,
+              },
+            },
+          },
+          {
+            opcode: 'applyAbberationEffect',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'set abberation of URI [SVG] to colors [COLOR1] and [COLOR2] at [PERCENTAGE]% on [DIRECT] axis',
+            arguments: {
+              SVG: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: '',
+              },
+              PERCENTAGE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 5,
+              },
+              COLOR1: {
+                type: Scratch.ArgumentType.COLOR,
+                defaultValue: '#ff0000',
+              },
+              COLOR2: {
+                type: Scratch.ArgumentType.COLOR,
+                defaultValue: '#00f7ff',
+              },
+              DIRECT: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'POSITIONS',
+                defaultValue: 'X',
               },
             },
           },
@@ -467,8 +495,8 @@
     }
 
     setCutout(args) {
-      this.cutoutX = args.X;
-      this.cutoutY = args.Y;
+      this.cutoutX = Scratch.Cast.toNumber(args.X);
+      this.cutoutY = Scratch.Cast.toNumber(args.Y);
     }
 
     changeCutout(args) {
@@ -639,8 +667,8 @@
     applyBulgeEffect(args) {
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
-        const centerX = (args.CENTER_X !== '') ? args.CENTER_X / 100 : 0;
-        const centerY = (args.CENTER_Y !== '') ? args.CENTER_Y / -100: 0;
+        let centerX = (args.CENTER_X !== '') ? args.CENTER_X / 100 : 0;
+        let centerY = (args.CENTER_Y !== '') ? args.CENTER_Y / -100: 0;
         const strength = (args.STRENGTH !== '') ? args.STRENGTH / 100 : 0;
 
         const img = new Image();
@@ -648,6 +676,8 @@
           const canvas = document.createElement('canvas');
           canvas.width = img.width;
           canvas.height = img.height;
+          centerX = centerX + (img.width / 200);
+          centerY = centerY + (img.height / 200);
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0);
 
@@ -670,18 +700,16 @@
 
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-          const dx = x / width - centerX;
-          const dy = y / height - centerY;
+          const dx = (x / width - centerX) * 2;
+          const dy = (y / height - centerY) * 2;
           const distance = Math.sqrt(dx * dx + dy * dy);
           const bulge = Math.pow(distance, strength);
-
-          const srcX = Math.floor(x + (dx * bulge * width));
-          const srcY = Math.floor(y + (dy * bulge * height));
+          const srcX = Math.floor(x + (dx * bulge * width) - (dx * width));
+          const srcY = Math.floor(y + (dy * bulge * height) - (dy * height));
 
           if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
             const srcIndex = (srcY * width + srcX) * 4;
             const dstIndex = (y * width + x) * 4;
-
             newData[dstIndex] = data[srcIndex];
             newData[dstIndex + 1] = data[srcIndex + 1];
             newData[dstIndex + 2] = data[srcIndex + 2];
@@ -1141,6 +1169,115 @@
         };
         img.src = `data:image/svg+xml;base64,${btoa(svgContent)}`;
       });
+    }
+
+    applyAbberationEffect(args) {
+      return new Promise((resolve) => {
+        const svgDataUri = args.SVG;
+        const percentage = args.PERCENTAGE;
+        const color1 = args.COLOR1;
+        const color2 = args.COLOR2;
+        const direction = args.DIRECT;
+
+        const img = new Image();
+        img.onload = async () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width + Math.abs(percentage) * 5;
+          canvas.height = img.height + Math.abs(percentage) * 5;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, Math.abs(percentage) * 2.5, Math.abs(percentage) * 2.5);
+
+          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          this.applyChromaticAberration(imageData, color1, color2, percentage, direction);
+          ctx.putImageData(imageData, 0, 0);
+
+          const modifiedDataUrl = canvas.toDataURL();
+          resolve(modifiedDataUrl);
+        };
+        img.src = svgDataUri;
+      });
+    }
+
+    applyChromaticAberration(imageData, color1, color2, percentage, direction) {
+      const data = imageData.data;
+      let width = imageData.width;
+      let height = imageData.height;
+      const copy1 = new Uint8ClampedArray(data.length);
+      const copy2 = new Uint8ClampedArray(data.length);
+
+      const hexToRGB = (hex) => [
+        parseInt(hex.slice(1, 3), 16),
+        parseInt(hex.slice(3, 5), 16),
+        parseInt(hex.slice(5, 7), 16),
+      ];
+
+      const rgb1 = hexToRGB(color1);
+      const rgb2 = hexToRGB(color2);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const srcIndex = (y * width + x) * 4;
+          const r = data[srcIndex];
+          const g = data[srcIndex + 1];
+          const b = data[srcIndex + 2];
+          const a = data[srcIndex + 3] / 1;
+
+          let newX1, newY1, newX2, newY2;
+
+          if (direction === 'X') {
+            newX1 = x + Math.floor((width / 2) * (percentage / 100));
+            newY1 = y;
+            newX2 = x - Math.floor((width / 2) * (percentage / 100));
+            newY2 = y;
+          } else {
+            newX1 = x;
+            newY1 = y + Math.floor((height / 2) * (percentage / 100));
+            newX2 = x;
+            newY2 = y - Math.floor((height / 2) * (percentage / 100));
+          }
+
+          newX1 = Math.max(0, Math.min(width - 1, newX1));
+          newY1 = Math.max(0, Math.min(height - 1, newY1));
+          newX2 = Math.max(0, Math.min(width - 1, newX2));
+          newY2 = Math.max(0, Math.min(height - 1, newY2));
+
+          const newR1 = data[(newY1 * width + newX1) * 4];
+          const newG1 = data[(newY1 * width + newX1) * 4 + 1];
+          const newB1 = data[(newY1 * width + newX1) * 4 + 2];
+
+          const newR2 = data[(newY2 * width + newX2) * 4];
+          const newG2 = data[(newY2 * width + newX2) * 4 + 1];
+          const newB2 = data[(newY2 * width + newX2) * 4 + 2];
+
+          const leftColor = [
+            (rgb1[0] * r) / 255,
+            (rgb1[1] * g) / 255,
+            (rgb1[2] * b) / 255,
+          ];
+          const rightColor = [
+            (rgb2[0] * r) / 255,
+            (rgb2[1] * g) / 255,
+            (rgb2[2] * b) / 255,
+          ];
+
+          const leftIndex = (newY1 * width + newX1) * 4;
+          const rightIndex = (newY2 * width + newX2) * 4;
+
+          copy1[leftIndex] = leftColor[0];
+          copy1[leftIndex + 1] = leftColor[1];
+          copy1[leftIndex + 2] = leftColor[2];
+          copy1[leftIndex + 3] = a;
+
+          copy2[rightIndex] = rightColor[0];
+          copy2[rightIndex + 1] = rightColor[1];
+          copy2[rightIndex + 2] = rightColor[2];
+          copy2[rightIndex + 3] = a;
+        }
+      }
+
+      for (let i = 0; i < data.length; i++) {
+        data[i] = Math.max(0, Math.min(255, (data[i] + copy1[i] + copy2[i]) / 2));
+      }
     }
   }
 
