@@ -1,8 +1,7 @@
 /*
-* This Extension was made by SharkPool (Version 2.0.2)
+* This Extension was made by SharkPool (Version 2.1.0)
 * Credit to HOME for the song 'Resonance' being used as the default audio link
 * Credit to LilyMakesThings for some block Ideas
-* Hopefully we can add DB detection to the extension...
 * Do Not Delete this Comment
 */
 
@@ -75,6 +74,21 @@
               NAME: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: 'MySound',
+              },
+            },
+          },
+          {
+            opcode: 'convertURLToURI',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'convert sound [INPUT_NAME] from URL to URI and save it to sound [OUTPUT_NAME]',
+            arguments: {
+              INPUT_NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+              OUTPUT_NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound2',
               },
             },
           },
@@ -290,6 +304,22 @@
               },
             },
           },
+          {
+            opcode: 'getLoudnessAtTime',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'loudness of sound [NAME] at time [TIME]',
+            blockIconURI: settingsIconURI,
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+              TIME: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0,
+              },
+            },
+          },
           
           '---',
           
@@ -297,6 +327,18 @@
             opcode: 'soundExists',
             blockType: Scratch.BlockType.BOOLEAN,
             text: 'sound [NAME] exists?',
+            blockIconURI: settingsIconURI,
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+            },
+          },
+          {
+            opcode: 'soundPlaying',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: 'sound [NAME] playing?',
             blockIconURI: settingsIconURI,
             arguments: {
               NAME: {
@@ -657,6 +699,16 @@
       return this.sounds.hasOwnProperty(NAME);
     }
 
+    soundPlaying(args) {
+      const { NAME } = args;
+      const soundInstances = this.sounds[NAME];
+      if (soundInstances && soundInstances.length > 0) {
+        const audio = soundInstances[0];
+        return (audio.currentTime !== 0 && !audio.paused);
+      }
+      return 'false';
+    }
+
     soundProperty(args) {
       const { NAME, PROPERTY } = args;
       const soundInstances = this.sounds[NAME];
@@ -715,7 +767,7 @@
     playSounds(args) {
       const { NAMES } = args;
       const namesArray = JSON.parse(NAMES);
-  
+
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -729,7 +781,7 @@
     playSoundsAt(args) {
       const { NAMES, START_TIME } = args;
       const namesArray = JSON.parse(NAMES);
-  
+
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -744,7 +796,7 @@
     stopSounds(args) {
       const { NAMES } = args;
       const namesArray = JSON.parse(NAMES);
-  
+
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -760,7 +812,7 @@
       const { NAMES, PAUSE_UNPAUSE } = args;
       const namesArray = JSON.parse(NAMES);
       const pause = PAUSE_UNPAUSE === 'paused';
-      
+
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -779,7 +831,7 @@
       const { NAMES, VOLUME } = args;
       const adjustedVolume = Math.max(0, Math.min(100, VOLUME));
       const namesArray = JSON.parse(NAMES);
-  
+
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -823,6 +875,65 @@
           });
         }
       });
+    }
+
+    getLoudnessAtTime(args) {
+      const { NAME, TIME } = args;
+      const soundInstances = this.sounds[NAME];
+
+      if (soundInstances && soundInstances.length > 0) {
+        const audio = soundInstances[0];
+        const audioDuration = audio.duration;
+
+        if (TIME >= 0 && TIME <= audioDuration) {
+          let audioURI = audio.src;
+          if (!audioURI.startsWith("data:")) {
+            return 'Audio URLs DO NOT WORK, convert to URI!';
+          }
+          const uriIndex = Math.floor(audioURI.length * (TIME / audioDuration));
+ 
+          if (uriIndex >= 0 && uriIndex < audioURI.length) {
+            const characterAtTime = audioURI.charAt(uriIndex);
+
+            let loudnessValue = characterAtTime.charCodeAt(0);
+            loudnessValue = (Math.PI / 180) * loudnessValue; 
+            loudnessValue = (Math.sin(loudnessValue / 2) * 100) - 50;
+            loudnessValue = loudnessValue * ((loudnessValue < 0) ? -2 : 3);
+            return loudnessValue;
+          }
+        }
+      }
+      if (soundInstances) {
+        return 'Time Input Doesnt Exist!';
+      } else {
+        return 'Audio Doesnt Exist!';
+      }
+    }
+
+    async convertURLToURI(args) {
+      const { INPUT_NAME, OUTPUT_NAME } = args;
+      const soundInstances = this.sounds[INPUT_NAME];
+
+      if (soundInstances && soundInstances.length > 0) {
+        const audio = soundInstances[0];
+        const audioURI = audio.src;
+        try {
+          const response = await fetch(audioURI);
+          const audioBlob = await response.blob();
+          const audioDataURL = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(audioBlob);
+          });
+          this.sounds[OUTPUT_NAME] = [new Audio(audioDataURL)];
+
+          return 'Conversion Success!';
+        } catch (error) {
+          return 'Error Converting: ' + error.message;
+        }
+      } else {
+        return 'Audio Doesnt Exist!';
+      }
     }
   }
 
