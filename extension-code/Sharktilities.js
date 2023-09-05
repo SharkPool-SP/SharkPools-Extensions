@@ -1,5 +1,5 @@
 /*
-* v1.8 | Created by SharkPool.
+* v1.9 | Created by SharkPool.
 * https://www.youtube.com/c/SharkPoolthe1
 * Do not remove this comment
 */
@@ -66,17 +66,37 @@
     }
 
     class Sharktilities {
-        constructor() {
-          this.runtime = vm.runtime;
-        }
+      constructor() {
+        this.runtime = vm.runtime;
+      }
 
-        getInfo() {
-        return {
-            id: 'SharkPoolSharktilities',
-            name: 'Sharktilities',
-            color1: '#33B6FF',
-            menuIconURI,
-            blocks: [
+      getInfo() {
+      return {
+        id: 'SharkPoolSharktilities',
+        name: 'Sharktilities',
+        color1: '#33B6FF',
+        menuIconURI,
+        blocks: [
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Management',
+          },
+          {
+            opcode: 'refresh',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'refresh palette',
+            arguments: {
+              NUMBER: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0,
+              },
+              ROUND_TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'ROUND_MENU',
+                defaultValue: 'whole number',
+              },
+            },
+          },
           {
             blockType: Scratch.BlockType.LABEL,
             text: 'Numbers and Letters',
@@ -474,7 +494,6 @@
         default:
           NUM1 += NUM2;
       }
-
       return NUM1;
     }
 
@@ -567,7 +586,6 @@
       const r = parseInt(hexColor.substring(0, 2), 16);
       const g = parseInt(hexColor.substring(2, 4), 16);
       const b = parseInt(hexColor.substring(4, 6), 16);
-      
       const CHANGE = args.CHANGE / 100;
     
       const hslColor = rgbToHsl(r, g, b);
@@ -586,6 +604,10 @@
 
       const output = Math[type](timer * speed) * limit;
       return output;
+    }
+
+    refresh() {
+      vm.extensionManager.refreshBlocks()
     }
   }
 
