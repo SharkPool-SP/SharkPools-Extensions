@@ -322,7 +322,19 @@
           },
           
           '---',
-          
+
+          {
+            opcode: 'returnInfo',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'URL used by sound [NAME]',
+            blockIconURI: settingsIconURI,
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'MySound',
+              },
+            },
+          },
           {
             opcode: 'soundExists',
             blockType: Scratch.BlockType.BOOLEAN,
@@ -934,6 +946,14 @@
       } else {
         return 'Audio Doesnt Exist!';
       }
+    }
+
+    returnInfo(args) {
+      const soundInstances = this.sounds[args.NAME];
+      if (soundInstances && soundInstances.length > 0) {
+        return this.sounds[args.NAME][0].src;
+      }
+      return 'Audio Doesnt Exist!';
     }
   }
 
