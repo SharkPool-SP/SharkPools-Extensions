@@ -24,16 +24,16 @@
           {
             opcode: "calculatetimedurationfromdate",
             blockType: Scratch.BlockType.REPORTER,
-            text: "difference between [DATE] to current date in [TIME_MENU]",
+            text: "difference between [DATE] to current datetime in [TIME_MENU]",
             arguments: {
               DATE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "2006-04-16",
+                defaultValue: "2007-03-14 09:34:00",
               },
               TIME_MENU: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "Time",
-                defaultValue: "day",
+                defaultValue: "hour",
               },
             },
           },
@@ -44,7 +44,27 @@
             arguments: {
               START_TIME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "00:00",
+                defaultValue: "00:00:00",
+              },
+              TIME_MENU: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "Time",
+                defaultValue: "hour",
+              },
+            },
+          },
+          {
+            opcode: "calculatetimedurationfromstamp",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "difference between [START_TIME] and [END_TIME] in [TIME_MENU]",
+            arguments: {
+              START_TIME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "2007-03-14 09:34:00",
+              },
+              END_TIME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "2016-07-21 15:03:00",
               },
               TIME_MENU: {
                 type: Scratch.ArgumentType.STRING,
@@ -79,11 +99,27 @@
           {
             opcode: "converttotime",
             blockType: Scratch.BlockType.REPORTER,
-            text: "convert [VALUE] to time (day:hour:minute)",
+            text: "convert [VALUE] to time (hour:minute:second)",
             arguments: {
               VALUE: {
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 0,
+              },
+            },
+          },
+          {
+            opcode: "convertToValue",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "convert [VALUE] to [TIME]",
+            arguments: {
+              VALUE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "1970-01-01 00:00:00",
+              },
+              TIME: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "Time",
+                defaultValue: "hour",
               },
             },
           },
@@ -159,22 +195,23 @@
         },
       };
     }
+
     calculateTimeDifference(startDate, endDate, timeMenu) {
       const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
 
       switch (timeMenu) {
         case "year":
-          return Math.round(timeDiff / 946080000000);
+          return (timeDiff / 946080000000);
         case "month":
-          return Math.round(timeDiff / 2592000000);
+          return (timeDiff / 2592000000);
         case "day":
-          return Math.round(timeDiff / 86400000);
+          return (timeDiff / 86400000);
         case "hour":
-          return Math.round(timeDiff / 3600000);
+          return (timeDiff / 3600000);
         case "minute":
-          return Math.round(timeDiff / 60000);
+          return (timeDiff / 60000);
         case "second":
-          return Math.round(timeDiff / 1000);
+          return (timeDiff / 1000);
         default:
           return "Invalid Menu Input";
       }
@@ -185,6 +222,20 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date(dateString);
       const endDate = new Date();
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      if (isNaN(difference)) {
+        return "Invalid Time Input";
+      } else {
+        return difference;
+      }
+    }
+
+    calculatetimedurationfromstamp(args) {
+      const dateString = args.START_TIME ? args.START_TIME : null;
+      const endDateString = args.END_TIME ? args.END_TIME : null;
+      const timeMenu = args.TIME_MENU;
+      const startDate = new Date(dateString);
+      const endDate = new Date(endDateString);
       const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
       if (isNaN(difference)) {
         return "Invalid Time Input";
@@ -231,14 +282,42 @@
     }
 
     converttotime(args) {
-      const value = args.VALUE ? args.VALUE : 0;
-      const seconds = Math.floor(value);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
+      const timestamp = args.VALUE ? args.VALUE : 0;
+      const seconds = timestamp % 60;
+      const minutes = Math.round((timestamp / 60) % 60);
+      const hours = Math.round((timestamp / 3600) % 24);
 
-      const timeString = `${hours % 24}:${minutes % 60}:${seconds % 60}`;
+      const timeString = `${hours}:${minutes}:${seconds}`;
       return timeString;
+    }
+
+    convertToValue(args) {
+      const dateString = args.VALUE ? args.VALUE : null;
+      let date = new Date(dateString);
+      date = Math.round(date.getTime() / 1000) - 28800;
+
+      switch (args.TIME) {
+        case "year":
+          return (date / 31536000);
+        case "month":
+          return (date / 2592000);
+        case "day":
+          return (date / 86400);
+        case "hour":
+          return (date / 3600);
+        case "minute":
+          return (date / 60);
+        case "second":
+          return date;
+        default:
+          return "Invalid Menu Input";
+      }
+
+      if (isNaN(date.getTime())) {
+        return "Invalid Time Input";
+      } else {
+        return date;
+      }
     }
 
     daysinmonth(args) {
@@ -274,49 +353,21 @@
 
     countdownReport(args) {
       const timeMenu = args.MENU;
-      const endDate = Date.now();
-
-      const dateTimeParts = args.TIME.split(/[- :]/);
-      const year = parseInt(dateTimeParts[0]);
-      const month = parseInt(dateTimeParts[1]) - 1;
-      const day = parseInt(dateTimeParts[2]);
-      const hour = parseInt(dateTimeParts[3]);
-      const minute = parseInt(dateTimeParts[4]);
-      const second = parseInt(dateTimeParts[5]);
-
-      const startDate = new Date(year, month, day, hour, minute, second).getTime();
-      const timeDifference = startDate - endDate;
-      
-      switch (timeMenu) {
-        case "year":
-          return Math.round(timeDifference / 946080000000);
-        case "month":
-          return Math.round(timeDifference / 2592000000);
-        case "day":
-          return Math.round(timeDifference / 86400000);
-        case "hour":
-          return Math.round(timeDifference / 3600000);
-        case "minute":
-          return Math.round(timeDifference / 60000);
-        case "second":
-          return Math.round(timeDifference / 1000);
-        default:
-          return "Invalid Menu Input";
+      const endDate = new Date();
+      const dateString = args.TIME ? args.TIME : null;
+      const startDate = new Date(dateString);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      if (isNaN(difference)) {
+        return "Invalid Time Input";
+      } else {
+        return difference;
       }
     }
 
     countdownBoolean(args) {
       const endDate = Date.now();
-
-      const dateTimeParts = args.TIME.split(/[- :]/);
-      const year = parseInt(dateTimeParts[0]);
-      const month = parseInt(dateTimeParts[1]) - 1;
-      const day = parseInt(dateTimeParts[2]);
-      const hour = parseInt(dateTimeParts[3]);
-      const minute = parseInt(dateTimeParts[4]);
-      const second = parseInt(dateTimeParts[5]);
-
-      const startDate = new Date(year, month, day, hour, minute, second).getTime();
+      const dateString = args.TIME ? args.TIME : null;
+      const startDate = new Date(dateString);
       const timeDifference = startDate - endDate;
       return (timeDifference <= 0);
     }
