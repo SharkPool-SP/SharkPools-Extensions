@@ -196,9 +196,9 @@
       };
     }
 
-    calculateTimeDifference(startDate, endDate, timeMenu) {
-      const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-
+    calculateTimeDifference(startDate, endDate, timeMenu, abs) {
+      let timeDiff = endDate.getTime() - startDate.getTime();
+      timeDiff = (abs) ? Math.abs(timeDiff) : timeDiff * -1;
       switch (timeMenu) {
         case "year":
           return (timeDiff / 946080000000);
@@ -222,7 +222,7 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date(dateString);
       const endDate = new Date();
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -236,7 +236,7 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date(dateString);
       const endDate = new Date(endDateString);
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -251,7 +251,7 @@
       const startDate = new Date();
       startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
       const endDate = new Date();
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
 
       if (isNaN(difference)) {
         return "Invalid Time Input";
@@ -273,7 +273,7 @@
       startDate.setHours(startHour, startMinute, 0, 0);
       endDate.setHours(endHour, endMinute, 0, 0);
 
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -311,12 +311,6 @@
           return date;
         default:
           return "Invalid Menu Input";
-      }
-
-      if (isNaN(date.getTime())) {
-        return "Invalid Time Input";
-      } else {
-        return date;
       }
     }
 
@@ -356,7 +350,7 @@
       const endDate = new Date();
       const dateString = args.TIME ? args.TIME : null;
       const startDate = new Date(dateString);
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu);
+      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, false);
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
