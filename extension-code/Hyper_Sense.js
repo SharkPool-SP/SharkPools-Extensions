@@ -1,6 +1,6 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
-* Version 1.3.0
+* Version 1.4.0
 * Do not remove this comment
 */
 
@@ -18,6 +18,7 @@
   let keyPressTime = 0;
   const keyHitPass = {};
 
+  const renderer = Scratch.renderer;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   var timer = 0;
@@ -223,6 +224,11 @@
             blockType: Scratch.BlockType.REPORTER,
             text: 'my sprite name',
           },
+          {
+            opcode: 'allLayers',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'max sprite layers',
+          },
         ],
         menus: {
           microphoneStates: ['enabled', 'disabled'],
@@ -241,6 +247,10 @@
           }
         }
       };
+    }
+
+    allLayers() {
+      return renderer._drawList.length - 1;
     }
 
     monitorScrollWheel() {
@@ -324,7 +334,11 @@
     }
 
     averageMicrophoneLoudness() {
-      return this.calculateAverageLoudness(this.loudnessArray);
+      let loudness = this.calculateAverageLoudness(this.loudnessArray);
+      if (isNaN(loudness)) {
+        loudness = "Microphone is Disabled!"
+      }
+      return loudness;
     }
 
     calculateAverageLoudness(loudnessArray) {
