@@ -3,7 +3,7 @@
 // Description: Apply a variety of new effects to the data URI of Images or Costumes.
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.1.1.0
+// Version V.1.3.0
 
 (function (Scratch) {
   'use strict';
@@ -55,7 +55,7 @@
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               R: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -86,7 +86,7 @@
               },
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               PERCENTAGE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -101,7 +101,7 @@
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               STRENGTH: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -124,7 +124,7 @@
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               AMPX: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -151,7 +151,7 @@
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               PERCENTAGE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -175,7 +175,7 @@
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               PERCENTAGE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -202,11 +202,11 @@
           {
             opcode: 'removeTransparencyEffect',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'remove pixels [REMOVE] [THRESHOLD]% transparency from URI [SVG]',
+            text: 'remove pixels from URI [SVG] [REMOVE] [THRESHOLD]% transparency',
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               THRESHOLD: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -226,7 +226,7 @@
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: 'data:,',
               },
               THICKNESS: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -313,12 +313,12 @@
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Image Conversion',
+            text: 'Image Conversions',
           },
           {
             opcode: 'svgToBitmap',
             blockType: Scratch.BlockType.REPORTER,
-            text: 'svg content [SVG] to bitmap width [WIDTH] height [HEIGHT]',
+            text: 'convert svg content [SVG] to bitmap with width [WIDTH] height [HEIGHT]',
             arguments: {
               SVG: {
                 type: Scratch.ArgumentType.STRING,
@@ -334,6 +334,84 @@
               },
             },
           },
+          {
+            opcode: 'convertImageToSVG',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'convert bitmap URI [URI] to svg [TYPE]',
+            arguments: {
+              URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'data:,',
+              },
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'fileType',
+                defaultValue: 'content',
+              },
+            },
+          },
+          {
+            opcode: 'makeSVGimage',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'make svg with image URI [URI] to svg [TYPE]',
+            arguments: {
+              URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'data:,',
+              },
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'fileType',
+                defaultValue: 'content',
+              },
+            },
+          },
+          {
+            opcode: 'audioToImage',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'convert audio URI [AUDIO_URI] to PNG with width [W] and height [H]',
+            arguments: {
+              AUDIO_URI: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'audio_uri_here',
+              },
+              W: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+              H: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+            },
+          },
+
+          '---',
+
+          {
+            opcode: 'skewSVG',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'skew SVG content [SVG] at x [Y] y [X] as [TYPE]',
+            arguments: {
+              SVG: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: '<svg/>',
+              },
+              X: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0,
+              },
+              Y: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0,
+              },
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: 'fileType',
+                defaultValue: 'content',
+              },
+            },
+          },
         ],
         menus: {
           CHANNELS: {
@@ -345,7 +423,8 @@
             ]
           },
           POSITIONS: ['X', 'Y'],
-          REMOVAL: ['under', 'over'],
+          REMOVAL: ['under', 'over', 'equal to'],
+          fileType: ['content', 'dataURI'],
           EFFECTS: {
             acceptReporters: true,
             items: [
@@ -922,7 +1001,7 @@
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
         const threshold = (args.THRESHOLD !== '') ? args.THRESHOLD / 100 : 0;
-        const removeUnder = args.REMOVE === 'under';
+        const removeUnder = args.REMOVE;
 
         const img = new Image();
         img.onload = async () => {
@@ -949,7 +1028,9 @@
 
       for (let i = 0; i < pixelCount; i++) {
         const alpha = data[i * 4 + 3] / 255;
-        if ((removeUnder && alpha < threshold) || (!removeUnder && alpha > threshold)) {
+        if ((removeUnder === 'under' && alpha < threshold) || 
+        (removeUnder === 'over' && alpha > threshold) ||
+        (removeUnder === 'equal to' && alpha > (threshold - 0.01) && alpha < (threshold + 0.01))) {
           data[i * 4 + 3] = 0;
         }
       }
@@ -1278,6 +1359,133 @@
       for (let i = 0; i < data.length; i++) {
         data[i] = Math.max(0, Math.min(255, (data[i] + copy1[i] + copy2[i]) / 2));
       }
+    }
+
+    convertImageToSVG(args) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = args.URI;
+
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('version', '1.1');
+          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+          svg.setAttribute('width', img.width.toFixed(5));
+          svg.setAttribute('height', img.height.toFixed(5));
+          svg.setAttribute('viewBox', `0,0,${img.width.toFixed(5)},${img.height.toFixed(5)}`);
+          const mergedColors = new Map();
+
+          for (let y = 0; y < img.height; y++) {
+            for (let x = 0; x < img.width; x++) {
+              const colorData = ctx.getImageData(x, y, 1, 1).data;
+              const alpha = colorData[3];
+
+              if (alpha === 0) {
+                continue;
+              }
+
+              const color = `rgb(${colorData[0]}, ${colorData[1]}, ${colorData[2]})`;
+              const rightColorData = ctx.getImageData(x + 1, y, 1, 1).data;
+              const rightColor = `rgb(${rightColorData[0]}, ${rightColorData[1]}, ${rightColorData[2]})`;
+
+              if (color === rightColor) {
+                const mergedPixel = mergedColors.get(color) || { x1: x, y1: y, x2: x + 1, y2: y };
+                mergedPixel.x2++;
+                mergedColors.set(color, mergedPixel);
+              } else {
+                mergedColors.forEach((mergedPixel, colorKey) => {
+                  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                  rect.setAttribute('x', mergedPixel.x1.toFixed(5));
+                  rect.setAttribute('y', mergedPixel.y1.toFixed(5));
+                  rect.setAttribute('width', (mergedPixel.x2 - mergedPixel.x1 + 1).toFixed(5));
+                  rect.setAttribute('height', (mergedPixel.y2 - mergedPixel.y1 + 1).toFixed(5));
+                  rect.setAttribute('fill', colorKey);
+
+                  svg.appendChild(rect);
+                });
+                mergedColors.clear();
+              }
+            }
+          }
+          let svgString = new XMLSerializer().serializeToString(svg);
+          if (args.TYPE === 'dataURI') {
+            svgString = `data:image/svg+xml;base64,${btoa(svgString)}`;
+          }
+          resolve (svgString);
+        };
+      });
+    }
+
+    makeSVGimage(args) {
+      const img = new Image();
+      img.src = args.URI;
+      const width = img.width;
+      const height = img.height;
+      let base = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width / 2}" height="${height / 2}" viewBox="0,0,${width / 2},${height / 2}"><g transform="translate(-175.5,-116)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill="none" fill-rule="nonzero" stroke="none" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><image x="351" y="232" transform="scale(0.5,0.5)" width="${width}" height="${height}" xlink:href="${args.URI}"/></g></g></svg>`;
+      if (args.TYPE === 'dataURI') {
+        base = `data:image/svg+xml;base64,${btoa(base)}`;
+      }
+      return base;
+    }
+
+    audioToImage(args) {
+      const audioURI = args.AUDIO_URI;
+      const imageWidth = Math.abs(Scratch.Cast.toString(args.W));
+      const imageHeight = Math.abs(Scratch.Cast.toString(args.H));
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = imageWidth;
+      canvas.height = imageHeight;
+
+      for (let i = 0; i < audioURI.length; i++) {
+        const charCode = audioURI.charCodeAt(i);
+        const red = (charCode * 2) % 256;
+        const green = (charCode * 3) % 256;
+        const blue = (charCode * 4) % 256;
+        ctx.fillStyle = `rgb(${red},${green},${blue})`;
+        ctx.fillRect(i % imageWidth, Math.floor(i / imageWidth), 1, 1);
+      }
+      const dataURI = canvas.toDataURL('image/png');
+      return dataURI;
+    }
+
+    skewSVG(args) {
+      let SVG = args.SVG;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(SVG, "image/svg+xml");
+      const svgElement = doc.documentElement;
+      const originalWidth = parseFloat(svgElement.getAttribute("width"));
+      const originalHeight = parseFloat(svgElement.getAttribute("height"));
+      const newTransform = `matrix(1, ${args.X / 100}, ${args.Y / 100}, 1, ${Math.abs(args.X)}, ${Math.abs(args.Y)})`;
+
+      svgElement.setAttribute("transform", newTransform);
+
+      const skewX = Math.abs((args.X / 100) * originalWidth);
+      const skewY = Math.abs((args.Y / 100) * originalHeight);
+      const newViewBoxWidth = originalWidth + (2 * skewX);
+      const newViewBoxHeight = originalHeight + (2 * skewY);
+      let newViewBoxX = ((newViewBoxWidth - originalWidth) / 2);
+      newViewBoxX = (newViewBoxX < 0 || args.Y < 0) ? 0 : newViewBoxX;
+      let newViewBoxY = ((newViewBoxHeight - originalHeight) / 2);
+      newViewBoxY = (newViewBoxY < 0 || args.X < 0) ? 0 : newViewBoxY;
+      let offsetX = (args.X < 0) ? 1 : 0
+      let offsetY = (args.Y < 0) ? 1 : 0
+      const newViewBox = `${newViewBoxX} ${newViewBoxY} ${newViewBoxWidth - (Math.abs(args.X * offsetX))} ${newViewBoxHeight - (Math.abs(args.Y * offsetY))}`;
+      svgElement.setAttribute("viewBox", newViewBox);
+
+      const serializer = new XMLSerializer();
+      SVG = serializer.serializeToString(svgElement);
+      if (args.TYPE === 'dataURI') {
+        SVG = `data:image/svg+xml;base64,${btoa(SVG)}`;
+      }
+      return SVG;
     }
   }
 
