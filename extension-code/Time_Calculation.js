@@ -222,20 +222,20 @@
 
     calculateTimeDifference(startDate, endDate, timeMenu, abs) {
       let timeDiff = endDate.getTime() - startDate.getTime();
-      timeDiff = (abs) ? Math.abs(timeDiff) : timeDiff * -1;
+      timeDiff = abs ? Math.abs(timeDiff) : timeDiff * -1;
       switch (timeMenu) {
         case "year":
-          return (timeDiff / 946080000000);
+          return timeDiff / 946080000000;
         case "month":
-          return (timeDiff / 2592000000);
+          return timeDiff / 2592000000;
         case "day":
-          return (timeDiff / 86400000);
+          return timeDiff / 86400000;
         case "hour":
-          return (timeDiff / 3600000);
+          return timeDiff / 3600000;
         case "minute":
-          return (timeDiff / 60000);
+          return timeDiff / 60000;
         case "second":
-          return (timeDiff / 1000);
+          return timeDiff / 1000;
         default:
           return "Invalid Menu Input";
       }
@@ -246,7 +246,12 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date(dateString);
       const endDate = new Date();
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
+      const difference = this.calculateTimeDifference(
+        startDate,
+        endDate,
+        timeMenu,
+        true
+      );
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -260,7 +265,12 @@
       const timeMenu = args.TIME_MENU;
       const startDate = new Date(dateString);
       const endDate = new Date(endDateString);
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
+      const difference = this.calculateTimeDifference(
+        startDate,
+        endDate,
+        timeMenu,
+        true
+      );
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -275,7 +285,12 @@
       const startDate = new Date();
       startDate.setHours(parseInt(startHour), parseInt(startMinute), 0, 0);
       const endDate = new Date();
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
+      const difference = this.calculateTimeDifference(
+        startDate,
+        endDate,
+        timeMenu,
+        true
+      );
 
       if (isNaN(difference)) {
         return "Invalid Time Input";
@@ -297,7 +312,12 @@
       startDate.setHours(startHour, startMinute, 0, 0);
       endDate.setHours(endHour, endMinute, 0, 0);
 
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, true);
+      const difference = this.calculateTimeDifference(
+        startDate,
+        endDate,
+        timeMenu,
+        true
+      );
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -322,15 +342,15 @@
 
       switch (args.TIME) {
         case "year":
-          return (date / 31536000);
+          return date / 31536000;
         case "month":
-          return (date / 2592000);
+          return date / 2592000;
         case "day":
-          return (date / 86400);
+          return date / 86400;
         case "hour":
-          return (date / 3600);
+          return date / 3600;
         case "minute":
-          return (date / 60);
+          return date / 60;
         case "second":
           return date;
         default:
@@ -374,7 +394,12 @@
       const endDate = new Date();
       const dateString = args.TIME ? args.TIME : null;
       const startDate = new Date(dateString);
-      const difference = this.calculateTimeDifference(startDate, endDate, timeMenu, false);
+      const difference = this.calculateTimeDifference(
+        startDate,
+        endDate,
+        timeMenu,
+        false
+      );
       if (isNaN(difference)) {
         return "Invalid Time Input";
       } else {
@@ -387,7 +412,7 @@
       const dateString = args.TIME ? args.TIME : null;
       const startDate = new Date(dateString);
       const timeDifference = startDate - endDate;
-      return (timeDifference <= 0);
+      return timeDifference <= 0;
     }
 
     evaluateTime(args) {
@@ -406,9 +431,16 @@
       } else {
         timeDifference = startDate.getTime() - endDate.getTime();
       }
-      timeDifference = new Date(timeDifference);
-      timeDifference = `${timeDifference.getFullYear()}-${(timeDifference.getMonth() + 1).toString().padStart(2, '0')}-${timeDifference.getDate().toString().padStart(2, '0')} ${timeDifference.getHours().toString().padStart(2, '0')}:${timeDifference.getMinutes().toString().padStart(2, '0')}:${timeDifference.getSeconds().toString().padStart(2, '0')}`;
-      return timeDifference;
+      const resultDate = new Date(timeDifference);
+      const year = resultDate.getFullYear();
+      const month = String(resultDate.getMonth() + 1).padStart(2, '0');
+      const day = String(resultDate.getDate()).padStart(2, '0');
+      const hours = String(resultDate.getHours()).padStart(2, '0');
+      const minutes = String(resultDate.getMinutes()).padStart(2, '0');
+      const seconds = String(resultDate.getSeconds()).padStart(2, '0');
+
+      const formattedResult = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      return formattedResult;
     }
   }
   Scratch.extensions.register(new TimeCalc());
