@@ -12,6 +12,7 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
+  let warningSent = false;
 
   //this script was ripped from the Files Extension. Thanks GarboMuffin :D
   const downloadURL = (url, file) => {
@@ -150,7 +151,15 @@
 
     recordingSet(args) {
       if (args.MODE === "enabled") {
-        this.startRecording();
+        if (!warningSent) {
+          const confirmed = window.confirm("Allow access to record Microphone Audio? Be aware of privacy concerns if you Accept.");
+          if (confirmed) {
+            this.startRecording();
+            warningSent = true;
+          }
+        } else {
+          this.startRecording();
+        }
       } else {
         this.stopRecording();
       }
