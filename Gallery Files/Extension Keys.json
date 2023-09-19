@@ -75,6 +75,11 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded"
     },
+    "Recording": {
+      "credits": "This extension was made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
+      "tags": ".all.utilities.fetching"
+    },
     "Example": {
       "credits": "",
       "url": "",
