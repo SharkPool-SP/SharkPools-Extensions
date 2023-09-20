@@ -12,7 +12,8 @@
     throw new Error("Image Effects extension must run unsandboxed");
   }
 
-  const menuIconURI = "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuNzMwNjQiIGhlaWdodD0iMTM1LjczMDY0IiB2aWV3Qm94PSIwLDAsMTM1LjczMDY0LDEzNS43MzA2NCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE3Mi4xMzQ2OCwtMTEyLjEzNDY4KSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsPSIjOTk2NmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTc1Ljg4NDY4LDE4MGMwLC0zNS40MDk5MSAyOC43MDU0MSwtNjQuMTE1MzIgNjQuMTE1MzIsLTY0LjExNTMyYzM1LjQwOTkxLDAgNjQuMTE1MzIsMjguNzA1NDEgNjQuMTE1MzIsNjQuMTE1MzJjMCwzNS40MDk5MSAtMjguNzA1NDEsNjQuMTE1MzIgLTY0LjExNTMyLDY0LjExNTMyYy0zNS40MDk5MSwwIC02NC4xMTUzMiwtMjguNzA1NDEgLTY0LjExNTMyLC02NC4xMTUzMnoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBzdHJva2U9IiM3NzRkY2IiIHN0cm9rZS13aWR0aD0iNy41Ii8+PHBhdGggZD0iTTI0MC40NDQ3MSwxNzMuMjY3NjJjNC4wOTQ5MiwtMS42NzM4NiA5LjMwMjQ5LC0xLjE5MDEgMTIuMTM5MDIsLTUuMDU1MzljMi45NDAxOSwtNC4wMDY1NSAzLjgyMTg1LC0xMi4zNTQ5MyA0LjQ0ODA0LC0xNy4yNTg2MWMwLjYxMDA3LC00Ljc3NzQ5IDEuNzYyMTIsLTQuNjEwOTMgMi42MzYyMywwLjI0MTA0YzAuOTI1MDIsNS4xMzQ1MyAyLjAzNDk4LDEzLjY3Njk1IDQuNjU0MTcsMTcuMjQ2MDhjMi45OTI4OSw0LjA3ODM3IDguOTIyODMsMy44NDQ2MiAxMy4zMDU3Miw1LjUyMjUyYzMuMDc3MjksMS4xNzgwNyAyLjgwMzA3LDEuODUyNzYgLTAuNTU3NTMsMi41NjMxOGMtNC4zMTUyNSwwLjkxMjIyIC05LjkwMjk2LDEuNjU3MSAtMTIuOTE1ODksNS43NjI3N2MtMy4xNzkwMyw0LjMzMjAyIC00LjI2MTk4LDE0LjY4OTEyIC01LjAwNjEyLDIwLjg0MjU5Yy0wLjUxMDM2LDQuMjIwMjYgLTEuOTQ5MjEsMi40MjI2MiAtMi4yMTYzMiwwLjI3NjAxYy0wLjc3MDA3LC02LjE4ODY3IC0xLjk2NjQ1LC0xNi44MzA3NiAtNS41MjIxNiwtMjEuNjc2MDdjLTIuNTE2NjgsLTMuNDI5NDQgLTYuNjk2MjksLTQuMDQ3ODUgLTEwLjExNzcyLC01LjAwMDM5Yy00LjYxNjIsLTEuMjg1MTggLTUuMTMyNDYsLTEuNzEyMTUgLTAuODQ3NDUsLTMuNDYzNzJ6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjE1Ii8+PHBhdGggZD0iTTI1Mi41ODM3MywxNjguMjEyMjNjMi45NDAxOSwtNC4wMDY1NSAyLjgyMTg1LC0xMi4zNTQ5MiAzLjQ0ODA0LC0xNy4yNTg2YzAuNjEwMDcsLTQuNzc3NDkgMy44NzMyMywtNC42MTA5MyA0Ljc0NzM0LDAuMjQxMDRjMC45MjUwMiw1LjEzNDUzIDAuOTIzODcsMTMuNjc2OTUgMy41NDMwNiwxNy4yNDYwOGMyLjk5Mjg5LDQuMDc4MzcgOC4zNjcyNywyLjczMzUxIDEyLjc1MDE2LDQuNDExNGMzLjA3NzI5LDEuMTc4MDcgMy4zNTg2MywzLjg1Mjc2IC0wLjAwMTk3LDQuNTYzMThjLTQuMzE1MjUsMC45MTIyMiAtOS45MDI5NiwwLjc2ODIxIC0xMi45MTU4OSw0Ljg3Mzg4Yy0zLjE3OTAzLDQuMzMyMDIgLTMuNDg0MiwxNC45MTEzNCAtNC4yMjgzMywyMS4wNjQ4MWMtMC41MTAzNiw0LjIyMDI2IC0zLjcyNjk5LDIuMjAwNCAtMy45OTQxLDAuMDUzNzljLTAuNzcwMDcsLTYuMTg4NjcgLTAuOTY2NDUsLTE2LjgzMDc2IC00LjUyMjE2LC0yMS42NzYwN2MtMi41MTY2OCwtMy40Mjk0NCAtNy40NzQwNywtMy4zODExOCAtMTAuODk1NSwtNC4zMzM3MmMtNC42MTYyLC0xLjI4NTE4IC00LjM1NDY4LC0zLjI2NzcxIC0wLjA2OTY3LC01LjAxOTI4YzAsMCA5LjMwMjQ5LC0wLjMwMTIzIDEyLjEzOTAyLC00LjE2NjUxeiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIxNC4xNjUzMSwxNTIuMzM0NzJjMS40OTI4MiwtMS42NDY2OSAxLjk0MDQ3LC01LjA3Nzg3IDIuMjU4NCwtNy4wOTMyOGMwLjMwOTc1LC0xLjk2MzU1IDAuODk0NjcsLTEuODk1MDkgMS4zMzg0OSwwLjA5OTA2YzAuNDY5NjYsMi4xMTAyOSAxLjAzMzIyLDUuNjIxMjMgMi4zNjMwNiw3LjA4ODE0YzEuNTE5NTgsMS42NzYyMSA0LjUzMDM3LDEuNTgwMTMgNi43NTU3LDIuMjY5NzVjMS41NjI0MywwLjQ4NDE4IDEuNDIzMiwwLjc2MTQ4IC0wLjI4MzA3LDEuMDUzNDZjLTIuMTkwOTgsMC4zNzQ5MiAtNS4wMjgwMSwwLjY4MTA3IC02LjU1Nzc2LDIuMzY4NWMtMS42MTQwOCwxLjc4MDQ2IC0yLjE2MzkzLDYuMDM3MjIgLTIuNTQxNzUsOC41NjYyOWMtMC4yNTkxMiwxLjczNDUyIC0wLjk4OTY3LDAuOTk1NyAtMS4xMjUyOSwwLjExMzQ0Yy0wLjM5MDk5LC0yLjU0MzU0IC0wLjk5ODQyLC02LjkxNzQ0IC0yLjgwMzc2LC04LjkwODg2Yy0xLjI3Nzc5LC0xLjQwOTUgLTMuMzk5OSwtMS42NjM2NyAtNS4xMzcwNiwtMi4wNTUxNmMtMi4zNDM3NywtMC41MjgyMSAtMi42MDU5LC0wLjcwMzcgLTAuNDMwMjcsLTEuNDIzNTljMCwwIDQuNzIzMTMsLTAuNDg5MTIgNi4xNjMzMSwtMi4wNzc3NXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMTAiLz48cGF0aCBkPSJNMjE0LjE2NTMxLDE1Mi4zMzQ3MmMxLjQ5MjgyLC0xLjY0NjY5IDEuMjczODEsLTQuOTY2NzYgMS41OTE3NCwtNi45ODIxN2MwLjMwOTc1LC0xLjk2MzU1IDIuMTE2ODksLTIuMDA2MiAyLjU2MDcsLTAuMDEyMDVjMC40Njk2NiwyLjExMDI5IDAuNDc3NjcsNS42MjEyMyAxLjgwNzUxLDcuMDg4MTRjMS41MTk1OCwxLjY3NjIxIDQuMzA4MTUsMC42MzU2OCA2LjUzMzQ4LDEuMzI1M2MxLjU2MjQzLDAuNDg0MTggMS42NDU0MiwyLjI2MTQ4IC0wLjA2MDg1LDIuNTUzNDZjLTIuMTkwOTgsMC4zNzQ5MiAtNS4wMjgwMSwwLjEyNTUyIC02LjU1Nzc2LDEuODEyOTVjLTEuNjE0MDgsMS43ODA0NiAtMS4xNjM5Myw2LjAzNzIyIC0xLjU0MTc1LDguNTY2MjljLTAuMjU5MTIsMS43MzQ1MiAtMi43Njc0NSwwLjk5NTcgLTIuOTAzMDcsMC4xMTM0NGMtMC4zOTA5OSwtMi41NDM1NCAtMC4yMjA2NCwtNi45MTc0NCAtMi4wMjU5OCwtOC45MDg4NmMtMS4yNzc3OSwtMS40MDk1IC00LjI4ODc5LC0wLjk5NyAtNi4wMjU5NSwtMS4zODg0OWMtMi4wMDQ1OCwtMC40NTE3NyAtMS4yNjQyMSwtMi4yMDEwOCAtMC4wMDA1MiwtMi42OTgwOWMwLjIxMzgyLC0wLjA4NDA5IDUuMTgyMjgsMC4xMTg3MSA2LjYyMjQ2LC0xLjQ2OTkyeiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIyMC44NTY0LDIwNC44MDk1MWMxLjU2MTg4LC0xLjk1NjIgMi4wMzAyNSwtNi4wMzIyOSAyLjM2Mjg5LC04LjQyNjUyYzAuMzI0MDgsLTIuMzMyNjIgMC45MzYwNiwtMi4yNTEyOSAxLjQwMDQxLDAuMTE3NjhjMC40OTEzOSwyLjUwNjkzIDEuMDgxMDIsNi42Nzc3OSAyLjQ3MjM5LDguNDIwNDFjMS41ODk4OSwxLjk5MTI2IDQuNzM5OTgsMS44NzcxNCA3LjA2ODI1LDIuNjk2MzdjMS42MzQ3MiwwLjU3NTIgMS40ODkwNSwwLjkwNDYxIC0wLjI5NjE3LDEuMjUxNDdjLTIuMjkyMzUsMC40NDUzOCAtNS4yNjA2NCwwLjgwOTA4IC02Ljg2MTE2LDIuODEzNjhjLTEuNjg4NzUsMi4xMTUxMSAtMi4yNjQwNSw3LjE3MTk4IC0yLjY1OTM1LDEwLjE3NjQxYy0wLjI3MTExLDIuMDYwNTQgLTEuMDM1NDUsMS4xODI4NSAtMS4xNzczNSwwLjEzNDc2Yy0wLjQwOTA4LC0zLjAyMTYyIC0xLjA0NDYxLC04LjIxNzY0IC0yLjkzMzQ4LC0xMC41ODMzNmMtMS4zMzY5MSwtMS42NzQ0MiAtMy41NTcxOSwtMS45NzYzNyAtNS4zNzQ3MSwtMi40NDE0NWMtMi40NTIyLC0wLjYyNzQ5IC0yLjcyNjQ2LC0wLjgzNTk1IC0wLjQ1MDE5LC0xLjY5MTE2YzAsMCA0Ljk0MTY1LC0wLjU4MTA3IDYuNDQ4NDYsLTIuNDY4M3oiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMTAiLz48cGF0aCBkPSJNMjIwLjg1NjQsMjA0LjgwOTUxYzEuNTYxODgsLTEuOTU2MiAxLjM2MzU4LC02LjAzMjI5IDEuNjk2MjIsLTguNDI2NTJjMC4zMjQwOCwtMi4zMzI2MiAyLjM4MDUsLTIuMjUxMjkgMi44NDQ4NiwwLjExNzY4YzAuNDkxMzksMi41MDY5MyAwLjMwMzI0LDYuNjc3NzkgMS42OTQ2LDguNDIwNDFjMS41ODk4OSwxLjk5MTI2IDQuMjk1NTMsMC45NDY1OCA2LjYyMzgxLDEuNzY1ODJjMS42MzQ3MiwwLjU3NTIgMS45MzM0OSwyLjM5MDcyIDAuMTQ4MjgsMi43Mzc1OGMtMi4yOTIzNSwwLjQ0NTM4IC01LjI2MDY0LDAuMjUzNTIgLTYuODYxMTYsMi4yNTgxM2MtMS42ODg3NSwyLjExNTExIC0xLjQ4NjI3LDcuMTcxOTggLTEuODgxNTYsMTAuMTc2NDFjLTAuMjcxMTEsMi4wNjA1NCAtMi41OTEwMSwxLjE4Mjg1IC0yLjczMjksMC4xMzQ3NmMtMC40MDkwOCwtMy4wMjE2MiAtMC4yNjY4MywtOC4yMTc2NCAtMi4xNTU3LC0xMC41ODMzNmMtMS4zMzY5MSwtMS42NzQ0MiAtNC4wMDE2NCwtMS41MzE5MyAtNS44MTkxNiwtMS45OTcwMWMtMi40NTIyLC0wLjYyNzQ5IC0yLjI4MjAxLC0xLjgzNTk1IC0wLjAwNTc0LC0yLjY5MTE2YzAsMCA0Ljk0MTY0LC0wLjAyNTUyIDYuNDQ4NDUsLTEuOTEyNzV6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjAiLz48L2c+PC9nPjwvc3ZnPg==";
+  const menuIconURI =
+    "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuNzMwNjQiIGhlaWdodD0iMTM1LjczMDY0IiB2aWV3Qm94PSIwLDAsMTM1LjczMDY0LDEzNS43MzA2NCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE3Mi4xMzQ2OCwtMTEyLjEzNDY4KSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsPSIjOTk2NmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTc1Ljg4NDY4LDE4MGMwLC0zNS40MDk5MSAyOC43MDU0MSwtNjQuMTE1MzIgNjQuMTE1MzIsLTY0LjExNTMyYzM1LjQwOTkxLDAgNjQuMTE1MzIsMjguNzA1NDEgNjQuMTE1MzIsNjQuMTE1MzJjMCwzNS40MDk5MSAtMjguNzA1NDEsNjQuMTE1MzIgLTY0LjExNTMyLDY0LjExNTMyYy0zNS40MDk5MSwwIC02NC4xMTUzMiwtMjguNzA1NDEgLTY0LjExNTMyLC02NC4xMTUzMnoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBzdHJva2U9IiM3NzRkY2IiIHN0cm9rZS13aWR0aD0iNy41Ii8+PHBhdGggZD0iTTI0MC40NDQ3MSwxNzMuMjY3NjJjNC4wOTQ5MiwtMS42NzM4NiA5LjMwMjQ5LC0xLjE5MDEgMTIuMTM5MDIsLTUuMDU1MzljMi45NDAxOSwtNC4wMDY1NSAzLjgyMTg1LC0xMi4zNTQ5MyA0LjQ0ODA0LC0xNy4yNTg2MWMwLjYxMDA3LC00Ljc3NzQ5IDEuNzYyMTIsLTQuNjEwOTMgMi42MzYyMywwLjI0MTA0YzAuOTI1MDIsNS4xMzQ1MyAyLjAzNDk4LDEzLjY3Njk1IDQuNjU0MTcsMTcuMjQ2MDhjMi45OTI4OSw0LjA3ODM3IDguOTIyODMsMy44NDQ2MiAxMy4zMDU3Miw1LjUyMjUyYzMuMDc3MjksMS4xNzgwNyAyLjgwMzA3LDEuODUyNzYgLTAuNTU3NTMsMi41NjMxOGMtNC4zMTUyNSwwLjkxMjIyIC05LjkwMjk2LDEuNjU3MSAtMTIuOTE1ODksNS43NjI3N2MtMy4xNzkwMyw0LjMzMjAyIC00LjI2MTk4LDE0LjY4OTEyIC01LjAwNjEyLDIwLjg0MjU5Yy0wLjUxMDM2LDQuMjIwMjYgLTEuOTQ5MjEsMi40MjI2MiAtMi4yMTYzMiwwLjI3NjAxYy0wLjc3MDA3LC02LjE4ODY3IC0xLjk2NjQ1LC0xNi44MzA3NiAtNS41MjIxNiwtMjEuNjc2MDdjLTIuNTE2NjgsLTMuNDI5NDQgLTYuNjk2MjksLTQuMDQ3ODUgLTEwLjExNzcyLC01LjAwMDM5Yy00LjYxNjIsLTEuMjg1MTggLTUuMTMyNDYsLTEuNzEyMTUgLTAuODQ3NDUsLTMuNDYzNzJ6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjE1Ii8+PHBhdGggZD0iTTI1Mi41ODM3MywxNjguMjEyMjNjMi45NDAxOSwtNC4wMDY1NSAyLjgyMTg1LC0xMi4zNTQ5MiAzLjQ0ODA0LC0xNy4yNTg2YzAuNjEwMDcsLTQuNzc3NDkgMy44NzMyMywtNC42MTA5MyA0Ljc0NzM0LDAuMjQxMDRjMC45MjUwMiw1LjEzNDUzIDAuOTIzODcsMTMuNjc2OTUgMy41NDMwNiwxNy4yNDYwOGMyLjk5Mjg5LDQuMDc4MzcgOC4zNjcyNywyLjczMzUxIDEyLjc1MDE2LDQuNDExNGMzLjA3NzI5LDEuMTc4MDcgMy4zNTg2MywzLjg1Mjc2IC0wLjAwMTk3LDQuNTYzMThjLTQuMzE1MjUsMC45MTIyMiAtOS45MDI5NiwwLjc2ODIxIC0xMi45MTU4OSw0Ljg3Mzg4Yy0zLjE3OTAzLDQuMzMyMDIgLTMuNDg0MiwxNC45MTEzNCAtNC4yMjgzMywyMS4wNjQ4MWMtMC41MTAzNiw0LjIyMDI2IC0zLjcyNjk5LDIuMjAwNCAtMy45OTQxLDAuMDUzNzljLTAuNzcwMDcsLTYuMTg4NjcgLTAuOTY2NDUsLTE2LjgzMDc2IC00LjUyMjE2LC0yMS42NzYwN2MtMi41MTY2OCwtMy40Mjk0NCAtNy40NzQwNywtMy4zODExOCAtMTAuODk1NSwtNC4zMzM3MmMtNC42MTYyLC0xLjI4NTE4IC00LjM1NDY4LC0zLjI2NzcxIC0wLjA2OTY3LC01LjAxOTI4YzAsMCA5LjMwMjQ5LC0wLjMwMTIzIDEyLjEzOTAyLC00LjE2NjUxeiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIxNC4xNjUzMSwxNTIuMzM0NzJjMS40OTI4MiwtMS42NDY2OSAxLjk0MDQ3LC01LjA3Nzg3IDIuMjU4NCwtNy4wOTMyOGMwLjMwOTc1LC0xLjk2MzU1IDAuODk0NjcsLTEuODk1MDkgMS4zMzg0OSwwLjA5OTA2YzAuNDY5NjYsMi4xMTAyOSAxLjAzMzIyLDUuNjIxMjMgMi4zNjMwNiw3LjA4ODE0YzEuNTE5NTgsMS42NzYyMSA0LjUzMDM3LDEuNTgwMTMgNi43NTU3LDIuMjY5NzVjMS41NjI0MywwLjQ4NDE4IDEuNDIzMiwwLjc2MTQ4IC0wLjI4MzA3LDEuMDUzNDZjLTIuMTkwOTgsMC4zNzQ5MiAtNS4wMjgwMSwwLjY4MTA3IC02LjU1Nzc2LDIuMzY4NWMtMS42MTQwOCwxLjc4MDQ2IC0yLjE2MzkzLDYuMDM3MjIgLTIuNTQxNzUsOC41NjYyOWMtMC4yNTkxMiwxLjczNDUyIC0wLjk4OTY3LDAuOTk1NyAtMS4xMjUyOSwwLjExMzQ0Yy0wLjM5MDk5LC0yLjU0MzU0IC0wLjk5ODQyLC02LjkxNzQ0IC0yLjgwMzc2LC04LjkwODg2Yy0xLjI3Nzc5LC0xLjQwOTUgLTMuMzk5OSwtMS42NjM2NyAtNS4xMzcwNiwtMi4wNTUxNmMtMi4zNDM3NywtMC41MjgyMSAtMi42MDU5LC0wLjcwMzcgLTAuNDMwMjcsLTEuNDIzNTljMCwwIDQuNzIzMTMsLTAuNDg5MTIgNi4xNjMzMSwtMi4wNzc3NXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMTAiLz48cGF0aCBkPSJNMjE0LjE2NTMxLDE1Mi4zMzQ3MmMxLjQ5MjgyLC0xLjY0NjY5IDEuMjczODEsLTQuOTY2NzYgMS41OTE3NCwtNi45ODIxN2MwLjMwOTc1LC0xLjk2MzU1IDIuMTE2ODksLTIuMDA2MiAyLjU2MDcsLTAuMDEyMDVjMC40Njk2NiwyLjExMDI5IDAuNDc3NjcsNS42MjEyMyAxLjgwNzUxLDcuMDg4MTRjMS41MTk1OCwxLjY3NjIxIDQuMzA4MTUsMC42MzU2OCA2LjUzMzQ4LDEuMzI1M2MxLjU2MjQzLDAuNDg0MTggMS42NDU0MiwyLjI2MTQ4IC0wLjA2MDg1LDIuNTUzNDZjLTIuMTkwOTgsMC4zNzQ5MiAtNS4wMjgwMSwwLjEyNTUyIC02LjU1Nzc2LDEuODEyOTVjLTEuNjE0MDgsMS43ODA0NiAtMS4xNjM5Myw2LjAzNzIyIC0xLjU0MTc1LDguNTY2MjljLTAuMjU5MTIsMS43MzQ1MiAtMi43Njc0NSwwLjk5NTcgLTIuOTAzMDcsMC4xMTM0NGMtMC4zOTA5OSwtMi41NDM1NCAtMC4yMjA2NCwtNi45MTc0NCAtMi4wMjU5OCwtOC45MDg4NmMtMS4yNzc3OSwtMS40MDk1IC00LjI4ODc5LC0wLjk5NyAtNi4wMjU5NSwtMS4zODg0OWMtMi4wMDQ1OCwtMC40NTE3NyAtMS4yNjQyMSwtMi4yMDEwOCAtMC4wMDA1MiwtMi42OTgwOWMwLjIxMzgyLC0wLjA4NDA5IDUuMTgyMjgsMC4xMTg3MSA2LjYyMjQ2LC0xLjQ2OTkyeiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIyMC44NTY0LDIwNC44MDk1MWMxLjU2MTg4LC0xLjk1NjIgMi4wMzAyNSwtNi4wMzIyOSAyLjM2Mjg5LC04LjQyNjUyYzAuMzI0MDgsLTIuMzMyNjIgMC45MzYwNiwtMi4yNTEyOSAxLjQwMDQxLDAuMTE3NjhjMC40OTEzOSwyLjUwNjkzIDEuMDgxMDIsNi42Nzc3OSAyLjQ3MjM5LDguNDIwNDFjMS41ODk4OSwxLjk5MTI2IDQuNzM5OTgsMS44NzcxNCA3LjA2ODI1LDIuNjk2MzdjMS42MzQ3MiwwLjU3NTIgMS40ODkwNSwwLjkwNDYxIC0wLjI5NjE3LDEuMjUxNDdjLTIuMjkyMzUsMC40NDUzOCAtNS4yNjA2NCwwLjgwOTA4IC02Ljg2MTE2LDIuODEzNjhjLTEuNjg4NzUsMi4xMTUxMSAtMi4yNjQwNSw3LjE3MTk4IC0yLjY1OTM1LDEwLjE3NjQxYy0wLjI3MTExLDIuMDYwNTQgLTEuMDM1NDUsMS4xODI4NSAtMS4xNzczNSwwLjEzNDc2Yy0wLjQwOTA4LC0zLjAyMTYyIC0xLjA0NDYxLC04LjIxNzY0IC0yLjkzMzQ4LC0xMC41ODMzNmMtMS4zMzY5MSwtMS42NzQ0MiAtMy41NTcxOSwtMS45NzYzNyAtNS4zNzQ3MSwtMi40NDE0NWMtMi40NTIyLC0wLjYyNzQ5IC0yLjcyNjQ2LC0wLjgzNTk1IC0wLjQ1MDE5LC0xLjY5MTE2YzAsMCA0Ljk0MTY1LC0wLjU4MTA3IDYuNDQ4NDYsLTIuNDY4M3oiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMTAiLz48cGF0aCBkPSJNMjIwLjg1NjQsMjA0LjgwOTUxYzEuNTYxODgsLTEuOTU2MiAxLjM2MzU4LC02LjAzMjI5IDEuNjk2MjIsLTguNDI2NTJjMC4zMjQwOCwtMi4zMzI2MiAyLjM4MDUsLTIuMjUxMjkgMi44NDQ4NiwwLjExNzY4YzAuNDkxMzksMi41MDY5MyAwLjMwMzI0LDYuNjc3NzkgMS42OTQ2LDguNDIwNDFjMS41ODk4OSwxLjk5MTI2IDQuMjk1NTMsMC45NDY1OCA2LjYyMzgxLDEuNzY1ODJjMS42MzQ3MiwwLjU3NTIgMS45MzM0OSwyLjM5MDcyIDAuMTQ4MjgsMi43Mzc1OGMtMi4yOTIzNSwwLjQ0NTM4IC01LjI2MDY0LDAuMjUzNTIgLTYuODYxMTYsMi4yNTgxM2MtMS42ODg3NSwyLjExNTExIC0xLjQ4NjI3LDcuMTcxOTggLTEuODgxNTYsMTAuMTc2NDFjLTAuMjcxMTEsMi4wNjA1NCAtMi41OTEwMSwxLjE4Mjg1IC0yLjczMjksMC4xMzQ3NmMtMC40MDkwOCwtMy4wMjE2MiAtMC4yNjY4MywtOC4yMTc2NCAtMi4xNTU3LC0xMC41ODMzNmMtMS4zMzY5MSwtMS42NzQ0MiAtNC4wMDE2NCwtMS41MzE5MyAtNS44MTkxNiwtMS45OTcwMWMtMi40NTIyLC0wLjYyNzQ5IC0yLjI4MjAxLC0xLjgzNTk1IC0wLjAwNTc0LC0yLjY5MTE2YzAsMCA0Ljk0MTY0LC0wLjAyNTUyIDYuNDQ4NDUsLTEuOTEyNzV6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjAiLz48L2c+PC9nPjwvc3ZnPg==";
 
   class imgEffectsSP {
     constructor() {
@@ -42,7 +43,7 @@
               HEX: {
                 type: Scratch.ArgumentType.COLOR,
                 defaultValue: "#FF0000",
-               },
+              },
               CHANNEL: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "CHANNELS",
@@ -263,13 +264,13 @@
             arguments: {
               MAIN: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "source-uri-here"
+                defaultValue: "source-uri-here",
               },
               CUTOUT: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "cutout-uri-here"
-              }
-            }
+                defaultValue: "cutout-uri-here",
+              },
+            },
           },
           {
             opcode: "setCutout",
@@ -283,8 +284,8 @@
               Y: {
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 0,
-              }
-            }
+              },
+            },
           },
           {
             opcode: "changeCutout",
@@ -298,8 +299,8 @@
               Y: {
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 0,
-              }
-            }
+              },
+            },
           },
           {
             opcode: "currentCut",
@@ -309,9 +310,9 @@
               POS: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "POSITIONS",
-                defaultValue: "X"
-              }
-            }  
+                defaultValue: "X",
+              },
+            },
           },
           {
             opcode: "setScale",
@@ -322,7 +323,7 @@
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 100,
               },
-            }
+            },
           },
           {
             opcode: "changeScale",
@@ -333,7 +334,7 @@
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 10,
               },
-            }
+            },
           },
           {
             opcode: "currentScale",
@@ -349,7 +350,7 @@
                 type: Scratch.ArgumentType.ANGLE,
                 defaultValue: 90,
               },
-            }
+            },
           },
           {
             opcode: "changeDirection",
@@ -360,7 +361,7 @@
                 type: Scratch.ArgumentType.ANGLE,
                 defaultValue: 15,
               },
-            }
+            },
           },
           {
             opcode: "currentDir",
@@ -472,11 +473,7 @@
         menus: {
           CHANNELS: {
             acceptReporters: true,
-            items: [
-              "R", 
-              "G", 
-              "B"
-            ]
+            items: ["R", "G", "B"],
           },
           POSITIONS: ["X", "Y"],
           REMOVAL: ["under", "over", "equal to"],
@@ -495,28 +492,28 @@
               "Blur",
               "Scanlines",
               "Grain",
-              "Cubism"
-            ]
-          }
+              "Cubism",
+            ],
+          },
         },
       };
     }
 
     convertHexToRGB(args) {
-        const hexColor = args.HEX;
-        const channel = args.CHANNEL;
+      const hexColor = args.HEX;
+      const channel = args.CHANNEL;
 
-        const r = parseInt(hexColor.substring(1, 3), 16);
-        const g = parseInt(hexColor.substring(3, 5), 16);
-        const b = parseInt(hexColor.substring(5, 7), 16);
+      const r = parseInt(hexColor.substring(1, 3), 16);
+      const g = parseInt(hexColor.substring(3, 5), 16);
+      const b = parseInt(hexColor.substring(5, 7), 16);
 
-        if (channel === "R") {
-          return r;
-        } else if (channel === "G") {
-          return g;
-        } else if (channel === "B") {
-          return b;
-        }
+      if (channel === "R") {
+        return r;
+      } else if (channel === "G") {
+        return g;
+      } else if (channel === "B") {
+        return b;
+      }
     }
 
     applyHueEffect(args) {
@@ -548,16 +545,16 @@
     applyHue(imageData, r, g, b) {
       const data = imageData.data;
       for (let i = 0; i < data.length; i += 4) {
-        data[i] = Math.min(255, data[i] * r / 255);
-        data[i + 1] = Math.min(255, data[i + 1] * g / 255);
-        data[i + 2] = Math.min(255, data[i + 2] * b / 255);
+        data[i] = Math.min(255, (data[i] * r) / 255);
+        data[i + 1] = Math.min(255, (data[i + 1] * g) / 255);
+        data[i + 2] = Math.min(255, (data[i + 2] * b) / 255);
       }
     }
 
     applyEffect(args) {
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
-        const percentage = (args.PERCENTAGE !== "") ? args.PERCENTAGE : 100;
+        const percentage = args.PERCENTAGE !== "" ? args.PERCENTAGE : 100;
 
         const img = new Image();
         img.onload = async () => {
@@ -568,7 +565,7 @@
           ctx.drawImage(img, 0, 0);
 
           let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const sEffect = args.EFFECT;      
+          const sEffect = args.EFFECT;
           switch (sEffect) {
             case "Glitch":
               this.applyGlitch(imageData, percentage);
@@ -690,15 +687,25 @@
             const context = canvas.getContext("2d");
             const scaledWidth = cutoutImage.width + this.scale;
             const scaledHeight = cutoutImage.height + this.scale;
-            const cutX = this.cutoutX + (mainImage.width / 2) - (scaledWidth / 2);
-            const cutY = this.cutoutY - (mainImage.height / 2) + (scaledHeight / 2);
+            const cutX = this.cutoutX + mainImage.width / 2 - scaledWidth / 2;
+            const cutY = this.cutoutY - mainImage.height / 2 + scaledHeight / 2;
 
             context.drawImage(mainImage, 0, 0);
             context.globalCompositeOperation = "destination-in";
-            const rotationAngle = ((this.cutoutDirection + 270) * Math.PI) / 180;
-            context.translate(cutX + scaledWidth / 2, cutY * -1 + scaledHeight / 2);
+            const rotationAngle =
+              ((this.cutoutDirection + 270) * Math.PI) / 180;
+            context.translate(
+              cutX + scaledWidth / 2,
+              cutY * -1 + scaledHeight / 2
+            );
             context.rotate(rotationAngle);
-            context.drawImage(cutoutImage, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+            context.drawImage(
+              cutoutImage,
+              -scaledWidth / 2,
+              -scaledHeight / 2,
+              scaledWidth,
+              scaledHeight
+            );
             context.setTransform(1, 0, 0, 1, 0, 0);
             context.globalCompositeOperation = "source-over";
 
@@ -723,9 +730,9 @@
           const b = data[i + 2];
 
           const negative = Math.random() < 0.5 ? -1 : 1;
-          const randomOffsetR = Math.random() * ((percentage * 1.5) * negative);
-          const randomOffsetG = Math.random() * ((percentage * 1.5) * negative);
-          const randomOffsetB = Math.random() * ((percentage * 1.5) * negative);
+          const randomOffsetR = Math.random() * (percentage * 1.5 * negative);
+          const randomOffsetG = Math.random() * (percentage * 1.5 * negative);
+          const randomOffsetB = Math.random() * (percentage * 1.5 * negative);
 
           data[i] = (r + randomOffsetR) % 256;
           data[i + 1] = (g + randomOffsetG) % 256;
@@ -750,17 +757,29 @@
           const index = (y * width + x) * 4;
           const distanceX = Math.abs(x - centerX);
           const distanceY = Math.abs(y - centerY);
-          const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+          const distance = Math.sqrt(
+            distanceX * distanceX + distanceY * distanceY
+          );
           let vignetteAmount = "";
           if (percent < 0) {
-            vignetteAmount =  1 - (distance / maxDistance) * (percent / 100);
+            vignetteAmount = 1 - (distance / maxDistance) * (percent / 100);
           } else {
-            vignetteAmount = ((maxDistance - distance) / maxDistance) * (percent / 100);
+            vignetteAmount =
+              ((maxDistance - distance) / maxDistance) * (percent / 100);
           }
 
-          data[index] = Math.max(0, Math.min(255, data[index] * vignetteAmount));
-          data[index + 1] = Math.max(0, Math.min(255, data[index + 1] * vignetteAmount));
-          data[index + 2] = Math.max(0, Math.min(255, data[index + 2] * vignetteAmount));
+          data[index] = Math.max(
+            0,
+            Math.min(255, data[index] * vignetteAmount)
+          );
+          data[index + 1] = Math.max(
+            0,
+            Math.min(255, data[index + 1] * vignetteAmount)
+          );
+          data[index + 2] = Math.max(
+            0,
+            Math.min(255, data[index + 2] * vignetteAmount)
+          );
         }
       }
     }
@@ -779,11 +798,17 @@
           const dy = y - centerY;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          const offset = Math.sin(distance * (percentage / 100)) * (percentage / 100);
+          const offset =
+            Math.sin(distance * (percentage / 100)) * (percentage / 100);
           const sourceX = Math.floor(x + offset);
           const sourceY = Math.floor(y);
 
-          if (sourceX >= 0 && sourceX < width && sourceY >= 0 && sourceY < height) {
+          if (
+            sourceX >= 0 &&
+            sourceX < width &&
+            sourceY >= 0 &&
+            sourceY < height
+          ) {
             const sourceIndex = (sourceY * width + sourceX) * 4;
             if (data[sourceIndex + 3] > 0) {
               data[index] = data[sourceIndex];
@@ -808,8 +833,16 @@
 
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-          const srcX = x + Math.floor(Math.random() * displacementAmount * 2 - displacementAmount);
-          const srcY = y + Math.floor(Math.random() * displacementAmount * 2 - displacementAmount);
+          const srcX =
+            x +
+            Math.floor(
+              Math.random() * displacementAmount * 2 - displacementAmount
+            );
+          const srcY =
+            y +
+            Math.floor(
+              Math.random() * displacementAmount * 2 - displacementAmount
+            );
 
           if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
             const srcIndex = (srcY * width + srcX) * 4;
@@ -830,26 +863,32 @@
       const numLevels = Math.max(percentage / 10, 1);
 
       for (let i = 0; i < data.length; i += 4) {
-        data[i] = Math.round(data[i] * (numLevels - 1) / 255) * (255 / (numLevels - 1));
-        data[i + 1] = Math.round(data[i + 1] * (numLevels - 1) / 255) * (255 / (numLevels - 1));
-        data[i + 2] = Math.round(data[i + 2] * (numLevels - 1) / 255) * (255 / (numLevels - 1));
+        data[i] =
+          Math.round((data[i] * (numLevels - 1)) / 255) *
+          (255 / (numLevels - 1));
+        data[i + 1] =
+          Math.round((data[i + 1] * (numLevels - 1)) / 255) *
+          (255 / (numLevels - 1));
+        data[i + 2] =
+          Math.round((data[i + 2] * (numLevels - 1)) / 255) *
+          (255 / (numLevels - 1));
       }
     }
 
     applyBulgeEffect(args) {
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
-        let centerX = (args.CENTER_X !== "") ? args.CENTER_X / 100 : 0;
-        let centerY = (args.CENTER_Y !== "") ? args.CENTER_Y / -100: 0;
-        const strength = (args.STRENGTH !== "") ? args.STRENGTH / 100 : 0;
+        let centerX = args.CENTER_X !== "" ? args.CENTER_X / 100 : 0;
+        let centerY = args.CENTER_Y !== "" ? args.CENTER_Y / -100 : 0;
+        const strength = args.STRENGTH !== "" ? args.STRENGTH / 100 : 0;
 
         const img = new Image();
         img.onload = async () => {
           const canvas = document.createElement("canvas");
           canvas.width = img.width;
           canvas.height = img.height;
-          centerX = centerX + (img.width / 200);
-          centerY = centerY + (img.height / 200);
+          centerX = centerX + img.width / 200;
+          centerY = centerY + img.height / 200;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0);
 
@@ -876,8 +915,8 @@
           const dy = (y / height - centerY) * 2;
           const distance = Math.sqrt(dx * dx + dy * dy);
           const bulge = Math.pow(distance, strength);
-          const srcX = Math.floor(x + (dx * bulge * width) - (dx * width));
-          const srcY = Math.floor(y + (dy * bulge * height) - (dy * height));
+          const srcX = Math.floor(x + dx * bulge * width - dx * width);
+          const srcY = Math.floor(y + dy * bulge * height - dy * height);
 
           if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
             const srcIndex = (srcY * width + srcX) * 4;
@@ -895,10 +934,10 @@
     applyWaveEffect(args) {
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
-        const amplitudeX = (args.AMPX !== "") ? args.AMPX / 10 : 0;
-        const amplitudeY = (args.AMPY !== "") ? args.AMPY / 10 : 0;
-        const frequencyX = (args.FREQX !== "") ? args.FREQX / 100 : 0;
-        const frequencyY = (args.FREQY !== "") ? args.FREQY / 100 : 0;
+        const amplitudeX = args.AMPX !== "" ? args.AMPX / 10 : 0;
+        const amplitudeY = args.AMPY !== "" ? args.AMPY / 10 : 0;
+        const frequencyX = args.FREQX !== "" ? args.FREQX / 100 : 0;
+        const frequencyY = args.FREQY !== "" ? args.FREQY / 100 : 0;
 
         const img = new Image();
         img.onload = async () => {
@@ -909,7 +948,13 @@
           ctx.drawImage(img, 0, 0);
 
           let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.applyWave(imageData, amplitudeX, amplitudeY, frequencyX, frequencyY);
+          this.applyWave(
+            imageData,
+            amplitudeX,
+            amplitudeY,
+            frequencyX,
+            frequencyY
+          );
           ctx.putImageData(imageData, 0, 0);
 
           const modifiedDataUrl = canvas.toDataURL();
@@ -948,18 +993,27 @@
       const data = imageData.data;
       const width = imageData.width;
       const height = imageData.height;
-      const radius = (percentage > 1) ? Math.floor((percentage / 100) * 10) : 0;
+      const radius = percentage > 1 ? Math.floor((percentage / 100) * 10) : 0;
 
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-          let r = 0, g = 0, b = 0, a = 0, count = 0;
+          let r = 0,
+            g = 0,
+            b = 0,
+            a = 0,
+            count = 0;
 
           for (let ky = -radius; ky <= radius; ky++) {
             for (let kx = -radius; kx <= radius; kx++) {
               const offsetX = x + kx;
               const offsetY = y + ky;
 
-              if (offsetX >= 0 && offsetX < width && offsetY >= 0 && offsetY < height) {
+              if (
+                offsetX >= 0 &&
+                offsetX < width &&
+                offsetY >= 0 &&
+                offsetY < height
+              ) {
                 const pixelIndex = (offsetY * width + offsetX) * 4;
 
                 r += data[pixelIndex];
@@ -987,9 +1041,9 @@
     applyLineGlitchEffect(args) {
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
-        const percentage = (args.PERCENTAGE !== "") ? args.PERCENTAGE / 100 : 0;
+        const percentage = args.PERCENTAGE !== "" ? args.PERCENTAGE / 100 : 0;
         const direction = args.DIRECT;
-        const width = (args.WIDTH !== "") ? args.WIDTH / 50 : 0;
+        const width = args.WIDTH !== "" ? args.WIDTH / 50 : 0;
 
         const img = new Image();
         img.onload = async () => {
@@ -1027,7 +1081,12 @@
               const srcX = x;
               const srcY = linePosition;
 
-              if (srcX >= 0 && srcX < imgWidth && srcY >= 0 && srcY < imgHeight) {
+              if (
+                srcX >= 0 &&
+                srcX < imgWidth &&
+                srcY >= 0 &&
+                srcY < imgHeight
+              ) {
                 const srcIndex = (srcY * imgWidth + srcX) * 4;
                 const dstIndex = (y * imgWidth + x) * 4;
 
@@ -1044,7 +1103,12 @@
               const srcX = linePosition;
               const srcY = y;
 
-              if (srcX >= 0 && srcX < imgWidth && srcY >= 0 && srcY < imgHeight) {
+              if (
+                srcX >= 0 &&
+                srcX < imgWidth &&
+                srcY >= 0 &&
+                srcY < imgHeight
+              ) {
                 const srcIndex = (srcY * imgWidth + srcX) * 4;
                 const dstIndex = (y * imgWidth + x) * 4;
 
@@ -1093,7 +1157,7 @@
     removeTransparencyEffect(args) {
       return new Promise((resolve) => {
         const svgDataUri = args.SVG;
-        const threshold = (args.THRESHOLD !== "") ? args.THRESHOLD / 100 : 0;
+        const threshold = args.THRESHOLD !== "" ? args.THRESHOLD / 100 : 0;
         const removeUnder = args.REMOVE;
 
         const img = new Image();
@@ -1121,9 +1185,13 @@
 
       for (let i = 0; i < pixelCount; i++) {
         const alpha = data[i * 4 + 3] / 255;
-        if ((removeUnder === "under" && alpha < threshold) || 
-        (removeUnder === "over" && alpha > threshold) ||
-        (removeUnder === "equal to" && alpha > (threshold - 0.01) && alpha < (threshold + 0.01))) {
+        if (
+          (removeUnder === "under" && alpha < threshold) ||
+          (removeUnder === "over" && alpha > threshold) ||
+          (removeUnder === "equal to" &&
+            alpha > threshold - 0.01 &&
+            alpha < threshold + 0.01)
+        ) {
           data[i * 4 + 3] = 0;
         }
       }
@@ -1200,8 +1268,8 @@
       const height = imageData.height;
       const percent = percentage / 100;
 
-      const numPixelsToEnlarge = Math.floor(percent / 100 * (width * height));
-      const maxEnlargeFactor = 1.5 + (percent / 200);
+      const numPixelsToEnlarge = Math.floor((percent / 100) * (width * height));
+      const maxEnlargeFactor = 1.5 + percent / 200;
 
       for (let i = 0; i < numPixelsToEnlarge; i++) {
         const x = Math.floor(Math.random() * width);
@@ -1229,7 +1297,7 @@
         }
       }
     }
-    
+
     applyScanlines(imageData, percentage) {
       const data = imageData.data;
       const width = imageData.width;
@@ -1244,8 +1312,14 @@
           for (let x = 0; x < width; x++) {
             const index = (y * width + x) * 4;
             data[index] = Math.min(data[index] + scanlineBrightness, 255);
-            data[index + 1] = Math.min(data[index + 1] + scanlineBrightness, 255);
-            data[index + 2] = Math.min(data[index + 2] + scanlineBrightness, 255);
+            data[index + 1] = Math.min(
+              data[index + 1] + scanlineBrightness,
+              255
+            );
+            data[index + 2] = Math.min(
+              data[index + 2] + scanlineBrightness,
+              255
+            );
           }
         }
       }
@@ -1275,7 +1349,10 @@
       const data = imageData.data;
       const width = imageData.width;
       const height = imageData.height;
-      const percent = (percentage === 0 || percentage === "") ? 1 : Math.abs(Scratch.Cast.toNumber(percentage));
+      const percent =
+        percentage === 0 || percentage === ""
+          ? 1
+          : Math.abs(Scratch.Cast.toNumber(percentage));
 
       for (let y = 0; y < height; y += percent) {
         for (let x = 0; x < width; x += percent) {
@@ -1359,10 +1436,20 @@
           canvas.width = img.width + Math.abs(percentage) * 5;
           canvas.height = img.height + Math.abs(percentage) * 5;
           const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, Math.abs(percentage) * 2.5, Math.abs(percentage) * 2.5);
+          ctx.drawImage(
+            img,
+            Math.abs(percentage) * 2.5,
+            Math.abs(percentage) * 2.5
+          );
 
           let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.applyChromaticAberration(imageData, color1, color2, percentage, direction);
+          this.applyChromaticAberration(
+            imageData,
+            color1,
+            color2,
+            percentage,
+            direction
+          );
           ctx.putImageData(imageData, 0, 0);
 
           const modifiedDataUrl = canvas.toDataURL();
@@ -1450,7 +1537,10 @@
       }
 
       for (let i = 0; i < data.length; i++) {
-        data[i] = Math.max(0, Math.min(255, (data[i] + copy1[i] + copy2[i]) / 2));
+        data[i] = Math.max(
+          0,
+          Math.min(255, (data[i] + copy1[i] + copy2[i]) / 2)
+        );
       }
     }
 
@@ -1466,13 +1556,19 @@
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, img.width, img.height);
 
-          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          const svg = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
+          );
           svg.setAttribute("version", "1.1");
           svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
           svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
           svg.setAttribute("width", img.width.toFixed(5));
           svg.setAttribute("height", img.height.toFixed(5));
-          svg.setAttribute("viewBox", `0,0,${img.width.toFixed(5)},${img.height.toFixed(5)}`);
+          svg.setAttribute(
+            "viewBox",
+            `0,0,${img.width.toFixed(5)},${img.height.toFixed(5)}`
+          );
           const mergedColors = new Map();
 
           for (let y = 0; y < img.height; y++) {
@@ -1489,16 +1585,30 @@
               const rightColor = `rgb(${rightColorData[0]}, ${rightColorData[1]}, ${rightColorData[2]})`;
 
               if (color === rightColor) {
-                const mergedPixel = mergedColors.get(color) || { x1: x, y1: y, x2: x + 1, y2: y };
+                const mergedPixel = mergedColors.get(color) || {
+                  x1: x,
+                  y1: y,
+                  x2: x + 1,
+                  y2: y,
+                };
                 mergedPixel.x2++;
                 mergedColors.set(color, mergedPixel);
               } else {
                 mergedColors.forEach((mergedPixel, colorKey) => {
-                  const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                  const rect = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "rect"
+                  );
                   rect.setAttribute("x", mergedPixel.x1.toFixed(5));
                   rect.setAttribute("y", mergedPixel.y1.toFixed(5));
-                  rect.setAttribute("width", (mergedPixel.x2 - mergedPixel.x1 + 1).toFixed(5));
-                  rect.setAttribute("height", (mergedPixel.y2 - mergedPixel.y1 + 1).toFixed(5));
+                  rect.setAttribute(
+                    "width",
+                    (mergedPixel.x2 - mergedPixel.x1 + 1).toFixed(5)
+                  );
+                  rect.setAttribute(
+                    "height",
+                    (mergedPixel.y2 - mergedPixel.y1 + 1).toFixed(5)
+                  );
                   rect.setAttribute("fill", colorKey);
 
                   svg.appendChild(rect);
@@ -1511,7 +1621,7 @@
           if (args.TYPE === "dataURI") {
             svgString = `data:image/svg+xml;base64,${btoa(svgString)}`;
           }
-          resolve (svgString);
+          resolve(svgString);
         };
       });
     }
@@ -1521,7 +1631,13 @@
       img.src = args.URI;
       const width = img.width;
       const height = img.height;
-      let base = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width / 2}" height="${height / 2}" viewBox="0,0,${width / 2},${height / 2}"><g transform="translate(-175.5,-116)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill="none" fill-rule="nonzero" stroke="none" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><image x="351" y="232" transform="scale(0.5,0.5)" width="${width}" height="${height}" xlink:href="${args.URI}"/></g></g></svg>`;
+      let base = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${
+        width / 2
+      }" height="${height / 2}" viewBox="0,0,${width / 2},${
+        height / 2
+      }"><g transform="translate(-175.5,-116)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill="none" fill-rule="nonzero" stroke="none" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><image x="351" y="232" transform="scale(0.5,0.5)" width="${width}" height="${height}" xlink:href="${
+        args.URI
+      }"/></g></g></svg>`;
       if (args.TYPE === "dataURI") {
         base = `data:image/svg+xml;base64,${btoa(base)}`;
       }
@@ -1556,21 +1672,25 @@
       const svgElement = doc.documentElement;
       const originalWidth = parseFloat(svgElement.getAttribute("width"));
       const originalHeight = parseFloat(svgElement.getAttribute("height"));
-      const newTransform = `matrix(1, ${args.X / 100}, ${args.Y / 100}, 1, ${Math.abs(args.X)}, ${Math.abs(args.Y)})`;
+      const newTransform = `matrix(1, ${args.X / 100}, ${
+        args.Y / 100
+      }, 1, ${Math.abs(args.X)}, ${Math.abs(args.Y)})`;
 
       svgElement.setAttribute("transform", newTransform);
 
       const skewX = Math.abs((args.X / 100) * originalWidth);
       const skewY = Math.abs((args.Y / 100) * originalHeight);
-      const newViewBoxWidth = originalWidth + (2 * skewX);
-      const newViewBoxHeight = originalHeight + (2 * skewY);
-      let newViewBoxX = ((newViewBoxWidth - originalWidth) / 2);
-      newViewBoxX = (newViewBoxX < 0 || args.Y < 0) ? 0 : newViewBoxX;
-      let newViewBoxY = ((newViewBoxHeight - originalHeight) / 2);
-      newViewBoxY = (newViewBoxY < 0 || args.X < 0) ? 0 : newViewBoxY;
-      let offsetX = (args.X < 0) ? 1 : 0
-      let offsetY = (args.Y < 0) ? 1 : 0
-      const newViewBox = `${newViewBoxX} ${newViewBoxY} ${newViewBoxWidth - (Math.abs(args.X * offsetX))} ${newViewBoxHeight - (Math.abs(args.Y * offsetY))}`;
+      const newViewBoxWidth = originalWidth + 2 * skewX;
+      const newViewBoxHeight = originalHeight + 2 * skewY;
+      let newViewBoxX = (newViewBoxWidth - originalWidth) / 2;
+      newViewBoxX = newViewBoxX < 0 || args.Y < 0 ? 0 : newViewBoxX;
+      let newViewBoxY = (newViewBoxHeight - originalHeight) / 2;
+      newViewBoxY = newViewBoxY < 0 || args.X < 0 ? 0 : newViewBoxY;
+      let offsetX = args.X < 0 ? 1 : 0;
+      let offsetY = args.Y < 0 ? 1 : 0;
+      const newViewBox = `${newViewBoxX} ${newViewBoxY} ${
+        newViewBoxWidth - Math.abs(args.X * offsetX)
+      } ${newViewBoxHeight - Math.abs(args.Y * offsetY)}`;
       svgElement.setAttribute("viewBox", newViewBox);
 
       const serializer = new XMLSerializer();
