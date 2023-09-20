@@ -1,15 +1,15 @@
 /*
-* v1.9 | Created by SharkPool.
+* v2.0 | Created by SharkPool.
 * https://www.youtube.com/c/SharkPoolthe1
 * Do not remove this comment
 */
 
 (function (Scratch) {
-    'use strict';
+    "use strict";
 
     const vm = Scratch.vm;
 
-    const menuIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==';
+    const menuIconURI = "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==";
 
     function rgbToHsl(r, g, b) {
       r /= 255;
@@ -72,19 +72,19 @@
 
       getInfo() {
       return {
-        id: 'SharkPoolSharktilities',
-        name: 'Sharktilities',
-        color1: '#33B6FF',
+        id: "SharkPoolSharktilities",
+        name: "Sharktilities",
+        color1: "#33B6FF",
         menuIconURI,
         blocks: [
           {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Management',
+            text: "Management",
           },
           {
-            opcode: 'refresh',
+            opcode: "refresh",
             blockType: Scratch.BlockType.COMMAND,
-            text: 'refresh palette',
+            text: "refresh palette",
             arguments: {
               NUMBER: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -92,19 +92,19 @@
               },
               ROUND_TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'ROUND_MENU',
-                defaultValue: 'whole number',
+                menu: "ROUND_MENU",
+                defaultValue: "whole number",
               },
             },
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Numbers and Letters',
+            text: "Numbers and Letters",
           },
           {
-            opcode: 'roundToNearest',
+            opcode: "roundToNearest",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'round [NUMBER] to nearest [ROUND_TYPE]',
+            text: "round [NUMBER] to nearest [ROUND_TYPE]",
             arguments: {
               NUMBER: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -112,42 +112,42 @@
               },
               ROUND_TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'ROUND_MENU',
-                defaultValue: 'whole number',
+                menu: "ROUND_MENU",
+                defaultValue: "whole number",
               },
             },
           },
           {
-            opcode: 'randomLetter',
+            opcode: "randomLetter",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'pick random [LETTER_TYPE] letter',
+            text: "pick random [LETTER_TYPE] letter",
             arguments: {
               LETTER_TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'LETTER_TYPE_MENU',
-                defaultValue: 'lowercase',
+                menu: "LETTER_TYPE_MENU",
+                defaultValue: "lowercase",
               },
             },
           },
           {
             disableMonitor: true,
-            opcode: 'randomSingleInteger',
+            opcode: "randomSingleInteger",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'pick random single integer',
+            text: "pick random single integer",
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Color and Effects',
+            text: "Color and Effects",
           },
           {
-            opcode: 'setSpriteEffect',
+            opcode: "setSpriteEffect",
             blockType: Scratch.BlockType.COMMAND,
-            text: 'set [EFFECT] effect to [VALUE] for [SPRITE]',
+            text: "set [EFFECT] effect to [VALUE] for [SPRITE]",
             arguments: {
               EFFECT: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'EFFECT_MENU',
-                defaultValue: 'color',
+                menu: "EFFECT_MENU",
+                defaultValue: "color",
               },
               VALUE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -155,18 +155,18 @@
               },
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: 'Sprite1',
+                defaultValue: "Sprite1",
               },
             },
           },
           {
-            opcode: 'hexBrightness',
+            opcode: "hexBrightness",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'change brightness of color [COLOR] by [CHANGE]',
+            text: "change brightness of color [COLOR] by [CHANGE]",
             arguments: {
               COLOR: {
                 type: Scratch.ArgumentType.COLOR,
-                defaultValue: '#FF0000',
+                defaultValue: "#FF0000",
               },
               CHANGE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -176,12 +176,12 @@
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Math',
+            text: "Math",
           },
           {
-            opcode: 'tripleOperator',
+            opcode: "tripleOperator",
             blockType: Scratch.BlockType.REPORTER,
-            text: '[NUM1] [OPERATOR1] [NUM2] [OPERATOR2] [NUM3]',
+            text: "[NUM1] [OPERATOR1] [NUM2] [OPERATOR2] [NUM3]",
             arguments: {
               NUM1: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -189,8 +189,8 @@
               },
               OPERATOR1: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'OPERATOR_MENU',
-                defaultValue: '+',
+                menu: "OPERATOR_MENU",
+                defaultValue: "+",
               },
               NUM2: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -198,8 +198,8 @@
               },
               OPERATOR2: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'OPERATOR_MENU',
-                defaultValue: '+',
+                menu: "OPERATOR_MENU",
+                defaultValue: "+",
               },
               NUM3: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -208,9 +208,9 @@
             },
           },
           {
-            opcode: 'quadrupleOperator',
+            opcode: "quadrupleOperator",
             blockType: Scratch.BlockType.REPORTER,
-            text: '[NUM1] [OPERATOR1] [NUM2] [OPERATOR2] [NUM3] [OPERATOR3] [NUM4]',
+            text: "[NUM1] [OPERATOR1] [NUM2] [OPERATOR2] [NUM3] [OPERATOR3] [NUM4]",
             arguments: {
               NUM1: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -218,8 +218,8 @@
               },
               OPERATOR1: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'OPERATOR_MENU',
-                defaultValue: '+',
+                menu: "OPERATOR_MENU",
+                defaultValue: "+",
               },
               NUM2: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -227,8 +227,8 @@
               },
               OPERATOR2: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'OPERATOR_MENU',
-                defaultValue: '+',
+                menu: "OPERATOR_MENU",
+                defaultValue: "+",
               },
               NUM3: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -236,8 +236,8 @@
               },
               OPERATOR3: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'OPERATOR_MENU',
-                defaultValue: '+',
+                menu: "OPERATOR_MENU",
+                defaultValue: "+",
               },
               NUM4: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -246,9 +246,9 @@
             },
           },
           {
-            opcode: 'negaAbs',
+            opcode: "negaAbs",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'nega-abs of [NUMBER]',
+            text: "nega-abs of [NUMBER]",
             arguments: {
               NUMBER: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -257,14 +257,14 @@
             },
           },
           {
-            opcode: 'smoothing',
+            opcode: "smoothing",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'smooth [MATH] at speed [SPEED] and limit [LIMIT]',
+            text: "smooth [MATH] at speed [SPEED] and limit [LIMIT]",
             arguments: {
               MATH: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'mathMenu',
-                defaultValue: 'sin',
+                menu: "mathMenu",
+                defaultValue: "sin",
               },
               SPEED: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -278,63 +278,113 @@
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Strings',
+            text: "Strings",
           },
           {
-            opcode: 'tripleJoin',
+            opcode: "replaceKey",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'join [STRING1] [STRING2] [STRING3]',
+            text: "replace [KEY] #[ORDER] of [STRING] with [REPLACE]",
             arguments: {
-              STRING1: {
+              STRING: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: "SharkPool is cool. SharkPool is great.",
               },
-              STRING2: {
+              KEY: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: "is",
               },
-              STRING3: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+              ORDER: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 2,
+              },
+              REPLACE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: "isnt",
               },
             },
           },
           {
-            opcode: 'quadrupleJoin',
+            opcode: "replaceKeys",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'join [STRING1] [STRING2] [STRING3] [STRING4]',
+            text: "replace [KEY] #[ORDER] to #[ORDER2] of [STRING] with [REPLACE]",
+            arguments: {
+              STRING: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "SharkPool is cool. SharkPool is great.",
+              },
+              KEY: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "is",
+              },
+              ORDER: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1,
+              },
+              ORDER2: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 2,
+              },
+              REPLACE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: "isnt",
+              },
+            },
+          },
+          {
+            opcode: "tripleJoin",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "join [STRING1] [STRING2] [STRING3]",
             arguments: {
               STRING1: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: "",
               },
               STRING2: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: "",
               },
               STRING3: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: "",
+              },
+            },
+          },
+          {
+            opcode: "quadrupleJoin",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "join [STRING1] [STRING2] [STRING3] [STRING4]",
+            arguments: {
+              STRING1: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              STRING2: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              STRING3: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
               },
               STRING4: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: '',
+                defaultValue: "",
               },
             },
           },
           {
-            opcode: 'shuffleArray',
+            opcode: "shuffleArray",
             blockType: Scratch.BlockType.REPORTER,
-            text: 'organize array [WORDS] by [SHUFFLE_OPTION]',
+            text: "organize array [WORDS] by [SHUFFLE_OPTION]",
             arguments: {
               WORDS: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: 'word1 word2 word3',
+                defaultValue: "word1 word2 word3",
               },
               SHUFFLE_OPTION: {
                 type: Scratch.ArgumentType.STRING,
-                menu: 'shuffleOption',
-                defaultValue: 'random',
+                menu: "shuffleOption",
+                defaultValue: "random",
               },
             },
           }
@@ -342,44 +392,44 @@
         menus: {
           ROUND_MENU: {
             acceptReporters: true,
-            items: ['whole number', 'tenths', 'hundredths', 'thousandths'],
+            items: ["whole number", "tenths", "hundredths", "thousandths"],
           },
           LETTER_TYPE_MENU: {
             acceptReporters: true,
-            items: ['lowercase', 'uppercase'],
+            items: ["lowercase", "uppercase"],
           },
           EFFECT_MENU: {
             acceptReporters: true,
-            items: ['color', 'fisheye', 'whirl', 'pixelate', 'mosaic', 'brightness', 'ghost'],
+            items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"],
           },
           OPERATOR_MENU: {
             acceptReporters: true,
-            items: ['+', '-', '*', '/'],
+            items: ["+", "-", "*", "/"],
           },
           mathMenu: {
             acceptReporters: true,
-            items: ['sin', 'cos'],
+            items: ["sin", "cos"],
           },
           shuffleOption: [
             {
-              text: 'random',
-              value: 'random',
+              text: "random",
+              value: "random",
             },
             {
-              text: 'ascending',
-              value: 'ascending',
+              text: "ascending",
+              value: "ascending",
             },
             {
-              text: 'descending',
-              value: 'descending',
+              text: "descending",
+              value: "descending",
             },
             {
-              text: 'ascending by length',
-              value: 'smallest_length',
+              text: "ascending by length",
+              value: "smallest_length",
             },
             {
-              text: 'descending by length',
-              value: 'biggest_length',
+              text: "descending by length",
+              value: "biggest_length",
             },
           ],
         },
@@ -388,13 +438,13 @@
 
     roundToNearest({ NUMBER, ROUND_TYPE }) {
       switch (ROUND_TYPE) {
-        case 'whole number':
+        case "whole number":
           return Math.round(NUMBER);
-        case 'tenths':
+        case "tenths":
           return Math.round(NUMBER * 10) / 10;
-        case 'hundredths':
+        case "hundredths":
           return Math.round(NUMBER * 100) / 100;
-        case 'thousandths':
+        case "thousandths":
           return Math.round(NUMBER * 1000) / 1000;
         default:
           return Math.round(NUMBER);
@@ -402,16 +452,16 @@
     }
 
     randomLetter({ LETTER_TYPE }) {
-      let letters = '';
+      let letters = "";
       switch (LETTER_TYPE) {
-        case 'lowercase':
-          letters = 'abcdefghijklmnopqrstuvwxyz';
+        case "lowercase":
+          letters = "abcdefghijklmnopqrstuvwxyz";
           break;
-        case 'uppercase':
-          letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        case "uppercase":
+          letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
           break;
         default:
-          letters = 'abcdefghijklmnopqrstuvwxyz';
+          letters = "abcdefghijklmnopqrstuvwxyz";
           break;
       }
       return letters.charAt(Math.floor(Math.random() * letters.length));
@@ -426,26 +476,26 @@
       if (!target) return;
 
       switch (EFFECT) {
-        case 'color':
-          target.setEffect('color', VALUE);
+        case "color":
+          target.setEffect("color", VALUE);
           break;
-        case 'fisheye':
-          target.setEffect('fisheye', VALUE);
+        case "fisheye":
+          target.setEffect("fisheye", VALUE);
           break;
-        case 'whirl':
-          target.setEffect('whirl', VALUE);
+        case "whirl":
+          target.setEffect("whirl", VALUE);
           break;
-        case 'pixelate':
-          target.setEffect('pixelate', VALUE);
+        case "pixelate":
+          target.setEffect("pixelate", VALUE);
           break;
-        case 'mosaic':
-          target.setEffect('mosaic', VALUE);
+        case "mosaic":
+          target.setEffect("mosaic", VALUE);
           break;
-        case 'brightness':
-          target.setEffect('brightness', VALUE);
+        case "brightness":
+          target.setEffect("brightness", VALUE);
           break;
-        case 'ghost':
-          target.setEffect('ghost', VALUE);
+        case "ghost":
+          target.setEffect("ghost", VALUE);
           break;
         default:
           break;
@@ -462,16 +512,16 @@
 
     tripleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3 }) {
       switch (OPERATOR1) {
-        case '+':
+        case "+":
           NUM1 += NUM2;
           break;
-        case '-':
+        case "-":
           NUM1 -= NUM2;
           break;
-        case '*':
+        case "*":
           NUM1 *= NUM2;
           break;
-        case '/':
+        case "/":
           NUM1 /= NUM2;
           break;
         default:
@@ -479,16 +529,16 @@
       }
 
       switch (OPERATOR2) {
-        case '+':
+        case "+":
           NUM1 += NUM3;
           break;
-        case '-':
+        case "-":
           NUM1 -= NUM3;
           break;
-        case '*':
+        case "*":
           NUM1 *= NUM3;
           break;
-        case '/':
+        case "/":
           NUM1 /= NUM3;
           break;
         default:
@@ -499,16 +549,16 @@
 
     quadrupleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3, OPERATOR3, NUM4 }) {
       switch (OPERATOR1) {
-        case '+':
+        case "+":
           NUM1 += NUM2;
           break;
-        case '-':
+        case "-":
           NUM1 -= NUM2;
           break;
-        case '*':
+        case "*":
           NUM1 *= NUM2;
           break;
-        case '/':
+        case "/":
           NUM1 /= NUM2;
           break;
         default:
@@ -516,16 +566,16 @@
       }
 
       switch (OPERATOR2) {
-        case '+':
+        case "+":
           NUM1 += NUM3;
           break;
-        case '-':
+        case "-":
           NUM1 -= NUM3;
           break;
-        case '*':
+        case "*":
           NUM1 *= NUM3;
           break;
-        case '/':
+        case "/":
           NUM1 /= NUM3;
           break;
         default:
@@ -533,16 +583,16 @@
       }
 
       switch (OPERATOR3) {
-        case '+':
+        case "+":
           NUM1 += NUM4;
           break;
-        case '-':
+        case "-":
           NUM1 -= NUM4;
           break;
-        case '*':
+        case "*":
           NUM1 *= NUM4;
           break;
-        case '/':
+        case "/":
           NUM1 /= NUM4;
           break;
         default:
@@ -556,19 +606,19 @@
     }
 
     shuffleArray(args) {
-      const words = args.WORDS.split(' ');
+      const words = args.WORDS.split(" ");
 
       switch (args.SHUFFLE_OPTION) {
-        case 'ascending':
+        case "ascending":
           words.sort();
           break;
-        case 'descending':
+        case "descending":
           words.sort().reverse();
           break;
-        case 'biggest_length':
+        case "biggest_length":
           words.sort((a, b) => b.length - a.length);
           break;
-        case 'smallest_length':
+        case "smallest_length":
           words.sort((a, b) => a.length - b.length);
           break;
         default:
@@ -578,11 +628,11 @@
           }
           break;
       }
-      return words.join(' ');
+      return words.join(" ");
     }
     
     hexBrightness(args) {
-      const hexColor = args.COLOR.replace(/^#/, '');
+      const hexColor = args.COLOR.replace(/^#/, "");
       const r = parseInt(hexColor.substring(0, 2), 16);
       const g = parseInt(hexColor.substring(2, 4), 16);
       const b = parseInt(hexColor.substring(4, 6), 16);
@@ -608,6 +658,41 @@
 
     refresh() {
       vm.extensionManager.refreshBlocks()
+    }
+
+    replaceKey(args) {
+      const string = args.STRING;
+      const regex = new RegExp(args.KEY, "g");
+      let index = 0;
+
+      const newString = string.replace(regex, function(match) {
+        index++;
+        if (index === args.ORDER) {
+          return args.REPLACE;
+        } else {
+          return match;
+        }
+      });
+      return newString;
+    }
+
+    replaceKeys(args) {
+      const string = args.STRING;
+      const regex = new RegExp(args.KEY, 'g');
+      let index = 0;
+
+      const order = args.ORDER;
+      const order2 = order > args.ORDER2 ? order : args.ORDER2;
+
+      const newString = string.replace(regex, function(match) {
+        index++;
+        if (index >= order && index <= order2) {
+          return args.REPLACE;
+        } else {
+          return match;
+        }
+      });
+      return newString;
     }
   }
 
