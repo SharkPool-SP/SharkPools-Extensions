@@ -309,14 +309,8 @@
       this.scrollDistance += event.deltaY;
     };
 
-    getSpriteName() {
-      const currentSpriteTarget = Scratch.vm.runtime.getEditingTarget();
-
-      if (this.isValidTarget(currentSpriteTarget)) {
-        return currentSpriteTarget.sprite.name;
-      } else {
-        return "";
-      }
+    getSpriteName(_, util) {
+      return util.target.getName();
     }
 
     initMicrophone() {
@@ -361,10 +355,6 @@
         sum += dataArray[i];
       }
       return sum / dataArray.length;
-    }
-
-    isValidTarget(target) {
-      return target && target.sprite;
     }
 
     averageMicrophoneLoudness() {
