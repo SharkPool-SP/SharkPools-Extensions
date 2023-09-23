@@ -80,6 +80,11 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching"
     },
+    "Newgrounds-Audio": {
+      "credits": "This extension was made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Newgrounds-Audio.js",
+      "tags": ".all.fetching"
+    },
     "Example": {
       "credits": "",
       "url": "",
@@ -95,6 +100,7 @@
   ],
   "site": {
     "is up": true,
-    "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html"
+    "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html",
+    "Extension Status": ""
   }
 }
