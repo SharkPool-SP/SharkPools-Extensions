@@ -1,94 +1,124 @@
 {
   "extensions": {
     "Sharktilities": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Various utility blocks for various purposes made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
-      "tags": ".all.utilities"
+      "tags": ".all.utilities",
+      "status": "update"
     },
     "YouTube-Operations": {
-      "credits": "This extension was made by SharkPool and with small help from Nekl300",
+      "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
-      "tags": ".all.fetching"
+      "tags": ".all.fetching",
+      "status": ""
     },
     "Time-Calculations": {
-      "credits": "This extension was made by SharkPool (originally meant to be merged with the Time Extension by -SPIC-)",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Time_Calculation.js",
-      "tags": ".all.expanded"
+      "credits": "Blocks for calculating time differences. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Time-Calculation.js",
+      "tags": ".all.utilities.expanded",
+      "status": ""
     },
     "Scratch-Utilities": {
-      "credits": "This extension was made by SharkPool, credit to NexusKitton for the inspiration from S-Grab",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch_Utilities.js",
-      "tags": ".all.expanded.fetching"
+      "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
+      "tags": ".all.expanded.fetching",
+      "status": ""
     },
     "Niche-Toolbox": {
-      "credits": "This extension was made by 0znzw. It merged Color at X&Y and Sound to Data.URI to one with new blocks!",
+      "credits": "Utility blocks made by 0znzw. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here",
       "url": "https://raw.githubusercontent.com/SurvExe1Pc/unsafe-extensions/main/extensions/0znzw/NicheToolbox.js",
-      "tags": ".all.utilities"
+      "tags": ".all.utilities",
+      "status": ""
     },
     "Seeds": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Generate random seeded numbers, generated terrain, and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Seeds.js",
-      "tags": ".all.utilities"
+      "tags": ".all.utilities",
+      "status": ""
     },
     "Tune-Shark": {
-      "credits": "This extension was made by SharkPool, some Blocks were inspired by LilyMakesThings",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune_Shark.js",
-      "tags": ".all.utilities"
+      "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
+      "tags": ".all.utilities",
+      "status": "update"
     },
     "Added-Motion": {
-      "credits": "This extension was made by SharkPool",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added_Motion.js",
-      "tags": ".all.utilities.expanded"
+      "credits": "New motion blocks made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
+      "tags": ".all.utilities.expanded",
+      "status": "update"
     },
     "Geometry-Dash-API": {
-      "credits": "This extension was made by SharkPool, Thank you RobTopGames for making Geometry Dash :)",
+      "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool. Thank you RobTopGames and ColonGD",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geometry-Dash-API.js",
-      "tags": ".all.utilities.fetching"
+      "tags": ".all.utilities.fetching",
+      "status": ""
     },
     "Sound-Waves": {
-      "credits": "This extension was made by SharkPool",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sound_Waves.js",
-      "tags": ".all.utilities"
+      "credits": "Play various oscillators in your project. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sound-Waves.js",
+      "tags": ".all.utilities",
+      "status": ""
     },
     "Hyper-Sense": {
-      "credits": "This extension was made by SharkPool",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper_Sense.js",
-      "tags": ".all.utilities.expanded"
+      "credits": "New Sensing blocks made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
+      "tags": ".all.utilities.expanded",
+      "status": "update"
     },
     "Better-Input": {
-      "credits": "This extension was made by SharkPool",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better_Input.js",
-      "tags": ".all.utilities.expanded"
+      "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
+      "tags": ".all.utilities.expanded",
+      "status": ""
     },
     "Camera-Sensing-Plus": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Better Camera Sensing extension for sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
-      "tags": ".all.utilities.expanded.fetching"
+      "tags": ".all.utilities.expanded.fetching",
+      "status": "update"
     },
     "Particle-Tools": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
-      "tags": ".all.utilities"
+      "tags": ".all.utilities",
+      "status": ""
     },
     "Image-Effects": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Apply new, non-vanilla effects and edits to images and sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
-      "tags": ".all.utilities.expanded"
+      "tags": ".all.utilities.expanded",
+      "status": ""
     },
     "Recording": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
-      "tags": ".all.utilities.fetching"
+      "tags": ".all.utilities.fetching",
+      "status": "new"
     },
     "Newgrounds-Audio": {
-      "credits": "This extension was made by SharkPool",
+      "credits": "Fetch audio and audio information from Newgrounds. Made by SharkPool, works best with Tune Shark",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Newgrounds-Audio.js",
       "tags": ".all.fetching"
+      "status": "new"
+    },
+    "Sprite-Parenting": {
+      "credits": "Link sprites together and make them follow the parent's data. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Parenting.js",
+      "tags": ".all.utilities"
+      "status": "wip"
+    },
+    "Lazy-Collisions": {
+      "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
+      "tags": ".all.utilities",
+      "status": "new"
     },
     "Example": {
       "credits": "",
       "url": "",
-      "tags": ".all.utilities.expanded.fetching"
+      "tags": ".all.utilities.expanded.fetching",
+      "status": "",
     }
   },
   "GAL text": [
@@ -99,7 +129,7 @@
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg"
   ],
   "site": {
-    "is up": true,
+    "is up": false,
     "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html",
     "Extension Status": ""
   }
