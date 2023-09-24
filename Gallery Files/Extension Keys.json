@@ -129,7 +129,7 @@
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg"
   ],
   "site": {
-    "is up": false,
+    "is up": true,
     "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html",
     "Extension Status": ""
   }
