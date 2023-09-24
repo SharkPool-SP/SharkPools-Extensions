@@ -130,7 +130,6 @@
   ],
   "site": {
     "is up": true,
-    "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html",
-    "Extension Status": ""
+    "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html"
   }
 }
