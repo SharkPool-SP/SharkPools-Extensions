@@ -1,42 +1,40 @@
-How to Add YOUR Extension to SharkPool's Extension Collection
+𝐇𝐨𝐰 𝐭𝐨 𝐀𝐝𝐝 𝐘𝐎𝐔𝐑 𝐄𝐱𝐭𝐞𝐧𝐬𝐢𝐨𝐧 𝐭𝐨 𝐒𝐡𝐚𝐫𝐤𝐏𝐨𝐨𝐥'𝐬 𝐄𝐱𝐭𝐞𝐧𝐬𝐢𝐨𝐧 𝐂𝐨𝐥𝐥𝐞𝐜𝐭𝐢𝐨𝐧
 
-Step-By-Step Tutorial
+𝙎𝙩𝙚𝙥-𝘽𝙮-𝙎𝙩𝙚𝙥 𝙏𝙪𝙩𝙤𝙧𝙞𝙖𝙡
 
-Step 1: Make Your Extension
+𝐒𝐭𝐞𝐩 𝟏: Make Your Extension
 
-Step 2: Make a Thumbnail for Your Extension
+𝐒𝐭𝐞𝐩 𝟐: Make a Thumbnail for Your Extension
+  -Rule 1: It 𝙈𝙐𝙎𝙏 be 300x150 px SVG
+  -Rule 2: It 𝙈𝙐𝙎𝙏 have a curved outline bordering the thumbnail (Copy the Borders used in Existing Thumbnails)
 
--Rule 1: It MUST be 300x150 pixel SVG
--Rule 2: It MUST have a curved outline bordering the thumbnail (Same as the other Extensions)
+𝐒𝐭𝐞𝐩 𝟑: Add your Extension Code and Thumbnail to the 'extension-code' and 'extension-thumbs' folders on Github
+  (https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)
+  (https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)
 
-Step 3: Add your Extension Code and Extension Thumbnail to the 'extension-code' and 'extension-thumbs' folder on Github
-
-(https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)
-(https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)
-
-Step 4: Edit and Add to the Extension Keys JSON
-
-(https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension%20Keys.json)
--Rule 1: Under the 'extensions' key, you need to add a new sub-key right before the 'example' extension
--Rule 2: Format it like this, replace the [] with your links/text:
+𝐒𝐭𝐞𝐩 𝟒: Edit and Add to the Extension Keys JSON
+  (https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension%20Keys.json)
+  -Rule 1: Under the 'extensions' key, you need to add a new sub-key right before the 'example' extension
+  -Rule 2: Format it like this, replace the [text] with your links/text:
 
     "[Extension-Name]": {
-      "credits": "[A Short Credits Text for your Extension]",
-      "url": "[Link to the RAW FILE for your Extension Code]",
+      "credits": "[A Short Description of your Extension with Credits]",
+      "url": "[Link to the RAW GITHUB FILE for your Extension Code]", <-- 𝐈𝐟 𝐲𝐨𝐮 𝐜𝐚𝐧'𝐭 𝐝𝐨 𝐭𝐡𝐢𝐬, 𝐒𝐡𝐚𝐫𝐤𝐏𝐨𝐨𝐥 𝐜𝐚𝐧 𝐝𝐨 𝐢𝐭 𝐟𝐨𝐫 𝐲𝐨𝐮!
       "tags": "[Tags that Relate to your Extension]"
+      "status": "[use '𝙣𝙚𝙬' if its a new extension or '𝙪𝙥𝙙𝙖𝙩𝙚' if its an update to an existing extension]"
     }
 
--Sub Rule 1: Extension Name MUST NOT include spaces, use '-' instead
--Sub Rule 2: Tags MUST start with '.all'
--Sub Rule 3: Tags MUST be split by '.' and MUST be from this list:
+  -Sub Rule 1: Extension Name 𝙈𝙐𝙎𝙏 𝙉𝙊𝙏 include spaces, use '-' instead
+  -Sub Rule 2: Tags 𝙈𝙐𝙎𝙏 start with '.all'
+  -Sub Rule 3: Tags 𝙈𝙐𝙎𝙏 be split by '.' and 𝙈𝙐𝙎𝙏 be from this list:
 	
 	Possible Tags:
 	-'utilities' -> Utility Blocks
 	-'expanded' -> Expansion of existing Custom/Vanilla Extension
 	-'fetching' -> Extensions that use 'fetch' or anything related to it
 
-Note: Dont worry about the Extension Thumbnail as they are Automatically Loaded
+  𝙉𝙤𝙩𝙚: 𝘿𝙤𝙣𝙩 𝙬𝙤𝙧𝙧𝙮 𝙖𝙗𝙤𝙪𝙩 𝙩𝙝𝙚 𝙀𝙭𝙩𝙚𝙣𝙨𝙞𝙤𝙣 𝙏𝙝𝙪𝙢𝙗𝙣𝙖𝙞𝙡 𝙖𝙨 𝙩𝙝𝙚𝙮 𝙖𝙧𝙚 𝘼𝙪𝙩𝙤𝙢𝙖𝙩𝙞𝙘𝙖𝙡𝙡𝙮 𝙇𝙤𝙖𝙙𝙚𝙙
 
-Step 5: Pull Request and You're Done!
+𝐒𝐭𝐞𝐩 𝟓: Pull Request and You're Done!
 
-Note: Remember to include all files and changes (SVG Thumbnail, Extension Code, and JSON additions: RAW Code Link, Credits, Name, Tags))
+𝙉𝙤𝙩𝙚: 𝙍𝙚𝙢𝙚𝙢𝙗𝙚𝙧 𝙩𝙤 𝙞𝙣𝙘𝙡𝙪𝙙𝙚 𝙖𝙡𝙡 𝙛𝙞𝙡𝙚𝙨 𝙖𝙣𝙙 𝙘𝙝𝙖𝙣𝙜𝙚𝙨 (𝙎𝙑𝙂 𝙏𝙝𝙪𝙢𝙗𝙣𝙖𝙞𝙡, 𝙀𝙭𝙩𝙚𝙣𝙨𝙞𝙤𝙣 𝘾𝙤𝙙𝙚, 𝙖𝙣𝙙 𝙅𝙎𝙊𝙉 𝙖𝙙𝙙𝙞𝙩𝙞𝙤𝙣𝙨: 𝙍𝘼𝙒 𝘾𝙤𝙙𝙚 𝙇𝙞𝙣𝙠, 𝘾𝙧𝙚𝙙𝙞𝙩𝙨, 𝙉𝙖𝙢𝙚, 𝙏𝙖𝙜𝙨))
