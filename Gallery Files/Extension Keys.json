@@ -106,7 +106,7 @@
       "credits": "Link sprites together and make them follow the parent's data. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Parenting.js",
       "tags": ".all.utilities",
-      "status": "wip"
+      "status": ""
     },
     "Lazy-Collisions": {
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
@@ -126,7 +126,8 @@
     "https://www.youtube.com/channel/UC26hvmetqYgNB3oFewV_gtg",
     "SharkPool's Extension Collection",
     "SharkPool's collection of Turbowarp Extensions that were either made or contributed to by SharkPool. Hover over an extension for details.",
-    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg"
+    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg",
+    "{\"Ext Offset\": \"\", \"offset\": \"\"}"
   ],
   "site": {
     "is up": true,
