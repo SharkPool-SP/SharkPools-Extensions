@@ -3,7 +3,7 @@
 // Description: Make sounds with oscillators!
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.0.1
+// Version V.2.0.2
 
 (function (Scratch) {
   "use strict";
@@ -222,12 +222,14 @@
     }
 
     playNote({ WAVE, NOTE, DURATION, ID }) {
+      this.stopID({ ID });
       const realNote = this.convertScratchNoteToRealNote(Math.round(NOTE));
       const frequency = this.noteToFrequency(realNote);
       this.playSound(frequency, DURATION, WAVE, ID);
     }
 
     playNoteContinuously({ WAVE, NOTE, ID }) {
+      this.stopID({ ID });
       const realNote = this.convertScratchNoteToRealNote(Math.round(NOTE));
       const frequency = this.noteToFrequency(realNote);
       this.playingNote = true;
