@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SharkPools Extension Gallery</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #00C9FF, #0082FF);
+            color: white;
+            text-align: center;
+            font-family: 'Lilita One', cursive;
+        }
+        .container {
+            margin-top: 20%;
+        }
+        .error-image {
+            max-width: 300px;
+        }
+        .centered-list {
+            text-align: left;
+            list-style-position: inside;
+            padding-left: 0;
+        }
+        .outlined-text {
+            text-shadow: 1.5px 2.5px 2px rgba(0, 0, 0, 1);
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap">
 </head>
 <body>
-    The site is currently down! SharkPool is either updating the gallery or a server error occured. Come back later to see if its up. :)
+    <div class="container">
+        <img src="https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/pages/404.svg" alt="Site is Down" class="error-image">
+        <h1 class="outlined-text">Uh Oh! Something Bad Happened!</h1>
+        <p class="outlined-text">It seems you couldn't establish a connection to the Gallery, here are some possible reasons for the Error:</p>
+        <ul class="centered-list">
+            <li class="outlined-text">SharkPool is updating the Gallery</li>
+            <li class="outlined-text">Internet connection</li>
+            <li class="outlined-text">Blacklisted site by Internet Provider (School Internet)</li>
+        </ul>
+        <p class="outlined-text">Reload the page or come back later to see if the Gallery is back online...</p>
+    </div>
 </body>
 </html>
