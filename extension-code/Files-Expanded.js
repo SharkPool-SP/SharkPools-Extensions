@@ -2,6 +2,9 @@
 // ID: files
 // Description: Read, upload, and download files.
 
+// Thank you GarboMuffin for the original Files Extension
+// Thank you Drago Cuven for the File Name and Size Blocks
+
 (function (Scratch) {
   "use strict";
 
@@ -361,6 +364,7 @@
               },
             },
           },
+          //These 2 Blocks By Drago Cuven
           {
             opcode: "FileName",
             blockType: Scratch.BlockType.REPORTER,
@@ -431,6 +435,7 @@
 
           "---",
 
+          //These Blocks By SharkPool
           {
             opcode: "resetStyle",
             blockType: Scratch.BlockType.COMMAND,
