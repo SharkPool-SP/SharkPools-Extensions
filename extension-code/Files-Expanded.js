@@ -23,7 +23,10 @@
     borderRadius: 16,
     borderType: "dashed",
     font: "inherit",
-    shadow: 0.5
+    shadow: 0.5,
+    image: "",
+    imageScale: 100,
+    textV: "Select or drop file"
   };
 
   const builtInFonts = [
@@ -185,7 +188,8 @@
       modal.style.cursor = "pointer";
       modal.style.font = selectorOptions.font;
       modal.style.fontFamily = selectorOptions.font;
-      modal.style.background = selectorOptions.outer;
+      modal.style.background = selectorOptions.image ? selectorOptions.image : selectorOptions.outer;
+      modal.style.backgroundSize = selectorOptions.imageScale + "%";
       modal.style.padding = "16px";
       modal.style.borderRadius = `${selectorOptions.borderRadius}px`;
       modal.style.border = `8px ${selectorOptions.borderType} ${INITIAL_BORDER_COLOR}`;
@@ -209,7 +213,7 @@
       });
 
       const title = document.createElement("div");
-      title.textContent = "Select or drop file";
+      title.textContent = selectorOptions.textV;
       title.style.fontSize = `${selectorOptions.sizeFont}em`;
       title.style.marginBottom = "8px";
       modal.appendChild(title);
@@ -441,6 +445,34 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "reset selector style to default",
           },
+
+          "---",
+
+          {
+            opcode: "imageSet",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set selector image to [IMG]",
+            arguments: {
+              IMG: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "https://extensions.turbowarp.org/dango.png",
+              },
+            },
+          },
+          {
+            opcode: "scaleImage",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "scale selector image to [SCALE]%",
+            arguments: {
+              SCALE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+            },
+          },
+
+          "---",
+
           {
             opcode: "borderColors",
             blockType: Scratch.BlockType.COMMAND,
@@ -480,7 +512,7 @@
             arguments: {
               TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "border",
+                defaultValue: "dashed",
                 menu: "borderTypes",
               },
             },
@@ -494,6 +526,17 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "inherit",
                 menu: "font",
+              },
+            },
+          },
+          {
+            opcode: "textSet",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set file selector text to [TEXT]",
+            arguments: {
+              TEXT: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Insert File Here",
               },
             },
           },
@@ -580,6 +623,14 @@
               {
                 text: "border type",
                 value: "borderType",
+              },
+              {
+                text: "background image",
+                value: "image",
+              },
+              {
+                text: "text",
+                value: "textV",
               },
             ],
           },
@@ -695,7 +746,10 @@
         borderRadius: 16,
         borderType: "dashed",
         font: "inherit",
-        shadow: 0.5
+        shadow: 0.5,
+        image: "",
+        imageScale: 100,
+        textV: "Select or drop file"
       };
     }
 
@@ -706,6 +760,7 @@
           break;
         case "background":
           selectorOptions.outer = args.COLOR;
+          selectorOptions.image = "";
           break;
         default:
           selectorOptions.border = args.COLOR;
@@ -743,6 +798,25 @@
       } else {
         return selectorOptions[args.THING];
       }
+    }
+
+    imageSet(args) {
+      Scratch.canFetch(encodeURI(args.IMG))
+        .then(canFetch => {
+          if (canFetch) {
+            selectorOptions.image = `url(${encodeURI(args.IMG)})`;
+          } else {
+            console.log("Cannot fetch content from the URL.");
+          }
+        });
+    }
+
+    scaleImage(args) {
+      selectorOptions.imageScale = args.SCALE;
+    }
+
+    textSet(args) {
+      selectorOptions.textV = args.TEXT;
     }
   }
 
