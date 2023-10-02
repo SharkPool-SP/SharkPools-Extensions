@@ -16,7 +16,7 @@
       "credits": "Blocks for calculating time differences. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Time-Calculation.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Scratch-Utilities": {
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
@@ -46,7 +46,7 @@
       "credits": "New motion blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Geometry-Dash-API": {
       "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool. Thank you RobTopGames and ColonGD",
@@ -58,13 +58,13 @@
       "credits": "Play various oscillators in your project. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sound-Waves.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "update"
     },
     "Hyper-Sense": {
       "credits": "New Sensing blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
@@ -76,7 +76,7 @@
       "credits": "Better Camera Sensing extension for sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching",
-      "status": "update"
+      "status": ""
     },
     "Particle-Tools": {
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
@@ -94,24 +94,30 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "new"
+      "status": "update"
     },
     "Newgrounds-Audio": {
       "credits": "Fetch audio and audio information from Newgrounds. Made by SharkPool, works best with Tune Shark",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Newgrounds-Audio.js",
       "tags": ".all.fetching",
-      "status": "new"
+      "status": ""
     },
     "Sprite-Parenting": {
       "credits": "Link sprites together and make them follow the parent's data. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Parenting.js",
       "tags": ".all.utilities",
-      "status": "new"
+      "status": ""
     },
     "Lazy-Collisions": {
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
       "tags": ".all.utilities",
+      "status": ""
+    },
+    "Files-Expanded": {
+      "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool and Drago Cuven.",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
+      "tags": ".all.expanded.fetching",
       "status": "new"
     },
     "Example": {
