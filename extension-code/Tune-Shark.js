@@ -1,5 +1,5 @@
 /*
-* This Extension was made by SharkPool (Version 2.1.0)
+* This Extension was made by SharkPool (Version 2.2.0)
 * Credit to HOME for the song "Resonance" being used as the default audio link
 * Credit to LilyMakesThings for some block Ideas
 * Do Not Delete this Comment
@@ -134,28 +134,14 @@
             },
           },
           {
-            opcode: "playAllSounds",
+            opcode: "controlAllSounds",
             blockType: Scratch.BlockType.COMMAND,
-            text: "play all sounds",
-          },
-          {
-            opcode: "stopAllSounds",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "stop all sounds",
-          },
-          {
-            opcode: "pauseUnpauseSound",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "set sound [NAME] to [PAUSE_UNPAUSE]",
+            text: "[CONTROL] all sounds",
             arguments: {
-              NAME: {
+              CONTROL: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
-              PAUSE_UNPAUSE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "pauseUnpauseMenu",
-                defaultValue: "paused",
+                menu: "control",
+                defaultValue: "play",
               },
             },
           },
@@ -194,14 +180,30 @@
             },
           },
           {
+            opcode: "pauseUnpauseSound",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "[PAUSE_UNPAUSE] sound [NAME]",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "MySound",
+              },
+              PAUSE_UNPAUSE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "pauseUnpauseMenu",
+                defaultValue: "pause",
+              },
+            },
+          },
+          {
             opcode: "pauseUnpauseAllSounds",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set all sounds to [PAUSE_UNPAUSE]",
+            text: "[PAUSE_UNPAUSE] all sounds",
             arguments: {
               PAUSE_UNPAUSE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "pauseUnpauseMenu",
-                defaultValue: "paused",
+                defaultValue: "pause",
               },
             },
           },
@@ -336,26 +338,19 @@
             },
           },
           {
-            opcode: "soundExists",
+            opcode: "soundCheck",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "sound [NAME] exists?",
+            text: "sound [NAME] [CONTROL]",
             blockIconURI: settingsIconURI,
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "MySound",
               },
-            },
-          },
-          {
-            opcode: "soundPlaying",
-            blockType: Scratch.BlockType.BOOLEAN,
-            text: "sound [NAME] playing?",
-            blockIconURI: settingsIconURI,
-            arguments: {
-              NAME: {
+              CONTROL: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                menu: "control2",
+                defaultValue: "exists?",
               },
             },
           },
@@ -384,9 +379,6 @@
             text: "delete all sounds",
             blockIconURI: settingsIconURI,
           },
-          
-          "---",
-          
           {
             blockType: Scratch.BlockType.LABEL,
             text: "Array Sound Grouping",
@@ -434,7 +426,7 @@
           {
             opcode: "pauseUnpauseSounds",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set sounds [NAMES] to [PAUSE_UNPAUSE]",
+            text: "[PAUSE_UNPAUSE] sounds [NAMES]",
             blockIconURI: groupIconURI,
             arguments: {
               NAMES: {
@@ -444,7 +436,7 @@
               PAUSE_UNPAUSE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "pauseUnpauseMenu",
-                defaultValue: "paused",
+                defaultValue: "pause",
               },
             },
           },
@@ -502,9 +494,21 @@
           }
         ],
         menus: {
-          pauseUnpauseMenu: ["paused", "unpaused"],
-          soundProperties: ["length", "volume", "speed", "pitch", "paused?", "looping?"],
+          pauseUnpauseMenu: ["pause", "unpause"],
+          soundProperties: {
+            acceptReporters: true,
+            items: [
+              "length",
+              "volume",
+              "speed",
+              "pitch",
+              "paused?",
+              "looping?"
+            ],
+          },
           loopMenu: ["loopable", "unloopable"],
+          control: ["play", "stop"],
+          control2: ["exists?", "playing?"],
         },
       };
     }
@@ -538,10 +542,10 @@
     }
 
     SoundIndex(soundName, util) {
-        const sounds = util.target.sprite.sounds;
-        return sounds.indexOf(sounds.filter((sound) => {
-            return sound.name == soundName;
-        })[0]);
+      const sounds = util.target.sprite.sounds;
+      return sounds.indexOf(sounds.filter((sound) => {
+          return sound.name == soundName;
+      })[0]);
     }
 
     playSound(args) {
@@ -593,7 +597,6 @@
               audio.currentTime = 0;
             });
           }
-
           resolve();
         }, maxTime);
       });
@@ -610,19 +613,15 @@
       }
     }
 
-    playAllSounds() {
+    controlAllSounds(args) {
       Object.values(this.sounds).forEach((soundInstances) => {
         soundInstances.forEach((audio) => {
-          audio.play();
-        });
-      });
-    }
-
-    stopAllSounds() {
-      Object.values(this.sounds).forEach((soundInstances) => {
-        soundInstances.forEach((audio) => {
-          audio.pause();
-          audio.currentTime = 0;
+          if (args.CONTROL === "play") {
+            audio.play();
+          } else {
+            audio.pause();
+            audio.currentTime = 0;
+          }
         });
       });
     }
@@ -680,7 +679,7 @@
       const { NAME, PAUSE_UNPAUSE } = args;
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
-        const pause = PAUSE_UNPAUSE === "paused";
+        const pause = PAUSE_UNPAUSE === "pause";
         soundInstances.forEach((audio) => {
           if (pause && !audio.paused) {
             audio.pause();
@@ -693,7 +692,7 @@
 
     pauseUnpauseAllSounds(args) {
       const { PAUSE_UNPAUSE } = args;
-      const pause = PAUSE_UNPAUSE === "paused";
+      const pause = PAUSE_UNPAUSE === "pause";
 
       Object.values(this.sounds).forEach((soundInstances) => {
         soundInstances.forEach((audio) => {
@@ -706,19 +705,19 @@
       });
     }
 
-    soundExists(args) {
-      const { NAME } = args;
-      return this.sounds.hasOwnProperty(NAME);
-    }
-
-    soundPlaying(args) {
-      const { NAME } = args;
-      const soundInstances = this.sounds[NAME];
-      if (soundInstances && soundInstances.length > 0) {
-        const audio = soundInstances[0];
-        return (audio.currentTime !== 0 && !audio.paused);
+    soundCheck(args) {
+      if (args.CONTROL === "exists?") {
+        const { NAME } = args;
+        return this.sounds.hasOwnProperty(NAME);
+      } else {
+        const { NAME } = args;
+        const soundInstances = this.sounds[NAME];
+        if (soundInstances && soundInstances.length > 0) {
+          const audio = soundInstances[0];
+          return (audio.currentTime !== 0 && !audio.paused);
+        }
+        return "false";
       }
-      return "false";
     }
 
     soundProperty(args) {
@@ -762,7 +761,11 @@
 
     allSounds() {
       const soundNames = Object.keys(this.sounds);
-      return "[\"" + soundNames.join("\", \"") + "\"]";
+      if (soundNames.join("\", \"") !== "") {
+        return "[\"" + soundNames.join("\", \"") + "\"]";
+      } else {
+        return "[]";
+      }
     }
 
     deleteAllSounds() {
@@ -823,7 +826,7 @@
     pauseUnpauseSounds(args) {
       const { NAMES, PAUSE_UNPAUSE } = args;
       const namesArray = JSON.parse(NAMES);
-      const pause = PAUSE_UNPAUSE === "paused";
+      const pause = PAUSE_UNPAUSE === "pause";
 
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
@@ -938,13 +941,12 @@
             reader.readAsDataURL(audioBlob);
           });
           this.sounds[OUTPUT_NAME] = [new Audio(audioDataURL)];
-
           console.log("Conversion Success!");
         } catch (error) {
           console.error("Error Converting: " + error.message);
         }
       } else {
-	console.log("Audio Doesnt Exist!");
+	      console.log("Audio Doesnt Exist!");
       }
     }
 
