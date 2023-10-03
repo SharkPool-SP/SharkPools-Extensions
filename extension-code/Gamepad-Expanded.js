@@ -1,4 +1,4 @@
-// Name: Gamepad
+// Name: Gamepad Expanded
 // ID: Gamepad
 // Description: Directly access gamepads instead of just mapping buttons to keys.
 
@@ -16,7 +16,7 @@
    * @returns {Gamepad[]}
    */
   const getGamepads = (index) => {
-    if (index === "any") 
+    if (index === "any") {
       return navigator.getGamepads().filter((i) => i);
     }
     const gamepad = navigator.getGamepads()[index - 1];
@@ -95,7 +95,7 @@
     getInfo() {
       return {
         id: "Gamepad",
-        name: "Gamepad-Extended",
+        name: "Gamepad Extended",
         blocks: [
           {
             opcode: "gamepadConnected",
