@@ -95,7 +95,7 @@
     getInfo() {
       return {
         id: "Gamepad",
-        name: "Gamepad",
+        name: "Gamepad-Extended",
         blocks: [
           {
             opcode: "gamepadConnected",
