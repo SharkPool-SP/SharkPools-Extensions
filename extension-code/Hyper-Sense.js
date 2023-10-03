@@ -1,6 +1,6 @@
 /*
 * This Extension was made by SharkPool (https://www.youtube.com/@SharkPool_SP)
-* Version 1.5.0
+* Version 1.6.0
 * Do not remove this comment
 */
 
@@ -218,6 +218,17 @@
             opcode: "spriteCurrentTouching",
             blockType: Scratch.BlockType.REPORTER,
             text: "sprites touching [SPRITE]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS",
+              },
+            },
+          },
+          {
+            opcode: "colorTouching",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "color touching [SPRITE]",
             arguments: {
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
@@ -493,6 +504,22 @@
       }
       const formattedList = JSON.stringify(list);
       return formattedList;
+    }
+
+    colorTouching(args) {
+      function rgbaToHex(t,r,a,S){
+        let n = t.toString(16).padStart(2,"0"), o = r.toString(16).padStart(2,"0"), g = a.toString(16).padStart(2,"0"), i = S.toString(16).padStart(2,"0");
+        return `#${n}${o}${g}${i}`;
+      }
+      const target = runtime.getSpriteTargetByName(args.SPRITE);
+      const canvas = [renderer.canvas.width, renderer.canvas.height];
+      const x = target.x;
+      const y = target.y;
+      const wasVisible = target.visible;
+      target.setVisible(false);
+      const canvasCC = renderer.extractColor(canvas[0] / 4 + x, canvas[1] / 4 + y, 1).color;
+      target.setVisible(wasVisible);
+      return rgbaToHex(canvasCC.r, canvasCC.g, canvasCC.b, canvasCC.a).toString();
     }
 
     _getTargets() {
