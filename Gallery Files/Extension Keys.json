@@ -115,9 +115,15 @@
       "status": ""
     },
     "Files-Expanded": {
-      "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool and Drago Cuven.",
+      "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool and Martinelplayz.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
+      "status": "new"
+    },
+    "Gamepad-Expanded": {
+      "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by Martinelplayz.",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Gamepad-Expanded.js",
+      "tags": ".all.expanded.utilities",
       "status": "new"
     },
     "Example": {
@@ -131,7 +137,7 @@
     "https://turbowarp.org",
     "https://www.youtube.com/channel/UC26hvmetqYgNB3oFewV_gtg",
     "SharkPool's Extension Collection",
-    "SharkPool's collection of Turbowarp Extensions that were either made or contributed to by SharkPool. Hover over an extension for details.",
+    "SharkPool's collection of Turbowarp Extensions that were mostly made or contributed to by SharkPool in some way. Hover over an extension for details.",
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg",
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/Gallery%20Files/Source-Images.json"
   ],
