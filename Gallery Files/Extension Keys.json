@@ -22,7 +22,7 @@
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": ""
+      "status": "update"
     },
     "Niche-Toolbox": {
       "credits": "Utility blocks made by 0znzw. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here",
