@@ -1,16 +1,16 @@
-/*
-* v2.0 | Created by SharkPool.
-* https://www.youtube.com/c/SharkPoolthe1
-* Do not remove this comment
-*/
+// Name: Sharktilities
+// ID: Sharktilities
+// Description: Various Utility Blocks for Various Operations
+// By: SharkPool <https://github.com/SharkPool-SP>
+
+// Version V.2.1.0
 
 (function (Scratch) {
     "use strict";
 
-    const vm = Scratch.vm;
-
     const menuIconURI = "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==";
 
+    const vm = Scratch.vm;
     function rgbToHsl(r, g, b) {
       r /= 255;
       g /= 255;
@@ -19,9 +19,7 @@
       const max = Math.max(r, g, b);
       const min = Math.min(r, g, b);
       const diff = max - min;
-
       let h, s, l = (max + min) / 2;
-
       if (diff === 0) {
         h = s = 0; // achromatic
       } else {
@@ -38,7 +36,6 @@
 
     function hslToRgb(h, s, l) {
       let r, g, b;
-
       if (s === 0) {
         r = g = b = l; // achromatic
       } else {
@@ -50,7 +47,6 @@
           if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
           return p;
         };
-
         const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const p = 2 * l - q;
         r = hue2rgb(p, q, h + 1 / 3);
@@ -85,15 +81,24 @@
             opcode: "refresh",
             blockType: Scratch.BlockType.COMMAND,
             text: "refresh palette",
+          },
+          {
+            opcode: "costumeInfo",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "[INFO] of costume #[NUM] in [SPRITE]",
             arguments: {
-              NUMBER: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
-              ROUND_TYPE: {
+              INFO: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "ROUND_MENU",
-                defaultValue: "whole number",
+                menu: "cosInfo",
+                defaultValue: "name",
+              },
+              NUM: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1,
+              },
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS",
               },
             },
           },
@@ -108,7 +113,7 @@
             arguments: {
               NUMBER: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 3.1415,
               },
               ROUND_TYPE: {
                 type: Scratch.ArgumentType.STRING,
@@ -130,10 +135,10 @@
             },
           },
           {
-            disableMonitor: true,
             opcode: "randomSingleInteger",
             blockType: Scratch.BlockType.REPORTER,
             text: "pick random single integer",
+            disableMonitor: true,
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -155,7 +160,7 @@
               },
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "Sprite1",
+                menu: "TARGETS",
               },
             },
           },
@@ -331,6 +336,22 @@
             },
           },
           {
+            opcode: "shuffleArray",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "organize array [WORDS] by [SHUFFLE_OPTION]",
+            arguments: {
+              WORDS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "word1 word2 word3",
+              },
+              SHUFFLE_OPTION: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "shuffleOption",
+                defaultValue: "random",
+              },
+            },
+          },
+          {
             opcode: "tripleJoin",
             blockType: Scratch.BlockType.REPORTER,
             text: "join [STRING1] [STRING2] [STRING3]",
@@ -373,23 +394,38 @@
             },
           },
           {
-            opcode: "shuffleArray",
+            opcode: "fiveJoin",
             blockType: Scratch.BlockType.REPORTER,
-            text: "organize array [WORDS] by [SHUFFLE_OPTION]",
+            text: "join [STRING1] [STRING2] [STRING3] [STRING4] [STRING5]",
             arguments: {
-              WORDS: {
+              STRING1: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "word1 word2 word3",
+                defaultValue: "",
               },
-              SHUFFLE_OPTION: {
+              STRING2: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "shuffleOption",
-                defaultValue: "random",
+                defaultValue: "",
+              },
+              STRING3: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              STRING4: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              STRING5: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
               },
             },
           }
         ],
         menus: {
+          TARGETS: {
+            acceptReporters: true,
+            items: "_getTargets",
+          },
           ROUND_MENU: {
             acceptReporters: true,
             items: ["whole number", "tenths", "hundredths", "thousandths"],
@@ -409,6 +445,19 @@
           mathMenu: {
             acceptReporters: true,
             items: ["sin", "cos"],
+          },
+          cosInfo: {
+            acceptReporters: true,
+            items: [
+              "name",
+              "width",
+              "height",
+              "type",
+              "rotation center x",
+              "rotation center y",
+              "content",
+              "data.uri"
+            ],
           },
           shuffleOption: [
             {
@@ -434,6 +483,23 @@
           ],
         },
       };
+    }
+
+    _getTargets() {
+      const spriteNames = [];
+      const targets = Scratch.vm.runtime.targets;
+
+      for (let index = 0; index < targets.length; index++) {
+        const target = targets[index];
+        if (target.isOriginal) {
+          spriteNames.push(target.getName());
+        }
+      }
+      if (spriteNames.length > 0) {
+        return spriteNames;
+      } else {
+        return [""];
+      }
     }
 
     roundToNearest({ NUMBER, ROUND_TYPE }) {
@@ -471,11 +537,24 @@
       return Math.random() < 0.5 ? -1 : 1;
     }
 
-    setSpriteEffect({ EFFECT, VALUE }, util) {
-      const target = util.target;
-      if (!target) return;
+    findID(sprite) {
+      const target = Scratch.vm.runtime.getSpriteTargetByName(sprite);
+      if (!target) return '';
+      return target.id;
+    }
 
-      switch (EFFECT) {
+    setSpriteEffect(args) {
+      let target = args.SPRITE;
+      if (target === "Stage") {
+        target = this.runtime.getTargetForStage();
+      } else {
+        target = this.runtime.getSpriteTargetByName(target);
+      }
+      if (!target) {
+        return;
+      }
+      const VALUE = args.VALUE;
+      switch (args.EFFECT) {
         case "color":
           target.setEffect("color", VALUE);
           break;
@@ -508,6 +587,10 @@
 
     quadrupleJoin({ STRING1, STRING2, STRING3, STRING4 }) {
       return `${STRING1}${STRING2}${STRING3}${STRING4}`;
+    }
+
+    fiveJoin({ STRING1, STRING2, STRING3, STRING4, STRING5 }) {
+      return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}`;
     }
 
     tripleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3 }) {
@@ -642,16 +725,14 @@
       const newLightness = Math.min(1, Math.max(0, hslColor[2] + CHANGE));
       const newRgbColor = hslToRgb(hslColor[0], hslColor[1], newLightness);
       const newHexColor = `#${componentToHex(newRgbColor[0])}${componentToHex(newRgbColor[1])}${componentToHex(newRgbColor[2])}`;
-
       return newHexColor;
     }
 
-    smoothing(args) {
+    smoothing(args, util) {
       const speed = Scratch.Cast.toNumber(args.SPEED) / 10;
       const limit = Scratch.Cast.toNumber(args.LIMIT);
       const type = args.MATH;
-      const timer = this.runtime.currentMSecs / 1000;
-
+      const timer = util.ioQuery('clock', 'projectTimer');
       const output = Math[type](timer * speed) * limit;
       return output;
     }
@@ -664,7 +745,6 @@
       const string = args.STRING;
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
-
       const newString = string.replace(regex, function(match) {
         index++;
         if (index === args.ORDER) {
@@ -680,10 +760,8 @@
       const string = args.STRING;
       const regex = new RegExp(args.KEY, 'g');
       let index = 0;
-
       const order = args.ORDER;
       const order2 = order > args.ORDER2 ? order : args.ORDER2;
-
       const newString = string.replace(regex, function(match) {
         index++;
         if (index >= order && index <= order2) {
@@ -693,6 +771,52 @@
         }
       });
       return newString;
+    }
+
+    costumeInfo(args) {
+      let target = args.SPRITE;
+      if (target === "Stage") {
+        target = this.runtime.getTargetForStage();
+      } else {
+        target = this.runtime.getSpriteTargetByName(target);
+      }
+      if (!target) {
+        return "";
+      }
+      const targetInfo = target.getCostumes();
+      let index = Math.round(Scratch.Cast.toString(args.NUM)) - 1;
+      if (
+        index === Infinity ||
+        index === -Infinity ||
+        !index ||
+        index < 0
+      ) {
+        index = 0;
+      }
+      if (index > target.sprite.costumes.length - 1) {
+        index = target.sprite.costumes.length - 1;
+      }
+      const costume = targetInfo[index];
+      switch (args.INFO) {
+        case "name":
+          return costume.name;
+        case "width":
+          return costume.size[0];
+        case "height":
+          return costume.size[1];
+        case "type":
+          return costume.dataFormat;
+        case "rotation center x":
+          return costume.rotationCenterX;
+        case "rotation center y":
+          return costume.rotationCenterY;
+        case "content":
+          return costume.asset.decodeText();
+        case "data.uri":
+          return costume.asset.encodeDataURI();
+        default:
+          return "";
+      }
     }
   }
 
