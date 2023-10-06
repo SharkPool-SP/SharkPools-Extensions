@@ -4,12 +4,13 @@
 
 // Thank you GarboMuffin for the original Files Extension
 // Thank you Drago Cuven for the File Name and Size Blocks
+// Thank you 0znzw for adding Hex and Base64 Support
 
 (function (Scratch) {
   "use strict";
 
   if (!Scratch.extensions.unsandboxed) {
-    throw new Error("files extension must be run unsandboxed");
+    throw new Error("Files Expanded extension must be run unsandboxed");
   }
 
   const menuIconURI =
@@ -55,6 +56,8 @@
 
   const AS_TEXT = "text";
   const AS_DATA_URL = "url";
+  const AS_HEX = "hex";
+  const AS_BASE64 = "base64";
 
   /**
    * @param {HTMLInputElement} input
@@ -69,6 +72,21 @@
     // Firefox 91 is from August 2021. That's old enough to not care about previous versions.
     return navigator.userAgent.includes("Firefox");
   };
+
+  /**
+   * @param {string} accepts base64
+   * @param {string} the delimeter for the hex string
+   * @returns {string} the base64 representation in hex
+   */
+  function base64ToHex(str, delim) {
+    const raw = atob(str);
+    let result = '';
+    for (let i = 0; i < raw.length; i++) {
+      const hex = raw.charCodeAt(i).toString(16);
+      result += delim.toString()+(hex.length === 2 ? hex : '0' + hex);
+    }
+    return result.toUpperCase();
+  }
 
   /**
    * @param {string} accept See MODE_ constants above
@@ -107,16 +125,29 @@
           FileName = file.name;
           FileSize = formatFileSize(file.size);
           RawFileSize = file.size; // Store the unformatted file size
-          callback(/** @type {string} */ (reader.result));
+          let result; // More Supported Stuff
+          if ([AS_HEX, AS_BASE64].includes(as/* binary support later */)) {
+            /* Getting the base64 (used for the hex also) */
+            let uri = reader.result.split(',');
+            result = uri.splice(1, uri.length).join(',');
+            switch(as) {
+              case AS_HEX: result = base64ToHex(result, ' ');
+              default: result;// base64; update this when its out dated
+            }
+          } else result = reader.result;
+          callback(/** @type {string} */ (result));
         };
         reader.onerror = () => {
           console.error("Failed to read file as text", reader.error);
           callback("");
         };
-        if (as === AS_TEXT) {
-          reader.readAsText(file);
-        } else {
-          reader.readAsDataURL(file);
+        switch(as) {
+          case AS_TEXT:
+            reader.readAsText(file);
+          case AS_DATA_URL:
+            reader.readAsDataURL(file);
+          default:
+            reader.readAsDataURL(file);
         }
       };
 
@@ -308,10 +339,10 @@
     }
   };
 
-  class Files {
+  class filesExpanded {
     getInfo() {
       return {
-        id: "files",
+        id: "filesExpanded",
         name: "Files Expanded",
         menuIconURI,
         color1: "#fcb103",
@@ -556,7 +587,7 @@
         menus: {
           encoding: {
             acceptReporters: true,
-            items: [
+            items: [/* ctrl f point: selector values*/
               {
                 text: "text",
                 value: AS_TEXT,
@@ -564,6 +595,14 @@
               {
                 text: "data: URL",
                 value: AS_DATA_URL,
+              },
+              {
+                text: "base64",
+                value: AS_BASE64,
+              },
+              {
+                text: "hex",
+                value: AS_HEX,
               },
             ],
           },
@@ -820,5 +859,5 @@
     }
   }
 
-  Scratch.extensions.register(new Files());
+  Scratch.extensions.register(new filesExpanded());
 })(Scratch);
