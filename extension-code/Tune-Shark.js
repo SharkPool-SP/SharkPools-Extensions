@@ -1,5 +1,5 @@
 /*
-* This Extension was made by SharkPool (Version 2.2.0)
+* This Extension was made by SharkPool (Version 2.2.1)
 * Credit to HOME for the song "Resonance" being used as the default audio link
 * Credit to LilyMakesThings for some block Ideas
 * Do Not Delete this Comment
@@ -175,7 +175,7 @@
               },
               MAX: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 2,
               },
             },
           },
@@ -769,7 +769,7 @@
     }
 
     deleteAllSounds() {
-      this.stopAllSounds();  
+      this.controlAllSounds("stop");  
       this.sounds = {};
     }
 
