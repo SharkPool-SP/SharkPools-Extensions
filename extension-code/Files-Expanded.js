@@ -399,20 +399,15 @@
               },
             },
           },
-          //These 2 Blocks By Drago Cuven
+          //This Block was made by Drago Cuven
           {
-            opcode: "FileName",
+            opcode: "fileInfo",
             blockType: Scratch.BlockType.REPORTER,
-            text: "file name",
-            disableMonitor: true,
-          },
-          {
-            opcode: "FileSize",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "file size [FORMAT]",
+            text: "file [FORMAT]",
             arguments: {
               FORMAT: {
                 type: Scratch.ArgumentType.STRING,
+                defaultValue: "name",
                 menu: "formatted",
               },
             },
@@ -675,7 +670,7 @@
           },
           formatted: {
             acceptReporters: true,
-            items: ["formatted", "unformatted"],
+            items: ["name", "size formatted", "size unformatted"],
           },
           visualColors: {
             acceptReporters: true,
@@ -763,17 +758,13 @@
       }
     }
 
-    FileName() {
-      return FileName;
-    }
-
-    FileSize(args) {
-      if (args.FORMAT === "formatted") {
+    fileInfo(args) {
+      if (args.FORMAT === "size formatted") {
         return FileSize;
-      } else if (args.FORMAT === "unformatted") {
+      } else if (args.FORMAT === "size unformatted") {
         return RawFileSize;
       }
-      return FileSize;
+      return FileName;
     }
 
     resetStyle() {
