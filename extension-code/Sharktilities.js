@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.1.0
+// Version V.2.1.1
 
 (function (Scratch) {
     "use strict";
@@ -438,10 +438,7 @@
             acceptReporters: true,
             items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"],
           },
-          OPERATOR_MENU: {
-            acceptReporters: true,
-            items: ["+", "-", "*", "/"],
-          },
+          OPERATOR_MENU: ["+", "-", "*", "/"],
           mathMenu: {
             acceptReporters: true,
             items: ["sin", "cos"],
@@ -593,95 +590,45 @@
       return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}`;
     }
 
-    tripleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3 }) {
-      switch (OPERATOR1) {
-        case "+":
-          NUM1 += NUM2;
-          break;
-        case "-":
-          NUM1 -= NUM2;
-          break;
-        case "*":
-          NUM1 *= NUM2;
-          break;
-        case "/":
-          NUM1 /= NUM2;
-          break;
-        default:
-          NUM1 += NUM2;
+    math(n1, n2, n3, n4, op1, op2, op3) {
+      n1 = this.mathfind(op1, n1, n2);
+      n1 = this.mathfind(op2, n1, n3);
+      if (n4 !== false) {
+        n1 = this.mathfind(op3, n1, n4);
       }
-
-      switch (OPERATOR2) {
-        case "+":
-          NUM1 += NUM3;
-          break;
-        case "-":
-          NUM1 -= NUM3;
-          break;
-        case "*":
-          NUM1 *= NUM3;
-          break;
-        case "/":
-          NUM1 /= NUM3;
-          break;
-        default:
-          NUM1 += NUM2;
-      }
-      return NUM1;
+      return n1;
     }
 
-    quadrupleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3, OPERATOR3, NUM4 }) {
-      switch (OPERATOR1) {
-        case "+":
-          NUM1 += NUM2;
-          break;
-        case "-":
-          NUM1 -= NUM2;
-          break;
-        case "*":
-          NUM1 *= NUM2;
-          break;
-        case "/":
-          NUM1 /= NUM2;
-          break;
-        default:
-          NUM1 += NUM2;
+    mathfind(option, num1, num2) {
+      if (option === "+") {
+        num1 += num2;
+      } else if (option === "-") {
+        num1 -= num2;
+      } else if (option === "*") {
+        num1 *= num2;
+      } else {
+        num1 /= num2;
       }
+      return num1;
+    }
 
-      switch (OPERATOR2) {
-        case "+":
-          NUM1 += NUM3;
-          break;
-        case "-":
-          NUM1 -= NUM3;
-          break;
-        case "*":
-          NUM1 *= NUM3;
-          break;
-        case "/":
-          NUM1 /= NUM3;
-          break;
-        default:
-          NUM1 += NUM2;
-      }
+    tripleOperator(args) {
+      const nums = [
+        Scratch.Cast.toNumber(args.NUM1),
+        Scratch.Cast.toNumber(args.NUM2),
+        Scratch.Cast.toNumber(args.NUM3),
+      ];
+      return this.math(nums[0], nums[1], nums[2], false, args.OPERATOR1, args.OPERATOR2);
+    }
 
-      switch (OPERATOR3) {
-        case "+":
-          NUM1 += NUM4;
-          break;
-        case "-":
-          NUM1 -= NUM4;
-          break;
-        case "*":
-          NUM1 *= NUM4;
-          break;
-        case "/":
-          NUM1 /= NUM4;
-          break;
-        default:
-          NUM1 += NUM2;
-      }
-      return NUM1;
+    quadrupleOperator(args) {
+      const nums = [
+        Scratch.Cast.toNumber(args.NUM1),
+        Scratch.Cast.toNumber(args.NUM2),
+        Scratch.Cast.toNumber(args.NUM3),
+        Scratch.Cast.toNumber(args.NUM4)
+      ];
+      return this.math(nums[0], nums[1], nums[2], nums[3], args.OPERATOR1, args.OPERATOR2, args.OPERATOR3);
     }
 
     negaAbs({ NUMBER }) {
