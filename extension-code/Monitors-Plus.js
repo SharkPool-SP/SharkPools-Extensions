@@ -393,7 +393,6 @@
             value: i.family,
           }))
         : [];
-
       return [
         ...builtInFonts,
         ...customFonts,
@@ -825,10 +824,12 @@
       let styleAttribute = variableMonitor.getAttribute("style");
       const transformRegex = /transform:([^;]+);/;
       const transformMatch = styleAttribute.match(transformRegex);
-      const existingTransform = transformMatch[1];
-      const updatedTransform = existingTransform.replace(/translate\([^)]+\)/, `translate(${x}px, ${y}px)`);
-      styleAttribute = styleAttribute.replace(transformRegex, `transform:${updatedTransform};`);
-      variableMonitor.setAttribute("style", styleAttribute);
+      if (transformMatch) {
+        const existingTransform = transformMatch[1];
+        const updatedTransform = existingTransform.replace(/translate\([^)]+\)/, `translate(${x}px, ${y}px)`);
+        styleAttribute = styleAttribute.replace(transformRegex, `transform:${updatedTransform};`);
+        variableMonitor.setAttribute("style", styleAttribute);
+      }
     }
 
     findScale(variableMonitor) {
@@ -946,7 +947,6 @@
         "skew x": "skewX",
         "skew y": "skewY",
       }[args.EFFECT] || args.EFFECT;
-
       const defaultV = {
         saturation: 100,
         hue: 0,
