@@ -40,7 +40,7 @@
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities",
-      "status": "update"
+      "status": ""
     },
     "Added-Motion": {
       "credits": "New motion blocks made by SharkPool",
@@ -94,7 +94,7 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "update"
+      "status": ""
     },
     "Newgrounds-Audio": {
       "credits": "Fetch audio and audio information from Newgrounds. Made by SharkPool, works best with Tune Shark",
@@ -118,11 +118,17 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and 0znzw.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "update"
+      "status": ""
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by Martinelplayz.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Gamepad-Expanded.js",
+      "tags": ".all.expanded.utilities",
+      "status": ""
+    },
+    "Tile-Grids": {
+      "credits": "Place Sprites on Tile Grids. Made by SharkPool.",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tile-Grids.js",
       "tags": ".all.expanded.utilities",
       "status": "new"
     },
