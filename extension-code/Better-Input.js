@@ -3,12 +3,7 @@
 // Description: Expansion of the "ask and wait" Blocks
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.2.2 (Bug Fixes, vertical sliders, better dropdowns and positioning)
-
-/*
-TO DO:
-- Infinite Buttons + Images for Buttons
-*/
+// Version V.3.0.0 (Infinite Buttons + More Live Updated Elements + Image setting for Buttons)
 
 (function (Scratch) {
   "use strict";
@@ -34,7 +29,6 @@ TO DO:
 
   let newColorType = "";
   let overlayImageContainer = "";
-  let selectedOptions = "";
   const fontMenu = [
     "Scratch",
     "Sans Serif",
@@ -48,58 +42,53 @@ TO DO:
   class BetterInputSP {
     constructor() {
       this.activeOverlays = [];
+      this.activeUI = [];
+      this.askBoxPromises = [];
       this.isWaitingForInput = false;
       this.isDropdownOpen = false;
       this.userInput = " ";
       this.textBoxX = 0;
       this.textBoxY = 0;
-      this.askBoxCount = 0;
-      this.maxBoxCount = 1;
+      this.askBoxInfo = [0, 1];
       this.forceInput = "Disabled";
       this.overlayInput = null;
 
-      this.overlayImage = "";
       this.optionList = ["Option 1", "Option 2", "Option 3"];
       this.sliderInfo = [0, 100, 50];
       this.Timeout = 0;
 
+      this.shadowEnabled = true;
+      this.isInputEnabled = "Enabled";
+      this.DropdownText = "Dropdown";
       this.fontSize = "14px";
       this.textAlign = "left";
       this.fontFamily = "Sans Serif";
-      this.cancelButtonBorderRadius = 5;
-      this.submitButtonBorderRadius = 5;
-      this.button3BorderRadius = 5;
-      this.button4BorderRadius = 5;
-      this.optionbuttonBorderRadius = 5;
-      this.textBoxBorderRadius = 5;
-      this.inputBoxRadius = 4;
+      this.overlayBorderRadius = [5, 4, 5];
+      this.buttonJSON = {
+        "Submit": {
+          borderRadius: 5,
+          color: "#0074D9",
+          textColor: "#ffffff",
+          name: "Submit",
+          image: "",
+          imgScale: 100,
+        },
+        "Cancel": {
+          borderRadius: 5,
+          color: "#d9534f",
+          textColor: "#ffffff",
+          name: "Cancel",
+          image: "",
+          imgScale: 100,
+        },
+      };
 
       this.questionColor = "#000000";
       this.inputColor = "#000000";
-      this.textBoxColor = "#ffffff";
-      this.inputBackgroundColor = "#ffffff";
-      this.inputOutlineColor = "#000000";
-      this.submitButtonColor = "#0074D9";
-      this.cancelButtonColor = "#d9534f";
-      this.button3Color = "#0074D9";
-      this.button4Color = "#d9534f";
-      this.optionbuttonColor = "#5f5f5f";
-      this.submitButtonTextColor = "#ffffff";
-      this.cancelButtonTextColor = "#ffffff";
-      this.button3TextColor = "#ffffff";
-      this.button4TextColor = "#ffffff";
-      this.optionbuttonTextColor = "#000000";
-
-      this.showCancelButton = true;
-      this.showButton3 = false;
-      this.showButton4 = false;
-      this.shadowEnabled = true;
-      this.isInputEnabled = "Enabled";
-      this.submitButtonText = "Submit";
-      this.cancelButtonText = "Cancel";
-      this.Button3Text = "Okay";
-      this.Button4Text = "No";
-      this.DropdownText = "Dropdown";
+      this.textBoxColor = ["#ffffff"];
+      this.inputFieldColor = ["#ffffff", "#000000"];
+      this.dropdownButtonColor = ["#5f5f5f", "#ffffff"];
+      this.overlayImage = [" ", " ", " "];
 
       this.Blur = 0;
       this.Brightness = 0;
@@ -113,7 +102,7 @@ TO DO:
       this.SkewX = 0;
       this.SkewY = 0;
       this.Rotation = 90;
-      this.imgScale = 100;
+      this.imgScale = [100, 100, 100];
       this.shadowS = [0, 0, 5, 0.3];
     }
 
@@ -164,54 +153,20 @@ TO DO:
             text: "remove all ask boxes",
           },
           {
-            opcode: "setButtonText",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "set [BUTTON_MENU] text to [TEXT]",
-            arguments: {
-              BUTTON_MENU: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "buttonMenu",
-                defaultValue: "Button 1",
-              },
-              TEXT: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "Submit",
-              },
-            },
-          },
-          {
-            opcode: "setDropdown",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "set dropdown options to array: [DROPDOWN]",
-            arguments: {
-              DROPDOWN: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"Option 1\", \"Option 2\", \"Option 3\"]",
-              },
-            },
-          },
-          {
-            opcode: "setSlider",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "set slider to min: [MIN] max: [MAX] default: [DEFAULT]",
-            arguments: {
-              MIN: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
-              MAX: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100,
-              },
-              DEFAULT: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 50,
-              },
-            },
-          },
-          {
             blockType: Scratch.BlockType.LABEL,
             text: "Formatting",
+          },
+          {
+            opcode: "setFontSize",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set font size to [SIZE]",
+            blockIconURI: formatIcon,
+            arguments: {
+              SIZE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 14,
+              },
+            },
           },
           {
             opcode: "setTextAlignment",
@@ -248,37 +203,76 @@ TO DO:
               ACTION: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "inputActionMenu",
-                defaultValue: "Enabled",
+                defaultValue: "Text",
               },
             },
           },
           {
-            opcode: "setEnable",
+            opcode: "setDropdown",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set [ENABLE_MENU] to be [ACTION]",
+            text: "set dropdown options to array: [DROPDOWN]",
             blockIconURI: formatIcon,
             arguments: {
-              ENABLE_MENU: {
+              DROPDOWN: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "enableMenu",
-                defaultValue: "Button 2",
-              },
-              ACTION: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "buttonActionMenu",
-                defaultValue: "Enabled",
+                defaultValue: "[\"Option 1\", \"Option 2\", \"Option 3\"]",
               },
             },
           },
           {
-            opcode: "setFontSize",
+            opcode: "setSlider",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set font size to [SIZE]",
+            text: "set slider to min: [MIN] max: [MAX] default: [DEFAULT]",
             blockIconURI: formatIcon,
             arguments: {
-              SIZE: {
+              MIN: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 14,
+                defaultValue: 0,
+              },
+              MAX: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+              DEFAULT: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 50,
+              },
+            },
+          },
+
+          "---",
+
+          {
+            opcode: "setButton",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "[BUTTON] button named [NAME]",
+            blockIconURI: formatIcon,
+            arguments: {
+              BUTTON: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "buttonType",
+                defaultValue: "add",
+              },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Submit",
+              },
+            },
+          },
+          {
+            opcode: "setButtonText",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set [BUTTON_MENU] button name to [TEXT]",
+            blockIconURI: formatIcon,
+            arguments: {
+              BUTTON_MENU: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "buttonMenu",
+                defaultValue: "Dropdown",
+              },
+              TEXT: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my dropdown",
               },
             },
           },
@@ -389,7 +383,7 @@ TO DO:
               COLOR_TYPE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "colorSettingsMenu",
-                defaultValue: "Question",
+                defaultValue: "Textbox",
               },
               COLOR: {
                 type: Scratch.ArgumentType.COLOR,
@@ -451,16 +445,32 @@ TO DO:
               },
             },
           },
+
+          "---",
+
+          {
+            opcode: "enableShadow",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set box shadow to be [ACTION]",
+            blockIconURI: colorIcon,
+            arguments: {
+              ACTION: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "buttonActionMenu",
+                defaultValue: "Enabled",
+              },
+            },
+          },
           {
             opcode: "setShadow",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set shadow [SHADOW] to [AMT]",
+            text: "set box shadow [SHADOW] to [AMT]",
             blockIconURI: colorIcon,
             arguments: {
               SHADOW: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "shadowStuff",
-                defaultValue: "Scale",
+                defaultValue: "Size",
               },
               AMT: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -494,9 +504,14 @@ TO DO:
           {
             opcode: "setImage",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set background image to [IMAGE]",
+            text: "set [ELEMENT] image to [IMAGE]",
             blockIconURI: colorIcon,
             arguments: {
+              ELEMENT: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "elementMenu",
+                defaultValue: "Textbox",
+              },
               IMAGE: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "input-url-or-uri-here",
@@ -506,9 +521,14 @@ TO DO:
           {
             opcode: "scaleImage",
             blockType: Scratch.BlockType.COMMAND,
-            text: "scale background image to [SCALE]%",
+            text: "scale [ELEMENT] image to [SCALE]%",
             blockIconURI: colorIcon,
             arguments: {
+              ELEMENT: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "elementMenu",
+                defaultValue: "Textbox",
+              },
               SCALE: {
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 100,
@@ -600,12 +620,12 @@ TO DO:
           {
             opcode: "isWaitingInput",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "is wating for Input?",
+            text: "is waiting?",
           },
           {
             opcode: "isDropdown",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "is dropdown menu open?",
+            text: "is dropdown open?",
           },
           {
             opcode: "setSubmitEvent",
@@ -652,6 +672,10 @@ TO DO:
             acceptReporters: true,
             items: ["count", "limit"],
           },
+          buttonType: {
+            acceptReporters: true,
+            items: ["add", "remove"],
+          },
           fontMenu: {
             acceptReporters: true,
             items: "allFonts",
@@ -663,8 +687,8 @@ TO DO:
           inputActionMenu: {
             acceptReporters: true,
             items: [
-              "Enabled",
-              "Disabled",
+              "Text",
+              "None",
               "Dropdown",
               "Multi-Select Dropdown",
               "Horizontal Slider",
@@ -689,47 +713,33 @@ TO DO:
           },
           shadowStuff: {
             acceptReporters: true,
-            items: ["Scale", "X", "Y", "Opacity"],
+            items: ["Size", "X", "Y", "Opacity"],
           },
           buttonMenu: {
             acceptReporters: true,
-            items: ["Button 1", "Button 2", "Button 3", "Button 4", "Dropdown"],
-          },
-          enableMenu: {
-            acceptReporters: true,
-            items: ["Button 2", "Button 3", "Button 4", "Textbox Shadow"],
+            items: this.allButtons([
+              "Dropdown"
+            ], false),
           },
           elementMenu: {
             acceptReporters: true,
-            items: [
+            items: this.allButtons([
               "Textbox",
               "Input Box",
-              "Button 1",
-              "Button 2",
-              "Button 3",
-              "Button 4",
               "Dropdown Button",
-            ],
+            ], false),
           },
           colorSettingsMenu: {
             acceptReporters: true,
-            items: [
-              "Question",
-              "Input Text",
+            items: this.allButtons([
               "Textbox",
-              "Input Background",
+              "Question Text",
+              "Input Text",
+              "Input Box",
               "Input Outline",
-              "Button 1",
-              "Button 2",
-              "Button 3",
-              "Button 4",
               "Dropdown Button",
-              "Button 1 Text",
-              "Button 2 Text",
-              "Button 3 Text",
-              "Button 4 Text",
               "Dropdown Text",
-            ],
+            ], true),
           },
           enterMenu: {
             acceptReporters: true,
@@ -752,7 +762,129 @@ TO DO:
       ];
     }
 
-    //Effects and colors
+    allButtons(array, enableText) {
+      const customButtons = Object.keys(this.buttonJSON);
+      if (enableText) {
+        customButtons.forEach((button) => {
+          customButtons.push(button + " Text");
+        });
+      }
+      return [
+        ...array,
+        ...customButtons,
+      ];
+    }
+
+    updateOverlayPos(overlay) {
+      if (this.Rotation > 359) {
+        this.Rotation = 0;
+      } else if (this.Rotation < 1) {
+        this.Rotation = 360;
+      }
+
+      if (this.textBoxX !== null && this.textBoxY !== null) {
+        overlay.style.left = `${50 + this.textBoxX}%`;
+        overlay.style.top = `${50 + this.textBoxY}%`;
+        overlay.style.transform = `
+          translate(-50%, -50%)
+          SkewX(${this.SkewX}deg)
+          SkewY(${this.SkewY}deg)
+          rotate(${this.Rotation - 90}deg)
+          scale(${this.Scale / 100})
+        `;
+      } else {
+        overlay.style.left = "50%";
+        overlay.style.top = "50%";
+      }
+    }
+
+    updateOverlay(overlay) {
+      const newOpacity =  this.Opacity / 100;
+      const newBrightness = this.Brightness + 100;
+      overlay.style.backgroundImage = "";
+      overlay.style[this.textBoxColor[0].includes("gradient") ? "backgroundImage" : "backgroundColor"] = this.textBoxColor[0];
+      overlay.style.boxShadow = this.shadowEnabled ? `${this.shadowS[0]}px ${this.shadowS[1]}px ${this.shadowS[2]}px rgba(0, 0, 0, ${this.shadowS[3]})` : "none";
+
+      overlay.style.transform = `
+        translate(-50%, -50%)
+        SkewX(${this.SkewX}deg)
+        SkewY(${this.SkewY}deg)
+        rotate(${this.Rotation - 90}deg)
+        scale(${this.Scale / 100})
+      `;
+      overlay.style.filter = `
+        blur(${this.Blur}px)
+        brightness(${newBrightness}%)
+        invert(${this.Invert}%)
+        saturate(${this.Saturation}%)
+        hue-rotate(${this.Hue}deg)
+        sepia(${this.Sepia}%)
+        contrast(${this.Contrast}%)
+      `;
+      overlay.style.opacity = newOpacity;
+      overlay.style.fontFamily = this.fontFamily;
+      overlay.style.textAlign = this.textAlign;
+      overlay.style.borderRadius = this.overlayBorderRadius[0] + "px";
+      overlayImageContainer.style.borderRadius = this.overlayBorderRadius[0] + "px";
+      overlayImageContainer.style.background = "";
+      this.setImageStyles(overlayImageContainer, this.overlayImage[0], this.imgScale[0]);
+      this.updateButtonImages(overlay);
+    }
+
+    updateButtonImages(overlay) {
+      let text = overlay.querySelector(".question");
+      if (text) {
+        text.style.color = this.questionColor;
+      }
+
+      const inputField = overlay.querySelector("input");
+      if (inputField) {
+        inputField.style.background = "";
+        inputField.style[this.inputFieldColor[0].includes("gradient") ? "backgroundImage" : "backgroundColor"] = this.inputFieldColor[0];
+        inputField.style.color = this.inputColor;
+        inputField.style.border = `1px solid ${this.inputFieldColor[1]}`;
+        inputField.style.borderRadius = this.overlayBorderRadius[1] + "px";
+        this.setImageStyles(inputField, this.overlayImage[1], this.imgScale[1]);
+      }
+
+      const dropdownButton = overlay.querySelector("button.dropbtn");
+      if (dropdownButton) {
+        dropdownButton.style.backgroundImage = "";
+        dropdownButton.style.color = this.dropdownButtonColor[1];
+        dropdownButton.style.borderRadius = this.overlayBorderRadius[2] + "px";
+        dropdownButton.style[this.dropdownButtonColor[0].includes("gradient") ? "backgroundImage" : "backgroundColor"] = this.dropdownButtonColor[0];
+        this.setImageStyles(dropdownButton, this.overlayImage[2], this.imgScale[2]);
+      }
+
+      const buttonContainer = overlay.querySelector(".button-container");
+      if (buttonContainer) {
+        const buttons = buttonContainer.querySelectorAll("button");
+        buttons.forEach((button, index) => {
+          const buttonName = Object.keys(this.buttonJSON)[index];
+          const buttonInfo = this.buttonJSON[buttonName];
+          if (buttonInfo) {
+            button.style.color = buttonInfo.textColor;
+            button.style.borderRadius = buttonInfo.borderRadius + "px";
+            button.style.background = "";
+            button.style[buttonInfo.color.includes("gradient") ? "backgroundImage" : "background"] = buttonInfo.color;
+            this.setImageStyles(button, buttonInfo.image, buttonInfo.imgScale);
+          }
+        });
+      }
+    }
+
+    setImageStyles(element, url, scale) {
+      if (Scratch.Cast.toString(url).length > 5) {
+        Scratch.canFetch(encodeURI(url)).then((canFetch) => {
+          if (canFetch) {
+            element.style.background = `url(${encodeURI(url)})`;
+            element.style.backgroundSize = scale + "%";
+          } else {
+            console.log("Cannot fetch content from the URL.");
+          }
+        });
+      }
+    }
 
     showEffect(args) {
       const effect = args.EFFECT;
@@ -762,7 +894,6 @@ TO DO:
     setEffect(args) {
       const effect = args.EFFECT;
       this[effect] = args.AMT;
-
       this.activeOverlays.forEach((overlay) => {
         this.updateOverlay(overlay);
       });
@@ -771,13 +902,12 @@ TO DO:
     changeEffect(args) {
       const effect = args.EFFECT;
       this[effect] = this[effect] + args.AMT;
-
       this.activeOverlays.forEach((overlay) => {
         this.updateOverlay(overlay);
       });
     }
 
-    resetEffect(args) {
+    resetEffect() {
       this.Blur = 0;
       this.Brightness = 0;
       this.Opacity = 100;
@@ -799,142 +929,133 @@ TO DO:
       const colorType = args.COLOR_TYPE;
       const colorValue = args.COLOR;
       switch (colorType) {
-        case "Question":
+        case "Question Text":
           this.questionColor = colorValue;
           break;
         case "Input Text":
           this.inputColor = colorValue;
           break;
         case "Textbox":
-          this.textBoxColor = colorValue;
-          this.overlayImage = null;
+          this.textBoxColor[0] = colorValue;
+          this.overlayImage[0] = " ";
           break;
-        case "Input Background":
-          this.inputBackgroundColor = colorValue;
+        case "Input Box":
+          this.inputFieldColor[0] = colorValue;
+          this.overlayImage[1] = " ";
           break;
         case "Input Outline":
-          this.inputOutlineColor = colorValue;
-          break;
-        case "Button 1":
-          this.submitButtonColor = colorValue;
-          break;
-        case "Button 2":
-          this.cancelButtonColor = colorValue;
-          break;
-        case "Button 3":
-          this.button3Color = colorValue;
-          break;
-        case "Button 4":
-          this.button4Color = colorValue;
+          this.inputFieldColor[1] = colorValue;
           break;
         case "Dropdown Button":
-          this.optionbuttonColor = colorValue;
-          break;
-        case "Slider":
-          this.sliderColor = colorValue;
-          break;
-        case "Button 1 Text":
-          this.submitButtonTextColor = colorValue;
-          break;
-        case "Button 2 Text":
-          this.cancelButtonTextColor = colorValue;
-          break;
-        case "Button 3 Text":
-          this.button3TextColor = colorValue;
-          break;
-        case "Button 4 Text":
-          this.button4TextColor = colorValue;
+          this.dropdownButtonColor[0] = colorValue;
+          this.overlayImage[2] = " ";
           break;
         case "Dropdown Text":
-          this.optionbuttonTextColor = colorValue;
+          this.dropdownButtonColor[1] = colorValue;
+          break;
+        default:
+          if (this.buttonJSON[colorType] || this.buttonJSON[colorType.replace(" Text", "")]) {
+            let buttonInfo;
+            if (colorType.includes(" Text")) {
+              buttonInfo = this.buttonJSON[colorType.replace(" Text", "")];
+              buttonInfo.textColor = colorValue;
+            } else {
+              buttonInfo = this.buttonJSON[colorType];
+              buttonInfo.color = colorValue;
+              buttonInfo.image = " ";
+            }
+          }
           break;
       }
+      this.activeOverlays.forEach((overlay) => {
+        this.updateOverlay(overlay);
+      });
     }
 
-findGradientType(menu) {
+    findGradientType(menu) {
       const colorType = menu;
       switch (colorType) {
         case "Textbox":
           newColorType = "textBoxColor";
-          this.overlayImage = null;
-          break;
+          this.overlayImage[0] = " ";
+          return newColorType;
         case "Input Box":
-          newColorType = "inputBackgroundColor";
-          break;
-        case "Button 1":
-          newColorType = "submitButtonColor";
-          break;
-        case "Button 2":
-          newColorType = "cancelButtonColor";
-          break;
-        case "Button 3":
-          newColorType = "button3Color";
-          break;
-        case "Button 4":
-          newColorType = "button4Color";
-          break;
+          newColorType = "inputFieldColor";
+          this.overlayImage[1] = " ";
+          return newColorType;
         case "Dropdown Button":
-          newColorType = "optionbuttonColor";
-          break;
+          newColorType = "dropdownButtonColor";
+          this.overlayImage[2] = " ";
+          return newColorType;
+        default:
+          if (this.buttonJSON[colorType]) {
+            newColorType = ["button", colorType];
+          }
+          return newColorType;
       }
-      return newColorType;
     }
 
     setGradient(args) {
-      this.findGradientType(args.COLOR_TYPE);
+      const newColorType = this.findGradientType(args.COLOR_TYPE);
       const gradientColor = `linear-gradient(${args.DIR - 90}deg, ${args.COLOR2}, ${args.COLOR1})`;
-      this[newColorType] = gradientColor;
+      if (newColorType[0] !== "button") {
+        this[newColorType][0] = gradientColor;
+      } else {
+        const buttonInfo = this.buttonJSON[newColorType[1]];
+        buttonInfo.color = gradientColor;
+      }
+      this.activeOverlays.forEach((overlay) => {
+        this.updateOverlay(overlay);
+      });
     }
 
     setCircleGradient(args) {
-      this.findGradientType(args.COLOR_TYPE);
-      const newX = args.X + 50;
-      const newY = args.Y + 50;
-
-      const gradientColor = `radial-gradient(circle at ${newX}% ${newY}%, ${args.COLOR2}, ${args.COLOR1})`;
-      this[newColorType] = gradientColor;
+      const newColorType = this.findGradientType(args.COLOR_TYPE);
+      const newPos = [args.X + 50, args.Y + 50];
+      const gradientColor = `radial-gradient(circle at ${newPos[0]}% ${newPos[1]}%, ${args.COLOR2}, ${args.COLOR1})`;
+      if (newColorType[0] !== "button") {
+        this[newColorType][0] = gradientColor;
+      } else {
+        const buttonInfo = this.buttonJSON[newColorType[1]];
+        buttonInfo.color = gradientColor;
+      }
+      this.activeOverlays.forEach((overlay) => {
+        this.updateOverlay(overlay);
+      });
     }
 
     setBorderRadius(args) {
       const element = args.ELEMENT;
       let value = args.VALUE;
-
       if (value < 0) {
         value = 0;
       }
-
       switch (element) {
         case "Textbox":
-          this.textBoxBorderRadius = value;
-          break;
-        case "Button 1":
-          this.submitButtonBorderRadius = value;
-          break;
-        case "Button 2":
-          this.cancelButtonBorderRadius = value;
-          break;
-        case "Button 3":
-          this.button3BorderRadius = value;
-          break;
-        case "Button 4":
-          this.button4BorderRadius = value;
+          this.overlayBorderRadius[0] = value;
           break;
         case "Input Box":
-          this.inputBoxRadius = value;
+          this.overlayBorderRadius[1] = value;
           break;
         case "Dropdown Button":
-          this.optionbuttonBorderRadius = value;
+          this.overlayBorderRadius[2] = value;
           break;
-        case "Slider":
-          this.sliderBorderRadius = value;
+        default:
+          if (this.buttonJSON[element]) {
+            const buttonInfo = this.buttonJSON[element];
+            buttonInfo.borderRadius = value;
+          }
           break;
       }
+      this.activeOverlays.forEach((overlay) => {
+        this.updateOverlay(overlay);
+      });
     }
 
     setShadow(args) {
       const shadow = args.SHADOW;
       switch (shadow) {
-        case "Scale":
+        case "Size":
           this.shadowS[2] = args.AMT;
           break;
         case "X":
@@ -944,26 +1065,45 @@ findGradientType(menu) {
           this.shadowS[1] = args.AMT;
           break;
         case "Opacity":
-          this.shadowS[3] = args.AMT;
+          this.shadowS[3] = args.AMT / 100;
           break;
       }
+      this.activeOverlays.forEach((overlay) => {
+        this.updateOverlay(overlay);
+      });
     }
 
     setImage(args) {
-      this.overlayImage = args.IMAGE;
+      if (args.ELEMENT === "Textbox") {
+        this.overlayImage[0] = args.IMAGE;
+      } else if (args.ELEMENT === "Input Box") {
+        this.overlayImage[1] = args.IMAGE;
+      } else if (args.ELEMENT === "Dropdown Button") {
+        this.overlayImage[2] = args.IMAGE;
+      } else if (this.buttonJSON[args.ELEMENT]) {
+        const buttonInfo = this.buttonJSON[args.ELEMENT];
+        buttonInfo.image = args.IMAGE;
+      }
       this.activeOverlays.forEach((overlay) => {
         this.updateOverlay(overlay);
       });
     }
 
     scaleImage(args) {
-      this.imgScale = args.SCALE;
+      if (args.ELEMENT === "Textbox") {
+        this.imgScale[0] = args.SCALE;
+      } else if (args.ELEMENT === "Input Box") {
+        this.imgScale[1] = args.SCALE;
+      } else if (args.ELEMENT === "Dropdown Button") {
+        this.imgScale[2] = args.SCALE;
+      } else if (this.buttonJSON[args.ELEMENT]) {
+        const buttonInfo = this.buttonJSON[args.ELEMENT];
+        buttonInfo.imgScale = args.SCALE;
+      }
       this.activeOverlays.forEach((overlay) => {
         this.updateOverlay(overlay);
       });
     }
-
-    //Position Stuff
 
     setDirection(args) {
       const ROTATE = args.ROTATE;
@@ -981,7 +1121,7 @@ findGradientType(menu) {
       });
     }
 
-    reportDirection(args) {
+    reportDirection() {
       return this.Rotation;
     }
 
@@ -1014,74 +1154,6 @@ findGradientType(menu) {
       return this.textBoxY * (screen.height / -300);
     }
 
-    updateOverlayPos(overlay) {
-      if (this.Rotation > 359) {
-        this.Rotation = 0;
-      } else if (this.Rotation < 1) {
-        this.Rotation = 360;
-      }
-
-      overlay.style.transform = `
-        SkewX(${this.SkewX}deg)
-        SkewY(${this.SkewY}deg)
-        rotate(${this.Rotation - 90}deg)
-      `;
-
-      if (this.textBoxX !== null && this.textBoxY !== null) {
-        overlay.style.left = `${50 + this.textBoxX}%`;
-        overlay.style.top = `${50 + this.textBoxY}%`;
-        overlay.style.transform = `
-          translate(-50%, -50%)
-          SkewX(${this.SkewX}deg)
-          SkewY(${this.SkewY}deg)
-          rotate(${this.Rotation - 90}deg)
-        `;
-      } else {
-        overlay.style.left = "50%";
-        overlay.style.top = "50%";
-      }
-    }
-
-    updateOverlay(overlay) {
-      const newOpacity =  this.Opacity / 100;
-      const newScale = this.Scale / 100;
-      const newBrightness = this.Brightness + 100;
-
-      overlay.style.transform = `
-        translate(-50%, -50%)
-        SkewX(${this.SkewX}deg)
-        SkewY(${this.SkewY}deg)
-        rotate(${this.Rotation - 90}deg)
-      `;
-      overlay.style.filter = `
-        blur(${this.Blur}px)
-        brightness(${newBrightness}%)
-        invert(${this.Invert}%)
-        saturate(${this.Saturation}%)
-        hue-rotate(${this.Hue}deg)
-        sepia(${this.Sepia}%)
-        contrast(${this.Contrast}%)
-      `;
-      overlay.style.opacity = newOpacity;
-      overlay.style.scale = newScale;
-      overlay.style.fontFamily = this.fontFamily;
-      overlay.style.textAlign = this.textAlign;
-
-      if (Scratch.Cast.toString(this.overlayImage).length > 1) {
-        Scratch.canFetch(encodeURI(this.overlayImage))
-          .then(canFetch => {
-            if (canFetch) {
-              overlayImageContainer.style.background = `url(${encodeURI(this.overlayImage)})`;
-              overlayImageContainer.style.backgroundSize = this.imgScale + '%';
-            } else {
-              console.log("Cannot fetch content from the URL.");
-            }
-          });
-      }
-    }
-
-    //Formatting
-
     setFontSize(args) {
       this.fontSize = args.SIZE + "px";
     }
@@ -1104,48 +1176,27 @@ findGradientType(menu) {
       this.sliderInfo = [args.MIN, args.MAX, args.DEFAULT];
     }
 
-    setEnable(args) {
-      const enableMenu = args.ENABLE_MENU;
-      const action = args.ACTION;
-      switch (enableMenu) {
-        case "Button 2":
-          this.showCancelButton = action === "Enabled";
-          break;
-        case "Button 3":
-          this.showButton3 = action === "Enabled";
-          break;
-        case "Button 4":
-          this.showButton4 = action === "Enabled";
-          break;
-        case "Textbox Shadow":
-          this.shadowEnabled = action === "Enabled";
-          break;
+    setInputType(args) {
+      if (args.ACTION === "Text" || args.ACTION ===  "None") {
+        this.isInputEnabled = args.ACTION === "Text" ? "Enabled" : "Disabled";
+      } else {
+        this.isInputEnabled = args.ACTION;
       }
     }
 
-    setInputType(args) {
-      this.isInputEnabled = args.ACTION;
+    enableShadow(args) {
+      this.shadowEnabled = args.ACTION === "Enabled";
     }
 
     setButtonText(args) {
       const buttonMenu = args.BUTTON_MENU;
       const text = args.TEXT;
-      switch (buttonMenu) {
-        case "Button 1":
-          this.submitButtonText = text;
-          break;
-        case "Button 2":
-          this.cancelButtonText = text;
-          break;
-        case "Button 3":
-          this.Button3Text = text;
-          break;
-        case "Button 4":
-          this.Button4Text = text;
-          break;
-        case "Dropdown":
-          this.DropdownText = text;
-          break;
+      if (buttonMenu === "Dropdown") {
+        this.DropdownText = text;
+      } else if (this.buttonJSON[buttonMenu]) {
+        const buttonInfo = this.buttonJSON[buttonMenu];
+        buttonInfo.name = text;
+        Scratch.vm.extensionManager.refreshBlocks();
       }
     }
 
@@ -1157,8 +1208,6 @@ findGradientType(menu) {
       }
     }
 
-    //Asking Stuff
-
     removeAskBoxes() {
       const overlaysToRemove = [];
       this.activeOverlays.forEach((overlay) => {
@@ -1166,20 +1215,24 @@ findGradientType(menu) {
           overlay.parentNode.removeChild(overlay);
           overlaysToRemove.push(overlay);
         }
+        if (this.askBoxPromises) {
+          const index = this.activeOverlays.indexOf(overlay);
+          if (index !== -1) {
+            this.askBoxPromises[index].resolve("removed");
+          }
+        }
       });
+      this.askBoxPromises = [];
       this.activeOverlays = this.activeOverlays.filter(
         (overlay) => !overlaysToRemove.includes(overlay)
       );
-      if (this.askBoxPromise) {
-        this.askBoxPromise.resolve("removed");
-        this.askBoxPromise = null;
-      }
-      this.askBoxCount = 0;
+      this.activeUI = [];
+      this.askBoxInfo[0] = 0;
       this.userInput = "";
     }
 
     askAndWaitForInput(args) {
-      if (this.askBoxCount < this.maxBoxCount) {
+      if (this.askBoxInfo[0] < this.askBoxInfo[1] ) {
         return this.askAndWait(args).then(() => {
           return this.getUserInput();
         });
@@ -1187,24 +1240,20 @@ findGradientType(menu) {
     }
 
     askAndWait(args) {
-      if (this.askBoxCount < this.maxBoxCount) {
+      if (this.askBoxInfo[0] < this.askBoxInfo[1]) {
         const question = args.question;
         this.isWaitingForInput = true;
         this.userInput = null;
-        this.askBoxCount++;
-        this.askBoxPromise = {};
+        this.askBoxInfo[0]++;
         let selectedOptions = [];
 
         return new Promise((resolve) => {
-          this.askBoxPromise.resolve = resolve;
+          const askBoxPromise = { resolve };
+          this.askBoxPromises.push(askBoxPromise);
           const overlay = document.createElement("div");
-          this.activeOverlays.push(overlay);
           overlay.classList.add("ask-box");
           overlay.style.position = "fixed";
           overlay.style.zIndex = "9999";
-          overlay.style[this.textBoxColor.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.textBoxColor;
-          overlay.style.boxShadow = this.shadowEnabled ? `${this.shadowS[0]}px ${this.shadowS[1]}px ${this.shadowS[2]}px rgba(0, 0, 0, ${this.shadowS[3]})` : "none";
-          overlay.style.borderRadius = this.textBoxBorderRadius + "px";
           overlay.style.padding = "15px";
           overlay.style.fontSize = this.fontSize;
           overlay.style.left = `${50 + this.textBoxX}%`;
@@ -1216,7 +1265,6 @@ findGradientType(menu) {
           overlayImageContainer.style.position = "absolute";
           overlayImageContainer.style.top = 0;
           overlayImageContainer.style.left = 0;
-          overlayImageContainer.style.borderRadius = this.textBoxBorderRadius + "px";
           overlayImageContainer.style.zIndex = "-1";
 
           if (this.forceInput !== "Disabled") {
@@ -1240,7 +1288,6 @@ findGradientType(menu) {
                 resolve();
               }
             };
-
             const observer = new MutationObserver((mutationsList) => {
               for (const mutation of mutationsList) {
                 if (
@@ -1260,7 +1307,6 @@ findGradientType(menu) {
           questionText.classList.add("question");
           questionText.style.fontSize = this.fontSize;
           questionText.style.marginBottom = "10px";
-          questionText.style.color = this.questionColor;
           questionText.textContent = question;
 
           const inputField = document.createElement("input");
@@ -1268,101 +1314,36 @@ findGradientType(menu) {
           inputField.style.width = "94%";
           inputField.style.padding = "5px";
           inputField.style.fontSize = this.fontSize;
-          inputField.style.color = this.inputColor;
-          inputField.style[this.inputBackgroundColor.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.inputBackgroundColor;
-          inputField.style.border = `1px solid ${this.inputOutlineColor}`;
-          inputField.style.borderRadius = this.inputBoxRadius + "px";
           inputField.style.margin = "0 auto";
-          inputField.style.textAlign = this.textAlign;
 
-          const submitButton = document.createElement("button");
-          submitButton.style.marginTop = "10px";
-          submitButton.style.marginRight = "5px";
-          submitButton.style.padding = "5px 10px";
-          submitButton.style[this.submitButtonColor.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.submitButtonColor;
-          submitButton.style.color = this.submitButtonTextColor;
-          submitButton.style.border = "none";
-          submitButton.style.borderRadius =
-          this.submitButtonBorderRadius + "px";
-          submitButton.style.cursor = "pointer";
-          submitButton.textContent = this.submitButtonText;
-
-          submitButton.addEventListener("click", () => {
-            if (this.isInputEnabled !== "Disabled") {
-              this.userInput = inputField.value;
+          const buttonContainer = document.createElement("div");
+          buttonContainer.classList.add("button-container");
+          for (const buttonName in this.buttonJSON) {
+            const buttonInfo = this.buttonJSON[buttonName];
+            if (buttonInfo.name.includes("<newline>")) {
+              const lineBreak = document.createElement("br");
+              buttonContainer.appendChild(lineBreak);
             } else {
-              this.userInput = this.submitButtonText;
+              const button = document.createElement("button");
+              button.style.marginTop = "10px";
+              button.style.marginRight = "5px";
+              button.style.padding = "5px 10px";
+              button.style.border = "none";
+              button.style.cursor = "pointer";
+              button.textContent = buttonInfo.name;
+              button.style.display = "inline-block";
+              button.addEventListener("click", () => {
+                if (this.isInputEnabled === "Disabled") {
+                  this.userInput = buttonInfo.name;
+                } else {
+                  this.userInput = inputField.value;
+                }
+                this.closeOverlay(overlay);
+                resolve();
+              });
+              buttonContainer.appendChild(button);
             }
-            this.closeOverlay(overlay);
-            resolve();
-          });
-
-          const cancelButton = document.createElement("button");
-          cancelButton.style.marginTop = "10px";
-          cancelButton.style.marginRight = "5px";
-          cancelButton.style.padding = "5px 10px";
-          cancelButton.style[this.cancelButtonColor.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.cancelButtonColor;
-          cancelButton.style.color = this.cancelButtonTextColor;
-          cancelButton.style.border = "none";
-          cancelButton.style.borderRadius =
-          this.cancelButtonBorderRadius + "px";
-          cancelButton.style.cursor = "pointer";
-          cancelButton.textContent = this.cancelButtonText;
-          cancelButton.style.display = this.showCancelButton ? "inline-block" : "none";
-
-          cancelButton.addEventListener("click", () => {
-            if (this.isInputEnabled === "Disabled") {
-              this.userInput = this.cancelButtonText;
-            } else {
-              this.userInput = "";
-            }
-            this.closeOverlay(overlay);
-            resolve();
-          });
-
-          const Button3 = document.createElement("button");
-          Button3.style.marginTop = "10px";
-          Button3.style.marginRight = "5px";
-          Button3.style.padding = "5px 10px";
-          Button3.style[this.button3Color.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.button3Color;
-          Button3.style.color = this.button3TextColor;
-          Button3.style.border = "none";
-          Button3.style.borderRadius = this.button3BorderRadius + "px";
-          Button3.style.cursor = "pointer";
-          Button3.textContent = this.Button3Text;
-          Button3.style.display = this.showButton3 ? "inline-block" : "none";
-
-          Button3.addEventListener("click", () => {
-            if (this.isInputEnabled === "Disabled") {
-              this.userInput = this.Button3Text;
-            } else {
-              this.userInput = "";
-            }
-            this.closeOverlay(overlay);
-            resolve();
-          });
-
-          const Button4 = document.createElement("button");
-          Button4.style.marginTop = "10px";
-          Button4.style.marginRight = "5px";
-          Button4.style.padding = "5px 10px";
-          Button4.style[this.button4Color.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.button4Color;
-          Button4.style.color = this.button4TextColor;
-          Button4.style.border = "none";
-          Button4.style.borderRadius = this.button4BorderRadius + "px";
-          Button4.style.cursor = "pointer";
-          Button4.textContent = this.Button4Text;
-          Button4.style.display = this.showButton4 ? "inline-block" : "none";
-
-          Button4.addEventListener("click", () => {
-            if (this.isInputEnabled === "Disabled") {
-              this.userInput = this.Button4Text;
-            } else {
-              this.userInput = "";
-            }
-            this.closeOverlay(overlay);
-            resolve();
-          });
+          }
 
           const dropdown = document.createElement("div");
           dropdown.className = "dropdown";
@@ -1371,10 +1352,7 @@ findGradientType(menu) {
           dropdownButton.className = "dropbtn";
           dropdownButton.textContent = this.DropdownText;
           dropdownButton.style.padding = "5px 10px";
-          dropdownButton.style[this.optionbuttonColor.includes('gradient') ? 'backgroundImage' : 'backgroundColor'] = this.optionbuttonColor;
-          dropdownButton.style.color = this.optionbuttonTextColor;
           dropdownButton.style.border = "none";
-          dropdownButton.style.borderRadius = this.optionbuttonBorderRadius + "px";
 
           const dropdownContent = document.createElement("div");
           dropdownContent.id = "myDropdown";
@@ -1386,7 +1364,6 @@ findGradientType(menu) {
             const optionLabel = document.createElement("label");
             optionLabel.style.color = this.questionColor;
             optionLabel.textContent = label + " ";
-
             const optionRadio = document.createElement("input");
             optionRadio.type = this.isInputEnabled === "Dropdown" ? "radio" : "checkbox";
             optionRadio.name = "dropdownOptions";
@@ -1430,26 +1407,21 @@ findGradientType(menu) {
           slider.max = this.sliderInfo[1];
           slider.value = this.sliderInfo[2];
           if (this.isInputEnabled.includes("Vertical")) {
-            sliderContainer.appendChild(document.createElement("br"));
-            sliderContainer.appendChild(document.createElement("br"));
-            sliderContainer.appendChild(document.createElement("br"));
-
+            for (let i = 0; i < 3; i++) {
+              sliderContainer.appendChild(document.createElement("br"));
+            }
             sliderContainer.appendChild(slider);
-
-            sliderContainer.appendChild(document.createElement("br"));
-            sliderContainer.appendChild(document.createElement("br"));
-            sliderContainer.appendChild(document.createElement("br"));
-            sliderContainer.appendChild(document.createElement("br"));
+            for (let i = 0; i < 4; i++) {
+              sliderContainer.appendChild(document.createElement("br"));
+            }
           } else {
             sliderContainer.appendChild(slider);
           }
-
           const valueDisplay = document.createElement("span");
           valueDisplay.classList.add("slider-value");
           sliderContainer.appendChild(valueDisplay);
           valueDisplay.style.color = this.questionColor;
           valueDisplay.textContent = slider.value;
-
           slider.addEventListener("input", () => {
             valueDisplay.textContent = slider.value;
             inputField.value = valueDisplay.textContent;
@@ -1469,12 +1441,8 @@ findGradientType(menu) {
               overlay.appendChild(document.createElement("br"));
             }
           }
-          overlay.appendChild(submitButton);
-          overlay.appendChild(cancelButton);
-          overlay.appendChild(Button3);
-          overlay.appendChild(Button4);
+          overlay.appendChild(buttonContainer);
           overlay.appendChild(overlayImageContainer);
-
           document.body.appendChild(overlay);
           inputField.focus();
 
@@ -1488,75 +1456,82 @@ findGradientType(menu) {
             }
           };
 
+          this.activeOverlays.push(overlay);
+          this.activeUI.push({
+            overlay: {
+              button: buttonContainer,
+              dropdown: dropdownButton,
+              input: inputField,
+            },
+          });
           document.addEventListener("fullscreenchange", resizeHandler);
           document.addEventListener("webkitfullscreenchange", resizeHandler);
           document.addEventListener("mozfullscreenchange", resizeHandler);
           document.addEventListener("MSFullscreenChange", resizeHandler);
 
-          this.updateOverlay(overlay);
-
+          const overlayParent = overlay.parentNode;
           const observer = new MutationObserver((mutationsList) => {
             for (const mutation of mutationsList) {
-              if (
-                mutation.type === "childList" &&
-                !document.contains(overlay)
-              ) {
+              if (mutation.type === "childList" && mutation.removedNodes.contains(overlay)) {
                 document.removeEventListener("fullscreenchange", resizeHandler);
-                document.removeEventListener(
-                  "webkitfullscreenchange",
-                  resizeHandler,
-                );
-                document.removeEventListener(
-                  "mozfullscreenchange",
-                  resizeHandler,
-                );
-                document.removeEventListener(
-                  "MSFullscreenChange",
-                  resizeHandler,
-                );
+                document.removeEventListener("webkitfullscreenchange", resizeHandler);
+                document.removeEventListener("mozfullscreenchange", resizeHandler);
+                document.removeEventListener("MSFullscreenChange", resizeHandler);
                 observer.disconnect();
               }
             }
           });
-          observer.observe(document.body, { childList: true });
+          observer.observe(overlayParent, { childList: true });
           document.body.appendChild(overlay);
           inputField.focus();
+          this.updateOverlay(overlay);
         });
       }
     }
 
-    removeOverlay(overlay) {
-      const index = this.activeOverlays.indexOf(overlay);
-      if (index !== -1) {
-        this.activeOverlays.splice(index, 1);
-      }
-      document.body.removeChild(overlay);
-    }
-
     closeOverlay(overlay) {
-      if (this.askBoxCount < 2) {
+      if (this.askBoxInfo[0] < 2) {
         this.isWaitingForInput = false;
       }
       this.isDropdownOpen = false;
-      this.askBoxCount--;
-      const timeout = this.Timeout * 1000;
+      this.askBoxInfo[0]--;
+      const index = this.activeOverlays.indexOf(overlay);
+      if (index !== -1) {
+        this.activeOverlays.splice(index, 1);
+        this.askBoxPromises.splice(index, 1);
+      }
+      delete this.activeUI[overlay];
       setTimeout(() => {
         document.body.removeChild(overlay);
-      }, timeout);
+      }, this.Timeout * 1000);
     }
 
-    //Operations
+    setButton(args) {
+      if (args.BUTTON === "add") {
+        this.buttonJSON[args.NAME] = {
+          borderRadius: 5,
+          color: "#0074D9",
+          textColor: "#ffffff",
+          name: args.NAME,
+          image: "",
+          imgScale: 100,
+        };
+      } else {
+        delete this.buttonJSON[args.NAME];
+      }
+      Scratch.vm.extensionManager.refreshBlocks()
+    }
 
-    isWaitingInput(args) {
+    isWaitingInput() {
       return this.isWaitingForInput;
     }
 
-    isDropdown(args) {
+    isDropdown() {
       return this.isDropdownOpen;
     }
 
     setMaxBoxCount(args) {
-      this.maxBoxCount = args.MAX;
+      this.askBoxInfo[1] = args.MAX;
     }
 
     setTimeout(args) {
@@ -1564,7 +1539,7 @@ findGradientType(menu) {
       this.Condition = args.CONDITION;
     }
 
-    reportTimeout(args) {
+    reportTimeout() {
       return this.Timeout;
     }
 
@@ -1573,11 +1548,7 @@ findGradientType(menu) {
     }
 
     getBoxInfo(args) {
-      if (args.INFO === "count") {
-        return this.askBoxCount;
-      } else {
-        return this.maxBoxCount;
-      }
+      return this.askBoxInfo[args.INFO === "count" ? 0 : 1];
     }
 
     setSubmitEvent(args) {
