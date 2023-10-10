@@ -129,7 +129,7 @@
     "Tile-Grids": {
       "credits": "Place Sprites on Tile Grids. Made by SharkPool.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tile-Grids.js",
-      "tags": ".all.expanded.utilities",
+      "tags": ".all.utilities",
       "status": "new"
     },
     "Example": {
