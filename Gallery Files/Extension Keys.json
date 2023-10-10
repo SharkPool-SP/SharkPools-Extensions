@@ -120,6 +120,12 @@
       "tags": ".all.expanded.fetching",
       "status": ""
     },
+    "Monitors-Plus": {
+      "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut.",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Monitors-Plus.js",
+      "tags": ".all.expanded.utilities",
+      "status": "new"
+    },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by Martinelplayz.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Gamepad-Expanded.js",
