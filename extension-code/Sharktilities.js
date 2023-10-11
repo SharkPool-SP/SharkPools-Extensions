@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.1.1
+// Version V.2.2.0
 
 (function (Scratch) {
     "use strict";
@@ -21,7 +21,7 @@
       const diff = max - min;
       let h, s, l = (max + min) / 2;
       if (diff === 0) {
-        h = s = 0; // achromatic
+        h = s = 0;
       } else {
         s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
         switch (max) {
@@ -37,7 +37,7 @@
     function hslToRgb(h, s, l) {
       let r, g, b;
       if (s === 0) {
-        r = g = b = l; // achromatic
+        r = g = b = l;
       } else {
         const hue2rgb = (p, q, t) => {
          if (t < 0) t += 1;
@@ -99,6 +99,22 @@
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "TARGETS",
+              },
+            },
+          },
+          {
+            opcode: "cloudCode",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "☁ cloud [CODE] string [TEXT]",
+            arguments: {
+              CODE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "encoder",
+                defaultValue: "encode",
+              },
+              TEXT: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "SharkPool",
               },
             },
           },
@@ -342,7 +358,7 @@
             arguments: {
               WORDS: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "word1 word2 word3",
+                defaultValue: "[\"word1\", \"word2\", \"word3\"]",
               },
               SHUFFLE_OPTION: {
                 type: Scratch.ArgumentType.STRING,
@@ -443,6 +459,7 @@
             acceptReporters: true,
             items: ["sin", "cos"],
           },
+          encoder: ["encode", "decode"],
           cosInfo: {
             acceptReporters: true,
             items: [
@@ -456,28 +473,16 @@
               "data.uri"
             ],
           },
-          shuffleOption: [
-            {
-              text: "random",
-              value: "random",
-            },
-            {
-              text: "ascending",
-              value: "ascending",
-            },
-            {
-              text: "descending",
-              value: "descending",
-            },
-            {
-              text: "ascending by length",
-              value: "smallest_length",
-            },
-            {
-              text: "descending by length",
-              value: "biggest_length",
-            },
-          ],
+          shuffleOption: {
+            acceptReporters: true,
+            items: [
+              "random",
+              "ascending",
+              "descending",
+              "ascending by length",
+              "descending by length"
+            ],
+          },
         },
       };
     }
@@ -636,8 +641,15 @@
     }
 
     shuffleArray(args) {
-      const words = args.WORDS.split(" ");
-
+      let words = args.WORDS;
+      try {
+        words = JSON.parse(words);
+      } catch (error) {
+        return "Invalid Array";
+      }
+      if (!Array.isArray(words)) {
+        return "Invalid Array";
+      }
       switch (args.SHUFFLE_OPTION) {
         case "ascending":
           words.sort();
@@ -645,10 +657,10 @@
         case "descending":
           words.sort().reverse();
           break;
-        case "biggest_length":
+        case "descending by length":
           words.sort((a, b) => b.length - a.length);
           break;
-        case "smallest_length":
+        case "ascending by length":
           words.sort((a, b) => a.length - b.length);
           break;
         default:
@@ -658,9 +670,9 @@
           }
           break;
       }
-      return words.join(" ");
+      return JSON.stringify(words);
     }
-    
+
     hexBrightness(args) {
       const hexColor = args.COLOR.replace(/^#/, "");
       const r = parseInt(hexColor.substring(0, 2), 16);
@@ -764,6 +776,33 @@
         default:
           return "";
       }
+    }
+
+    cloudCode(args) {
+      if (args.CODE === "encode") {
+        return this.encodeText(args.TEXT);
+      } else {
+        return this.decodeText(args.TEXT);
+      }
+    }
+
+    encodeText(txt) {
+      const encodedString = txt
+        .split("")
+        .map(char => char.charCodeAt(0))
+        .map(value => value.toString().padStart(3, "0"))
+        .join("");
+      return encodedString;
+    }
+
+    decodeText(txt) {
+      const decodedString = [];
+      for (let i = 0; i < txt.length; i += 3) {
+        const charCode = parseInt(txt.slice(i, i + 3), 10);
+        const char = String.fromCharCode(charCode);
+        decodedString.push(char);
+      }
+      return decodedString.join("");
     }
   }
 
