@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.2.0
+// Version 2.1.1
 
 (function (Scratch) {
     "use strict";
@@ -21,7 +21,7 @@
       const diff = max - min;
       let h, s, l = (max + min) / 2;
       if (diff === 0) {
-        h = s = 0;
+        h = s = 0; // achromatic
       } else {
         s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
         switch (max) {
@@ -37,7 +37,7 @@
     function hslToRgb(h, s, l) {
       let r, g, b;
       if (s === 0) {
-        r = g = b = l;
+        r = g = b = l; // achromatic
       } else {
         const hue2rgb = (p, q, t) => {
          if (t < 0) t += 1;
@@ -103,22 +103,6 @@
             },
           },
           {
-            opcode: "cloudCode",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "☁ cloud [CODE] string [TEXT]",
-            arguments: {
-              CODE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "encoder",
-                defaultValue: "encode",
-              },
-              TEXT: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "SharkPool",
-              },
-            },
-          },
-          {
             blockType: Scratch.BlockType.LABEL,
             text: "Numbers and Letters",
           },
@@ -147,6 +131,21 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "LETTER_TYPE_MENU",
                 defaultValue: "lowercase",
+              },
+            },
+          },
+          {
+            opcode: "randomCharRange",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "pick random character [ONE] to [TWO]",
+            arguments: {
+              ONE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              TWO: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
               },
             },
           },
@@ -358,7 +357,7 @@
             arguments: {
               WORDS: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"word1\", \"word2\", \"word3\"]",
+                defaultValue: "word1 word2 word3",
               },
               SHUFFLE_OPTION: {
                 type: Scratch.ArgumentType.STRING,
@@ -454,12 +453,14 @@
             acceptReporters: true,
             items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"],
           },
-          OPERATOR_MENU: ["+", "-", "*", "/"],
+          OPERATOR_MENU: {
+            acceptReporters: true,
+            items: ["+", "-", "*", "/"],
+          },
           mathMenu: {
             acceptReporters: true,
             items: ["sin", "cos"],
           },
-          encoder: ["encode", "decode"],
           cosInfo: {
             acceptReporters: true,
             items: [
@@ -473,16 +474,28 @@
               "data.uri"
             ],
           },
-          shuffleOption: {
-            acceptReporters: true,
-            items: [
-              "random",
-              "ascending",
-              "descending",
-              "ascending by length",
-              "descending by length"
-            ],
-          },
+          shuffleOption: [
+            {
+              text: "random",
+              value: "random",
+            },
+            {
+              text: "ascending",
+              value: "ascending",
+            },
+            {
+              text: "descending",
+              value: "descending",
+            },
+            {
+              text: "ascending by length",
+              value: "smallest_length",
+            },
+            {
+              text: "descending by length",
+              value: "biggest_length",
+            },
+          ],
         },
       };
     }
@@ -533,6 +546,12 @@
           break;
       }
       return letters.charAt(Math.floor(Math.random() * letters.length));
+    }
+
+    randomCharRange(args) { 
+      let ONE = args.ONE.charCodeAt(0);
+      let TWO = args.TWO.charCodeAt(0);
+      return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
     }
 
     randomSingleInteger() {
@@ -595,45 +614,95 @@
       return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}`;
     }
 
-    math(n1, n2, n3, n4, op1, op2, op3) {
-      n1 = this.mathfind(op1, n1, n2);
-      n1 = this.mathfind(op2, n1, n3);
-      if (n4 !== false) {
-        n1 = this.mathfind(op3, n1, n4);
+    tripleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3 }) {
+      switch (OPERATOR1) {
+        case "+":
+          NUM1 += NUM2;
+          break;
+        case "-":
+          NUM1 -= NUM2;
+          break;
+        case "*":
+          NUM1 *= NUM2;
+          break;
+        case "/":
+          NUM1 /= NUM2;
+          break;
+        default:
+          NUM1 += NUM2;
       }
-      return n1;
-    }
 
-    mathfind(option, num1, num2) {
-      if (option === "+") {
-        num1 += num2;
-      } else if (option === "-") {
-        num1 -= num2;
-      } else if (option === "*") {
-        num1 *= num2;
-      } else {
-        num1 /= num2;
+      switch (OPERATOR2) {
+        case "+":
+          NUM1 += NUM3;
+          break;
+        case "-":
+          NUM1 -= NUM3;
+          break;
+        case "*":
+          NUM1 *= NUM3;
+          break;
+        case "/":
+          NUM1 /= NUM3;
+          break;
+        default:
+          NUM1 += NUM2;
       }
-      return num1;
+      return NUM1;
     }
 
-    tripleOperator(args) {
-      const nums = [
-        Scratch.Cast.toNumber(args.NUM1),
-        Scratch.Cast.toNumber(args.NUM2),
-        Scratch.Cast.toNumber(args.NUM3),
-      ];
-      return this.math(nums[0], nums[1], nums[2], false, args.OPERATOR1, args.OPERATOR2);
-    }
+    quadrupleOperator({ NUM1, OPERATOR1, NUM2, OPERATOR2, NUM3, OPERATOR3, NUM4 }) {
+      switch (OPERATOR1) {
+        case "+":
+          NUM1 += NUM2;
+          break;
+        case "-":
+          NUM1 -= NUM2;
+          break;
+        case "*":
+          NUM1 *= NUM2;
+          break;
+        case "/":
+          NUM1 /= NUM2;
+          break;
+        default:
+          NUM1 += NUM2;
+      }
 
-    quadrupleOperator(args) {
-      const nums = [
-        Scratch.Cast.toNumber(args.NUM1),
-        Scratch.Cast.toNumber(args.NUM2),
-        Scratch.Cast.toNumber(args.NUM3),
-        Scratch.Cast.toNumber(args.NUM4)
-      ];
-      return this.math(nums[0], nums[1], nums[2], nums[3], args.OPERATOR1, args.OPERATOR2, args.OPERATOR3);
+      switch (OPERATOR2) {
+        case "+":
+          NUM1 += NUM3;
+          break;
+        case "-":
+          NUM1 -= NUM3;
+          break;
+        case "*":
+          NUM1 *= NUM3;
+          break;
+        case "/":
+          NUM1 /= NUM3;
+          break;
+        default:
+          NUM1 += NUM2;
+      }
+
+      switch (OPERATOR3) {
+        case "+":
+          NUM1 += NUM4;
+          break;
+        case "-":
+          NUM1 -= NUM4;
+          break;
+        case "*":
+          NUM1 *= NUM4;
+          break;
+        case "/":
+          NUM1 /= NUM4;
+          break;
+        default:
+          NUM1 += NUM2;
+      }
+      return NUM1;
     }
 
     negaAbs({ NUMBER }) {
@@ -641,15 +710,8 @@
     }
 
     shuffleArray(args) {
-      let words = args.WORDS;
-      try {
-        words = JSON.parse(words);
-      } catch (error) {
-        return "Invalid Array";
-      }
-      if (!Array.isArray(words)) {
-        return "Invalid Array";
-      }
+      const words = args.WORDS.split(" ");
+
       switch (args.SHUFFLE_OPTION) {
         case "ascending":
           words.sort();
@@ -657,10 +719,10 @@
         case "descending":
           words.sort().reverse();
           break;
-        case "descending by length":
+        case "biggest_length":
           words.sort((a, b) => b.length - a.length);
           break;
-        case "ascending by length":
+        case "smallest_length":
           words.sort((a, b) => a.length - b.length);
           break;
         default:
@@ -670,9 +732,9 @@
           }
           break;
       }
-      return JSON.stringify(words);
+      return words.join(" ");
     }
-
+    
     hexBrightness(args) {
       const hexColor = args.COLOR.replace(/^#/, "");
       const r = parseInt(hexColor.substring(0, 2), 16);
@@ -776,33 +838,6 @@
         default:
           return "";
       }
-    }
-
-    cloudCode(args) {
-      if (args.CODE === "encode") {
-        return this.encodeText(args.TEXT);
-      } else {
-        return this.decodeText(args.TEXT);
-      }
-    }
-
-    encodeText(txt) {
-      const encodedString = txt
-        .split("")
-        .map(char => char.charCodeAt(0))
-        .map(value => value.toString().padStart(3, "0"))
-        .join("");
-      return encodedString;
-    }
-
-    decodeText(txt) {
-      const decodedString = [];
-      for (let i = 0; i < txt.length; i += 3) {
-        const charCode = parseInt(txt.slice(i, i + 3), 10);
-        const char = String.fromCharCode(charCode);
-        decodedString.push(char);
-      }
-      return decodedString.join("");
     }
   }
 
