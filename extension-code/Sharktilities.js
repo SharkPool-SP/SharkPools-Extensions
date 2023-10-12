@@ -151,6 +151,21 @@
             },
           },
           {
+            opcode: "randomCharRange",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "pick random character [ONE] to [TWO]",
+            arguments: {
+              ONE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "a",
+              },
+              TWO: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "c",
+              },
+            },
+          },
+          {
             opcode: "randomSingleInteger",
             blockType: Scratch.BlockType.REPORTER,
             text: "pick random single integer",
@@ -776,6 +791,12 @@
         default:
           return "";
       }
+    }
+
+    randomCharRange(args) { 
+      let ONE = args.ONE.charCodeAt(0);
+      let TWO = args.TWO.charCodeAt(0);
+      return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
     }
 
     cloudCode(args) {
