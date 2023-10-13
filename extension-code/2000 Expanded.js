@@ -1,11 +1,12 @@
 //Made by ION, Based on improving scratches days since 2000 block.
-class Since2000 {
-    constructor() {}
-  
+(function (Scratch) {
+  "use strict";
+    
+  class Since2000 {
     getInfo() {
       return {
         id: 'since2000',
-        name: '_ Since 2000',
+        name: 'Since 2000',
         color1: '#15b9a4',
         color2: '#0f80dd',
         blocks: [
@@ -137,3 +138,4 @@ class Since2000 {
   }
   
   Scratch.extensions.register(new Since2000());
+})(Scratch);
