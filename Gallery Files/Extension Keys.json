@@ -22,10 +22,10 @@
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": "update"
+      "status": ""
     },
     "Niche-Toolbox": {
-      "credits": "Utility blocks made by 0znzw. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here",
+      "credits": "Utility Blocks made by 0znzw. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
       "url": "https://raw.githubusercontent.com/SurvExe1Pc/unsafe-extensions/main/extensions/0znzw/NicheToolbox.js",
       "tags": ".all.utilities",
       "status": "update"
@@ -43,7 +43,7 @@
       "status": ""
     },
     "Added-Motion": {
-      "credits": "New motion blocks made by SharkPool",
+      "credits": "New Motion Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
       "tags": ".all.utilities.expanded",
       "status": ""
@@ -61,7 +61,7 @@
       "status": ""
     },
     "Hyper-Sense": {
-      "credits": "New Sensing blocks made by SharkPool",
+      "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
       "status": ""
@@ -73,7 +73,7 @@
       "status": "update"
     },
     "Camera-Sensing-Plus": {
-      "credits": "Better Camera Sensing extension for sprites. Apply green screens and more! Made by SharkPool",
+      "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching",
       "status": ""
@@ -85,7 +85,7 @@
       "status": ""
     },
     "Image-Effects": {
-      "credits": "Apply new, non-vanilla effects and edits to images and sprites! Made by SharkPool",
+      "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
       "status": ""
@@ -97,7 +97,7 @@
       "status": ""
     },
     "Newgrounds-Audio": {
-      "credits": "Fetch audio and audio information from Newgrounds. Made by SharkPool, works best with Tune Shark",
+      "credits": "Fetch Audio and Audio Information from Newgrounds. Made by SharkPool, works best with Tune Shark",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Newgrounds-Audio.js",
       "tags": ".all.fetching",
       "status": ""
@@ -145,7 +145,7 @@
       "status": "new"
     },
     "Animations": {
-      "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool.",
+      "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail ",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
       "status": "new"
