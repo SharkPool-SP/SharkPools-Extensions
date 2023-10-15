@@ -489,13 +489,13 @@
       switch (type) {
         case "large readout":
           this.resetFormat(variableId);
-          var LState = vm.runtime.getMonitorState().get(variableId);
+          var state = vm.runtime.getMonitorState().get(variableId);
           state = state.set("mode", "large");
           vm.runtime.requestUpdateMonitor(state);
           break;
         case "slider":
           this.resetFormat(variableId);
-          var SState = vm.runtime.getMonitorState().get(variableId);
+          var state = vm.runtime.getMonitorState().get(variableId);
           state = state.set("mode", "slider");
           vm.runtime.requestUpdateMonitor(state);
           break;
