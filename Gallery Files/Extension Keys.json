@@ -28,7 +28,7 @@
       "credits": "Utility blocks made by 0znzw. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here",
       "url": "https://raw.githubusercontent.com/SurvExe1Pc/unsafe-extensions/main/extensions/0znzw/NicheToolbox.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "update"
     },
     "Seeds": {
       "credits": "Generate random seeded numbers, generated terrain, and more! Made by SharkPool",
@@ -136,12 +136,24 @@
       "credits": "Place Sprites on Tile Grids. Made by SharkPool.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tile-Grids.js",
       "tags": ".all.utilities",
-      "status": "new"
+      "status": ""
     },
     "Since-2000": {
-      "credits": "An expansion of the Since 2000 Blocks. Made By ION",
+      "credits": "An expansion of the Since 2000 Blocks. Made By ION.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Since-2000.js",
       "tags": ".all.expanded",
+      "status": "new"
+    },
+    "Animations": {
+      "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool.",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
+      "tags": ".all.utilities",
+      "status": "new"
+    },
+    "Pause-Utilities": {
+      "credits": "Pause your Project and Chosen Scripts. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
+      "tags": ".all.utilities",
       "status": "new"
     },
     "Example": {
