@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": "update"
+      "status": ""
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
@@ -82,7 +82,7 @@
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "update"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
@@ -124,7 +124,7 @@
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Monitors-Plus.js",
       "tags": ".all.expanded.utilities",
-      "status": "new"
+      "status": ""
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by Martinelplayz.",
@@ -142,19 +142,19 @@
       "credits": "An expansion of the Since 2000 Blocks. Made By ION.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Since-2000.js",
       "tags": ".all.expanded",
-      "status": "new"
+      "status": ""
     },
     "Animations": {
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail ",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "new"
+      "status": "update"
     },
     "Pause-Utilities": {
       "credits": "Pause your Project and Chosen Scripts. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "new"
+      "status": ""
     },
     "Example": {
       "credits": "",
