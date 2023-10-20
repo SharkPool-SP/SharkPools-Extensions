@@ -3,7 +3,7 @@
 // Description: Tools for making particle engines easier.
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   'use strict';
@@ -25,7 +25,7 @@
       return {
         id: 'ParticleToolsSP',
         name: 'Particle Tools',
-        docsURI: 'https://extensions.turbowarp.org/SharkPool/Particle-Tools',
+        docsURI: 'https://extensions.penguinmod.com/docs/particle-tools',
         color1: '#0090ff',
         menuIconURI,
         blocks: [
