@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.2.0
+// Version V.2.3.0
 
 (function (Scratch) {
     "use strict";
@@ -317,6 +317,25 @@
             text: "Strings",
           },
           {
+            opcode: "rndString",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "pick random [STRING1] or [STRING2] with [CHANCE]% chance",
+            arguments: {
+              STRING1: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "foo",
+              },
+              STRING2: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "bar",
+              },
+              CHANCE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 50,
+              },
+            },
+          },
+          {
             opcode: "replaceKey",
             blockType: Scratch.BlockType.REPORTER,
             text: "replace [KEY] #[ORDER] of [STRING] with [REPLACE]",
@@ -610,35 +629,13 @@
       return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}`;
     }
 
-    math(n1, n2, n3, n4, op1, op2, op3) {
-      n1 = this.mathfind(op1, n1, n2);
-      n1 = this.mathfind(op2, n1, n3);
-      if (n4 !== false) {
-        n1 = this.mathfind(op3, n1, n4);
-      }
-      return n1;
-    }
-
-    mathfind(option, num1, num2) {
-      if (option === "+") {
-        num1 += num2;
-      } else if (option === "-") {
-        num1 -= num2;
-      } else if (option === "*") {
-        num1 *= num2;
-      } else {
-        num1 /= num2;
-      }
-      return num1;
-    }
-
     tripleOperator(args) {
       const nums = [
         Scratch.Cast.toNumber(args.NUM1),
         Scratch.Cast.toNumber(args.NUM2),
         Scratch.Cast.toNumber(args.NUM3),
       ];
-      return this.math(nums[0], nums[1], nums[2], false, args.OPERATOR1, args.OPERATOR2);
+      return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`);
     }
 
     quadrupleOperator(args) {
@@ -648,7 +645,7 @@
         Scratch.Cast.toNumber(args.NUM3),
         Scratch.Cast.toNumber(args.NUM4)
       ];
-      return this.math(nums[0], nums[1], nums[2], nums[3], args.OPERATOR1, args.OPERATOR2, args.OPERATOR3);
+      return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
     }
 
     negaAbs({ NUMBER }) {
@@ -824,6 +821,10 @@
         decodedString.push(char);
       }
       return decodedString.join("");
+    }
+
+    rndString(args) {
+      return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1;
     }
   }
 
