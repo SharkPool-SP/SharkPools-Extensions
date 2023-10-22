@@ -169,7 +169,8 @@
     "SharkPool's Extension Collection",
     "SharkPool's collection of TurboWarp Extensions. Most Extensions were made or contributed to by SharkPool. Hover for Details.",
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-thumbs/NAME.svg",
-    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/Gallery%20Files/Source-Images.json"
+    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/Gallery%20Files/Source-Images.json",
+    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/Gallery%20Files/Contributors.json"
   ],
   "site": {
     "is up": true,
