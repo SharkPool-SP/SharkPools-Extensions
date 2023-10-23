@@ -172,7 +172,14 @@
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/Gallery%20Files/Source-Images.json",
     "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/Gallery%20Files/Contributors.json",
     "https://github.com/",
-    "https://corsproxy.io?https://avatars.githubusercontent.com/u/9919?s=300&v=4"
+    "https://corsproxy.io?https://avatars.githubusercontent.com/u/9919?s=300&v=4",
+    "https://penguinmod.com",
+    "https://sharkpools-extensions.vercel.app/extension-code/",
+    "Go back to the Gallery",
+    "Go to the Contributors Page",
+    "Selected Extensions are Auto-Loaded",
+    "Copy Error: Couldn't Copy Code",
+    "Copied Extension Code!",
   ],
   "site": {
     "is up": true,
