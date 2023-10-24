@@ -1,5 +1,5 @@
 // Name: YouTube Operations
-// ID: SPtimeCalc
+// ID: SPyoutubeoperations
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
