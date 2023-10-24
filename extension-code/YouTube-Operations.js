@@ -225,7 +225,7 @@
           return "";
         }
       } catch (error) {
-        return "";
+        return "Failed to Fetch";
       }
     }
 
@@ -254,7 +254,7 @@
         }
         return "";
       } catch (error) {
-        return "";
+        return "Failed to Fetch";
       }
     }
 
@@ -317,7 +317,7 @@
         return "";
       }
       catch(error) {
-        return "";
+        return "Failed to Fetch";
       }
     }
 
@@ -381,7 +381,7 @@
         }
         return "";
       } catch (error) {
-        return "";
+        return "Failed to Fetch";
       }
     }
 
@@ -400,8 +400,13 @@
               return match[1].replace(/\\n/g, "\n");
             case "length":
               pattern = /"endTimeMs":"([^"]+)"/;
-              match = text.match(pattern);
-              const totalSeconds = Math.floor(match[1] / 1000);
+              match = text.match(pattern)[1];
+              if (!match) {
+                console.error("error, finding failsafe...");
+                pattern = /"lengthSeconds":"([^"]+)"/;
+                match = text.match(pattern)[1] * 1000;
+              }
+              const totalSeconds = Math.floor(match / 1000);
               const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, "0");
               const remainingSeconds = totalSeconds % 3600;
               const minutes = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
@@ -413,7 +418,7 @@
         }
         return "";
       } catch (error) {
-        return "";
+        return "Failed to Fetch";
       }
     }
   }
