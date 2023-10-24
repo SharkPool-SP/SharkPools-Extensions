@@ -10,7 +10,7 @@
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "update"
     },
     "Time-Calculations": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
@@ -82,7 +82,7 @@
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
-      "status": "update"
+      "status": ""
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
