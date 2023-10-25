@@ -626,7 +626,7 @@
 
     scrollWheelHat(args) {
       let status;
-      if (args.EVENT === "up") {
+      if (args.EVENT === "down") {
         status = this.scrollDistance > this.oldScroll;
       } else {
         status = this.scrollDistance < this.oldScroll;
@@ -636,9 +636,14 @@
     }
 
     scrollWheelBool(args) {
-      const status = args.EVENT === "down" ? this.scrollDistance > this.oldScroll : this.scrollDistance < this.oldScroll;
-      this.oldScroll = this.scrollDistance;
-      return (status);
+      let status;
+      if (args.EVENT === "down") {
+        status = this.scrollDistance > this.oldScroll;
+      } else {
+        status = this.scrollDistance < this.oldScroll;
+      }
+      if (status) this.oldScroll = this.scrollDistance;
+      return (!!status);
     }
 
     spriteDragMode(args) {
