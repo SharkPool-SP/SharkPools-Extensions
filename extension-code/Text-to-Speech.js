@@ -46,7 +46,6 @@
               VOICE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "VOICES",
-                defaultValue: "English US - Male 4",
               }
             },
           },
@@ -138,6 +137,9 @@
     }
 
     async fetchVoice(args) {
+      if (voice === undefined) {
+        voice = "en_us_006";
+      }
       const url = "https://tiktok-tts.weilnet.workers.dev/api/generation";
       const requestBody = {
         text: args.TEXT,
@@ -166,6 +168,9 @@
     }
 
     cVoice() {
+      if (voice === undefined) {
+        voice = "en_us_006";
+      }
       const menu = this.voiceList();
       for (const item of menu) {
         if (item.value === voice) {
@@ -264,30 +269,6 @@
     voiceList() {
       return [
         {
-          text: "English AU - Female",
-          value: "en_au_001",
-        },
-        {
-          text: "English AU - Male",
-          value: "en_au_002",
-        },
-        {
-          text: "English UK - Male 1",
-          value: "en_uk_001",
-        },
-        {
-          text: "English UK - Male 2",
-          value: "en_uk_003",
-        },
-        {
-          text: "English US - Female 1",
-          value: "en_us_001",
-        },
-        {
-          text: "English US - Female 2",
-          value: "en_us_002",
-        },
-        {
           text: "English US - Male 1",
           value: "en_us_006",
         },
@@ -302,6 +283,30 @@
         {
           text: "English US - Male 4",
           value: "en_us_010",
+        },
+        {
+          text: "English US - Female 1",
+          value: "en_us_001",
+        },
+        {
+          text: "English US - Female 2",
+          value: "en_us_002",
+        },
+        {
+          text: "English AU - Male",
+          value: "en_au_002",
+        },
+        {
+          text: "English AU - Female",
+          value: "en_au_001",
+        },
+        {
+          text: "English UK - Male 1",
+          value: "en_uk_001",
+        },
+        {
+          text: "English UK - Male 2",
+          value: "en_uk_003",
         },
         {
           text: "French - Male 1",
