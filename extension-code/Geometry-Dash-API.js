@@ -687,7 +687,7 @@
 
     fetchIcon(args) {
       let URL = 'https://gdbrowser.com/iconkit/premade/@_^.png';
-      if (args.type === 2.2) {
+      if (args.type === "2.2") {
         URL = URL.replace('premade', 'newpremade');
       }
 
