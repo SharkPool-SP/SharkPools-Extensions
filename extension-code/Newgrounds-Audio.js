@@ -50,7 +50,7 @@
             text: "get [INFO] from Track",
             arguments: {
               INFO: {
-                type: Scratch.ArgumentType.NUMBER,
+                type: Scratch.ArgumentType.STRING,
                 menu: "INFO",
                 defaultValue: "Name",
               },
