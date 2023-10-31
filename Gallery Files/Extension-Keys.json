@@ -10,7 +10,7 @@
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": "update"
+      "status": ""
     },
     "Time-Calculations": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
@@ -64,7 +64,7 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "update"
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
