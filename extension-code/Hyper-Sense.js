@@ -2,7 +2,7 @@
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
 
-// Version 1.7.0
+// Version 1.7.5
 
 (function (Scratch) {
   "use strict";
@@ -23,7 +23,7 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   var timer = 0;
-
+  
   class HyperSenseSP {
     constructor() {
       runtime.shouldExecuteStopClicked = true;
@@ -41,6 +41,9 @@
       runtime.on("AFTER_EXECUTE", () => {
         runtime.shouldExecuteStopClicked = true;
       });
+      runtime.on("ANSWER", () => {
+        this.wait = [false, "sprite"];
+      });
       const originalGreenFlag = vm.greenFlag;
       vm.greenFlag = function () {
         runtime.shouldExecuteStopClicked = false;
@@ -53,6 +56,7 @@
       document.addEventListener("wheel", this.handleScroll);
       this.isMicrophoneEnabled = false;
       this.pressedKey = null;
+      this.wait = [false, "sprite"];
 
       document.addEventListener("keydown", (event) => {
         keyPressTime = keyPressTime + 0.1;
@@ -302,7 +306,7 @@
               TEXT: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "string_types",
-                defaultValue: "letters"
+                defaultValue: "numbers"
               }
             },
           },
@@ -310,6 +314,47 @@
             blockType: Scratch.BlockType.LABEL,
             text: "Miscellaneous",
           },
+          {
+            opcode: "advancedAsk",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "ask [QUESTION] as [THING] and [WAIT]",
+            arguments: {
+              THING: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "Asking",
+                defaultValue: "stage"
+              },
+              QUESTION: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "what is your name?"
+              },
+              WAIT: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "shouldWait",
+                defaultValue: "wait"
+              }
+            },
+          },
+          {
+            opcode: "setAtt",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set ask monitor x: [x] y: [y] width: [width]",
+            arguments: {
+              x: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              },
+              y: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              },
+              width: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 480
+              }
+            },
+          },
+          "---",
           {
             opcode: "getSpriteName",
             blockType: Scratch.BlockType.REPORTER,
@@ -362,6 +407,14 @@
             acceptReporters: true,
             items: "_getTargets",
           },
+          Asking: {
+            acceptReporters: false,
+            items: ["stage", "sprite"],
+          },
+          shouldWait: {
+            acceptReporters: false,
+            items: ["wait", "continue"],
+          },
           keys: {
             acceptReporters: true,
             items: [
@@ -385,7 +438,7 @@
           },
           string_types: {
             acceptReporters: true,
-            items: ["letters", "numbers", "special characters"],
+            items: ["numbers", "letters", "special characters"],
           }
         }
       };
@@ -654,6 +707,38 @@
     boolean(args) {
       const string = Scratch.Cast.toString(args.STRING);
       return (!!string && args.STRING !== undefined);
+    }
+
+    setAtt(args) {
+      let box = document.querySelectorAll(".stage_question-wrapper_3ukB4")[0];
+      if (!box) return;
+      const canvas = getComputedStyle(document.querySelector(".stage_stage_1fD7k canvas"));
+      if (args.width) {
+        box.style.width = `${args.width * (parseInt(canvas.width) / 480)}px`;
+      }
+      if (args.x !== "" && args.y !== "") {
+        const x = args.x + (parseInt(canvas.width) / 2) - (args.width * (parseInt(canvas.width) / 480) / 2);
+        const y = args.y + (parseInt(canvas.height) / 2) - (this.wait[1] === "stage" ? 53 : 39);
+        box.style.transform = `translate(${x}px, ${y * -1}px)`;
+      }
+    }
+
+    advancedAsk(args, util) {
+      const wasVisible = util.target.visible;
+      if (!util.target.isStage && args.THING === "stage") {
+        util.target.setVisible(false);
+      }
+      this.wait = [true, args.THING];
+      runtime.ext_scratch3_sensing.askAndWait(args, util);
+      if (!util.target.isStage && wasVisible) {
+        util.target.setVisible(true);
+      }
+      if (args.WAIT === "wait") {
+        return new Promise(resolve => {
+          const checkWait = () => this.wait[0] ? setTimeout(checkWait, 100) : resolve();
+          checkWait();
+        });
+      }
     }
 
     getAllString(args) {
