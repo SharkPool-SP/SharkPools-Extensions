@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.3.0
+// Version V.2.4.0
 
 (function (Scratch) {
     "use strict";
@@ -81,6 +81,19 @@
             opcode: "refresh",
             blockType: Scratch.BlockType.COMMAND,
             text: "refresh palette",
+            isTerminal: true,
+          },
+          {
+            opcode: "request",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "request [THING]",
+            arguments: {
+              THING: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "reqMenu",
+                defaultValue: "redraw",
+              },
+            },
           },
           {
             opcode: "costumeInfo",
@@ -484,6 +497,10 @@
             acceptReporters: true,
             items: ["lowercase", "uppercase"],
           },
+          reqMenu: {
+            acceptReporters: true,
+            items: ["redraw", "toolbox update", "block refresh"],
+          },
           EFFECT_MENU: {
             acceptReporters: true,
             items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"],
@@ -703,13 +720,23 @@
       const speed = Scratch.Cast.toNumber(args.SPEED) / 10;
       const limit = Scratch.Cast.toNumber(args.LIMIT);
       const type = args.MATH;
-      const timer = util.ioQuery('clock', 'projectTimer');
+      const timer = util.ioQuery("clock", "projectTimer");
       const output = Math[type](timer * speed) * limit;
       return output;
     }
 
     refresh() {
-      vm.extensionManager.refreshBlocks()
+      vm.refreshWorkspace();
+    }
+
+    request(args) {
+      if (args.THING === "redraw") {
+        this.runtime.requestRedraw();
+      } else if (args.THING === "block refresh") {
+        vm.extensionManager.refreshBlocks();
+      } else {
+        this.runtime.requestToolboxExtensionsUpdate();
+      }
     }
 
     replaceKey(args) {
