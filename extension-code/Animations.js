@@ -448,6 +448,10 @@
             },
           },
           {
+            blockType: Scratch.BlockType.LABEL,
+            text: "^ Stretch only works on PenguinMod",
+          },
+          {
             opcode: "deleteKeyframe",
             blockType: Scratch.BlockType.COMMAND,
             text: "remove keyframe with ID [ID] from animation [NAME]",
