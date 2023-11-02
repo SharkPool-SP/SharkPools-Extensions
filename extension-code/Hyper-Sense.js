@@ -2,7 +2,7 @@
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
 
-// Version 1.7.5
+// Version 1.8.0
 
 (function (Scratch) {
   "use strict";
@@ -69,6 +69,11 @@
         this.pressedKey = null;
         currentlyPressedKey = null;
         keyPressTime = 0;
+      });
+
+      document.addEventListener("mousemove", (event) => {
+        window.mouseX = event.clientX;
+        window.mouseY = event.clientY;
       });
     }
 
@@ -149,6 +154,32 @@
                 defaultValue: "up"
               }
             },
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: "Mouse Detection",
+          },
+          {
+            opcode: "mouseClick",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is mouse [BUTTON] down?",
+            arguments: {
+              BUTTON: {
+                type: Scratch.ArgumentType.NUMBER,
+                menu: "mouseButtons",
+                defaultValue: 0
+              },
+            },
+          },
+          {
+            opcode: "realX",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "real mouse x",
+          },
+          {
+            opcode: "realY",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "real mouse y",
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -233,7 +264,7 @@
             arguments: {
               SPRITE1: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
+                menu: "TARGETS2"
               },
               SPRITE2: {
                 type: Scratch.ArgumentType.STRING,
@@ -248,7 +279,22 @@
             arguments: {
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS2"
+              }
+            },
+          },
+          {
+            opcode: "getNeighbors",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get neighbors of [SPRITE] with diameter [DIAMETER]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
                 menu: "TARGETS"
+              },
+              DIAMETER: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 200
               }
             },
           },
@@ -260,7 +306,7 @@
             arguments: {
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
+                menu: "TARGETS2"
               }
             },
           },
@@ -405,7 +451,11 @@
           microphoneStates: ["enabled", "disabled"],
           TARGETS: {
             acceptReporters: true,
-            items: "_getTargets",
+            items: this._getTargets(false),
+          },
+          TARGETS2: {
+            acceptReporters: true,
+            items: this._getTargets(true),
           },
           Asking: {
             acceptReporters: false,
@@ -439,6 +489,31 @@
           string_types: {
             acceptReporters: true,
             items: ["numbers", "letters", "special characters"],
+          },
+          mouseButtons: {
+            acceptReporters: true,
+            items: [
+              {
+                text: "left",
+                value: 0
+              },
+              {
+                text: "scroll wheel",
+                value: 1
+              },
+              {
+                text: "right",
+                value: 2
+              },
+              {
+                text: "back",
+                value: 3
+              },
+              {
+                text: "foward",
+                value: 4
+              }
+            ],
           }
         }
       };
@@ -636,21 +711,38 @@
     spriteCurrentTouching(args) {
       const list = [];
       const spriteNames = this._getTargets();
+      const thisSprite = args.SPRITE === "_mouse_" ? "_mouse_" : args.SPRITE;
+      if (!thisSprite) return "[]";
       for (let i = 0; i < spriteNames.length; i++) {
-        const sprite1 = spriteNames[i].value;
-        const sprite2 = args.SPRITE;
-        const target = runtime.getSpriteTargetByName(sprite2);
-        let caseTouch;
-        if (!target) {
-          caseTouch = false;
-        } else {
-          caseTouch = target.isTouchingObject(sprite1);
-        }
+        const target = runtime.getSpriteTargetByName(spriteNames[i].value);
+        let caseTouch = target.isTouchingObject(thisSprite);
         if (caseTouch) {
-          list.push(spriteNames[i].value);
+          if (spriteNames[i].value !== thisSprite) list.push(spriteNames[i].value);
         }
       }
       const formattedList = JSON.stringify(list);
+      return formattedList;
+    }
+
+    getNeighbors(args) {
+      const list = [];
+      const spriteNames = this._getTargets();
+      const target = runtime.getSpriteTargetByName(args.SPRITE);
+      if (!target) return "[]";
+      const old = [target.size, target.direction];
+      target.setDirection(-179), target.setSize(Math.abs(Scratch.Cast.toNumber(args.DIAMETER)));
+      for (let l = 0; l < 90; l++) {
+        for (let i = 0; i < spriteNames.length; i++) {
+          const sprite1 = spriteNames[i].value;
+          let caseTouch = target.isTouchingObject(sprite1);
+          if (caseTouch && !list.includes(sprite1)) {
+            if (target.sprite.name !== sprite1) list.push(spriteNames[i].value);
+          }
+        }
+        target.setDirection(target.direction + 2);
+      }
+      const formattedList = JSON.stringify(list);
+      target.setSize(old[0]), target.setDirection(old[1]);
       return formattedList;
     }
 
@@ -658,12 +750,17 @@
       return this.colorTouching(Scratch.Cast.toNumber(args.x), Scratch.Cast.toNumber(args.y));
     }
     
-    colorTouchingSprite(args) {
-      const target = runtime.getSpriteTargetByName(args.SPRITE);
-      const wasVisible = target.visible;
-      target.setVisible(false);
-      const hex = this.colorTouching(target.x, target.y);
-      target.setVisible(wasVisible);
+    colorTouchingSprite(args, util) {
+      let hex;
+      if (args.SPRITE === "_mouse_") {
+        hex = this.colorTouching(util.ioQuery("mouse", "getScratchX"), util.ioQuery("mouse", "getScratchY"));
+      } else {
+        const target = runtime.getSpriteTargetByName(args.SPRITE);
+        const wasVisible = target.visible;
+        target.setVisible(false);
+        hex = this.colorTouching(target.x, target.y);
+        target.setVisible(wasVisible);
+      }
       return hex;
     }
 
@@ -741,6 +838,13 @@
       }
     }
 
+    mouseClick(args, util) {
+      return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)]);
+    }
+
+    realX() {return window.mouseX}
+    realY() {return window.mouseY}
+
     getAllString(args) {
       let regex;
       if (args.TEXT === "letters") {
@@ -753,8 +857,14 @@
       return args.STRING.replace(regex, "");
     }
 
-    _getTargets() {
+    _getTargets(mouse) {
       const spriteNames = [];
+      if (mouse) {
+        spriteNames.push({
+          text: "mouse-pointer",
+          value: "_mouse_",
+        });
+      }
       const targets = Scratch.vm.runtime.targets;
       for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
