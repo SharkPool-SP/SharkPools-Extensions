@@ -120,7 +120,7 @@
       "tags": ".all.expanded.fetching",
       "status": ""
     },
-    "Variables-Expanded": {
+    "Monitors-Plus": {
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
@@ -160,6 +160,12 @@
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Text-to-Speech.js",
       "tags": ".all.expanded.fetching.utilities",
+      "status": ""
+    },
+    "Fetch-Progress": {
+      "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Fetch-Progress.js",
+      "tags": ".all.fetching",
       "status": "new"
     },
     "Example": {
