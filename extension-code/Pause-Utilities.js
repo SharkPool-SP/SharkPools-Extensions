@@ -12,6 +12,7 @@
     alert("Pause Utilities Extension must run unsandboxed!");
   }
   const runtime = Scratch.vm.runtime;
+  const Cast = Scratch.Cast;
   let storedScripts = {};
 
   const menuIconURI =
@@ -19,6 +20,10 @@
 
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIzMS40NzcxNCIgaGVpZ2h0PSIzMS40NzcxNCIgdmlld0JveD0iMCwwLDMxLjQ3NzE0LDMxLjQ3NzE0Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjI0LjI2MTQzLC0xNjQuMjYxNDMpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0yMjQuMjYxNDMsMTk1LjczODU3di0zMS40NzcxNGgzMS40NzcxNHYzMS40NzcxNHoiIGZpbGw9IiM1ZjViNDkiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIzMS41MjgxOSwxODguNDk5MTN2LTE3LjA0MjMxaDQuNDI2Nzl2MTcuMDQxMzV6TTI0NC4wNzE5NiwxODguNDk5MTN2LTE3LjA0MjMxaDQuNDI3ODJ2MTcuMDQxMzV6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGw9IiNmZmFlMDAiIHN0cm9rZT0iI2Q4OTQwMCIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvZz48L3N2Zz4=";
+
+  Scratch.vm.runtime.on('PROJECT_STOP_ALL', () => {
+    storedScripts = {};
+  });
 
   class SPPause {
     getInfo() {
@@ -31,7 +36,7 @@
         blocks: [
           {
             blockType: Scratch.BlockType.LABEL,
-            text: window.location.href.includes("penguinmod") ? "Manual Blocks" : "Manual Block",
+            text: Scratch.extensions.isPenguinMod ? "Manual Blocks" : "Manual Block",
           },
           {
             opcode: "pause",
@@ -42,7 +47,7 @@
             opcode: "unpause",
             blockType: Scratch.BlockType.COMMAND,
             text: "unpause project",
-            hideFromPalette: !window.location.href.includes("penguinmod"),
+            hideFromPalette: !Scratch.extensions.isPenguinMod,
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -86,7 +91,7 @@
     }
 
     pause() {
-      if (window.location.href.includes("penguinmod")) {
+      if (Scratch.extensions.isPenguinMod) {
         runtime.pause();
       } else {
         const pauseButton = document.querySelector("img.pause-btn.addons-display-none-pause");
@@ -102,31 +107,28 @@
       runtime.play();
     }
 
-    pauseLoop(args) {
-      storedScripts[args.NAME] = [false];
-      return new Promise((resolve) => {
-        const checkStatus = () => {
-          if (storedScripts[args.NAME][0] === true) {
-            resolve();
-          } else {
-            setTimeout(checkStatus, 100);
-          }
-        };
-        checkStatus();
-      });
+    pauseLoop(args, util) {
+      const scriptName = Cast.toString(args.NAME);
+      const state = util.stackFrame.pausedScript;
+      if (!state) {
+          storedScripts[scriptName] = true;
+          util.stackFrame.pausedScript = scriptName;
+          util.yield();
+      } else if (state in storedScripts) {
+          util.yield();
+      }
     }
 
     breakLoop(args) {
-      if (storedScripts[args.NAME]) {
-        storedScripts[args.NAME][0] = true;
+      const scriptName = Cast.toString(args.NAME);
+      if (scriptName in storedScripts) {
+          delete storedScripts[scriptName];
       }
     }
 
     isPaused(args) {
-      if (storedScripts[args.NAME]) {
-        return !storedScripts[args.NAME][0];
-      }
-      return false;
+      const scriptName = Cast.toString(args.NAME);
+      return scriptName in storedScripts;
     }
   }
 
