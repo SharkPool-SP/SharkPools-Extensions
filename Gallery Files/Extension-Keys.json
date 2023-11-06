@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "update"
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
@@ -46,7 +46,7 @@
       "credits": "New Motion Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Geometry-Dash-API": {
       "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool. Thank you RobTopGames and ColonGD",
@@ -125,6 +125,12 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
       "status": "update"
+    },
+    "Sty-Lists": {
+      "credits": "Customize and Organize Lists Monitors. Made by SharkPool.",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
+      "tags": ".all.expanded.utilities",
+      "status": "new"
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by DNin01 and Meehdrescher.",
