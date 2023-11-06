@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.4.0
+// Version V.2.5.0
 
 (function (Scratch) {
     "use strict";
@@ -78,24 +78,6 @@
             text: "Management",
           },
           {
-            opcode: "refresh",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "refresh palette",
-            isTerminal: true,
-          },
-          {
-            opcode: "request",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "request [THING]",
-            arguments: {
-              THING: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "reqMenu",
-                defaultValue: "redraw",
-              },
-            },
-          },
-          {
             opcode: "costumeInfo",
             blockType: Scratch.BlockType.REPORTER,
             text: "[INFO] of costume #[NUM] in [SPRITE]",
@@ -128,6 +110,21 @@
               TEXT: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "SharkPool",
+              },
+            },
+          },
+          {
+            opcode: "setTargetCostume",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set costume of [SPRITE] to [NUM]",
+            arguments: {
+              NUM: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 1,
+              },
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS"
               },
             },
           },
@@ -480,6 +477,28 @@
               STRING5: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "",
+              },
+            },
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: "Experimental",
+          },
+          {
+            opcode: "refresh",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "refresh palette",
+            isTerminal: true,
+          },
+          {
+            opcode: "request",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "request [THING]",
+            arguments: {
+              THING: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "reqMenu",
+                defaultValue: "redraw",
               },
             },
           }
@@ -852,6 +871,19 @@
 
     rndString(args) {
       return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1;
+    }
+
+    setTargetCostume(args) {
+      if (args.SPRITE === "Stage") {
+        this.runtime.ext_scratch3_looks._setBackdrop(this.runtime.getTargetForStage(), args.NUM);
+      } else {
+        const target = this.runtime.getSpriteTargetByName(args.SPRITE);
+        if (target) {
+          this.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
+        } else {
+          return;
+        }
+      }
     }
   }
 
