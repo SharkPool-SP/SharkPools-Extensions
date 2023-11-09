@@ -52,6 +52,7 @@
       this.buttonName = "";
       this.monitorsUpdateListeners = [];
     }
+
     getInfo() {
       return {
         id: "DICandSPmonitorsPlus",
@@ -524,7 +525,6 @@
         const oldMonitor = variableMonitor.querySelector(`[class^="monitor_default-monitor"]:not(.monitor_default-monitor_SPnew1)`);
         oldMonitor.style.display = "none";
       }
-
       switch (type) {
         case "large readout":
           state = state.set("mode", "large");
