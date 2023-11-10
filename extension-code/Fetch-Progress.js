@@ -3,11 +3,10 @@
 // Description: Get the Loading Progress of Fetch Requests!
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.1.0.0
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) {
     throw new Error("Fetch Progress Extension must run unsandboxed!");
   }
@@ -20,7 +19,8 @@
     constructor() {
       this.fetchInProgress = false;
       this.fetchProgress = 0;
-      this.response = "";
+      this.response = " ";
+      this.fileSize = 0;
     }
 
     getInfo() {
@@ -32,13 +32,21 @@
         blockIconURI,
         blocks: [
           {
+            blockType: Scratch.BlockType.LABEL,
+            text: "Warning: Most Proxies Don't Work",
+          },
+          {
             opcode: "fetchThis",
             blockType: Scratch.BlockType.COMMAND,
-            text: "fetch [URL]",
+            text: "fetch [URL] with size [SIZE] bytes",
             arguments: {
               URL: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "https://extensions.turbowarp.org/hello.txt",
+              },
+              SIZE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 13,
               }
             },
           },
@@ -52,6 +60,11 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "response from fetch",
           },
+          {
+            opcode: "getSize",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "response size in bytes",
+          },
         ],
       };
     }
@@ -60,27 +73,41 @@
       if (this.fetchInProgress) return;
       this.fetchInProgress = true;
       this.fetchProgress = 0;
-      try {
-        const response = await fetch(args.URL);
-        const text = await response.text();
-        let loaded = 0;
-        for (let i = 0; i < text.length; i += 1000) {
-          const chunk = text.slice(i, i + 1000);
-          loaded += chunk.length;
-          this.fetchProgress = (loaded / text.length) * 100;
-          await new Promise(resolve => setTimeout(resolve, 1));
+
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = "text";
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          this.response = xhr.responseText;
+          this.fetchProgress = 100;
+          this.fileSize = new TextEncoder().encode(this.response).length;
+        } else {
+          this.response = `Error: ${xhr.status} - ${xhr.statusText}`;
+          this.fetchProgress = 0;
+          this.fileSize = 0;
         }
-        this.response = text;
-      } catch (error) {
-        this.response = Scratch.Cast.toString(error);
-        this.fetchProgress = 100;
-      }
-      this.fetchInProgress = false;
+        this.fetchInProgress = false;
+      };
+      xhr.onerror = () => {
+        this.response = "Error: Couldn't fetch this URL";
+        this.fetchProgress = 0;
+        this.fetchInProgress = false;
+        this.fileSize = 0;
+      };
+      xhr.onprogress = (event) => {
+        if (event.total !== 0) {
+          this.fetchProgress = Math.round((event.loaded / event.total) * 100);
+        } else {
+          this.fetchProgress = Math.round((event.loaded / args.SIZE) * 100);
+        }
+      };
+      xhr.open("GET", args.URL, true);
+      xhr.send();
     }
 
+    getResponse() {return this.response || "Error: Couldn't Fetch this URL"}
     getProgress() {return this.fetchProgress + "%"}
-
-    getResponse() {return this.response}
+    getSize() {return this.fileSize}
   }
 
   Scratch.extensions.register(new SPprogress());
