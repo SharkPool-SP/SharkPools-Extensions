@@ -3,7 +3,7 @@
 // Description: Customize and Organize Lists Monitors.
 // By: SharkPool
 
-// Version 1.0
+// Version 1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -932,7 +932,7 @@
         //creating this kind of list doesnt show until you switch back from editing a sprite to another for some reason...
         return util.target.createVariable(this.generateId(), args.LIST, "list");
       } else {
-        Blockly.getMainWorkspace().createVariable(args.LIST, "list");
+        runtime.getTargetForStage().createVariable(this.generateId(), args.LIST, "list");
       }
     }
 
