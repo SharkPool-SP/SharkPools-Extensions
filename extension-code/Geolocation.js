@@ -91,6 +91,7 @@
     isAvailiable() { return Scratch.Cast.toBoolean(navigator.geolocation) }
 
     async getThing(THING) {
+      if (!await Scratch.canGeolocate()) return;
       if (navigator.geolocation) {
         try {
           const position = await new Promise((resolve, reject) => {
@@ -101,7 +102,7 @@
           return "Error: " + error.message;
         }
       } else {
-        return "Geolocation is not supported by this browser";
+        return "Geolocation isn't supported by this browser";
       }
     }
 
