@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.4.0
+// Version V.1.5.0
 
 (function (Scratch) {
   "use strict";
@@ -38,6 +38,18 @@
             text: "Videos",
           },
           {
+            opcode: "extractVideoID",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "extract video ID from [URL]",
+            arguments: {
+              URL: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUJcmljayByb2xs"
+              }
+            }
+          },
+          "---",
+          {
             opcode: "fetchStats",
             blockType: Scratch.BlockType.REPORTER,
             text: "fetch [STAT] count of video [VIDEO_ID]",
@@ -58,7 +70,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "fetch [STAT] of video [VIDEO_ID]",
             arguments: {
-            STAT: {
+              STAT: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "STAT_OPTION",
                 defaultValue: "author"
@@ -69,14 +81,15 @@
               }
             }
           },
+          "---",
           {
-            opcode: "extractVideoID",
+            opcode: "getResults",
             blockType: Scratch.BlockType.REPORTER,
-            text: "extract video ID from [URL]",
+            text: "get video results from search [QUERY]",
             arguments: {
-              URL: {
+              QUERY: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUJcmljayByb2xs"
+                defaultValue: "SharkPool"
               }
             }
           },
@@ -417,6 +430,23 @@
           }
         }
         return "";
+      } catch (error) {
+        return "Failed to Fetch";
+      }
+    }
+
+    async getResults(args) {
+      args.QUERY = encodeURIComponent(args.QUERY.replace(/ /g, "+"));
+      args.QUERY = args.QUERY.replaceAll("%2B", "+");
+      try {
+        const response = await fetch(`https://corsproxy.io?https://www.youtube.com/results?search_query=${args.QUERY}`);
+        if (response.ok) {
+          const text = await response.text();
+          const pattern = /\/watch\?v=([a-zA-Z0-9_-]{11})/g;
+          const matchArray = text.match(pattern) || [];
+          return JSON.stringify(matchArray.map(match => match.slice(9)));
+        }
+        return "[]";
       } catch (error) {
         return "Failed to Fetch";
       }
