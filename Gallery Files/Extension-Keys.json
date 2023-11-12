@@ -172,13 +172,19 @@
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
       "tags": ".all.expanded.utilities",
-      "status": "new"
+      "status": ""
     },
     "Fetch-Progress": {
       "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Fetch-Progress.js",
       "tags": ".all.fetching",
-      "status": "update"
+      "status": ""
+    },
+    "Geolocation": {
+      "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geolocation.js",
+      "tags": ".all.fetching",
+      "status": "new"
     },
     "Example": {
       "credits": "",
