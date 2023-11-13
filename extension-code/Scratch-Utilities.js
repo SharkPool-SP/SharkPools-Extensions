@@ -140,7 +140,7 @@
               },
               TITLE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "Flappy Bird +",
+                defaultValue: "Flappy Bird Plus",
               },
             },
           },
