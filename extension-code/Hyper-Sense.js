@@ -2,7 +2,7 @@
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
 
-// Version 1.8.1
+// Version 1.8.2
 
 (function (Scratch) {
   "use strict";
@@ -820,9 +820,9 @@
     }
 
     setAtt(args) {
-      let box = document.querySelectorAll(".stage_question-wrapper_3ukB4")[0];
+      let box = document.querySelectorAll(`[class^="question"]`)[0];
       if (!box) return;
-      const canvas = getComputedStyle(document.querySelector(".stage_stage_1fD7k canvas"));
+      const canvas = getComputedStyle(document.querySelector("canvas"));
       if (args.width) {
         box.style.width = `${args.width * (parseInt(canvas.width) / 480)}px`;
       }
@@ -835,14 +835,10 @@
 
     advancedAsk(args, util) {
       const wasVisible = util.target.visible;
-      if (!util.target.isStage && args.THING === "stage") {
-        util.target.setVisible(false);
-      }
+      if (!util.target.isStage && args.THING === "stage") {util.target.setVisible(false)}
       this.wait = [true, args.THING];
       runtime.ext_scratch3_sensing.askAndWait(args, util);
-      if (!util.target.isStage && wasVisible) {
-        util.target.setVisible(true);
-      }
+      if (!util.target.isStage && wasVisible) {util.target.setVisible(true)}
       if (args.WAIT === "wait") {
         return new Promise(resolve => {
           const checkWait = () => this.wait[0] ? setTimeout(checkWait, 100) : resolve();
@@ -851,10 +847,7 @@
       }
     }
 
-    mouseClick(args, util) {
-      return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)]);
-    }
-
+    mouseClick(args, util) {return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)])}
     realX() {return window.mouseX}
     realY() {return window.mouseY}
 
@@ -887,10 +880,7 @@
         const target = targets[index];
         if (target.isOriginal) {
           const targetName = target.getName();
-          spriteNames.push({
-            text: targetName,
-            value: targetName,
-          });
+          spriteNames.push({ text: targetName, value: targetName });
         }
       }
       if (spriteNames.length > 0) {
