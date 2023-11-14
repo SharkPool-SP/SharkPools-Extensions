@@ -1,6 +1,6 @@
 // Name: Spotify API
 // ID: SPspotify
-// Description: Fetch data and Play Songs from Spotify!
+// Description: Fetch Statistics and Information and Play Songs from Spotify
 // By: SharkPool
 
 // Version 1.0.0
@@ -295,8 +295,10 @@
     }
 
     async playSongURL(args) {
+      /* eslint-disable */
       const audio = new Audio();
       audio.src = await this.getSongURL(args);
+      /* eslint-enable */
       audio.play();
       audioInstances.push(audio);
     }
@@ -358,7 +360,6 @@
       } catch (error) {
         return `Error: ${error}`;
       }
-      return "";
     }
 
     async getArtistAtt(args) {
@@ -402,7 +403,6 @@
       } catch (error) {
         return `Error: ${error}`;
       }
-      return "";
     }
 
     async getPlaylistAtt(args) {
@@ -459,7 +459,6 @@
       } catch (error) {
         return `Error: ${error}`;
       }
-      return "";
     }
   }
 
