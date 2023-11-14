@@ -187,7 +187,7 @@
       "status": "new"
     },
     "Spotify": {
-      "credits": "Fetch Statistics and Play Songs from Spotify. Made by SharkPool",
+      "credits": "Fetch Statistics and Information, and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
       "status": "new"
