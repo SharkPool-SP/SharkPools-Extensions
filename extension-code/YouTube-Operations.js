@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.5.0
+// Version V.1.5.1
 
 (function (Scratch) {
   "use strict";
@@ -350,44 +350,50 @@
         args.URL = args.URL + "/about";
       }
       try {
-        const response = await fetch("https://corsproxy.io?" + args.URL);
+        const response = await fetch("https://api.codetabs.com/v1/proxy?quest=" + args.URL);
         if (response.ok) {
           const text = await response.text();
           let match;
           let pattern;
+          console.log(text);
           switch (args.THING) {
             case "profile":
               pattern = /https:\/\/yt3\.googleusercontent\.com\/([a-zA-Z0-9_.+-=]+)/;
               match = text.match(pattern);
-              return "https://yt3.googleusercontent.com/" + match[1];
+              return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
             case "subscriber count":
-              pattern = /subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,.A-Z]+) subscribers"}\}/;
+              pattern = /"}},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([^"]*)/;
               match = text.match(pattern);
-              return match[1];
+              if (match && match[1]) {
+                match = match[1];
+              } else {
+                match = "";
+              }
+              return match;
             case "video count":
-              pattern = /videosCountText":\{"runs":\[\{"text":"(\d+)"\}/;
+              pattern = /videosCountText":{"runs":\[{"text":"([^"]*)"/;
               match = text.match(pattern);
-              return match[1];
+              return match && match[1] ? match[1] : "";
             case "total view count":
-              pattern = /"viewCountText":\{"simpleText":"([0-9,]+) views"\}/;
+              pattern = /viewCountText":"([\d\s]+)[^"]*","joinedDateText"/;
               match = text.match(pattern);
-              return match[1];
+              return match && match[1] ? match[1] : "";
             case "joined date":
-              pattern = /"joinedDateText":\{"runs":\[\{"text":"Joined "\},\{"text":"([A-Za-z]+ [0-9, ]{4,})"\}/;
+              pattern = /joinedDateText":{"content":"\w+\s([^"]*)/;
               match = text.match(pattern);
-              return match[1];
+              return match && match[1] ? match[1].trim() : "";
             case "name":
               pattern = /"c4TabbedHeaderRenderer":\{"channelId":"[^"]+","title":"([^"]+)",/;
               match = text.match(pattern);
-              return match[1];
+              return match && match[1] ? match[1] : "";
             case "description":
               pattern = /"description":"((?:[^"\\]|\\.)*)"/;
               match = text.match(pattern);
-              return match[1].replace(/\\n/g, "\n");
+              return match && match[1] ? match[1].replace(/\\n/g, "\n") : "";
             case "location":
               pattern = /"country":\{"simpleText":"([^"]+)"\}/;
               match = text.match(pattern);
-              return match[1];
+              return match && match[1] ? match[1] : "Not Available";
             default:
             return "Invalid Selection";
           }
@@ -401,7 +407,7 @@
     async fetchOthersVideo(args) {
       args.VIDEO_ID = `https://www.youtube.com/watch?v=${args.VIDEO_ID}`;
       try {
-        const response = await fetch("https://corsproxy.io?" + args.VIDEO_ID);
+        const response = await fetch("https://api.codetabs.com/v1/proxy?quest=" + args.VIDEO_ID);
         if (response.ok) {
           const text = await response.text();
           let match;
@@ -439,7 +445,7 @@
       args.QUERY = encodeURIComponent(args.QUERY.replace(/ /g, "+"));
       args.QUERY = args.QUERY.replaceAll("%2B", "+");
       try {
-        const response = await fetch(`https://corsproxy.io?https://www.youtube.com/results?search_query=${args.QUERY}`);
+        const response = await fetch(`https://api.codetabs.com/v1/proxy?quest=https://www.youtube.com/results?search_query=${args.QUERY}`);
         if (response.ok) {
           const text = await response.text();
           const pattern = /\/watch\?v=([a-zA-Z0-9_-]{11})/g;
