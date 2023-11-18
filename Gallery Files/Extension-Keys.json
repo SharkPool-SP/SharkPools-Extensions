@@ -124,7 +124,7 @@
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
-      "status": "update"
+      "status": ""
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool.",
@@ -154,7 +154,7 @@
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail ",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "update"
+      "status": ""
     },
     "Pause-Utilities": {
       "credits": "Pause your Project and Chosen Scripts. Made by SharkPool",
@@ -184,13 +184,13 @@
       "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geolocation.js",
       "tags": ".all.fetching",
-      "status": "new"
+      "status": ""
     },
     "Spotify": {
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
-      "status": "new"
+      "status": "update"
     },
     "Example": {
       "credits": "",
