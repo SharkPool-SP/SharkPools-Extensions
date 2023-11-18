@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.5.1
+// Version V.1.5.2
 
 (function (Scratch) {
   "use strict";
@@ -97,7 +97,7 @@
           {
             opcode: "openYouTubeLinkInNewWindow",
             blockType: Scratch.BlockType.COMMAND,
-            text: "open YouTube video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start",
+            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start",
             arguments: {
               ID: {
                 type: Scratch.ArgumentType.STRING,
@@ -124,7 +124,7 @@
           {
             opcode: "openYouTubeLinkInNewWindowAtTime",
             blockType: Scratch.BlockType.COMMAND,
-            text: "open YouTube video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]",
+            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]",
             arguments: {
               ID: {
                 type: Scratch.ArgumentType.STRING,
@@ -159,7 +159,7 @@
           {
             opcode: "closeYouTubeWindow",
             blockType: Scratch.BlockType.COMMAND,
-            text: "close YouTube window with video ID: [VIDEO_ID]",
+            text: "close video window with ID: [VIDEO_ID]",
             arguments: {
               VIDEO_ID: {
                 type: Scratch.ArgumentType.STRING,
@@ -280,8 +280,10 @@
       params += isNaN(args.LEFT) ? "" : `,left=${Math.max(0, Math.min(args.LEFT, window.screen.width))}`;
       params += isNaN(args.TOP) ? "" : `,top=${Math.max(0, Math.min(args.TOP, window.screen.height))}`;
       const newWindow = window.open(url, "_blank", params);
-      this.youtubeWindows[videoId] = newWindow;
-      this.playVideoAutomatically(newWindow);
+      if (newWindow) {
+        this.youtubeWindows[videoId] = newWindow;
+        newWindow.focus();
+      }
     }
 
     openYouTubeLinkInNewWindowAtTime(args) {
@@ -296,8 +298,10 @@
       params += isNaN(args.LEFT) ? "" : `,left=${Math.max(0, Math.min(args.LEFT, window.screen.width))}`;
       params += isNaN(args.TOP) ? "" : `,top=${Math.max(0, Math.min(args.TOP, window.screen.height))}`;
       const newWindow = window.open(url, "_blank", params);
-      this.youtubeWindows[videoId] = newWindow;
-      this.playVideoAutomatically(newWindow);
+      if (newWindow) {
+        this.youtubeWindows[videoId] = newWindow;
+        newWindow.focus();
+      }
     }
 
     closeYouTubeWindow(args) {
@@ -334,14 +338,6 @@
       }
     }
 
-    playVideoAutomatically(newWindow) {
-      setTimeout(() => {
-        if (newWindow) {
-          newWindow.document.getElementsByTagName("video")[0].play();
-        }
-      }, 1000);
-    }
-
     async fetchUserThing(args) {
       if (args.URL.split("/").slice(-1)[0].split("/").length > 3) {
         args.URL = args.URL.substring(0, lastIndex) + args.URL.substring(lastIndex + 1);
@@ -350,32 +346,30 @@
         args.URL = args.URL + "/about";
       }
       try {
-        const response = await fetch("https://api.codetabs.com/v1/proxy?quest=" + args.URL);
+        const response = await fetch("https://corsproxy.io?" + args.URL);
         if (response.ok) {
           const text = await response.text();
           let match;
           let pattern;
-          console.log(text);
           switch (args.THING) {
             case "profile":
               pattern = /https:\/\/yt3\.googleusercontent\.com\/([a-zA-Z0-9_.+-=]+)/;
               match = text.match(pattern);
               return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
             case "subscriber count":
-              pattern = /"}},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([^"]*)/;
+              pattern = /"},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+\.[0-9]?\s?[mkbMKB]?)/;
               match = text.match(pattern);
-              if (match && match[1]) {
-                match = match[1];
-              } else {
-                match = "";
-              }
-              return match;
+              // this is very case sensitive for some reason...
+              if (!match) match = text.match(/"},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+\s?[mkbMKB]?)/);
+              if (!match) match = text.match(/}},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+\.[0-9]?[0-9]?\s?[mkbMKB]?)/);
+              if (!match) match = text.match(/}},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+)/);
+              return match && match[1] ? match[1] : "";
             case "video count":
               pattern = /videosCountText":{"runs":\[{"text":"([^"]*)"/;
               match = text.match(pattern);
               return match && match[1] ? match[1] : "";
             case "total view count":
-              pattern = /viewCountText":"([\d\s]+)[^"]*","joinedDateText"/;
+              pattern = /viewCountText":"([\d\s,]+)[^"]*","joinedDateText"/;
               match = text.match(pattern);
               return match && match[1] ? match[1] : "";
             case "joined date":
