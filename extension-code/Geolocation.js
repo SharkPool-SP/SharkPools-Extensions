@@ -3,7 +3,7 @@
 // Description: Get the Location of Users
 // By: SharkPool
 
-//  Version 1.1.0
+//  Version 1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -56,7 +56,6 @@
               TYPE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "IP_MENU",
-                defaultValue: "country"
               },
               IP: {
                 type: Scratch.ArgumentType.STRING,
@@ -120,7 +119,15 @@
           },
           IP_MENU: {
             acceptReporters: true,
-            items: ["country", "city", "region"]
+            items: [
+              { "text" : "country name", "value" : "countryName" },
+              { "text" : "country code", "value" : "countryCode" },
+              { "text" : "region", "value" : "regionName" },
+              { "text" : "city", "value" : "cityName" },
+              { "text" : "continent", "value" : "continent" },
+              { "text" : "latitude", "value" : "latitude" },
+              { "text" : "longitude", "value" : "longitude" }
+            ]
           },
           UNITS: ["miles", "kilometers"]
         }
@@ -157,9 +164,9 @@
     }
 
     async getIPInfo(args) {
-      if (!await Scratch.canFetch(`https://ipinfo.io/${args.IP}/geo`)) return "";
+      if (!await Scratch.canFetch(`https://freeipapi.com/api/json/${args.IP}`)) return "";
       try {
-        const response = await fetch(`https://ipinfo.io/${args.IP}/geo`);
+        const response = await fetch(`https://freeipapi.com/api/json/${args.IP}`);
         const data = await response.json();
         return data[args.TYPE] ? data[args.TYPE] : "";
       } catch (error) { return "" }
