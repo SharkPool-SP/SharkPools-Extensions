@@ -363,7 +363,7 @@
                 defaultValue: 2,
               },
               REPLACE: {
-                type: Scratch.ArgumentType.NUMBER,
+                type: Scratch.ArgumentType.STRING,
                 defaultValue: "isnt",
               },
             },
@@ -390,7 +390,7 @@
                 defaultValue: 2,
               },
               REPLACE: {
-                type: Scratch.ArgumentType.NUMBER,
+                type: Scratch.ArgumentType.STRING,
                 defaultValue: "isnt",
               },
             },
