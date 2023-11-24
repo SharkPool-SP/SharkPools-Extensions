@@ -4,13 +4,13 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "update"
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": "update"
+      "status": ""
     },
     "Time-Calculations": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
@@ -184,13 +184,13 @@
       "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geolocation.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "update"
     },
     "Spotify": {
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
-      "status": "update"
+      "status": ""
     },
     "Example": {
       "credits": "",
