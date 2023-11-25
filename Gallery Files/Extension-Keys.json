@@ -84,6 +84,12 @@
       "tags": ".all.utilities",
       "status": ""
     },
+    "Sprite-Effects": {
+      "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new"
+    },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
