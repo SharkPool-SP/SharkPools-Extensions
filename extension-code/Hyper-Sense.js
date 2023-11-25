@@ -657,7 +657,16 @@
       return currentlyPressedKey.charAt(0).toUpperCase() + currentlyPressedKey.slice(1).toLowerCase();
     }
 
-    currentKeys() { return JSON.stringify(Object.keys(this.pressedKeys)) }
+    currentKeys() {
+      let pressedKeysArray = Object.keys(this.pressedKeys);
+      pressedKeysArray = pressedKeysArray.map((key) => {
+        if (key.includes("ARROW") || key === "CAPSLOCK") {
+          return (key === "CAPSLOCK") ? "Caps Lock" : "Arrow " + key.charAt(5).toUpperCase() + key.slice(6).toLowerCase();
+        }
+        return key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+      });
+      return JSON.stringify(pressedKeysArray);
+    }
 
     timeKeyPressed(args) {
       let key = Scratch.Cast.toString(args.KEY).replace(" ", "");
