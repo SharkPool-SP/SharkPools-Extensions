@@ -2,7 +2,7 @@
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
 
-// Version 1.9.0
+// Version 1.9.1
 
 (function (Scratch) {
   "use strict";
@@ -609,7 +609,8 @@
         key = currentlyPressedKey;
       }
       if (isNaN(parseFloat(key))) key = key.toUpperCase();
-      const pressedKey = this.currentKey();
+      let pressedKey = this.currentKey().toUpperCase();
+      if (pressedKey !== " ") pressedKey = pressedKey.replaceAll(" ", "");
       if (
         ((key === "SPACE" && pressedKey === " ") ||
         (key === pressedKey) ||
