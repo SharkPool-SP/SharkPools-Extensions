@@ -3,11 +3,10 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.1.0.0
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) {
     alert("Pause Utilities Extension must run unsandboxed!");
   }
@@ -21,9 +20,7 @@
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIzMS40NzcxNCIgaGVpZ2h0PSIzMS40NzcxNCIgdmlld0JveD0iMCwwLDMxLjQ3NzE0LDMxLjQ3NzE0Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjI0LjI2MTQzLC0xNjQuMjYxNDMpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0yMjQuMjYxNDMsMTk1LjczODU3di0zMS40NzcxNGgzMS40NzcxNHYzMS40NzcxNHoiIGZpbGw9IiM1ZjViNDkiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIzMS41MjgxOSwxODguNDk5MTN2LTE3LjA0MjMxaDQuNDI2Nzl2MTcuMDQxMzV6TTI0NC4wNzE5NiwxODguNDk5MTN2LTE3LjA0MjMxaDQuNDI3ODJ2MTcuMDQxMzV6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGw9IiNmZmFlMDAiIHN0cm9rZT0iI2Q4OTQwMCIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvZz48L3N2Zz4=";
 
-  runtime.on('PROJECT_STOP_ALL', () => {
-    storedScripts = {};
-  });
+  runtime.on("PROJECT_STOP_ALL", () => { storedScripts = {} });
 
   class SPPause {
     getInfo() {
@@ -36,23 +33,20 @@
         blocks: [
           {
             blockType: Scratch.BlockType.LABEL,
-            text: Scratch.extensions.isPenguinMod ? "Manual Blocks" : "Manual Block",
+            text: Scratch.extensions.isPenguinMod ? "Manual Blocks" : "Manual Block"
           },
           {
             opcode: "pause",
             blockType: Scratch.BlockType.COMMAND,
-            text: "pause project",
+            text: "pause project"
           },
           {
             opcode: "unpause",
             blockType: Scratch.BlockType.COMMAND,
             text: "unpause project",
-            hideFromPalette: !Scratch.extensions.isPenguinMod,
+            hideFromPalette: !Scratch.extensions.isPenguinMod
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Automatic Blocks",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Automatic Blocks" },
           {
             opcode: "pauseLoop",
             blockType: Scratch.BlockType.COMMAND,
@@ -60,8 +54,8 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my script",
-              },
+                defaultValue: "my script"
+              }
             }
           },
           {
@@ -71,10 +65,36 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my script",
-              },
+                defaultValue: "my script"
+              }
             }
           },
+          "---",
+          {
+            opcode: "pauseLoopCon",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "if [CON] pause this script with ID [NAME]",
+            arguments: {
+              CON: { type: Scratch.ArgumentType.BOOLEAN },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my script"
+              }
+            }
+          },
+          {
+            opcode: "breakLoopCon",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "if [CON] unpause script with ID [NAME]",
+            arguments: {
+              CON: { type: Scratch.ArgumentType.BOOLEAN },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my script"
+              }
+            }
+          },
+          "---",
           {
             opcode: "isPaused",
             blockType: Scratch.BlockType.BOOLEAN,
@@ -82,8 +102,8 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my script",
-              },
+                defaultValue: "my script"
+              }
             }
           },
         ],
@@ -107,22 +127,30 @@
       runtime.play();
     }
 
+    pauseLoopCon(args, util) {
+      if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util);
+    }
+
+    breakLoopCon(args) {
+      if (Cast.toBoolean(args.CON)) this.breakLoop(args);
+    }
+
     pauseLoop(args, util) {
       const scriptName = Cast.toString(args.NAME);
       const state = util.stackFrame.pausedScript;
       if (!state) {
-          storedScripts[scriptName] = true;
-          util.stackFrame.pausedScript = scriptName;
-          util.yield();
+        storedScripts[scriptName] = true;
+        util.stackFrame.pausedScript = scriptName;
+        util.yield();
       } else if (state in storedScripts) {
-          util.yield();
+        util.yield();
       }
     }
 
     breakLoop(args) {
       const scriptName = Cast.toString(args.NAME);
       if (scriptName in storedScripts) {
-          delete storedScripts[scriptName];
+        delete storedScripts[scriptName];
       }
     }
 
