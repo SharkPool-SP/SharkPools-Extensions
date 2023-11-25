@@ -2,11 +2,10 @@
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
 
-// Version 1.8.2
+// Version 1.9.0
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) {
     throw new Error("Hyper Sense must run unsandboxed");
   }
@@ -51,23 +50,27 @@
       };
 
       this.scrollDistance = 0;
-      this.oldScroll = 0;
+      this.oldScroll = [0, 0];
       this.loudnessArray = [];
       document.addEventListener("wheel", this.handleScroll);
       this.isMicrophoneEnabled = false;
       this.pressedKey = null;
       this.wait = [false, "sprite"];
+      this.pressedKeys = {};
 
       document.addEventListener("keydown", (event) => {
         keyPressTime = keyPressTime + 0.1;
         this.pressedKey = event.key.toUpperCase();
-        currentlyPressedKey = event.key.toUpperCase();
+        this.pressedKeys[this.pressedKey] = true;
+        this.pressedKey = this.pressedKey;
+        currentlyPressedKey = this.pressedKey;
       });
 
-      document.addEventListener("keyup", () => {
+      document.addEventListener("keyup", (event) => {
         keyHitPass[currentlyPressedKey] = 0;
-        this.pressedKey = null;
-        currentlyPressedKey = null;
+        const releasedKey = event.key.toUpperCase();
+        delete this.pressedKeys[releasedKey];
+        currentlyPressedKey = Object.keys(this.pressedKeys).pop() || null;
         keyPressTime = 0;
       });
 
@@ -133,8 +136,9 @@
           },
           {
             opcode: "scrollWheelHat",
-            blockType: Scratch.BlockType.HAT,
-            text: "when scrolled [EVENT]",
+            blockType: Scratch.BlockType.EVENT,
+            text: "when scrolled up",
+            isEdgeActivated: false,
             arguments: {
               EVENT: {
                 type: Scratch.ArgumentType.STRING,
@@ -142,6 +146,12 @@
                 defaultValue: "up"
               }
             },
+          },
+          {
+            opcode: "scrollWheelHat2",
+            blockType: Scratch.BlockType.EVENT,
+            text: "when scrolled down",
+            isEdgeActivated: false,
           },
           {
             opcode: "scrollWheelBool",
@@ -209,8 +219,7 @@
               }
             },
           },
-          //yes, these blocks do technically exist, but they dont have special keys like Tab
-          "---",
+          "---", //yes, these blocks do technically exist, but they dont have special keys like Tab
           {
             opcode: "whenKeyPressed",
             blockType: Scratch.BlockType.HAT,
@@ -236,10 +245,16 @@
               }
             },
           },
+          "---",
           {
             opcode: "currentKey",
             blockType: Scratch.BlockType.REPORTER,
             text: "current key pressed",
+          },
+          {
+            opcode: "currentKeys",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "current keys pressed",
           },
           {
             opcode: "timeKeyPressed",
@@ -453,14 +468,9 @@
           TARGETS2: { acceptReporters: true, items: this._getTargets(true, true) },
           TARGETS3: { acceptReporters: true, items: this._getTargets(false, true) },
           TARGETS4: { acceptReporters: true, items: this._getTargets(false, false) },
-          Asking: {
-            acceptReporters: false,
-            items: ["stage", "sprite"],
-          },
-          shouldWait: {
-            acceptReporters: false,
-            items: ["wait", "continue"],
-          },
+          Asking: ["stage", "sprite"],
+          shouldWait: ["wait", "continue"],
+          SCROLL_EVENTS: ["up", "down"],
           keys: {
             acceptReporters: true,
             items: [
@@ -474,10 +484,6 @@
               "Insert", "Page Up", "Page Down"
             ],
           },
-          SCROLL_EVENTS: {
-            acceptReporters: false,
-            items: ["up", "down"],
-          },
           DRAG_MODES: {
             acceptReporters: true,
             items: ["draggable", "not draggable"],
@@ -489,39 +495,22 @@
           mouseButtons: {
             acceptReporters: true,
             items: [
-              {
-                text: "left",
-                value: 0
-              },
-              {
-                text: "scroll wheel",
-                value: 1
-              },
-              {
-                text: "right",
-                value: 2
-              },
-              {
-                text: "back",
-                value: 3
-              },
-              {
-                text: "foward",
-                value: 4
-              }
+              { text: "left", value: 0 },
+              { text: "scroll wheel", value: 1 },
+              { text: "right", value: 2 },
+              { text: "back", value: 3 },
+              { text: "foward", value: 4 }
             ],
           }
         }
       };
     }
 
-    allLayers() {
-      return renderer._drawList.length - 1;
-    }
+    allLayers() { return renderer._drawList.length - 1 }
 
-    monitorScrollWheel() {
-      return this.scrollDistance;
-    }
+    getSpriteName(_, util) { return util.target.getName() }
+
+    monitorScrollWheel() { return this.scrollDistance }
 
     monitorScrollWheelLimited(args) {
       const min = Scratch.Cast.toNumber(args.MIN);
@@ -529,47 +518,42 @@
       return Math.max(Math.min(this.scrollDistance, max), min);
     }
 
-    setScrollDistance(args) {
-      this.scrollDistance = Scratch.Cast.toNumber(args.DISTANCE);
-    }
+    setScrollDistance(args) { this.scrollDistance = Scratch.Cast.toNumber(args.DISTANCE) }
 
-    changeScrollDistance(args) {
-      this.scrollDistance = this.scrollDistance + Scratch.Cast.toNumber(args.DISTANCE);
-    }
+    changeScrollDistance(args) { this.scrollDistance = this.scrollDistance + Scratch.Cast.toNumber(args.DISTANCE) }
 
     handleScroll = (event) => {
       this.scrollDistance += event.deltaY;
+      if (this.scrollWheelBool({EVENT:"up", FH:true})) runtime.startHats("HyperSenseSP_scrollWheelHat");
+      if (this.scrollWheelBool({EVENT:"down", FH:true})) runtime.startHats("HyperSenseSP_scrollWheelHat2");
     };
 
-    getSpriteName(_, util) {
-      return util.target.getName();
+    scrollWheelBool(args, fromHat) {
+      const status = eval(`this.scrollDistance ${args.EVENT === "down" ? ">" : "<"} this.oldScroll[${fromHat ? 1 : 0}]`);
+      if (status) this.oldScroll[fromHat ? 1 : 0] = this.scrollDistance;
+      return (!!status);
     }
 
     initMicrophone() {
       if (this.isMicrophoneEnabled) {
         navigator.mediaDevices.getUserMedia({ audio: true })
-          .then(this.handleMicrophoneSuccess)
-          .catch(this.handleMicrophoneError);
+          .then(this.handleMicrophoneSuccess).catch(this.handleMicrophoneError);
       }
     }
-
     handleMicrophoneSuccess = (stream) => {
       this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const microphone = this.audioContext.createMediaStreamSource(stream);
       const analyser = this.audioContext.createAnalyser();
       analyser.fftSize = 256;
-
       microphone.connect(analyser);
       this.updateMicrophoneLoudness(analyser);
     };
-
     handleMicrophoneError = (error) => {
       console.error("Error accessing microphone:", error);
     };
 
     updateMicrophoneLoudness(analyser) {
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
       setInterval(() => {
         analyser.getByteFrequencyData(dataArray);
         const loudness = this.calculateLoudness(dataArray);
@@ -590,9 +574,7 @@
 
     averageMicrophoneLoudness() {
       let loudness = this.calculateAverageLoudness(this.loudnessArray);
-      if (isNaN(loudness)) {
-        loudness = "Microphone is Disabled!"
-      }
+      if (isNaN(loudness)) loudness = "Microphone is Disabled!"
       return loudness;
     }
 
@@ -623,25 +605,18 @@
 
     handleKeyPress(key, loop) {
       if (key === "Any") {
-        if (currentlyPressedKey === null) {
-          return false;
-        }
+        if (currentlyPressedKey === null) return false;
         key = currentlyPressedKey;
       }
-      if (isNaN(parseFloat(key))) {
-        key = key.toUpperCase();
-      }
-      const pressedKey = this.pressedKey || null;
-
+      if (isNaN(parseFloat(key))) key = key.toUpperCase();
+      const pressedKey = this.currentKey();
       if (
         ((key === "SPACE" && pressedKey === " ") ||
         (key === pressedKey) ||
         (key.startsWith("DIGIT") && key.slice(5) === pressedKey))
       ) {
         key = (key === "SPACE") ? " " : key;
-        if (isNaN(keyHitPass[key])) {
-          keyHitPass[key] = 0;
-        }
+        if (isNaN(keyHitPass[key])) keyHitPass[key] = 0;
         keyHitPass[key] = keyHitPass[key] + 1;
         return (loop) ? true : (keyHitPass[key] < 2);
       }
@@ -651,25 +626,25 @@
     isKeyHit(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
       const loop = false;
-      return this.handleKeyPress (key, loop);
+      return this.handleKeyPress(key, loop);
     }
 
     whenKeyHit(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
       const loop = false;
-      return this.handleKeyPress (key, loop);
+      return this.handleKeyPress(key, loop);
     }
 
     whenKeyPressed(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
       const loop = true;
-      return this.handleKeyPress (key, loop);
+      return this.handleKeyPress(key, loop);
     }
 
     isKeyPressed(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
       const loop = true;
-      return this.handleKeyPress (key, loop);
+      return this.handleKeyPress(key, loop);
     }
 
     currentKey() {
@@ -681,14 +656,12 @@
       return currentlyPressedKey.charAt(0).toUpperCase() + currentlyPressedKey.slice(1).toLowerCase();
     }
 
+    currentKeys() { return JSON.stringify(Object.keys(this.pressedKeys)) }
+
     timeKeyPressed(args) {
       let key = Scratch.Cast.toString(args.KEY).replace(" ", "");
-      if (isNaN(parseFloat(key))) {
-        key = key.toUpperCase();
-      }
-      if (key === "SPACE") {
-        key = " ";
-      }
+      if (isNaN(parseFloat(key))) key = key.toUpperCase();
+      if (key === "SPACE") key = " ";
       if (key === this.pressedKey || args.KEY === "Any") {
         return keyPressTime;
       } else {
@@ -787,28 +760,6 @@
       return `#${r}${g}${b}`;
     }
 
-    scrollWheelHat(args) {
-      let status;
-      if (args.EVENT === "down") {
-        status = this.scrollDistance > this.oldScroll;
-      } else {
-        status = this.scrollDistance < this.oldScroll;
-      }
-      if (status) this.oldScroll = this.scrollDistance;
-      return (status);
-    }
-
-    scrollWheelBool(args) {
-      let status;
-      if (args.EVENT === "down") {
-        status = this.scrollDistance > this.oldScroll;
-      } else {
-        status = this.scrollDistance < this.oldScroll;
-      }
-      if (status) this.oldScroll = this.scrollDistance;
-      return (!!status);
-    }
-
     spriteDragMode(args) {
       const target = runtime.getSpriteTargetByName(args.SPRITE);
       target.setDraggable(args.DRAG === "draggable");
@@ -865,16 +816,8 @@
 
     _getTargets(mouse, myself) {
       const spriteNames = [];
-      if (mouse) {
-        spriteNames.push({
-          text: "mouse-pointer", value: "_mouse_",
-        });
-      }
-      if (myself) {
-        spriteNames.push({
-          text: "myself", value: "_myself_",
-        });
-      }
+      if (mouse) { spriteNames.push({ text: "mouse-pointer", value: "_mouse_" }) }
+      if (myself) { spriteNames.push({ text: "myself", value: "_myself_" }) }
       const targets = Scratch.vm.runtime.targets;
       for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
@@ -883,11 +826,7 @@
           spriteNames.push({ text: targetName, value: targetName });
         }
       }
-      if (spriteNames.length > 0) {
-        return spriteNames;
-      } else {
-        return [""];
-      }
+      return spriteNames.length > 0 ? spriteNames : [""];
     }
   }
 
