@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.1.1.0
+// Version V.1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -69,6 +69,11 @@
               }
             }
           },
+          {
+            opcode: "breakAll",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "unpause all scripts"
+          },
           "---",
           {
             opcode: "pauseLoopCon",
@@ -106,6 +111,12 @@
               }
             }
           },
+          {
+            opcode: "allPausedScripts",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "all paused scripts",
+            disableMonitor: true
+          },
         ],
       };
     }
@@ -123,17 +134,12 @@
       }
     }
 
-    unpause() { //penguinmod exlusive
-      runtime.play();
-    }
+    //penguinmod exlusive 
+    unpause() { runtime.play() }
 
-    pauseLoopCon(args, util) {
-      if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util);
-    }
+    pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
 
-    breakLoopCon(args) {
-      if (Cast.toBoolean(args.CON)) this.breakLoop(args);
-    }
+    breakLoopCon(args) { if (Cast.toBoolean(args.CON)) this.breakLoop(args) }
 
     pauseLoop(args, util) {
       const scriptName = Cast.toString(args.NAME);
@@ -149,8 +155,13 @@
 
     breakLoop(args) {
       const scriptName = Cast.toString(args.NAME);
-      if (scriptName in storedScripts) {
-        delete storedScripts[scriptName];
+      if (scriptName in storedScripts) delete storedScripts[scriptName];
+    }
+
+    breakAll() {
+      const allScripts = Object.keys(storedScripts);
+      for (let i = 0; i < allScripts.length; i++) {
+        this.breakLoop({ NAME : allScripts[i] });
       }
     }
 
@@ -158,6 +169,8 @@
       const scriptName = Cast.toString(args.NAME);
       return scriptName in storedScripts;
     }
+
+    allPausedScripts() { return JSON.stringify(Object.keys(storedScripts)) }
   }
 
   Scratch.extensions.register(new SPPause());
