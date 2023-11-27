@@ -3,80 +3,74 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.5.0
+// Version V.2.6.0
 
 (function (Scratch) {
-    "use strict";
+  "use strict";
+  if (!Scratch.extensions.unsandboxed) {
+    throw new Error("Sharktilities must run unsandboxed");
+  }
 
-    const menuIconURI = "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==";
+  const menuIconURI =
+"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==";
+  const vm = Scratch.vm;
 
-    const vm = Scratch.vm;
-    function rgbToHsl(r, g, b) {
-      r /= 255;
-      g /= 255;
-      b /= 255;
-
-      const max = Math.max(r, g, b);
-      const min = Math.min(r, g, b);
-      const diff = max - min;
-      let h, s, l = (max + min) / 2;
-      if (diff === 0) {
-        h = s = 0;
-      } else {
-        s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
-        switch (max) {
-          case r: h = (g - b) / diff + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / diff + 2; break;
-          case b: h = (r - g) / diff + 4; break;
-        }
-        h /= 6;
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const diff = max - min;
+    let h, s, l = (max + min) / 2;
+    if (diff === 0) {
+      h = s = 0;
+    } else {
+      s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
+      switch (max) {
+        case r: h = (g - b) / diff + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / diff + 2; break;
+        case b: h = (r - g) / diff + 4; break;
       }
-      return [h, s, l];
+      h /= 6;
     }
+    return [h, s, l];
+  }
 
-    function hslToRgb(h, s, l) {
-      let r, g, b;
-      if (s === 0) {
-        r = g = b = l;
-      } else {
-        const hue2rgb = (p, q, t) => {
-         if (t < 0) t += 1;
-          if (t > 1) t -= 1;
-          if (t < 1 / 6) return p + (q - p) * 6 * t;
-          if (t < 1 / 2) return q;
-          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-          return p;
-        };
-        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1 / 3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1 / 3);
-      }
-      return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  function hslToRgb(h, s, l) {
+    let r, g, b;
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      const hue2rgb = (p, q, t) => {
+       if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
     }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
 
-    function componentToHex(c) {
-      const hex = c.toString(16);
-      return hex.length === 1 ? "0" + hex : hex;
-    }
+  function componentToHex(c) {
+    const hex = c.toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  }
 
-    class Sharktilities {
-      constructor() {
-        this.runtime = vm.runtime;
-      }
-
-      getInfo() {
+  class Sharktilities {
+    getInfo() {
       return {
         id: "SharkPoolSharktilities",
         name: "Sharktilities",
         color1: "#33B6FF",
         menuIconURI,
         blocks: [
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Management",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Management" },
           {
             opcode: "costumeInfo",
             blockType: Scratch.BlockType.REPORTER,
@@ -129,9 +123,15 @@
             },
           },
           {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Numbers and Letters",
+            opcode: "repeatForUntil",
+            text: "repeat [NUM] or until [CON]",
+            blockType: Scratch.BlockType.LOOP,
+            arguments: {
+              NUM: { type: Scratch.ArgumentType.STRING, defaultValue: 10 },
+              CON: { type: Scratch.ArgumentType.BOOLEAN }
+            },
           },
+          { blockType: Scratch.BlockType.LABEL, text: "Numbers and Letters" },
           {
             opcode: "roundToNearest",
             blockType: Scratch.BlockType.REPORTER,
@@ -181,10 +181,7 @@
             text: "pick random single integer",
             disableMonitor: true,
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Color and Effects",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Color and Effects" },
           {
             opcode: "setSpriteEffect",
             blockType: Scratch.BlockType.COMMAND,
@@ -208,7 +205,7 @@
           {
             opcode: "hexBrightness",
             blockType: Scratch.BlockType.REPORTER,
-            text: "change brightness of color [COLOR] by [CHANGE]",
+            text: "change brightness of [COLOR] by [CHANGE]",
             arguments: {
               COLOR: {
                 type: Scratch.ArgumentType.COLOR,
@@ -220,10 +217,7 @@
               },
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Math",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Math" },
           {
             opcode: "tripleOperator",
             blockType: Scratch.BlockType.REPORTER,
@@ -322,10 +316,7 @@
               }
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Strings",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Strings" },
           {
             opcode: "rndString",
             blockType: Scratch.BlockType.REPORTER,
@@ -416,18 +407,9 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "join [STRING1] [STRING2] [STRING3]",
             arguments: {
-              STRING1: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING2: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING3: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
+              STRING1: { type: Scratch.ArgumentType.STRING },
+              STRING2: { type: Scratch.ArgumentType.STRING },
+              STRING3: { type: Scratch.ArgumentType.STRING }
             },
           },
           {
@@ -435,22 +417,10 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "join [STRING1] [STRING2] [STRING3] [STRING4]",
             arguments: {
-              STRING1: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING2: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING3: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING4: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
+              STRING1: { type: Scratch.ArgumentType.STRING },
+              STRING2: { type: Scratch.ArgumentType.STRING },
+              STRING3: { type: Scratch.ArgumentType.STRING },
+              STRING4: { type: Scratch.ArgumentType.STRING }
             },
           },
           {
@@ -458,36 +428,18 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "join [STRING1] [STRING2] [STRING3] [STRING4] [STRING5]",
             arguments: {
-              STRING1: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING2: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING3: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING4: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              STRING5: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
+              STRING1: { type: Scratch.ArgumentType.STRING },
+              STRING2: { type: Scratch.ArgumentType.STRING },
+              STRING3: { type: Scratch.ArgumentType.STRING },
+              STRING4: { type: Scratch.ArgumentType.STRING },
+              STRING5: { type: Scratch.ArgumentType.STRING },
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Experimental",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Experimental" },
           {
             opcode: "refresh",
             blockType: Scratch.BlockType.COMMAND,
-            text: "refresh palette",
+            text: "refresh extensions",
             isTerminal: true,
           },
           {
@@ -524,11 +476,11 @@
             acceptReporters: true,
             items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"],
           },
-          OPERATOR_MENU: ["+", "-", "*", "/"],
           mathMenu: {
             acceptReporters: true,
             items: ["sin", "cos"],
           },
+          OPERATOR_MENU: ["+", "-", "*", "/"],
           encoder: ["encode", "decode"],
           cosInfo: {
             acceptReporters: true,
@@ -552,7 +504,7 @@
               "ascending by length",
               "descending by length"
             ],
-          },
+          }
         },
       };
     }
@@ -560,18 +512,11 @@
     _getTargets() {
       const spriteNames = [];
       const targets = Scratch.vm.runtime.targets;
-
       for (let index = 0; index < targets.length; index++) {
         const target = targets[index];
-        if (target.isOriginal) {
-          spriteNames.push(target.getName());
-        }
+        if (target.isOriginal) spriteNames.push(target.getName());
       }
-      if (spriteNames.length > 0) {
-        return spriteNames;
-      } else {
-        return [""];
-      }
+      return spriteNames.length > 0 ? spriteNames : [""];
     }
 
     roundToNearest({ NUMBER, ROUND_TYPE }) {
@@ -590,41 +535,21 @@
     }
 
     randomLetter({ LETTER_TYPE }) {
-      let letters = "";
-      switch (LETTER_TYPE) {
-        case "lowercase":
-          letters = "abcdefghijklmnopqrstuvwxyz";
-          break;
-        case "uppercase":
-          letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-          break;
-        default:
-          letters = "abcdefghijklmnopqrstuvwxyz";
-          break;
-      }
+      let letters = "abcdefghijklmnopqrstuvwxyz";
+      if (LETTER_TYPE === "uppercase") letters = letters.toUpperCase();
       return letters.charAt(Math.floor(Math.random() * letters.length));
     }
 
-    randomSingleInteger() {
-      return Math.random() < 0.5 ? -1 : 1;
-    }
-
-    findID(sprite) {
-      const target = Scratch.vm.runtime.getSpriteTargetByName(sprite);
-      if (!target) return '';
-      return target.id;
-    }
+    randomSingleInteger() { return Math.random() < 0.5 ? -1 : 1 }
 
     setSpriteEffect(args) {
       let target = args.SPRITE;
       if (target === "Stage") {
-        target = this.runtime.getTargetForStage();
+        target = vm.runtime.getTargetForStage();
       } else {
-        target = this.runtime.getSpriteTargetByName(target);
+        target = vm.runtime.getSpriteTargetByName(target);
       }
-      if (!target) {
-        return;
-      }
+      if (!target) return;
       const VALUE = args.VALUE;
       switch (args.EFFECT) {
         case "color":
@@ -653,17 +578,9 @@
       }
     }
 
-    tripleJoin({ STRING1, STRING2, STRING3 }) {
-      return `${STRING1}${STRING2}${STRING3}`;
-    }
-
-    quadrupleJoin({ STRING1, STRING2, STRING3, STRING4 }) {
-      return `${STRING1}${STRING2}${STRING3}${STRING4}`;
-    }
-
-    fiveJoin({ STRING1, STRING2, STRING3, STRING4, STRING5 }) {
-      return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}`;
-    }
+    tripleJoin({ STRING1, STRING2, STRING3 }) { return `${STRING1}${STRING2}${STRING3}` }
+    quadrupleJoin({ STRING1, STRING2, STRING3, STRING4 }) { return `${STRING1}${STRING2}${STRING3}${STRING4}` }
+    fiveJoin({ STRING1, STRING2, STRING3, STRING4, STRING5 }) { return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}` }
 
     tripleOperator(args) {
       const nums = [
@@ -684,9 +601,7 @@
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
     }
 
-    negaAbs({ NUMBER }) {
-      return -Math.abs(Scratch.Cast.toNumber(NUMBER));
-    }
+    negaAbs({ NUMBER }) { return -Math.abs(Scratch.Cast.toNumber(NUMBER)) }
 
     shuffleArray(args) {
       let words = args.WORDS;
@@ -695,9 +610,7 @@
       } catch (error) {
         return "Invalid Array";
       }
-      if (!Array.isArray(words)) {
-        return "Invalid Array";
-      }
+      if (!Array.isArray(words)) return "Invalid Array";
       switch (args.SHUFFLE_OPTION) {
         case "ascending":
           words.sort();
@@ -744,17 +657,15 @@
       return output;
     }
 
-    refresh() {
-      vm.refreshWorkspace();
-    }
+    refresh() { vm.extensionManager.refreshBlocks() }
 
     request(args) {
       if (args.THING === "redraw") {
-        this.runtime.requestRedraw();
+        Scratch.vm.runtime.requestRedraw();
       } else if (args.THING === "block refresh") {
-        vm.extensionManager.refreshBlocks();
+        Scratch.vm.extensionManager.refreshBlocks();
       } else {
-        this.runtime.requestToolboxExtensionsUpdate();
+        Scratch.vm.runtime.requestToolboxExtensionsUpdate();
       }
     }
 
@@ -764,28 +675,20 @@
       let index = 0;
       const newString = string.replace(regex, function(match) {
         index++;
-        if (index === args.ORDER) {
-          return args.REPLACE;
-        } else {
-          return match;
-        }
+        return index === args.ORDER ? args.REPLACE : match;
       });
       return newString;
     }
 
     replaceKeys(args) {
       const string = args.STRING;
-      const regex = new RegExp(args.KEY, 'g');
+      const regex = new RegExp(args.KEY, "g");
       let index = 0;
       const order = args.ORDER;
       const order2 = order > args.ORDER2 ? order : args.ORDER2;
       const newString = string.replace(regex, function(match) {
         index++;
-        if (index >= order && index <= order2) {
-          return args.REPLACE;
-        } else {
-          return match;
-        }
+        return index >= order && index <= order2 ? args.REPLACE : match;
       });
       return newString;
     }
@@ -793,26 +696,15 @@
     costumeInfo(args) {
       let target = args.SPRITE;
       if (target === "Stage") {
-        target = this.runtime.getTargetForStage();
+        target = vm.runtime.getTargetForStage();
       } else {
-        target = this.runtime.getSpriteTargetByName(target);
+        target = vm.runtime.getSpriteTargetByName(target);
       }
-      if (!target) {
-        return "";
-      }
+      if (!target) return "";
       const targetInfo = target.getCostumes();
-      let index = Math.round(Scratch.Cast.toString(args.NUM)) - 1;
-      if (
-        index === Infinity ||
-        index === -Infinity ||
-        !index ||
-        index < 0
-      ) {
-        index = 0;
-      }
-      if (index > target.sprite.costumes.length - 1) {
-        index = target.sprite.costumes.length - 1;
-      }
+      let index = Math.round(Math.abs(Scratch.Cast.toString(args.NUM))) - 1;
+      if (!index || index === Infinity || index === -Infinity) index = 0;
+      if (index > target.sprite.costumes.length - 1) index = target.sprite.costumes.length - 1;
       const costume = targetInfo[index];
       switch (args.INFO) {
         case "name":
@@ -869,21 +761,28 @@
       return decodedString.join("");
     }
 
-    rndString(args) {
-      return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1;
-    }
+    rndString(args) { return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1 }
 
     setTargetCostume(args) {
       if (args.SPRITE === "Stage") {
-        this.runtime.ext_scratch3_looks._setBackdrop(this.runtime.getTargetForStage(), args.NUM);
+        vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
       } else {
-        const target = this.runtime.getSpriteTargetByName(args.SPRITE);
+        const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
         if (target) {
-          this.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
+          vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
         } else {
           return;
         }
       }
+    }
+
+    repeatForUntil(args, util) {
+      const condition = Scratch.Cast.toBoolean(args.CON);
+      if (typeof util.stackFrame.loopCounter === "undefined") {
+        util.stackFrame.loopCounter = Math.round(Scratch.Cast.toNumber(args.NUM));
+      }
+      util.stackFrame.loopCounter--;
+      if (!condition && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
     }
   }
 
