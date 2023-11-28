@@ -198,6 +198,12 @@
       "tags": ".all.fetching",
       "status": ""
     },
+    "Money-Utilities": {
+      "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Money-Utilities.js",
+      "tags": ".all.fetching",
+      "status": "new"
+    },
     "Example": {
       "credits": "",
       "url": "",
