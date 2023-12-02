@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool <https://github.com/SharkPool-SP>
 
-// Version V.2.6.0
+// Version V.2.7.0
 
 (function (Scratch) {
   "use strict";
