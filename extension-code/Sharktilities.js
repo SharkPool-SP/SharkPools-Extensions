@@ -140,6 +140,15 @@
               CON: { type: Scratch.ArgumentType.BOOLEAN }
             },
           },
+          {
+            opcode: "spayedCondition",
+            blockType: Scratch.BlockType.LOOP,
+            text: ["if [CON1] start loop", "repeat until [CON2]" + " "],
+            arguments: {
+        			CON1: { type: Scratch.ArgumentType.BOOLEAN },
+        			CON2: { type: Scratch.ArgumentType.BOOLEAN },
+            },
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Numbers and Letters" },
           {
             opcode: "roundToNearest",
@@ -795,6 +804,21 @@
       }
       util.stackFrame.loopCounter--;
       if (!condition && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
+    }
+
+    spayedCondition(args, util) {
+      if (typeof util.stackFrame.index === "undefined") util.stackFrame.index = 0;
+      if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index === 0) {
+        return false;
+      } else {
+        if (!Scratch.Cast.toBoolean(args.CON2)) {
+          util.stackFrame.index = 1;
+          return true;
+        } else {
+          util.stackFrame.index = 0;
+        	return false;
+        }
+      }
     }
   }
 
