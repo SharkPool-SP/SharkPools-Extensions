@@ -64,13 +64,13 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
@@ -88,7 +88,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "new"
+      "status": ""
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
@@ -154,7 +154,7 @@
       "credits": "An expansion of the Since 2000 Blocks. Made By ION, modified by 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Since-2000.js",
       "tags": ".all.expanded",
-      "status": "update"
+      "status": ""
     },
     "Animations": {
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
@@ -166,7 +166,7 @@
       "credits": "Pause your Project and Chosen Scripts. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update"
+      "status": ""
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
@@ -190,7 +190,7 @@
       "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geolocation.js",
       "tags": ".all.fetching",
-      "status": "update"
+      "status": ""
     },
     "Spotify": {
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
@@ -202,7 +202,7 @@
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Money-Utilities.js",
       "tags": ".all.fetching",
-      "status": "new"
+      "status": ""
     },
     "Example": {
       "credits": "",
@@ -232,7 +232,7 @@
     "https://surv.is-a.dev/unsafe-extensions/0znzw/NicheToolbox.js"
   ],
   "site": {
-    "is up": true,
+    "is up": false,
     "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html"
   }
 }
