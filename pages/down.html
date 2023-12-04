@@ -10,36 +10,46 @@
             color: white;
             text-align: center;
             font-family: Comic Sans MS, Comic-Sans-MS;
+            font-size: 18px;
+            line-height: 1;
+            overflow: hidden
         }
         .container {
-            margin-top: 20%;
             margin-bottom: 50%;
         }
         .error-image {
             max-width: 300px;
         }
-        .centered-list {
-            text-align: center;
-            list-style-position: inside;
-            padding-left: 0;
-        }
         .outlined-text {
             text-shadow: 1.5px 2.5px 2px rgba(0, 0, 0, 1);
         }
+        .button-OP {
+            background-color: #079dfa;
+            color: white;
+            font-size: 18px;
+            font-family: Comic Sans MS, Comic-Sans-MS;
+            border-radius: 15px;
+            border: outset;
+            border-width: 5px;
+            border-color: #0269d6;
+            padding: 7px 15px;
+            cursor: pointer;
+    	}
+    	button:hover {
+    	  text-shadow: 0px 0px 8px white;
+          box-shadow: 0 0 5px 2px white;
+    	}
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap">
 </head>
 <body>
     <div class="container">
         <img src="https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/pages/503.svg" alt="Site is Down" class="error-image">
-        <h1 class="outlined-text">Uh Oh! Something Bad Happened!</h1>
-        <p class="outlined-text">It seems you couldn't establish a connection to the Gallery, here are some possible reasons for the Error:</p>
-        <ul class="centered-list">
-            <li class="outlined-text">SharkPool is updating the Gallery</li>
-            <li class="outlined-text">Internet connection</li>
-            <li class="outlined-text">Blacklisted site by Internet Provider (School Internet)</li>
-        </ul>
-        <p class="outlined-text">Reload the page or come back later to see if the Gallery is back online...</p>
+        <h1 class="outlined-text">Uh Oh! Something Went Wrong!</h1>
+        <p class="outlined-text">It seems you couldn't access the Gallery, SharkPool may be updating it at this current time...</p>
+        <p class="outlined-text">Reload the page or come back later to see if the Gallery is online...</p>
+        <br>
+        <button class="button-OP" style="transform: scale(1.5)" onClick="window.location.reload();">Refresh Page</button>
     </div>
 </body>
 </html>
