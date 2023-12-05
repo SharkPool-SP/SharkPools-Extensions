@@ -25,7 +25,7 @@
       "status": ""
     },
     "Niche-Toolbox": {
-      "credits": "Utility Blocks made by 0znzw. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
+      "credits": "Utility Blocks made by Ashimee. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Niche-Toolbox.js",
       "tags": ".all.utilities",
       "status": ""
@@ -121,7 +121,7 @@
       "status": ""
     },
     "Files-Expanded": {
-      "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and 0znzw",
+      "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
       "status": ""
@@ -151,7 +151,7 @@
       "status": ""
     },
     "Since-2000": {
-      "credits": "An expansion of the Since 2000 Blocks. Made By ION, modified by 0znzw",
+      "credits": "An expansion of the Since 2000 Blocks. Made By ION, modified by Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Since-2000.js",
       "tags": ".all.expanded",
       "status": ""
