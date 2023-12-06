@@ -3,14 +3,11 @@
 // Description: Apply New Non-Vanilla Effects to Sprites and the Canvas!
 // By: SharkPool
 
-// Version V.1.0.0
-// To Do: Add Bulge, Mosiac, Whirl
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error("Sprite Effects must run unsandboxed");
-  }
+  if (!Scratch.extensions.unsandboxed) throw new Error("Sprite Effects must run unsandboxed");
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzYiIGhlaWdodD0iMTM2IiB2aWV3Qm94PSIwLDAsMTM2LDEzNiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE3MiwtMTEyKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3MiwxODBjMCwtMzcuNTU1MzYgMzAuNDQ0NjQsLTY4IDY4LC02OGMzNy41NTUzNiwwIDY4LDMwLjQ0NDY0IDY4LDY4YzAsMzcuNTU1MzYgLTMwLjQ0NDY0LDY4IC02OCw2OGMtMzcuNTU1MzYsMCAtNjgsLTMwLjQ0NDY0IC02OCwtNjh6IiBmaWxsPSIjNzc0ZGNiIiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTE3OC40MzI0MywxODBjMCwtMzQuMDAyODMgMjcuNTY0NzQsLTYxLjU2NzU3IDYxLjU2NzU3LC02MS41Njc1N2MzNC4wMDI4MywwIDYxLjU2NzU3LDI3LjU2NDc0IDYxLjU2NzU3LDYxLjU2NzU3YzAsMzQuMDAyODMgLTI3LjU2NDc0LDYxLjU2NzU3IC02MS41Njc1Nyw2MS41Njc1N2MtMzQuMDAyODMsMCAtNjEuNTY3NTcsLTI3LjU2NDc0IC02MS41Njc1NywtNjEuNTY3NTd6IiBmaWxsPSIjOTk2NmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIi8+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJzdGFydCIvPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiPjxwYXRoIGQ9Ik0yNjkuNTE4MTYsMTcwLjE5ODgyYzEuNjk4NzYsLTAuNzM5ODkgMi44NzM5NSwtMi4zMjkxOSAzLjA4MzU5LC00LjE3MDE4bDAuNDc5MDUsLTQuMTg1NThjMC4yMjg5LC0xLjk3OTA1IDIuOTI3MjksLTIuMzgzMjYgMy43MjMwNSwtMC41NTc3bDEuNjg3NDgsMy44NjEwNWMwLjczOTg5LDEuNjk4NzYgMi4zMjkxOSwyLjg3Mzk1IDQuMTY3MTksMy4wODQwNmw0LjE4NTU5LDAuNDc5MDZjMS45NzkwNSwwLjIyODkgMi4zODMyNywyLjkyNzMxIDAuNTU4MTUsMy43MjYwNmwtMy44NjE1MSwxLjY4NDQ3Yy0xLjY5NTc2LDAuNzM5NDMgLTIuODcwOTQsMi4zMjg3NCAtMy4wODEwNSw0LjE2Njc0bC0wLjQ4MjA2LDQuMTg2MDVjLTAuMjI1OTEsMS45Nzg2IC0yLjkyNDMxLDIuMzgyODIgLTMuNzIzMDYsMC41NTc2OWwtMS42ODQ0OCwtMy44NjE1MWMtMC43Mzk0MywtMS42OTU3NiAtMi4zMjg3NCwtMi44NzA5NCAtNC4xNjk3MywtMy4wODA2bC00LjE4NTU4LC0wLjQ3OTA2Yy0xLjk3OTA1LC0wLjIyODkgLTIuMzgzMjgsLTIuOTI3MzEgLTAuNTU4MTYsLTMuNzI2MDV6Ii8+PC9nPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiPjxwYXRoIGQ9Ik0xOTUuMzExODksMTkyLjgzNDM2YzEuNDQzNTMsLTEuNTYwOCAxLjk0NTI0LC0zLjc3MjU1IDEuMzE2NDQsLTUuODAzNDNsLTEuNDI3MDUsLTQuNjE4NGMtMC42NzIyMywtMi4xODQ4MSAxLjk3NjM1LC0zLjg1Mzk2IDMuNjU0MzIsLTIuMzAyOThsMy41NTM1OSwzLjI3ODI2YzEuNTYwOCwxLjQ0MzUzIDMuNzcyNTUsMS45NDUyMyA1LjgwMDQ5LDEuMzE4MzFsNC42MTg0MSwtMS40MjcwNWMyLjE4NDgxLC0wLjY3MjI0IDMuODUzOTcsMS45NzYzNSAyLjMwNDgzLDMuNjU3MjdsLTMuMjgwMTIsMy41NTA2NWMtMS40NDA1OCwxLjU1ODkzIC0xLjk0MjI5LDMuNzcwNjkgLTEuMzE1MzYsNS43OTg2MmwxLjQyNDEsNC42MjAyN2MwLjY3NTE3LDIuMTgyOTYgLTEuOTczNCwzLjg1MjExIC0zLjY1NDMyLDIuMzAyOTdsLTMuNTUwNjUsLTMuMjgwMTJjLTEuNTU4OTMsLTEuNDQwNTggLTMuNzcwNjgsLTEuOTQyMjggLTUuODAxNTcsLTEuMzEzNWwtNC42MTg0MSwxLjQyNzA1Yy0yLjE4NDgxLDAuNjcyMjQgLTMuODUzOTcsLTEuOTc2MzUgLTIuMzA0ODMsLTMuNjU3Mjd6Ii8+PC9nPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiPjxwYXRoIGQ9Ik0yMzMuNDk5MDMsMjE4LjQxODAxYzEuMzA5NjYsLTAuNzczNzMgMi4xMDczLC0yLjE4Njg1IDIuMDkyOTEsLTMuNzA3OTJsLTAuMDMwNzQsLTMuNDU4NDdjLTAuMDEyNTgsLTEuNjM1NDkgMi4xNDUzMywtMi4yMzYyOCAyLjk3NzM0LC0wLjgyODkxbDEuNzYzMjksMi45NzYwOWMwLjc3MzczLDEuMzA5NjYgMi4xODY4NSwyLjEwNzI5IDMuNzA1NTIsMi4wOTM1OWwzLjQ1ODQ3LC0wLjAzMDczYzEuNjM1NDksLTAuMDEyNTggMi4yMzYyOSwyLjE0NTMzIDAuODI5NTksMi45Nzk3M2wtMi45NzY3OCwxLjc2MDljLTEuMzA3MjUsMC43NzMwNiAtMi4xMDQ5LDIuMTg2MTggLTIuMDkxMTgsMy43MDQ4NmwwLjAyODMzLDMuNDU5MTVjMC4wMTQ5NywxLjYzNDgzIC0yLjE0MjkzLDIuMjM1NjEgLTIuOTc3MzMsMC44Mjg5MWwtMS43NjA5LC0yLjk3Njc5Yy0wLjc3MzA2LC0xLjMwNzI1IC0yLjE4NjE4LC0yLjEwNDg5IC0zLjcwNzI1LC0yLjA5MDUybC0zLjQ1ODQ2LDAuMDMwNzRjLTEuNjM1NDksMC4wMTI1OCAtMi4yMzYyOSwtMi4xNDUzMyAtMC44Mjk1OSwtMi45Nzk3M3oiLz48L2c+PGcgZmlsbD0iI2ZmZmZmZiIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMCI+PHBhdGggZD0iTTI2OS40NzcwMywyMTQuNzA0NTFsLTAuMjUwNDksLTAuMjUwNWMtMC4wMDA1NCwtMC4wMDA1MyAtMC4wMDEwNywtMC4wMDEwNyAtMC4wMDE2MSwtMC4wMDE2bC0wLjAwMDAyLC0wLjAwMDAybC0yNi4xNDA1OSwtMjYuMTQxNDVjLTIuOTc1NzcsMi4wNDU2NCAtNi43NzEyMiwyLjg3NTM5IC0xMC41NjI0NywxLjk4MDE1Yy02LjQ0MTUzLC0xLjUyMTA1IC0xMC42NjYzOCwtNy41MDEyIC0xMC4xNzc0NiwtMTMuODk5NDljLTAuMzI3NjksMC4wMjQyNSAtMC42NTg3LDAuMDM2NTkgLTAuOTkyNTksMC4wMzY1OWMtNy4zMjMzNywwIC0xMy4yNjAyMiwtNS45MzY4NSAtMTMuMjYwMjIsLTEzLjI2MDIyYzAsLTIuNzkwNzEgMC44NjIxMiwtNS4zODAwNyAyLjMzNDU0LC03LjUxNjMxbC0xLjM3Njg4LC0xLjM3NjkzYy0wLjk0MDcxLC0wLjk0MDcxIC0wLjk0MDcxLC0yLjQ2ODYxIDAsLTMuNDA5MzJjMC45NDA3MSwtMC45NDA3MSAyLjQ2ODYxLC0wLjk0MDcxIDMuNDA5MzIsMGwwLjI0ODA3LDAuMjQ4MDdjMC4wMDEzNSwwLjAwMTM0IDAuMDAyNjksMC4wMDI2OCAwLjAwNDA0LDAuMDA0MDNsMS4xMjQ4LDEuMTI0OGMyLjEzNjIzLC0xLjQ3MjQ0IDQuNzI1NjEsLTIuMzM0NTcgNy41MTYzNCwtMi4zMzQ1N2M3LjMyMzM3LDAgMTMuMjYwMjIsNS45MzY4NSAxMy4yNjAyMiwxMy4yNjAyMmMwLDAuMzMzNDYgLTAuMDEyMzEsMC42NjQwNCAtMC4wMzY1LDAuOTkxMzJjMS4zMjIyNSwtMC4wOTg5OSAyLjY4MTkyLDAuMDAwMjYgNC4wNDEwNCwwLjMyMTJjNy4xMjc0MSwxLjY4MzAxIDExLjU0MDk1LDguODI1MjYgOS44NTc5NSwxNS45NTI2NmMtMC4zODk0OSwxLjY0OTQ3IC0xLjA3MTM3LDMuMTUzNTkgLTEuOTc3NzksNC40NzA0M2wyNi4zODk2MywyNi4zODk2M2MwLjk0MDcxLDAuOTQwNzEgMC45NDA3MSwyLjQ2ODYyIDAsMy40MDkzM2MtMC40NzEzMywwLjQ2OTM3IC0xLjA4Nzk5LDAuNzA2OTkgLTEuNzA0NjUsMC43MDY5OWgtMC4wMDAwMWMtMC42MTY2NywwIC0xLjIzMzMyLC0wLjIzNTY2IC0xLjcwNDY1LC0wLjcwNTA0eiIvPjxwYXRoIGQ9Ik0yMjEuMzUxOCwxNzYuNDI4MmMtNy4zMjMzNywwIC0xMy4yNjAyMiwtNS45MzY4NSAtMTMuMjYwMjIsLTEzLjI2MDIyYzAsLTIuNzkwNzEgMC44NjIxMSwtNS4zODAwNyAyLjMzNDUzLC03LjUxNjMxbC0xLjEyNDc4LC0xLjEyNDgxYy0wLjQ3MDM2LC0wLjQ3MDM2IC0wLjcwNTUzLC0xLjA4NzUxIC0wLjcwNTUzLC0xLjcwNDY3YzAsLTAuNjE3MTYgMC4yMzUxNywtMS4yMzQzMSAwLjcwNTUzLC0xLjcwNDY3YzAuOTQwNzEsLTAuOTQwNzEgMi40Njg2MiwtMC45NDA3MSAzLjQwOTMzLDBsMS4xMjQ4LDEuMTI0OGMyLjEzNjIzLC0xLjQ3MjQ0IDQuNzI1NjEsLTIuMzM0NTcgNy41MTYzNCwtMi4zMzQ1N2M3LjMyMzM3LDAgMTMuMjYwMjIsNS45MzY4NSAxMy4yNjAyMiwxMy4yNjAyMmMwLDIuNzkwNzMgLTAuODYyMTMsNS4zODAxIC0yLjMzNDU3LDcuNTE2MzRsMTAuNDkwMTIsMTAuNDkwMTJjMi4xMzYyMywtMS40NzI0NCA0LjcyNTYxLC0yLjMzNDU1IDcuNTE2MzMsLTIuMzM0NTVjNy4zMjMzNywwIDEzLjI2MjE4LDUuOTM4ODIgMTMuMjYyMTgsMTMuMjYwMjJjMCwyLjc5MDkgLTAuODYyNTIsNS4zODA3MSAtMi4zMzU0Nyw3LjUxNzM3bDExLjY3NTc1LDExLjY3NTc1YzAuOTQwNzEsMC45NDA3MSAwLjk0MDcxLDIuNDY4NjIgMCwzLjQwOTMzYy0wLjQ3MTMzLDAuNDY5MzcgLTEuMDg3OTksMC43MDY5OSAtMS43MDQ2NSwwLjcwNjk5aC0wLjAwMDAxYy0wLjYxNjY3LDAgLTEuMjMzMzIsLTAuMjM1NjYgLTEuNzA0NjUsLTAuNzA1MDRsLTAuMDAwMDIsMC4wMDAwMWwtMTEuNjc2NjksLTExLjY3NzA3Yy0yLjEzNjQ4LDEuNDcyNTYgLTQuNzI1OTUsMi4zMzQ4MyAtNy41MTY0NCwyLjMzNDgzYy03LjMyMzM3LDAgLTEzLjI2MDIyLC01LjkzODgxIC0xMy4yNjAyMiwtMTMuMjYyMThjMCwtMi43OTA0OCAwLjg2MTk3LC01LjM3OTY0IDIuMzM0MTYsLTcuNTE1NzZsLTEwLjQ5MDA5LC0xMC40OTA0M2MtMi4xMzYxNiwxLjQ3MjI4IC00LjcyNTQsMi4zMzQyOSAtNy41MTU5NSwyLjMzNDI5eiIvPjxwYXRoIGQ9Ik0yNjkuNDc3MDMsMjE0LjcwNDUxbC0wLjU3MTk2LC0wLjU3MTk4bC0xNC4xOTY1MSwtMTQuMTk2NTFjLTAuMDEwMSwtMC4wMTAwOCAtMC4wMjAwOCwtMC4wMjAyMiAtMC4wMjk5NiwtMC4wMzA0M2wtMjUuODEwODUsLTI1LjgxMTY5Yy0yLjEzNjE2LDEuNDcyMjggLTQuNzI1NCwyLjMzNDMgLTcuNTE1OTUsMi4zMzQzYy03LjMyMzM3LDAgLTEzLjI2MDIyLC01LjkzNjg1IC0xMy4yNjAyMiwtMTMuMjYwMjJjMCwtMi43OTA3MSAwLjg2MjEyLC01LjM4MDA3IDIuMzM0NTQsLTcuNTE2MzFsLTEuMTI0NzgsLTEuMTI0ODJjLTAuNDcwMzYsLTAuNDcwMzYgLTAuNzA1NTMsLTEuMDg3NTEgLTAuNzA1NTMsLTEuNzA0NjZjMCwtMC42MTcxNSAwLjIzNTE4LC0xLjIzNDMxIDAuNzA1NTMsLTEuNzA0NjZjMC45NDA3MSwtMC45NDA3MSAyLjQ2ODYyLC0wLjk0MDcxIDMuNDA5MzMsMGwxLjEyNDgsMS4xMjQ4YzIuMTM2MjMsLTEuNDcyNDQgNC43MjU2MSwtMi4zMzQ1NyA3LjUxNjM0LC0yLjMzNDU3YzcuMzIzMzcsMCAxMy4yNjAyMiw1LjkzNjg1IDEzLjI2MDIyLDEzLjI2MDIyYzAsMi43OTA3MyAtMC44NjIxMyw1LjM4MDEgLTIuMzM0NTcsNy41MTYzNGw0MC42MDg5LDQwLjYwODljMC45NDA3MSwwLjk0MDcxIDAuOTQwNzEsMi40Njg2MiAwLDMuNDA5MzNjLTAuNDcxMzMsMC40NjkzNyAtMS4wODc5OSwwLjcwNjk5IC0xLjcwNDY1LDAuNzA2OTloLTAuMDAwMDFjLTAuNjE2NjcsMCAtMS4yMzMzMiwtMC4yMzU2NiAtMS43MDQ2NSwtMC43MDUwNHoiLz48L2c+PGcgZmlsbD0iI2ZmZmZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSI+PHBhdGggZD0iTTIzNS42Njg4MywxNDAuNDY4NWMwLjY4NzMyLC0xLjI2ODI1IDAuNjQ2MjcsLTIuODA2NTMgLTAuMTA3NzIsLTQuMDM2MzFsLTEuNzEyNzUsLTIuNzk3MTNjLTAuODA4MzYsLTEuMzIzNyAwLjY1MzA3LC0yLjg2NTI4IDIuMDE2MzksLTIuMTI2OTZsMi44ODYxMSwxLjU1OTRjMS4yNjgyNSwwLjY4NzMyIDIuODA2NTMsMC42NDYyNyA0LjAzNDcsLTAuMTA2bDIuNzk3MTMsLTEuNzEyNzVjMS4zMjM3LC0wLjgwODM2IDIuODY1MjksMC42NTMwNyAyLjEyODY4LDIuMDE4MDFsLTEuNTYxMTIsMi44ODQ1Yy0wLjY4NTY5LDEuMjY2NTQgLTAuNjQ0NjQsMi44MDQ4MiAwLjEwNzYzLDQuMDMyOThsMS43MTExMywyLjc5ODg1YzAuODA5OTksMS4zMjE5OSAtMC42NTE0NSwyLjg2MzU3IC0yLjAxNjM5LDIuMTI2OTZsLTIuODg0NTEsLTEuNTYxMTNjLTEuMjY2NTQsLTAuNjg1NjkgLTIuODA0ODEsLTAuNjQ0NjMgLTQuMDM0NiwwLjEwOTM1bC0yLjc5NzExLDEuNzEyNzRjLTEuMzIzNywwLjgwODM2IC0yLjg2NTI5LC0wLjY1MzA3IC0yLjEyODY3LC0yLjAxODAxeiIvPjwvZz48L2c+PC9nPjwvc3ZnPg==";
@@ -20,10 +17,19 @@
   Scratch.vm.extensionManager.loadExtensionURL("https://extensions.turbowarp.org/Lily/Skins.js");
 
   let sprite = true;
-  let filterNameOffset = 0; // Used to avoid Same-Name filters
+  let nameOffset = 0;
   let allFilters = [];
   let displacementSrCs = [];
   let maskOptions = [0, 0, 100];
+
+  // This function was ripped from Looks Plus by Lily
+  const requireNonPackagedRuntime = () => {
+    if (runtime.isPackaged) {
+      alert(`To use this block, the creator of the packaged project must uncheck "Remove raw asset data after loading to save RAM" under advanced settings in the packager.`);
+      return false;
+    }
+    return true;
+  };
 
   class SPspriteEffects {
     getInfo() {
@@ -60,7 +66,6 @@
               BLEND: { type: Scratch.ArgumentType.STRING, menu: "BLENDING" },
             },
           },
-          "---",
           {
             opcode: "setSpriteEffect",
             blockType: Scratch.BlockType.REPORTER,
@@ -69,10 +74,7 @@
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "EFFECTS" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 }
             },
           },
           {
@@ -83,10 +85,7 @@
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "EFFECTS" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 }
             },
           },
           {
@@ -96,14 +95,8 @@
             hideFromPalette: !sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -113,14 +106,8 @@
             hideFromPalette: sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -149,19 +136,13 @@
             text: "apply [EFFECT] effect to [SPRITE] at x [X] y [Y] with colors [COLOR1] [COLOR2] and [COLOR3]",
             hideFromPalette: !sprite,
             arguments: {
-              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "SPLITTING" },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               COLOR1: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#00ff00" },
-              COLOR3: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" }
+              COLOR3: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "SPLITTING" },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -170,97 +151,62 @@
             text: "apply [EFFECT] effect to [SPRITE] at x [X] y [Y] with colors [COLOR1] [COLOR2] and [COLOR3]",
             hideFromPalette: sprite,
             arguments: {
-              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "SPLITTING" },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
               COLOR1: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#00ff00" },
-              COLOR3: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" }
+              COLOR3: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "SPLITTING" },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
+            opcode: "applyCustomSprite",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] effect with ID [ID] to [SPRITE]",
+            hideFromPalette: !sprite,
+            arguments: {
+              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "custom-svg-filter" },
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-filter" },
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
+            },
+          },
+          {
+            opcode: "applyCustomImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] effect with ID [ID] to [SPRITE]",
+            hideFromPalette: sprite,
+            arguments: {
+              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "custom-svg-filter" },
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-filter" },
+              SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" }
+            },
+          },
+          "---",
+          {
             opcode: "waveSprite",
             blockType: Scratch.BlockType.REPORTER,
-            text: "apply wave effect to [SPRITE] on [axis] with seed [SEED] at [NUM]%",
+            text: "apply wave effect to [SPRITE] on [axis] with seed [SEED] at x [NUM] y [Y]",
             hideFromPalette: !sprite,
             arguments: {
               axis: { type: Scratch.ArgumentType.STRING, menu: "AXISES" },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
-              SEED: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              SEED: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
             },
           },
           {
             opcode: "waveImage",
             blockType: Scratch.BlockType.REPORTER,
-            text: "apply wave effect to [SPRITE] on [axis] with seed [SEED] at [NUM]%",
+            text: "apply wave effect to [SPRITE] on [axis] with seed [SEED] at [NUM] y [Y]",
             hideFromPalette: sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
               axis: { type: Scratch.ArgumentType.STRING, menu: "AXISES" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
-              SEED: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1
-              }
-            },
-          },
-          {
-            opcode: "bulgeSprite",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "apply bulge effect to [SPRITE] at x [X] y [Y] at [NUM]%",
-            hideFromPalette: true, //!sprite,
-            arguments: {
-              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
-            },
-          },
-          {
-            opcode: "bulgeImage",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "apply bulge effect to [SPRITE] at x [X] y [Y] at [NUM]%",
-            hideFromPalette: true, //sprite,
-            arguments: {
-              SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              SEED: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
             },
           },
           {
@@ -269,20 +215,11 @@
             text: "apply glitch effect to [SPRITE] with offset x [X] y [Y] thickness [NUM] on [axis]",
             hideFromPalette: !sprite,
             arguments: {
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
               axis: { type: Scratch.ArgumentType.STRING, menu: "AXISES" },
-              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -293,18 +230,85 @@
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
               axis: { type: Scratch.ArgumentType.STRING, menu: "AXISES" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "tileSprite",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply mosaic effect to [SPRITE] at x [x] y [y] size [NUM]%",
+            hideFromPalette: !sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "tileImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply mosaic effect to [SPRITE] at x [x] y [y] size [NUM]%",
+            hideFromPalette: sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "distortSprite",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] distortion to [SPRITE] at x [X] y [Y] at [NUM]%",
+            hideFromPalette: !sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "DISTORTION" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "distortImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] distortion to [SPRITE] at x [X] y [Y] at [NUM]%",
+            hideFromPalette: sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "DISTORTION" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "distortSpriteImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] distortion to [SPRITE] at x [X] y [Y] at [NUM]%",
+            hideFromPalette: !sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "distortImageImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] distortion to [SPRITE] at x [X] y [Y] at [NUM]%",
+            hideFromPalette: sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           { blockType: Scratch.BlockType.LABEL, text: "Formatting" },
@@ -315,10 +319,7 @@
             hideFromPalette: !sprite,
             arguments: {
               OUTLINE: { type: Scratch.ArgumentType.STRING, menu: "OUTLINES" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
             },
@@ -330,10 +331,7 @@
             hideFromPalette: sprite,
             arguments: {
               OUTLINE: { type: Scratch.ArgumentType.STRING, menu: "OUTLINES" },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5
-              },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
             },
@@ -346,18 +344,9 @@
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -368,18 +357,35 @@
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              X: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              Y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              }
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "applySpriteLight",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "add lighting to [SPRITE] tinted [COLOR] at x [X] y [Y] at [NUM]%",
+            hideFromPalette: !sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          {
+            opcode: "applyImageLight",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "add lighting to [SPRITE] tinted [COLOR] at x [X] y [Y] at [NUM]%",
+            hideFromPalette: sprite,
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           "---",
@@ -389,7 +395,7 @@
             text: "mask [TYPE] [SPRITE2] from [SPRITE]",
             hideFromPalette: !sprite,
             arguments: {
-              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
               SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "MASKING" }
             },
@@ -410,14 +416,8 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set mask x [x] y [y]",
             arguments: {
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -425,10 +425,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set mask size to [SIZE]%",
             arguments: {
-              SIZE: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              }
+              SIZE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             },
           },
           {
@@ -448,14 +445,8 @@
             hideFromPalette: !sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -465,14 +456,8 @@
             hideFromPalette: sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -482,10 +467,7 @@
             hideFromPalette: !sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              DIR: {
-                type: Scratch.ArgumentType.ANGLE,
-                defaultValue: 90
-              }
+              DIR: { type: Scratch.ArgumentType.NUMBER, defaultValue: 90 }
             },
           },
           {
@@ -495,10 +477,7 @@
             hideFromPalette: sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              DIR: {
-                type: Scratch.ArgumentType.ANGLE,
-                defaultValue: 90
-              }
+              DIR: { type: Scratch.ArgumentType.NUMBER, defaultValue: 90 }
             },
           },
           {
@@ -508,14 +487,8 @@
             hideFromPalette: !sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             },
           },
           {
@@ -525,14 +498,8 @@
             hideFromPalette: sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             },
           },
           {
@@ -542,14 +509,8 @@
             hideFromPalette: !sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -559,21 +520,15 @@
             hideFromPalette: sprite,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, defaultValue: "data URI or <svg content>" },
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           { blockType: Scratch.BlockType.LABEL, text: "Canvas Filters" },
           {
             func: "filterWarn",
             blockType: Scratch.BlockType.BUTTON,
-            text: "Canvas Filter Warnings"
+            text: "Canvas Filter Disclaimer"
           },
           {
             opcode: "addCanvasFilter",
@@ -582,7 +537,7 @@
             arguments: {
               FILTER: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "put a filter block/ here"
+                defaultValue: "insert sprite/custom filter"
               },
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -608,7 +563,8 @@
           }
         ],
         menus: {
-          TARGETS: { acceptReporters: true, items: "_getTargets" },
+          TARGETS: { acceptReporters: true, items: this.getTargets(false) },
+          TARGETS2: { acceptReporters: true, items: this.getTargets(true) },
           EFFECTS: {
             acceptReporters: true,
             items: [
@@ -632,24 +588,32 @@
               "grain"
             ],
           },
+          DISTORTION: {
+            acceptReporters: true,
+            items: ["bulge", "whirl", "ripple"]
+          },
           maskATTs: {
             acceptReporters: false,
             items: [
-              { "text" : "x position", "value" : "0" },
-              { "text" : "y position", "value" : "1" },
-              { "text" : "size", "value" : "2" }
+              {"text":"x position", "value":"0"},
+              {"text":"y position", "value":"1"},
+              {"text":"size", "value":"2"}
             ]
           },
           OUTLINES: { acceptReporters: true, items: ["filled", "solid"] },
           AXISES: { acceptReporters: false, items: ["x axis", "y axis", "both axes"] },
-          SPLITTING: { acceptReporters: true, items: ["color split", "abberation"] },
+          SPLITTING: { acceptReporters: true, items: ["color split", "abberation", "chromatic aberration"] },
           MASKING: {
             acceptReporters: false,
             items: [{"text":"erase", "value":"out"}, {"text":"overlay", "value":" "}]
           },
           BLENDING: {
             acceptReporters: true,
-            items: ["normal", "multiply", "screen", "overlay"]
+            items: [
+              "normal", "multiply", "screen",
+              "overlay", "exclusion",
+              "color-dodge", "color-burn"
+            ]
           }
         },
       };
@@ -657,58 +621,74 @@
 
     sourceSwitch() { sprite = sprite ? false : true, Scratch.vm.extensionManager.refreshBlocks() }
     filterWarn() {
-      alert(`Unfortunately, not ALL effects (especially the Formatting Blocks) will work on the Canvas...
-        \nDO NOT USE MASKING on the Canvas, masking is not built for a Canvas Element and will crash`);
+      alert(`Unfortunately, due to various limitations, not ALL effects (especially the Formatting Blocks) will work on the Canvas...
+        \nYou are welcome to experiment by making your own svg filters and using them on the canvas!`);
     }
 
-    setSpriteEffect(args) { return this.setMainEffect(args, false) }
+    setSpriteEffect(args, util) { return this.setMainEffect(args, false, util) }
     async setImageEffect(args) { return await this.setMainEffect(args, true) }
 
-    setSpriteMotion(args) { return this.motionBlur(args, false) }
+    applyCustomSprite(args, util) { return this.customFilter(args, false, util) }
+    async applyCustomImage(args) { return await this.customFilter(args, true) }
+
+    setSpriteMotion(args, util) { return this.motionBlur(args, false, util) }
     async setImageMotion(args) { return await this.motionBlur(args, true) }
 
-    setSpriteBlend(args) { return this.blendType(args, false) }
+    setSpriteBlend(args, util) { return this.blendType(args, false, util) }
     async setImageBlend(args) { return await this.blendType(args, true) }
 
-    hueSprite(args) { return this.setHue(args, false) }
+    hueSprite(args, util) { return this.setHue(args, false, util) }
     async hueImage(args) { return await this.setHue(args, true) }
 
-    spriteShadow(args) { return this.addShadow(args, false) }
+    spriteShadow(args, util) { return this.addShadow(args, false, util) }
     async imageShadow(args) { return await this.addShadow(args, true) }
 
-    outlineSprite(args) { return this.addOutline(args, false) }
+    outlineSprite(args, util) { return this.addOutline(args, false, util) }
     async outlineImage(args) { return await this.addOutline(args, true) }
 
-    splitSprite(args) { return this.colorSplit(args, false) }
+    splitSprite(args, util) { return this.colorSplit(args, false, util) }
     async splitImage(args) { return await this.colorSplit(args, true) }
 
-    waveSprite(args) { return this.waveEffect(args, false) }
+    waveSprite(args, util) { return this.waveEffect(args, false, util) }
     async waveImage(args) { return await this.waveEffect(args, true) }
 
-    bulgeSprite(args) { return this.setBulge(args, false) }
-    async bulgeImage(args) { return await this.setBulge(args, true) }
+    distortSprite(args, util) { return this.setDistort(args, false, false, util) }
+    async distortImage(args) { return await this.setDistort(args, true, false) }
+    distortSpriteImage(args, util) { return this.setDistort(args, false, true, util) }
+    async distortImageImage(args) { return await this.setDistort(args, true, true) }
 
-    glitchSprite(args) { return this.setGlitch(args, false) }
+    glitchSprite(args, util) { return this.setGlitch(args, false, util) }
     async glitchImage(args) { return await this.setGlitch(args, true) }
 
-    maskSprite(args) { return this.mask(args, false) }
+    tileSprite(args, util) { return this.addTile(args, false, util) }
+    async tileImage(args) { return await this.addTile(args, true) }
+
+    applySpriteLight(args, util) { return this.lighting(args, false, util) }
+    async applyImageLight(args) { return await this.lighting(args, true) }
+
+    maskSprite(args, util) { return this.mask(args, false, util) }
     async maskImage(args) { return await this.mask(args, true) }
 
-    setXY(args) { return this.setATT(args, false, 0) }
+    setXY(args, util) { return this.setATT(args, false, 0, util) }
     async setXY2(args) { return await this.setATT(args, true, 0) }
-    setDIR(args) { return this.setATT(args, false, 1) }
+    setDIR(args, util) { return this.setATT(args, false, 1, util) }
     async setDIR2(args) { return await this.setATT(args, true, 1) }
-    setSCALE(args) { return this.setATT(args, false, 2) }
+    setSCALE(args, util) { return this.setATT(args, false, 2, util) }
     async setSCALE2(args) { return await this.setATT(args, true, 2) }
-    setSKEW(args) { return this.setATT(args, false, 3) }
+    setSKEW(args, util) { return this.setATT(args, false, 3, util) }
     async setSKEW2(args) { return await this.setATT(args, true, 3) }
 
     setMaskXY(args) { maskOptions[0] = Scratch.Cast.toNumber(args.x); maskOptions[1] = Scratch.Cast.toNumber(args.y) * -1 }
     setMaskSZ(args) { maskOptions[2] = Scratch.Cast.toNumber(args.SIZE) }
     maskATT(args) { return maskOptions[args.ATT] }
 
-    async setMainEffect(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async setMainEffect(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         let filterElement;
         let amtIn = args.NUM;
@@ -722,16 +702,16 @@
             scaleFactor = amtIn / 100;
             filterElement = `<filter id="sepia"><feColorMatrix type="matrix" values="${0.393 * scaleFactor} ${0.769 * scaleFactor} ${0.189 * scaleFactor} 0 0 ${0.349 * scaleFactor} ${0.686 * scaleFactor} ${0.168 * scaleFactor} 0 0 ${0.272 * scaleFactor} ${0.534 * scaleFactor} ${0.131 * scaleFactor} 0 0 0 0 0 1 0"></feColorMatrix></filter>`;
             break;
-          case "contrast":
+          case "amplify":
             amtIn = amtIn + 100;
-            filterElement = `<filter id="contrast"><feComponentTransfer><feFuncR type="linear" slope="${amtIn / 100}"></feFuncR><feFuncG type="linear" slope="${amtIn / 100}"></feFuncG><feFuncB type="linear" slope="${amtIn / 100}"></feFuncB></feComponentTransfer></filter>`;
+            filterElement = `<filter id="amplify"><feComponentTransfer><feFuncR type="linear" slope="${amtIn / 100}"></feFuncR><feFuncG type="linear" slope="${amtIn / 100}"></feFuncG><feFuncB type="linear" slope="${amtIn / 100}"></feFuncB></feComponentTransfer></filter>`;
             break;
           case "inflate":
             filterElement = `<filter id="inflate"><feMorphology in="SourceGraphic" operator="dilate" radius="${Math.abs(amtIn / 10)}"></feMorphology></filter>`;
             break;
-          case "amplify":
+          case "contrast":
             amtIn = amtIn + 100;
-            filterElement = `<filter id="amplify"><feComponentTransfer><feFuncR type="gamma" exponent="${amtIn / 100}" amplitude="${amtIn / 100}" offset="0" /><feFuncG type="gamma" exponent="${amtIn / 100}" amplitude="${amtIn / 100}" offset="0" /><feFuncB type="gamma" exponent="${amtIn / 100}" amplitude="${amtIn / 100}" offset="0" /></feComponentTransfer></filter>`
+            filterElement = `<filter id="contrast"><feComponentTransfer><feFuncR type="gamma" exponent="${amtIn / 100}" amplitude="${amtIn / 100}" offset="0" /><feFuncG type="gamma" exponent="${amtIn / 100}" amplitude="${amtIn / 100}" offset="0" /><feFuncB type="gamma" exponent="${amtIn / 100}" amplitude="${amtIn / 100}" offset="0" /></feComponentTransfer></filter>`
             break;
           case "discrete":
             filterElement = `<filter id="discrete"><feComponentTransfer><feFuncR type="discrete" tableValues="0 ${amtIn / 100} 0 1"/><feFuncG type="discrete" tableValues="0 ${amtIn / 100} 0 1"/><feFuncB type="discrete" tableValues="0 ${amtIn / 100} 0 1"/><feFuncA type="discrete" tableValues="0 ${amtIn / 100} 0 1"/></feComponentTransfer></filter>`
@@ -784,8 +764,13 @@
       return svg;
     }
 
-    async motionBlur(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async motionBlur(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         const filterElement = `<filter id="motionBlur"><feGaussianBlur stdDeviation="${Math.abs(args.X)}, ${Math.abs(args.Y)}" in="SourceGraphic" result="BLUR"></feGaussianBlur></filter>`;
         return this.filterApplier(svg, filterElement, "motionBlur");
@@ -793,40 +778,63 @@
       return svg;
     }
 
-    async blendType(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async blendType(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
-        const filterElement = `<filter id="blend${args.BLEND}">
-          <feFlood result="floodFill" flood-color="black" />
-          <feBlend in="SourceGraphic" in2="SourceGraphic" mode="${args.BLEND}" /></filter>`;
-        return this.filterApplier(svg, filterElement, `blend${args.BLEND}`);
+        const filterElement = `<filter id="blend-${args.BLEND}"><feBlend in="SourceGraphic" in2="SourceGraphic" mode="${args.BLEND}" /></filter>`;
+        return this.filterApplier(svg, filterElement, `blend-${args.BLEND}`);
       }
       return svg;
     }
 
-    async setHue(args, isImage) {
+    async customFilter(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
+      if (svg) return this.filterApplier(svg, args.EFFECT, args.ID);
+      return svg;
+    }
+
+    async setHue(args, isImage, util) {
       let targetColorHex = args.COLOR;
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         targetColorHex = targetColorHex.replace(/^#/, "");
         const r = parseInt(targetColorHex.slice(0, 2), 16);
         const g = parseInt(targetColorHex.slice(2, 4), 16);
         const b = parseInt(targetColorHex.slice(4, 6), 16);
-        const filterValues = [
+        const filterMatrix = [
           r / 255, 0, 0, 0, 0,
           0, g / 255, 0, 0, 0,
           0, 0, b / 255, 0, 0,
           0, 0, 0, 1, 0
-        ];
-        const filterMatrix = filterValues.join(" ");
+        ].join(" ");
         const filterElement = `<filter id="hue"><feColorMatrix in="SourceGraphic" type="matrix" values="${filterMatrix}"></feColorMatrix></filter>`;
         return this.filterApplier(svg, filterElement, "hue");
       }
       return svg;
     }
 
-    async addShadow(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async addShadow(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         const rgbColor = this.hexToRgb(args.COLOR);
         const filterElement = `<filter id="shadow"><feDropShadow dx="${args.X}" dy="${args.Y * -1}" stdDeviation="${args.NUM / 2}" flood-color="rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})"/></filter>`;
@@ -835,33 +843,46 @@
       return svg;
     }
 
-    async addOutline(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async addOutline(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         let filterElement;
-        let amtIn = args.NUM;
         const rgbColor = this.hexToRgb(args.COLOR);
         let effect;
         if (args.OUTLINE === "filled") {
           effect = "filled-outline";
-          filterElement = `<filter id="filled-outline"><feMorphology operator="dilate" radius="${amtIn}" in="SourceAlpha" result="thickened" /><feComposite operator="over" in="SourceGraphic" in2="thickened" /><feFlood flood-color="rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})" result="flood"/><feComposite operator="in" in="flood" in2="thickened"/><feComposite operator="over" in="SourceGraphic" /></filter>`
+          filterElement = `<filter id="filled-outline"><feMorphology operator="dilate" radius="${args.NUM}" in="SourceAlpha" result="thickened" /><feComposite operator="over" in="SourceGraphic" in2="thickened" /><feFlood flood-color="rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})" result="flood"/><feComposite operator="in" in="flood" in2="thickened"/><feComposite operator="over" in="SourceGraphic" /></filter>`
         } else {
           effect = "outline";
-          filterElement = `<filter id="outline"><feMorphology operator="dilate" radius="${amtIn}" in="SourceAlpha" result="thickened" /><feComposite operator="over" in="SourceGraphic" in2="thickened" /><feFlood flood-color="rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})" result="flood"/><feComposite operator="in" in="flood" in2="thickened"/></filter>`;
+          filterElement = `<filter id="outline"><feMorphology operator="dilate" radius="${args.NUM}" in="SourceAlpha" result="thickened" /><feComposite operator="over" in="SourceGraphic" in2="thickened" /><feFlood flood-color="rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})" result="flood"/><feComposite operator="in" in="flood" in2="thickened"/></filter>`;
         }
         return this.filterApplier(svg, filterElement, effect);
       }
       return svg;
     }
 
-    async colorSplit(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async colorSplit(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         let filterElement;
         let effect;
         if (args.EFFECT.includes("color")) {
           effect = "color-split";
           filterElement = `<filter id="color-split"><feFlood flood-color="${args.COLOR1}" flood-opacity="0.5" result="RED"/><feFlood flood-color="${args.COLOR2}" flood-opacity="0.5" result="GREEN"/><feFlood flood-color="${args.COLOR3}" flood-opacity="0.5" result="BLUE"/><feComposite operator="in" in="RED" in2="SourceAlpha" result="RED"/><feComposite operator="in" in="GREEN" in2="SourceAlpha" result="GREEN"/><feComposite operator="in" in="BLUE" in2="SourceAlpha" result="BLUE"/><feOffset in="RED" dx="${args.X * -1}" dy="${args.Y}" result="RED_OFF"/><feOffset in="GREEN" dx="${args.X}" dy="${args.Y * -1}" result="GREEN_OFF"/><feOffset in="BLUE" dx="0" dy="0" result="BLUE_OFF"/><feBlend mode="screen" in="RED_OFF" in2="GREEN_OFF" result="RG"/><feBlend mode="screen" in="RG" in2="BLUE_OFF" result="FINAL_RESULT"/></filter>`;
+        } else if (args.EFFECT.includes("chromatic")) {
+          const colors = [this.hexToHs(args.COLOR1), this.hexToHs(args.COLOR2)];
+          effect = "chromatic-abberation";
+          filterElement = `<filter id="chromatic-abberation"><feOffset in="SourceGraphic" dx="${args.X}" dy="${args.Y}" result="layer-one" /><feComponentTransfer in="layer-one" result="customColor1"><feFuncR type="table" tableValues="${colors[0].h}, ${colors[0].s}, 1" /><feFuncG type="discrete" tableValues="0" /><feFuncB type="discrete" tableValues="0" /></feComponentTransfer><feOffset in="SourceGraphic" dx="${args.X * -1}" dy="${args.Y * -1}" result="layer-two" /><feComponentTransfer in="layer-two" result="customColor2"><feFuncR type="discrete" tableValues="0" /><feFuncG type="identity" /><feFuncB type="table" tableValues="${colors[1].h}, ${colors[1].s}, 1" /></feComponentTransfer><feBlend in="customColor1" in2="customColor2" mode="screen" result="color-split" /></filter>`;
         } else {
           effect = "abberation";
           filterElement = `<filter id="abberation"><feFlood flood-color="${args.COLOR1}" flood-opacity="0.5" result="RED"/><feFlood flood-color="${args.COLOR2}" flood-opacity="0.5" result="GREEN"/><feComposite operator="in" in="SourceGraphic" in2="SourceAlpha" result="BLUE" /><feComposite operator="in" in="RED" in2="SourceAlpha" result="RED"/><feComposite operator="in" in="GREEN" in2="SourceAlpha" result="GREEN"/><feComposite operator="in" in="BLUE" in2="SourceAlpha" result="BLUE"/><feOffset in="RED" dx="${args.X * -1}" dy="${args.Y}" result="RED_OFF"/><feOffset in="GREEN" dx="${args.X}" dy="${args.Y * -1}" result="GREEN_OFF"/><feOffset in="BLUE" dx="0" dy="0" result="BLUE_OFF"/><feBlend mode="screen" in="RED_OFF" in2="GREEN_OFF" result="RG"/><feBlend mode="screen" in="RG" in2="BLUE_OFF" result="FINAL_RESULT"/><feComposite operator="over" in="SourceGraphic" in2="FINAL_RESULT" /></filter>`;
@@ -871,61 +892,146 @@
       return svg;
     }
 
-    async waveEffect(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async waveEffect(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         const ChannelSelector = [args.axis === "x axis" ? "A" : "R", args.axis === "y axis" ? "A" : "G"];
-        const filterElement = `<filter id="wave"><feTurbulence type="fractalNoise" baseFrequency="${args.NUM / 100}" numOctaves="2" seed="${args.SEED}" result="turbulence" /><feDisplacementMap in="SourceGraphic" in2="turbulence" scale="25" xChannelSelector="${ChannelSelector[0]}" yChannelSelector="${ChannelSelector[1]}" /></filter>`;
+        const filterElement = `<filter id="wave"><feTurbulence type="fractalNoise" baseFrequency="${args.Y / 100}, ${args.NUM / 100}" numOctaves="2" seed="${args.SEED}" result="turbulence" /><feDisplacementMap in="SourceGraphic" in2="turbulence" scale="25" xChannelSelector="${ChannelSelector[0]}" yChannelSelector="${ChannelSelector[1]}" /></filter>`;
         return this.filterApplier(svg, filterElement, "wave");
       }
       return svg;
     }
 
-    async setBulge(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async addTile(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
-        //fix centering
-        const filterElement = `<filter id="bulge" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">
-          <feOffset dx="${args.NUM / -2}" dy="${args.NUM / -2}" x="0%" y="0%" width="100%" height="100%" in="displacementMap" result="offset"/>
-          <feImage xlink:href="https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code-assets/SE-bulge.png" x="${66 + args.X}" y="${66 - args.Y}" width="500" height="500" preserveAspectRatio="xMidYMid meet" crossOrigin="anonymous" result="image"/>
-          <feDisplacementMap in="offset" in2="image" scale="${args.NUM}" xChannelSelector="R" yChannelSelector="B" x="0%" y="0%" width="100%" height="100%" result="displacementMap"/>
-          </filter>`;
-        return this.filterApplier(svg, filterElement, "bulge");
+        let atts = [/width="([^"]*)"/.exec(svg), /height="([^"]*)"/.exec(svg)];
+        atts = [
+          Scratch.Cast.toNumber(atts[0] ? parseFloat(atts[0][1]) : 100),
+          Scratch.Cast.toNumber(atts[1] ? parseFloat(atts[1][1]) : 100)
+        ];
+        const amts = [Math.abs(100 - Scratch.Cast.toNumber(args.NUM)), Scratch.Cast.toNumber(args.x), Scratch.Cast.toNumber(args.y)];
+         const filterElement =
+         `<filter id="tile"><feImage x="${amts[1]}" y="${amts[2]}" width="${amts[0]}%" height="${amts[0]}%" xlink:href="${await this.svgToBitmap(svg, atts[0], atts[1])}"/><feTile /></filter>`;
+        return this.filterApplier(svg, filterElement, "tile");
       }
       return svg;
     }
 
-    async setGlitch(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async lighting(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
+        const widthMatch = /width="([^"]*)"/.exec(svg);
+        const heightMatch = /height="([^"]*)"/.exec(svg);
+        const pos = [
+          Scratch.Cast.toNumber(args.X) + Scratch.Cast.toNumber(widthMatch ? parseFloat(widthMatch[1]) / 2 : parseFloat(Scratch.renderer.canvas.style.width) / 2),
+          (Scratch.Cast.toNumber(args.Y) * -1) + Scratch.Cast.toNumber(heightMatch ? parseFloat(heightMatch[1]) / 2 : parseFloat(Scratch.renderer.canvas.style.height) / 2)
+        ];
+        const filterElement = `<filter id="lighting"><feSpecularLighting result="specOut" specularExponent="20" lighting-color="${args.COLOR}"><fePointLight x="${pos[0]}" y="${pos[1]}" z="${Scratch.Cast.toNumber(args.NUM)}" /></feSpecularLighting><feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" /></filter>`;
+        return this.filterApplier(svg, filterElement, "lighting");
+      }
+      return svg;
+    }
+
+    async setDistort(args, isImage, override, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
+      if (svg) {
+        let source;
+        if (override) {
+          source = args.EFFECT.includes("data:image/") ? args.EFFECT : `data:image/svg+xml;base64,${btoa(args.EFFECT)}`;
+        } else {
+          source = args.EFFECT === "bulge" ? 0 : args.EFFECT === "whirl" ? 1 : 2;
+        }
+        const mul = args.SPRITE === "_canvas_" ? 2 : 1;
+        const amts = [Scratch.Cast.toNumber(args.NUM), Scratch.Cast.toNumber(args.X), Scratch.Cast.toNumber(args.Y)];
+        if (!displacementSrCs[2] && !override) await this.getSources();
+        const scaleFactor = (amts[0] * 1.5).toFixed(2);
+        let tableValue = [100 + 2 * (100 - amts[0]) / 2];
+        tableValue[1] = (100 - tableValue[0]) / 2;
+        const filterElement =`<filter id="${override ? "customDistort" : args.EFFECT}" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <feImage id="dMapS" xlink:href="${override ? source : displacementSrCs[source]}" x="${(tableValue[1] + amts[1]) * mul}%" y="${(tableValue[1] - amts[2]) * mul}%" width="${tableValue[0] * mul}%" height="${tableValue[0] * mul}%" result="distortImg" />
+        <feDisplacementMap id="dMapRes" xChannelSelector="R" yChannelSelector="G" in="SourceGraphic" in2="distortImg" result="displacementMap" color-interpolation-filters="sRGB" scale="${amts[0]}" /><feComposite operator="in" in2="distortImg"></feComposite>
+        ${amts[0] < 0 && args.EFFECT !== "ripple" ? "" : `<feComposite operator="over" in2="SourceGraphic"></feComposite>`}</filter>`;
+        return this.filterApplier(svg, filterElement, override ? "customDistort" : args.EFFECT);
+      }
+      return svg;
+    }
+
+    async setGlitch(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
+      if (svg) {
+        const mul = args.SPRITE === "_canvas_" ? [1000, args.NUM * 10] : [200, args.NUM];
+        const axis = args.axis === "x axis" ? 1 : args.axis === "y axis" ? 2 : 3;
         const filterElement = `<filter id="glitch"><feOffset in="SourceGraphic" dx="${args.X}" dy="${args.Y}" result="off1b"/><feOffset in="SourceGraphic" dx="-${args.X}" dy="${args.Y}" result="off2b"/>
-          <feMerge ${args.axis.includes("x") ? `x="-50%" y="${Math.random() * 100}%"` : args.axis.includes("y") ? `x="${Math.random() * 100}%" y="-50%"` : `x="${Math.random() * 100}%" y="${Math.random() * 100}%"`}
-            width="${args.axis.includes("x") || args.axis === "both axes" ? "200%" : args.NUM + "%"}" height="${args.axis.includes("y") || args.axis === "both axes" ? "200%" : args.NUM + "%"}" result="merge1">
+          <feMerge ${axis === 1 ? `x="-50%" y="${Math.random() * 100}%"` : axis === 2 ? `x="${Math.random() * 100}%" y="-50%"` : `x="${Math.random() * 100}%" y="${Math.random() * 100}%"`}
+            width="${axis === 1 || axis === 3 ? `${mul[0]}%` : mul[1] + "%"}" height="${axis > 1 ? `${mul[0]}%` : mul[1] + "%"}" result="merge1">
             <feMergeNode in="SourceGraphic" /><feMergeNode in="off1b" /></feMerge><feColorMatrix in="merge1" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${Math.random() * 0.5 + 0.5} 0" result="tinted1"/>
-          <feMerge ${args.axis.includes("x") ? `x="-50%" y="${Math.random() * 100}%"` : args.axis.includes("y") ? `x="${Math.random() * 100}%" y="-50%"` : `x="${Math.random() * 100}%" y="${Math.random() * 100}%"`} 
-            width="${args.axis.includes("x") || args.axis === "both axes" ? "200%" : args.NUM + "%"}" height="${args.axis.includes("y") || args.axis === "both axes" ? "200%" : args.NUM + "%"}" result="merge2">
+          <feMerge ${axis === 1 ? `x="-50%" y="${Math.random() * 100}%"` : axis === 2 ? `x="${Math.random() * 100}%" y="-50%"` : `x="${Math.random() * 100}%" y="${Math.random() * 100}%"`} 
+            width="${axis === 1 || axis === 3 ? `${mul[0]}%` : mul[1] + "%"}" height="${axis > 1 ? `${mul[0]}%` : mul[1] + "%"}" result="merge2">
             <feMergeNode in="SourceGraphic" /><feMergeNode in="off2b" /></feMerge><feColorMatrix in="merge2" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${Math.random() * 0.5 + 0.5} 0" result="tinted2"/>
           <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="tinted1" /><feMergeNode in="tinted2" /></feMerge></filter>`;
-	      return this.filterApplier(svg, filterElement, "glitch");
+        return this.filterApplier(svg, filterElement, "glitch");
       }
       return svg;
     }
 
-    async mask(args, isImage) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
-      let svg2 = isImage ? await this.getImage(args.SPRITE2) : await this.getSVG(args.SPRITE2);
+    async mask(args, isImage, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
+      if (args.SPRITE === args.SPRITE2) return svg; // do nothing if youre masking yourself
+      let svg2;
+      if (args.SPRITE2 === "_myself_") {
+        svg2 = await this.findAsset(util);
+      } else {
+        svg2 = isImage ? await this.getImage(args.SPRITE2) : await this.getSVG(args.SPRITE2);
+      }
+      const multiply = args.SPRITE === "_canvas_" ? [parseFloat(Scratch.renderer.canvas.style.width), parseFloat(Scratch.renderer.canvas.style.height)] : [100, 100];
       if (svg && svg2) {
         const name = args.TYPE === " " ? "maskOver" : "maskRemove";
-        const filterElement = `<filter id="${name}" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">
+        const filterElement = `<filter id="${name}">
         	<feImage xlink:href="${`data:image/svg+xml;base64,${btoa(svg2)}`}" x="${maskOptions[0]}" y="${maskOptions[1]}" width="${maskOptions[2]}%" height="${maskOptions[2]}%" preserveAspectRatio="xMidYMid meet" crossOrigin="anonymous" result="image1"/>
-        	<feComposite in="${args.TYPE !== " " ? "SourceGraphic" : "image1"}" in2="${args.TYPE !== " " ? "image1" : "SourceGraphic"}" operator="${args.TYPE}" x="0%" y="0%" width="100%" height="100%" result="composite1"/></filter>`;
-	      return this.filterApplier(svg, filterElement, name);
+        	<feComposite in="${args.TYPE !== " " ? "SourceGraphic" : "image1"}" in2="${args.TYPE !== " " ? "image1" : "SourceGraphic"}" operator="${args.TYPE}" x="0%" y="0%" width="${multiply[0]}%" height="${multiply[1]}%" result="composite1"/></filter>`;
+        return this.filterApplier(svg, filterElement, name);
       }
       return svg;
     }
 
-    async setATT(args, isImage, type) {
-      let svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+    async setATT(args, isImage, type, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") {
+        svg = await this.findAsset(util);
+      } else {
+        svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      }
       if (svg) {
         // Note: We Do Not Check if Translate Exists Since We Override it
         let transform = "";
@@ -942,7 +1048,7 @@
         const y = Scratch.Cast.toNumber(args.y ? args.y : 0) / 100;
         if (type === 0) {
           const newPos = [currentX + (x * 100), currentY + (y * -100)];
-          return svg.replace(/translate\([^\)]*\)/, `translate(${newPos[0]},${newPos[1]})`);
+          return svg.replace(/translate\([^)]*\)/, `translate(${newPos[0]},${newPos[1]})`);
         } else if (type === 1) {
           if (svg.includes("style=\"transform-origin: center; transform:")) {
             svg = svg.replace(/(style="[^"]*transform:[^"]*)/, `$1 rotate(${Scratch.Cast.toNumber(args.DIR) - 90}deg)`);
@@ -982,10 +1088,13 @@
           filterExists.innerHTML = match[1];
           return;
         }
+        const svgFilterOuter = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgFilterOuter.id = `SP-canvas-${filterID}`;
         const svgFilter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
         svgFilter.id = filterID;
         svgFilter.innerHTML = match[1];
-        document.body.appendChild(svgFilter);
+        svgFilterOuter.appendChild(svgFilter);
+        document.body.appendChild(svgFilterOuter);
         allFilters.push(filterID);
         const existingFilter = Scratch.renderer.canvas.parentNode.parentNode.parentNode.style.filter;
         const filterString = existingFilter ? `${existingFilter} url(#${filterID})` : `url(#${filterID})`;
@@ -1002,7 +1111,7 @@
         canvas.style.filter = canvas.style.filter.replace(`url(#${args.NAME})`, "").trim();
         const array = canvas.style.filter.split(" ");
         if (array.length === 1 && canvas.style.filter.includes(args.NAME)) canvas.style.filter = "";
-        const filterSel = document.getElementById(args.NAME);
+        const filterSel = document.getElementById(`SP-canvas-${args.NAME}`);
         if (filterSel) {
           document.body.removeChild(filterSel);
           allFilters.splice(allFilters.indexOf(args.NAME), 1);
@@ -1014,7 +1123,7 @@
 
     removeAllFilters(args) {
       for (let i = 0; i < allFilters.length; i++) {
-        const filterSel = document.getElementById(allFilters[i]);
+        const filterSel = document.getElementById(`SP-canvas-${allFilters[i]}`);
         if (filterSel) document.body.removeChild(filterSel);
       }
       Scratch.renderer.canvas.parentNode.parentNode.parentNode.style.filter = "";
@@ -1022,8 +1131,9 @@
     }
 
     async getSVG(targetArgs) {
-      const target = targetArgs === "Stage" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(targetArgs);
-      if (!target) return "";
+      const target = targetArgs === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(targetArgs);
+      if (!target) return "<>";
+      if (!requireNonPackagedRuntime()) return "<>";
       const costume = target.getCostumes()[target.currentCostume];
       //if bitmap, convert to svg
       if (costume.dataFormat === "png") {
@@ -1035,7 +1145,8 @@
 
     async getImage(image) {
       if (image.startsWith("data:image/")) {
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
+          // eslint-disable-next-line
           const img = new Image();
           img.onload = () => {
             const width = img.width;
@@ -1057,13 +1168,46 @@
       }
     }
 
-    _getTargets() {
-      const spriteNames = [];
-      const targets = Scratch.vm.runtime.targets;
-      for (let index = 0; index < targets.length; index++) {
-        const target = targets[index];
-        if (target.isOriginal) spriteNames.push(target.getName());
+    async findAsset(util) {
+      const currentCostume = util.target.currentCostume;
+      let myAsset = util.target.sprite.costumes;
+      myAsset = myAsset[currentCostume];
+      //if bitmap, convert to svg
+      if (myAsset.dataFormat === "png") {
+        return await this.getImage(myAsset.asset.encodeDataURI());
+      } else {
+        return myAsset.asset.decodeText();
       }
+    }
+
+    async svgToBitmap(svg, width, height) {
+      return await new Promise((resolve) => {
+        // eslint-disable-next-line
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUri = canvas.toDataURL();
+          resolve(dataUri);
+        };
+        img.onerror = (error) => { resolve("Invalid Image") };
+        img.src = `data:image/svg+xml;base64,${btoa(svg)}`;
+      });
+    }
+
+    getTargets(includeCanvas) {
+      const spriteNames = [];
+      spriteNames.push({ text : "myself", value: "_myself_" });
+      const targets = Scratch.vm.runtime.targets;
+      for (let index = 1; index < targets.length; index++) {
+        const target = targets[index];
+        if (target.isOriginal) spriteNames.push({ text : target.getName(), value : target.getName() });
+      }
+      spriteNames.push({ text : "Stage", value: "_stage_" });
+      if (includeCanvas) spriteNames.push({ text : "Canvas", value: "_canvas_" });
       return spriteNames.length > 0 ? spriteNames : [""];
     }
 
@@ -1073,13 +1217,42 @@
       return {"r" : (bigint >> 16) & 255, "g" :(bigint >> 8) & 255, "b" : bigint & 255};
     }
 
+    hexToHs(hex) {
+      hex = hex.replace(/^#/, "");
+      const bigint = parseInt(hex, 16);
+      const r = ((bigint >> 16) & 255) / 255;
+      const g = ((bigint >> 8) & 255) / 255;
+      const b = (bigint & 255) / 255;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let delta = max - min;
+      let h = 0;
+      if (delta !== 0) {
+        switch (max) {
+          case r:
+            h = ((g - b) / delta + (g < b ? 6 : 0)) / 6;
+            break;
+          case g:
+            h = ((b - r) / delta + 2) / 6;
+            break;
+          case b:
+            h = ((r - g) / delta + 4) / 6;
+            break;
+        }
+      }
+      const s = max === 0 ? 0 : delta / max;
+      return { h: Math.round(h * 360) / 100, s: Math.round(s * 50) / 100 };
+    }
+
     filterApplier(svg, filter, name) {
-      filterNameOffset++;
+      nameOffset++;
+      if (nameOffset > 100) nameOffset = 0;
       let svgTag = svg.indexOf(">");
       if (svgTag !== -1) {
         let url = `filter="url(#${name})"`;
         if (svg.includes("filter=\"url(")) {
-          const regex = /filter="url\(\#[^"]+\)"/g;
+          const regex = /filter="url\([^"]+\)"/g;
           const existingFilters = svg.match(regex);
           if (existingFilters) {
             const filterString = existingFilters.join(" ").slice(0, -1);
@@ -1089,14 +1262,17 @@
         }
         svgTag = svg.indexOf(">");
         const appliedSVG = `${svg.substring(0, svgTag)} ${url}>${filter.slice(0, -1)}${svg.slice(svgTag)}`;
-        return appliedSVG.replaceAll(name, `${name}${filterNameOffset}`);
+        // replace needs to be repeated twice to avoid the new name being used in other namespaces
+        return appliedSVG.replace(`#${name})`, `#${name}${nameOffset})`).replace(`"${name}"`, `"${name}${nameOffset}"`);
       }
       return svg;
     }
 
     async getSources() {
       // we shouldnt ask for permission since its for a trusted, static function
+      // I could hardcode this in, but Id rather not have it take up file space :/
       const link = "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-sourceFeed/";
+      /* eslint-disable */
       try {
         displacementSrCs = [
           await (await fetch(link + "SE-bulge.txt")).text(),
@@ -1104,6 +1280,7 @@
           await (await fetch(link + "SE-ripple.txt")).text(),
         ];
       } catch (error) { console.error("Error fetching resources: ", error) }
+      /* eslint-enable */
     }
   }
 
