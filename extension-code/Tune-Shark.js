@@ -554,7 +554,6 @@
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
-          if (audio.currentTime !== args.START_TIME && audio.currentTime !== 0) this.checkOverlap(args);
           audio.currentTime = START_TIME;
           audio.play();
         });
