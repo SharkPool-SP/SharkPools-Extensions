@@ -1,17 +1,16 @@
-/*
-* This Extension was made by SharkPool (Version 2.2.1)
-* Credit to HOME for the song "Resonance" being used as the default audio link
-* Credit to LilyMakesThings for some block Ideas
-* Do Not Delete this Comment
-*/
+// Name: Tune Shark
+// ID: SPtuneShark
+// Description: Advanced Sound Engine, inspired by LilyMakesThings
+// By: SharkPool
+
+// Version V.2.3.0
+// Credit to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
   "use strict";
 
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error("Tune Shark extension must be run unsandboxed");
-  }
-  
+  if (!Scratch.extensions.unsandboxed) throw new Error("Tune Shark extension must be run unsandboxed");
+
   let enableBlock = true;
 
   const menuIconURI =
@@ -29,17 +28,19 @@
   class SPtuneShark {
     constructor() {
       this.sounds = {};
+      this.overlappables = {};
     }
-
     getInfo() {
       return {
         id: "SPtuneShark",
         name: "Tune Shark",
-	color1: "#848484",
-	menuIconURI,
-	blockIconURI,
-	blocks: [
-	  {
+        color1: "#848484",
+        color2: "#676767",
+        color3: "#4e4e4e",
+        menuIconURI,
+        blockIconURI,
+        blocks: [
+          {
             opcode: "importSound",
             blockType: Scratch.BlockType.COMMAND,
             text: "import sound from URL/URI [URL] named [NAME]",
@@ -47,19 +48,19 @@
             arguments: {
               URL: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "https://tinyurl.com/Resonance-Home",
+                defaultValue: "https://tinyurl.com/Resonance-Home"
               },
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
             func: "enableTest",
             blockType: Scratch.BlockType.BUTTON,
             text: "Enable Sprite Sound Block",
-            hideFromPalette: !enableBlock,
+            hideFromPalette: !enableBlock
           },
           {
             opcode: "importMenuSound",
@@ -68,13 +69,11 @@
             blockIconURI: settingsIconURI,
             hideFromPalette: enableBlock,
             arguments: {
-              SOUND: {
-                type: Scratch.ArgumentType.SOUND,
-              },
+              SOUND: { type: Scratch.ArgumentType.SOUND },
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
@@ -84,18 +83,15 @@
             arguments: {
               INPUT_NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               OUTPUT_NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound2",
-              },
+                defaultValue: "MySound2"
+              }
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Audio Playback",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Audio Playback" },
           {
             opcode: "playSound",
             blockType: Scratch.BlockType.COMMAND,
@@ -103,8 +99,8 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
@@ -114,12 +110,41 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               START_TIME: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
+              }
+            },
+          },
+          {
+            opcode: "startAndStop", // depreciated block
+            blockType: Scratch.BlockType.COMMAND,
+            text: "play sound [NAME] and stop at [MAX] seconds",
+            hideFromPalette: true,
+            arguments: {
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" },
+              MAX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 }
+            }
+          },
+          {
+            opcode: "lateStartAndStop",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "start sound [NAME] at time [START_TIME] and stop at [MAX] seconds",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "MySound"
               },
+              START_TIME: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              },
+              MAX: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 2
+              }
             },
           },
           {
@@ -129,8 +154,8 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
@@ -140,45 +165,11 @@
             arguments: {
               CONTROL: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "control",
-                defaultValue: "play",
-              },
+                menu: "control"
+              }
             },
           },
-          {
-            opcode: "startAndStop",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "play sound [NAME] and stop at [MAX] seconds",
-            arguments: {
-              NAME: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
-              MAX: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 2,
-              },
-            },
-          },
-          {
-            opcode: "lateStartAndStop",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "start sound [NAME] at time [START_TIME] and stop at [MAX] seconds",
-            arguments: {
-              NAME: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
-              START_TIME: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
-              MAX: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 2,
-              },
-            },
-          },
+          "---",
           {
             opcode: "pauseUnpauseSound",
             blockType: Scratch.BlockType.COMMAND,
@@ -186,13 +177,12 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               PAUSE_UNPAUSE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "pauseUnpauseMenu",
-                defaultValue: "pause",
-              },
+                menu: "pauseUnpauseMenu"
+              }
             },
           },
           {
@@ -202,15 +192,11 @@
             arguments: {
               PAUSE_UNPAUSE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "pauseUnpauseMenu",
-                defaultValue: "pause",
-              },
+                menu: "pauseUnpauseMenu"
+              }
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Audio Effects",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Audio Effects" },
           {
             opcode: "setSoundVolume",
             blockType: Scratch.BlockType.COMMAND,
@@ -218,12 +204,12 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               VOLUME: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100,
-              },
+                defaultValue: 100
+              }
             },
           },
           {
@@ -233,12 +219,12 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               SPEED: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1.0,
-              },
+                defaultValue: 1.0
+              }
             },
           },
           {
@@ -248,18 +234,15 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               PITCH: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1.0,
-              },
+                defaultValue: 1.0
+              }
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Audio Operations",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Audio Operations" },
           {
             opcode: "toggleLoopSound",
             blockType: Scratch.BlockType.COMMAND,
@@ -268,15 +251,31 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               LOOP_STATE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "loopMenu",
-                defaultValue: "loopable",
-              },
+                menu: "loopMenu"
+              }
             },
           },
+          {
+            opcode: "toggleOverlap",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "toggle sound [NAME] overlapping [OVERLAP]",
+            blockIconURI: settingsIconURI,
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "MySound"
+              },
+              OVERLAP: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "overlapMenu",
+              }
+            },
+          },
+          "---",
           {
             opcode: "soundProperty",
             blockType: Scratch.BlockType.REPORTER,
@@ -285,13 +284,12 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               PROPERTY: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "soundProperties",
-                defaultValue: "length",
-              },
+                menu: "soundProperties"
+              }
             },
           },
           {
@@ -302,8 +300,8 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
@@ -314,17 +312,15 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               TIME: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
+                defaultValue: 0
+              }
             },
           },
-          
           "---",
-
           {
             opcode: "returnInfo",
             blockType: Scratch.BlockType.REPORTER,
@@ -333,8 +329,8 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
@@ -345,13 +341,12 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
+                defaultValue: "MySound"
               },
               CONTROL: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "control2",
-                defaultValue: "exists?",
-              },
+                menu: "control2"
+              }
             },
           },
           {
@@ -359,7 +354,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "all sounds",
             disableMonitor: true,
-            blockIconURI: settingsIconURI,
+            blockIconURI: settingsIconURI
           },
           {
             opcode: "deleteSound",
@@ -369,20 +364,17 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "MySound",
-              },
+                defaultValue: "MySound"
+              }
             },
           },
           {
             opcode: "deleteAllSounds",
             blockType: Scratch.BlockType.COMMAND,
             text: "delete all sounds",
-            blockIconURI: settingsIconURI,
+            blockIconURI: settingsIconURI
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Array Sound Grouping",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Array Sound Grouping" },
           {
             opcode: "playSounds",
             blockType: Scratch.BlockType.COMMAND,
@@ -391,8 +383,8 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
-              },
+                defaultValue: "[\"MySound\", \"MySound2\"]"
+              }
             },
           },
           {
@@ -403,12 +395,12 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
+                defaultValue: "[\"MySound\", \"MySound2\"]"
               },
               START_TIME: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
+                defaultValue: 0
+              }
             },
           },
           {
@@ -419,8 +411,8 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
-              },
+                defaultValue: "[\"MySound\", \"MySound2\"]"
+              }
             },
           },
           {
@@ -431,19 +423,15 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
+                defaultValue: "[\"MySound\", \"MySound2\"]"
               },
               PAUSE_UNPAUSE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "pauseUnpauseMenu",
-                defaultValue: "pause",
-              },
+                menu: "pauseUnpauseMenu"
+              }
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Group Effects",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Group Effects" },
           {
             opcode: "setSoundsVolume",
             blockType: Scratch.BlockType.COMMAND,
@@ -452,12 +440,12 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
+                defaultValue: "[\"MySound\", \"MySound2\"]"
               },
               VOLUME: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100,
-              },
+                defaultValue: 100
+              }
             },
           },
           {
@@ -468,12 +456,12 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
+                defaultValue: "[\"MySound\", \"MySound2\"]"
               },
               SPEED: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1.0,
-              },
+                defaultValue: 1.0
+              }
             },
           },
           {
@@ -484,12 +472,12 @@
             arguments: {
               NAMES: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"MySound\", \"MySound2\"]",
+                defaultValue: "[\"MySound\", \"MySound2\"]"
               },
               PITCH: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1.0,
-              },
+                defaultValue: 1.0
+              }
             },
           }
         ],
@@ -497,18 +485,12 @@
           pauseUnpauseMenu: ["pause", "unpause"],
           soundProperties: {
             acceptReporters: true,
-            items: [
-              "length",
-              "volume",
-              "speed",
-              "pitch",
-              "paused?",
-              "looping?"
-            ],
+            items: ["length", "volume", "speed", "pitch", "paused?", "looping?"]
           },
           loopMenu: ["loopable", "unloopable"],
           control: ["play", "stop"],
           control2: ["exists?", "playing?"],
+          overlapMenu: ["on", "off"]
         },
       };
     }
@@ -525,9 +507,8 @@
     }
     
     importSound(args) {
-      const { URL, NAME } = args;
-      const audio = new Audio(URL);
-      this.sounds[NAME] = [audio];
+      const audio = new Audio(args.URL);
+      this.sounds[args.NAME] = [audio];
     }
 
     importMenuSound(args, util) {
@@ -535,7 +516,6 @@
       if (index < 0) return "";
       const sprite = util.target.sprite;
       const soundDataURI = sprite.sounds[index].asset.encodeDataURI();
-
       const { URI = soundDataURI, NAME } = args;
       const audio = new Audio(soundDataURI);
       this.sounds[NAME] = [audio];
@@ -543,49 +523,40 @@
 
     SoundIndex(soundName, util) {
       const sounds = util.target.sprite.sounds;
-      return sounds.indexOf(sounds.filter((sound) => {
-          return sound.name == soundName;
-      })[0]);
+      return sounds.indexOf(sounds.filter((sound) => { return sound.name == soundName })[0]);
     }
 
     playSound(args) {
-      const { NAME } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
-          audio.play();
+          audio.play()
+          if (audio.currentTime !== 0) this.checkOverlap(args);
         });
       }
     }
 
     playSoundAt(args) {
-      const { NAME, START_TIME } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
-          audio.currentTime = START_TIME;
+          audio.currentTime = args.START_TIME;
           audio.play();
+          if (audio.currentTime !== 0) this.checkOverlap(args);
         });
       }
     }
     
-    async startAndStop(args) {
-      await this.playSoundandStop(args.NAME, args.MAX, 0);
-    }
-
-    async lateStartAndStop(args) {
-      await this.playSoundandStop(args.NAME, args.MAX, args.START_TIME);
-    }
+    async startAndStop(args) { await this.playSoundandStop(args.NAME, args.MAX, 0) }
+    async lateStartAndStop(args) { await this.playSoundandStop(args.NAME, args.MAX, args.START_TIME) }
 
     async playSoundandStop(NAME, MAX, START_TIME) {
       const soundInstances = this.sounds[NAME];
-
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
           audio.currentTime = START_TIME;
           audio.play();
         });
-
       }
       await new Promise((resolve, reject) => {
         const maxTime = (MAX - START_TIME) * 1000;
@@ -603,8 +574,7 @@
     }
 
     stopSound(args) {
-      const { NAME } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
           audio.pause();
@@ -627,59 +597,55 @@
     }
 
     setSoundVolume(args) {
-      let { NAME, VOLUME } = args;
-      VOLUME = Math.max(0, Math.min(100, VOLUME));
-      const soundInstances = this.sounds[NAME];
+      args.VOLUME = Math.max(0, Math.min(100, args.VOLUME));
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
-        soundInstances.forEach((audio) => {
-          audio.volume = VOLUME / 100;
-        });
+        soundInstances.forEach((audio) => { audio.volume = args.VOLUME / 100 });
       }
     }
 
     setSoundSpeed(args) {
-      if (args.SPEED < 0) {
-        args.SPEED = 0;
-      }
-      const { NAME, SPEED } = args;
-      const soundInstances = this.sounds[NAME];
+      if (args.SPEED < 0) args.SPEED = 0;
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
-        soundInstances.forEach((audio) => {
-          audio.playbackRate = SPEED;
-        });
+        soundInstances.forEach((audio) => { audio.playbackRate = args.SPEED });
       }
     }
 
     setSoundPitch(args) {
-      const { NAME, PITCH } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
           audio.mozPreservesPitch = false;
           audio.playbackRate = 1;
           const semitoneRatio = Math.pow(2, 1 / 12);
-          const currentPitch = Math.pow(semitoneRatio, PITCH);
+          const currentPitch = Math.pow(semitoneRatio, args.PITCH);
           audio.playbackRate = currentPitch;
         });
       }
     }
 
     toggleLoopSound(args) {
-      const { NAME, LOOP_STATE } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
-        const loop = LOOP_STATE === "loopable";
-        soundInstances.forEach((audio) => {
-          audio.loop = loop;
-        });
+        const loop = args.LOOP_STATE === "loopable";
+        soundInstances.forEach((audio) => { audio.loop = loop });
+      }
+    }
+
+    toggleOverlap(args) {
+      if (args.OVERLAP === "on") {
+        const source = this.returnInfo(args);
+        if (source !== "Audio Doesnt Exist!") this.overlappables[args.NAME] = {src : source};
+      } else {
+        delete this.overlappables[args.NAME];
       }
     }
 
     pauseUnpauseSound(args) {
-      const { NAME, PAUSE_UNPAUSE } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
-        const pause = PAUSE_UNPAUSE === "pause";
+        const pause = args.PAUSE_UNPAUSE === "pause";
         soundInstances.forEach((audio) => {
           if (pause && !audio.paused) {
             audio.pause();
@@ -691,9 +657,7 @@
     }
 
     pauseUnpauseAllSounds(args) {
-      const { PAUSE_UNPAUSE } = args;
-      const pause = PAUSE_UNPAUSE === "pause";
-
+      const pause = args.PAUSE_UNPAUSE === "pause";
       Object.values(this.sounds).forEach((soundInstances) => {
         soundInstances.forEach((audio) => {
           if (pause && !audio.paused) {
@@ -707,11 +671,9 @@
 
     soundCheck(args) {
       if (args.CONTROL === "exists?") {
-        const { NAME } = args;
-        return this.sounds.hasOwnProperty(NAME);
+        return this.sounds.hasOwnProperty(args.NAME);
       } else {
-        const { NAME } = args;
-        const soundInstances = this.sounds[NAME];
+        const soundInstances = this.sounds[args.NAME];
         if (soundInstances && soundInstances.length > 0) {
           const audio = soundInstances[0];
           return (audio.currentTime !== 0 && !audio.paused);
@@ -721,11 +683,10 @@
     }
 
     soundProperty(args) {
-      const { NAME, PROPERTY } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         const audio = soundInstances[0];
-        switch (PROPERTY) {
+        switch (args.PROPERTY) {
           case "length":
             return audio.duration;
           case "volume":
@@ -750,8 +711,7 @@
     }
 
     currentSoundTime(args) {
-      const { NAME } = args;
-      const soundInstances = this.sounds[NAME];
+      const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         const audio = soundInstances[0];
         return audio.currentTime;
@@ -759,14 +719,7 @@
       return 0;
     }
 
-    allSounds() {
-      const soundNames = Object.keys(this.sounds);
-      if (soundNames.join("\", \"") !== "") {
-        return "[\"" + soundNames.join("\", \"") + "\"]";
-      } else {
-        return "[]";
-      }
-    }
+    allSounds() { return JSON.stringify(Object.keys(this.sounds)) }
 
     deleteAllSounds() {
       this.controlAllSounds("stop");  
@@ -775,33 +728,26 @@
 
     deleteSound(args) {
       this.stopSound(args);
-      const { NAME } = args;
-      delete this.sounds[NAME];
+      delete this.sounds[args.NAME];
     }
     
     playSounds(args) {
-      const { NAMES } = args;
-      const namesArray = JSON.parse(NAMES);
-
+      const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
-          soundInstances.forEach((audio) => {
-            audio.play();
-          });
+          soundInstances.forEach((audio) => { audio.play() });
         }
       });
     }
 
     playSoundsAt(args) {
-      const { NAMES, START_TIME } = args;
-      const namesArray = JSON.parse(NAMES);
-
+      const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
           soundInstances.forEach((audio) => {
-            audio.currentTime = START_TIME;
+            audio.currentTime = args.START_TIME;
             audio.play();
           });
         }
@@ -809,9 +755,7 @@
     }
 
     stopSounds(args) {
-      const { NAMES } = args;
-      const namesArray = JSON.parse(NAMES);
-
+      const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -824,10 +768,8 @@
     }
 
     pauseUnpauseSounds(args) {
-      const { NAMES, PAUSE_UNPAUSE } = args;
-      const namesArray = JSON.parse(NAMES);
-      const pause = PAUSE_UNPAUSE === "pause";
-
+      const namesArray = JSON.parse(args.NAMES);
+      const pause = args.PAUSE_UNPAUSE === "pause";
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -843,41 +785,29 @@
     }
 
     setSoundsVolume(args) {
-      const { NAMES, VOLUME } = args;
-      const adjustedVolume = Math.max(0, Math.min(100, VOLUME));
-      const namesArray = JSON.parse(NAMES);
-
+      const adjustedVolume = Math.max(0, Math.min(100, args.VOLUME));
+      const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
-          soundInstances.forEach((audio) => {
-            audio.volume = adjustedVolume / 100;
-          });
+          soundInstances.forEach((audio) => { audio.volume = adjustedVolume / 100 });
         }
       });
     }
 
     setSoundSpeeds(args) {
-      if (args.SPEED < 0) {
-        args.SPEED = 0;
-      }
-      const { NAMES, SPEED } = args;
-      const namesArray = JSON.parse(NAMES);
-
+      if (args.SPEED < 0) args.SPEED = 0;
+      const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
-          soundInstances.forEach((audio) => {
-            audio.playbackRate = SPEED;
-          });
+          soundInstances.forEach((audio) => { audio.playbackRate = args.SPEED });
         }
       });
     }
 
     setSoundsPitch(args) {
-      const { NAMES, PITCH } = args;
-      const namesArray = JSON.parse(NAMES);
-  
+      const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
@@ -885,7 +815,7 @@
             audio.mozPreservesPitch = false;
             audio.playbackRate = 1;
             const semitoneRatio = Math.pow(2, 1 / 12);
-            const currentPitch = Math.pow(semitoneRatio, PITCH);
+            const currentPitch = Math.pow(semitoneRatio, args.PITCH);
             audio.playbackRate = currentPitch;
           });
         }
@@ -895,21 +825,15 @@
     getLoudnessAtTime(args) {
       const { NAME, TIME } = args;
       const soundInstances = this.sounds[NAME];
-
       if (soundInstances && soundInstances.length > 0) {
         const audio = soundInstances[0];
         const audioDuration = audio.duration;
-
         if (TIME >= 0 && TIME <= audioDuration) {
           let audioURI = audio.src;
-          if (!audioURI.startsWith("data:")) {
-            return "Audio URLs DO NOT WORK, convert to URI!";
-          }
+          if (!audioURI.startsWith("data:")) return "Audio URLs DO NOT WORK, convert to URI!";
           const uriIndex = Math.floor(audioURI.length * (TIME / audioDuration));
- 
           if (uriIndex >= 0 && uriIndex < audioURI.length) {
             const characterAtTime = audioURI.charAt(uriIndex);
-
             let loudnessValue = characterAtTime.charCodeAt(0);
             loudnessValue = (Math.PI / 180) * loudnessValue; 
             loudnessValue = (Math.sin(loudnessValue / 2) * 100) - 50;
@@ -918,17 +842,11 @@
           }
         }
       }
-      if (soundInstances) {
-        return "Time Input Doesnt Exist!";
-      } else {
-        return "Audio Doesnt Exist!";
-      }
+      return soundInstances ? "Time Input Doesnt Exist!" : "Audio Doesnt Exist!";
     }
 
     async convertURLToURI(args) {
-      const { INPUT_NAME, OUTPUT_NAME } = args;
-      const soundInstances = this.sounds[INPUT_NAME];
-
+      const soundInstances = this.sounds[args.INPUT_NAME];
       if (soundInstances && soundInstances.length > 0) {
         const audio = soundInstances[0];
         const audioURI = audio.src;
@@ -940,22 +858,37 @@
             reader.onloadend = () => resolve(reader.result);
             reader.readAsDataURL(audioBlob);
           });
-          this.sounds[OUTPUT_NAME] = [new Audio(audioDataURL)];
+          this.sounds[args.OUTPUT_NAME] = [new Audio(audioDataURL)];
           console.log("Conversion Success!");
-        } catch (error) {
-          console.error("Error Converting: " + error.message);
-        }
-      } else {
-	      console.log("Audio Doesnt Exist!");
-      }
+        } catch (error) { console.error("Error Converting: " + error.message) }
+      } else { console.log("Audio Doesnt Exist!") }
     }
 
     returnInfo(args) {
       const soundInstances = this.sounds[args.NAME];
-      if (soundInstances && soundInstances.length > 0) {
-        return this.sounds[args.NAME][0].src;
-      }
+      if (soundInstances && soundInstances.length > 0) return this.sounds[args.NAME][0].src;
       return "Audio Doesnt Exist!";
+    }
+
+    checkOverlap(args) {
+      if (this.overlappables[args.NAME] !== undefined) {
+        const sourcePlayer = this.sounds[args.NAME][0];
+        const audio = new Audio(this.overlappables[args.NAME].src);
+        audio.playbackRate = sourcePlayer.playbackRate || audio.defaultPlaybackRate;
+        audio.currentTime = args.START_TIME || 0;
+        audio.volume = sourcePlayer.volume || 1;
+        audio.play();
+        const checkConditionInterval = setInterval(() => {
+          audio.playbackRate = sourcePlayer.playbackRate || audio.defaultPlaybackRate;
+          audio.volume = sourcePlayer.volume || 1;
+          if (sourcePlayer.paused && sourcePlayer.currentTime === 0) {
+            audio.pause();
+            audio.currentTime = 0;
+            if (audio.context) audio.context.close();
+            clearInterval(checkConditionInterval);
+          }
+        }, 100);
+      }
     }
   }
 
