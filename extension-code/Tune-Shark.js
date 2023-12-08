@@ -540,9 +540,9 @@
       const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
+          if (audio.currentTime !== args.START_TIME && audio.currentTime !== 0) this.checkOverlap(args);
           audio.currentTime = args.START_TIME;
           audio.play();
-          if (audio.currentTime !== 0) this.checkOverlap(args);
         });
       }
     }
@@ -554,6 +554,7 @@
       const soundInstances = this.sounds[NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
+          if (audio.currentTime !== args.START_TIME && audio.currentTime !== 0) this.checkOverlap(args);
           audio.currentTime = START_TIME;
           audio.play();
         });
@@ -878,9 +879,15 @@
         audio.currentTime = args.START_TIME || 0;
         audio.volume = sourcePlayer.volume || 1;
         audio.play();
+
         const checkConditionInterval = setInterval(() => {
           audio.playbackRate = sourcePlayer.playbackRate || audio.defaultPlaybackRate;
           audio.volume = sourcePlayer.volume || 1;
+          if (sourcePlayer.paused) {
+            audio.pause();
+          } else {
+            audio.play();
+          }
           if (sourcePlayer.paused && sourcePlayer.currentTime === 0) {
             audio.pause();
             audio.currentTime = 0;
