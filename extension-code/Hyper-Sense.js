@@ -1,14 +1,13 @@
 // Name: Hyper Sense
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
+// By: SharkPool
 
-// Version 1.9.1
+// Version 2.0.0
 
 (function (Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error("Hyper Sense must run unsandboxed");
-  }
+  if (!Scratch.extensions.unsandboxed) throw new Error("Hyper Sense must run unsandboxed");
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzguMjE0IiBoZWlnaHQ9IjEzOC4yMTQiIHZpZXdCb3g9IjAsMCwxMzguMjE0LDEzOC4yMTQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzAuODkzLC0xMTAuODkzKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTcwLjg5MywxODBjMCwtMzguMTY2NzQgMzAuOTQwMjYsLTY5LjEwNyA2OS4xMDcsLTY5LjEwN2MzOC4xNjY3NCwwIDY5LjEwNywzMC45NDAyNiA2OS4xMDcsNjkuMTA3YzAsMzguMTY2NzQgLTMwLjk0MDI2LDY5LjEwNyAtNjkuMTA3LDY5LjEwN2MtMzguMTY2NzQsMCAtNjkuMTA3LC0zMC45NDAyNiAtNjkuMTA3LC02OS4xMDd6IiBmaWxsPSIjNWNiMWQ2IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIvPjxwYXRoIGQ9Ik0yNzMuNTY4MTMsMjE2LjIzNjU5Yy0wLjY4MjI5LDAgLTEuMzY0NTcsLTAuMjYwNzQgLTEuODg2MDYsLTAuNzgwMDZsLTY2LjU3ODkzLC02Ni41ODExYy0xLjA0MDgxLC0xLjA0MDgxIC0xLjA0MDgxLC0yLjczMTI5IDAsLTMuNzcyMWMxLjA0MDgxLC0xLjA0MDgxIDIuNzMxMjksLTEuMDQwODEgMy43NzIxLDBsNjYuNTc4OTMsNjYuNTc4OTNjMS4wNDA4MSwxLjA0MDgxIDEuMDQwODEsMi43MzEyOSAwLDMuNzcyMWMtMC41MjE0OSwwLjUxOTMyIC0xLjIwMzc4LDAuNzgyMjMgLTEuODg2MDYsMC43ODIyM3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMy4xMDcxMSwxNTguNDM2MDZjMCw4LjEwMjY0IC02LjU2ODU5LDE0LjY3MTIzIC0xNC42NzEyMywxNC42NzEyM2MtOC4xMDI2NCwwIC0xNC42NzEyMywtNi41Njg1OSAtMTQuNjcxMjMsLTE0LjY3MTIzYzAsLTguMTAyNjQgNi41Njg1OSwtMTQuNjcxMjMgMTQuNjcxMjMsLTE0LjY3MTIzYzguMTAyNjQsMCAxNC42NzEyMyw2LjU2ODU5IDE0LjY3MTIzLDE0LjY3MTIzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjMxLjA3MzQ3LDE4OC43MjQyNmMtNy44ODU4MywtMS44NjIwOSAtMTIuNzY5MDIsLTkuNzY0MzUgLTEwLjkwNjkyLC0xNy42NTAxN2MxLjg2MjA5LC03Ljg4NTgzIDkuNzY0MzUsLTEyLjc2OTAyIDE3LjY1MDE3LC0xMC45MDY5MmM3Ljg4NTgzLDEuODYyMDkgMTIuNzY5MDIsOS43NjQzNSAxMC45MDY5MiwxNy42NTAxN2MtMS44NjIwOSw3Ljg4NTgzIC05Ljc2NDM1LDEyLjc2OTAyIC0xNy42NTAxNywxMC45MDY5MnoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI2NS4xMjAwMSwxOTAuNDQ2NzljMCw4LjEwMjY0IC02LjU3MDc2LDE0LjY3MzM5IC0xNC42NzMzOSwxNC42NzMzOWMtOC4xMDI2NCwwIC0xNC42NzEyMywtNi41NzA3NiAtMTQuNjcxMjMsLTE0LjY3MzM5YzAsLTguMTAyNjQgNi41Njg1OSwtMTQuNjcxMjMgMTQuNjcxMjMsLTE0LjY3MTIzYzguMTAyNjQsMCAxNC42NzMzOSw2LjU3MDc2IDE0LjY3MzM5LDE0LjY3MTIzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjczLjU2ODEzLDIxNi4yMzY1OWMtMC42ODIyOSwwIC0xLjM2NDU3LC0wLjI2MDc0IC0xLjg4NjA2LC0wLjc4MDA2bC0xNi4zMzk5OCwtMTYuMzM5OThjLTEuMDQyOTgsLTEuMDQwODEgLTEuMDQyOTgsLTIuNzMxMjkgMCwtMy43NzIxYzEuMDQyOTgsLTEuMDQwODEgMi43MjkxMiwtMS4wNDA4MSAzLjc3MjEsMGwxNi4zMzk5OCwxNi4zMzk5OGMxLjA0MDgxLDEuMDQwODEgMS4wNDA4MSwyLjczMTI5IDAsMy43NzIxYy0wLjUyMTQ5LDAuNTE3MTQgLTEuMjAzNzgsMC43ODAwNiAtMS44ODYwNiwwLjc4MDA2eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48ZyBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMS41Ij48cGF0aCBkPSJNMTgyLjY2ODI2LDE4MGwxMi44MDY5MSwtMTIuODA2OTF2MjUuNjEzODF6Ii8+PHBhdGggZD0iTTI1Mi44MDY5LDEzNS40NzUxNmgtMjUuNjEzODFsMTIuODA2OSwtMTIuODA2OXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9Ii8+PHBhdGggZD0iTTI5Ny4zMzE3NSwxODBsLTEyLjgwNjksMTIuODA2OXYtMjUuNjEzODF6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIvPjxwYXRoIGQ9Ik0yMjcuMTkzMSwyMjQuNTI0ODRoMjUuNjEzODFsLTEyLjgwNjksMTIuODA2OXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9Ii8+PC9nPjwvZz48L2c+PC9zdmc+";
@@ -31,18 +30,10 @@
         runtime.shouldExecuteStopClicked = false;
         runtime.startHats("HyperSenseSP_whenKeyPressed");
       });
-      runtime.on("PROJECT_START", () => {
-        timer = 0;
-      });
-      runtime.on("PROJECT_STOP_ALL", () => {
-        timer = 0;
-      });
-      runtime.on("AFTER_EXECUTE", () => {
-        runtime.shouldExecuteStopClicked = true;
-      });
-      runtime.on("ANSWER", () => {
-        this.wait = [false, "sprite"];
-      });
+      runtime.on("PROJECT_START", () => { timer = 0 });
+      runtime.on("PROJECT_STOP_ALL", () => { timer = 0 });
+      runtime.on("AFTER_EXECUTE", () => { runtime.shouldExecuteStopClicked = true });
+      runtime.on("ANSWER", () => { this.wait = [false, "sprite"] });
       const originalGreenFlag = vm.greenFlag;
       vm.greenFlag = function () {
         runtime.shouldExecuteStopClicked = false;
@@ -88,14 +79,11 @@
         color2: "#2e8eb8",
         menuIconURI,
         blocks: [
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Scrolling",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Scrolling" },
           {
             opcode: "monitorScrollWheel",
             blockType: Scratch.BlockType.REPORTER,
-            text: "scroll wheel distance",
+            text: "scroll wheel distance"
           },
           {
             opcode: "monitorScrollWheelLimited",
@@ -142,8 +130,7 @@
             arguments: {
               EVENT: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "SCROLL_EVENTS",
-                defaultValue: "up"
+                menu: "SCROLL_EVENTS"
               }
             },
           },
@@ -151,7 +138,7 @@
             opcode: "scrollWheelHat2",
             blockType: Scratch.BlockType.EVENT,
             text: "when scrolled down",
-            isEdgeActivated: false,
+            isEdgeActivated: false
           },
           {
             opcode: "scrollWheelBool",
@@ -160,15 +147,11 @@
             arguments: {
               EVENT: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "SCROLL_EVENTS",
-                defaultValue: "up"
+                menu: "SCROLL_EVENTS"
               }
             },
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Mouse Detection",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Mouse Detection" },
           {
             opcode: "mouseClick",
             blockType: Scratch.BlockType.BOOLEAN,
@@ -176,25 +159,21 @@
             arguments: {
               BUTTON: {
                 type: Scratch.ArgumentType.NUMBER,
-                menu: "mouseButtons",
-                defaultValue: 0
-              },
-            },
+                menu: "mouseButtons"
+              }
+            }
           },
           {
             opcode: "realX",
             blockType: Scratch.BlockType.REPORTER,
-            text: "real mouse x",
+            text: "real mouse x"
           },
           {
             opcode: "realY",
             blockType: Scratch.BlockType.REPORTER,
-            text: "real mouse y",
+            text: "real mouse y"
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Key Detection",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Key Detection" },
           {
             opcode: "whenKeyHit",
             blockType: Scratch.BlockType.HAT,
@@ -202,10 +181,9 @@
             arguments: {
               KEY: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "keys",
-                defaultValue: "Space"
+                menu: "keys"
               }
-            },
+            }
           },
           {
             opcode: "isKeyHit",
@@ -214,10 +192,9 @@
             arguments: {
               KEY: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "keys",
-                defaultValue: "Space"
+                menu: "keys"
               }
-            },
+            }
           },
           "---", //yes, these blocks do technically exist, but they dont have special keys like Tab
           {
@@ -231,7 +208,7 @@
                 menu: "keys",
                 defaultValue: "Tab"
               }
-            },
+            }
           },
           {
             opcode: "isKeyPressed",
@@ -249,29 +226,26 @@
           {
             opcode: "currentKey",
             blockType: Scratch.BlockType.REPORTER,
-            text: "current key pressed",
+            text: "current key pressed"
           },
           {
             opcode: "currentKeys",
             blockType: Scratch.BlockType.REPORTER,
-            text: "current keys pressed",
+            text: "current keys pressed"
           },
           {
             opcode: "timeKeyPressed",
             blockType: Scratch.BlockType.REPORTER,
-            text: "seconds key [KEY] pressed",
+            text: "seconds [KEY] key pressed",
             arguments: {
               KEY: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "keys",
                 defaultValue: "A"
               }
-            },
+            }
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Touching Expanded",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Touching Expanded" },
           {
             opcode: "spriteTouchingSprite",
             blockType: Scratch.BlockType.BOOLEAN,
@@ -285,7 +259,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "TARGETS3"
               }
-            },
+            }
           },
           {
             opcode: "spriteCurrentTouching",
@@ -296,7 +270,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "TARGETS2"
               }
-            },
+            }
           },
           {
             opcode: "getNeighbors",
@@ -311,7 +285,7 @@
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 200
               }
-            },
+            }
           },
           "---",
           {
@@ -323,7 +297,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "TARGETS2"
               }
-            },
+            }
           },
           {
             opcode: "colorAtPosition",
@@ -338,12 +312,9 @@
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 0
               }
-            },
+            }
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Strings",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Strings" },
           {
             opcode: "boolean",
             blockType: Scratch.BlockType.BOOLEAN,
@@ -353,7 +324,7 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: ""
               }
-            },
+            }
           },
           {
             opcode: "getAllString",
@@ -367,14 +338,10 @@
               TEXT: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "string_types",
-                defaultValue: "numbers"
               }
-            },
+            }
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Miscellaneous",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Miscellaneous" },
           {
             opcode: "advancedAsk",
             blockType: Scratch.BlockType.COMMAND,
@@ -382,8 +349,7 @@
             arguments: {
               THING: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "Asking",
-                defaultValue: "stage"
+                menu: "Asking"
               },
               QUESTION: {
                 type: Scratch.ArgumentType.STRING,
@@ -391,10 +357,9 @@
               },
               WAIT: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "shouldWait",
-                defaultValue: "wait"
+                menu: "shouldWait"
               }
-            },
+            }
           },
           {
             opcode: "setAtt",
@@ -413,18 +378,35 @@
                 type: Scratch.ArgumentType.NUMBER,
                 defaultValue: 480
               }
-            },
+            }
+          },
+          "---",
+          {
+            opcode: "isScreen",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is [SCREEN] ?",
+            arguments: {
+              SCREEN: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SCREENS"
+              }
+            }
+          },
+          {
+            opcode: "screenOff",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "stage size offset"
           },
           "---",
           {
             opcode: "getSpriteName",
             blockType: Scratch.BlockType.REPORTER,
-            text: "my sprite name",
+            text: "my sprite name"
           },
           {
             opcode: "allLayers",
             blockType: Scratch.BlockType.REPORTER,
-            text: "max sprite layers",
+            text: "max sprite layers"
           },
           "---",
           {
@@ -439,7 +421,6 @@
               DRAG: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "DRAG_MODES",
-                defaultValue: "draggable"
               }
             },
           },
@@ -452,18 +433,18 @@
               STATE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "microphoneStates",
-                defaultValue: "enabled"
               }
-            },
+            }
           },
           {
             opcode: "averageMicrophoneLoudness",
             blockType: Scratch.BlockType.REPORTER,
-            text: "average microphone loudness",
+            text: "average microphone loudness"
           },
         ],
         menus: {
           microphoneStates: ["enabled", "disabled"],
+          SCREENS: ["fullscreen", "smallscreen"],
           TARGETS: { acceptReporters: true, items: this._getTargets(true, false) },
           TARGETS2: { acceptReporters: true, items: this._getTargets(true, true) },
           TARGETS3: { acceptReporters: true, items: this._getTargets(false, true) },
@@ -822,6 +803,15 @@
         regex = /[A-Za-z0-9]/g;
       }
       return args.STRING.replace(regex, "");
+    }
+
+    // stage size is dynamic, can change during runtime... thus, dont use runtime/renderer variables
+    // we also only need to check width since height will return the same value
+    screenOff() { return Scratch.vm.renderer.canvas.width / Scratch.vm.runtime.stageWidth }
+
+    isScreen(args) {
+      const value = this.screenOff();
+      return args.SCREEN === "fullscreen" ? value > 1.5 : value < 0.5;
     }
 
     _getTargets(mouse, myself) {
