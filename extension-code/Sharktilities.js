@@ -1,15 +1,13 @@
 // Name: Sharktilities
 // ID: Sharktilities
 // Description: Various Utility Blocks for Various Operations
-// By: SharkPool <https://github.com/SharkPool-SP>
+// By: SharkPool
 
-// Version V.2.7.0
+// Version V.2.8.0
 
 (function (Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error("Sharktilities must run unsandboxed");
-  }
+  if (!Scratch.extensions.unsandboxed) throw new Error("Sharktilities must run unsandboxed");
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAsMCwxMzUuMzYzLDEzNS4zNjMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzIuMzE4NSwtMTEyLjMxODUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE3Mi4zMTg1LDE4MGMwLC0zNy4zNzk0NiAzMC4zMDIwNCwtNjcuNjgxNSA2Ny42ODE1LC02Ny42ODE1YzM3LjM3OTQ2LDAgNjcuNjgxNSwzMC4zMDIwNCA2Ny42ODE1LDY3LjY4MTVjMCwzNy4zNzk0NiAtMzAuMzAyMDQsNjcuNjgxNSAtNjcuNjgxNSw2Ny42ODE1Yy0zNy4zNzk0NiwwIC02Ny42ODE1LC0zMC4zMDIwNCAtNjcuNjgxNSwtNjcuNjgxNXoiIGZpbGw9IiMzM2I2ZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yMDQuNjY2OTcsMjA3LjMwMzE4YzAsMCAxMi41NTgyMSw2LjQxMzE5IDE1LjM0ODYsLTguNDQ2OTVjNC4wNTQ1OSwtMjEuNTkyNTkgLTIuNTcyNTgsLTQwLjMzNDY2IC02LjM0Mzk3LC00OC43MDgwMmMtMS4zNDgxMSwtMi45OTMxMiAtMC4wMDIwNSwtNC4yNTgwNCAzLjY1MDg0LC0zLjQwNDE5YzkuMjI5MDQsMi4xNTcyNSAyNi45MDcwMSw3LjE5MDMgMzYuODE1NTEsMTUuODYwNDFjMTUuMjEzNTIsMTMuMzEyMDkgMTUuNTQ0NjksMzQuMDY5NDMgMTguNTExOTIsMzkuOTY3MjFjMi40MjcwOSw0LjgyNDE4IDkuNTk0MjYsMi42MTk4IDkuNTk0MjYsMi42MTk4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==";
@@ -81,40 +79,34 @@
         blocks: [
           { blockType: Scratch.BlockType.LABEL, text: "Management" },
           {
+            opcode: "costumeCnt",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "# of costumes in [SPRITE]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS"
+              }
+            }
+          },
+          {
             opcode: "costumeInfo",
             blockType: Scratch.BlockType.REPORTER,
             text: "[INFO] of costume #[NUM] in [SPRITE]",
             arguments: {
               INFO: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "cosInfo",
-                defaultValue: "name",
+                menu: "cosInfo"
               },
               NUM: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1,
+                defaultValue: 1
               },
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS",
-              },
-            },
-          },
-          {
-            opcode: "cloudCode",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "☁ cloud [CODE] string [TEXT]",
-            arguments: {
-              CODE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "encoder",
-                defaultValue: "encode",
-              },
-              TEXT: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "SharkPool",
-              },
-            },
+                menu: "TARGETS"
+              }
+            }
           },
           {
             opcode: "setTargetCostume",
@@ -123,13 +115,29 @@
             arguments: {
               NUM: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: 1,
+                defaultValue: 1
               },
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "TARGETS"
+              }
+            }
+          },
+          "---",
+          {
+            opcode: "cloudCode",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "☁ cloud [CODE] string [TEXT]",
+            arguments: {
+              CODE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "encoder"
               },
-            },
+              TEXT: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "SharkPool"
+              }
+            }
           },
           {
             opcode: "repeatForUntil",
@@ -138,16 +146,16 @@
             arguments: {
               NUM: { type: Scratch.ArgumentType.STRING, defaultValue: 10 },
               CON: { type: Scratch.ArgumentType.BOOLEAN }
-            },
+            }
           },
           {
             opcode: "spayedCondition",
             blockType: Scratch.BlockType.LOOP,
             text: ["if [CON1] start loop", "repeat until [CON2]" + " "],
             arguments: {
-        			CON1: { type: Scratch.ArgumentType.BOOLEAN },
-        			CON2: { type: Scratch.ArgumentType.BOOLEAN },
-            },
+              CON1: { type: Scratch.ArgumentType.BOOLEAN },
+              CON2: { type: Scratch.ArgumentType.BOOLEAN },
+            }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Numbers and Letters" },
           {
@@ -157,14 +165,13 @@
             arguments: {
               NUMBER: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 3.1415,
+                defaultValue: 3.1415
               },
               ROUND_TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "ROUND_MENU",
-                defaultValue: "whole number",
-              },
-            },
+                menu: "ROUND_MENU"
+              }
+            }
           },
           {
             opcode: "randomLetter",
@@ -173,10 +180,9 @@
             arguments: {
               LETTER_TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "LETTER_TYPE_MENU",
-                defaultValue: "lowercase",
-              },
-            },
+                menu: "LETTER_TYPE_MENU"
+              }
+            }
           },
           {
             opcode: "randomCharRange",
@@ -185,19 +191,19 @@
             arguments: {
               ONE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "a",
+                defaultValue: "a"
               },
               TWO: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "c",
-              },
-            },
+                defaultValue: "c"
+              }
+            }
           },
           {
             opcode: "randomSingleInteger",
             blockType: Scratch.BlockType.REPORTER,
             text: "pick random single integer",
-            disableMonitor: true,
+            disableMonitor: true
           },
           { blockType: Scratch.BlockType.LABEL, text: "Color and Effects" },
           {
@@ -207,18 +213,17 @@
             arguments: {
               EFFECT: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "EFFECT_MENU",
-                defaultValue: "color",
+                menu: "EFFECT_MENU"
               },
               VALUE: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
               },
               SPRITE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS",
-              },
-            },
+                menu: "TARGETS"
+              }
+            }
           },
           {
             opcode: "hexBrightness",
@@ -227,13 +232,24 @@
             arguments: {
               COLOR: {
                 type: Scratch.ArgumentType.COLOR,
-                defaultValue: "#FF0000",
+                defaultValue: "#FF0000"
               },
               CHANGE: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 5,
-              },
-            },
+                defaultValue: 5
+              }
+            }
+          },
+          {
+            opcode: "removeThorns",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "remove vector thorns from [SVG]",
+            arguments: {
+              SVG: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "<svg>"
+              }
+            }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Math" },
           {
@@ -243,27 +259,25 @@
             arguments: {
               NUM1: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
               },
               OPERATOR1: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "OPERATOR_MENU",
-                defaultValue: "+",
+                menu: "OPERATOR_MENU"
               },
               NUM2: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
               },
               OPERATOR2: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "OPERATOR_MENU",
-                defaultValue: "+",
+                menu: "OPERATOR_MENU"
               },
               NUM3: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
-            },
+                defaultValue: 0
+              }
+            }
           },
           {
             opcode: "quadrupleOperator",
@@ -272,36 +286,35 @@
             arguments: {
               NUM1: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
               },
               OPERATOR1: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "OPERATOR_MENU",
-                defaultValue: "+",
+                menu: "OPERATOR_MENU"
               },
               NUM2: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
               },
               OPERATOR2: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "OPERATOR_MENU",
-                defaultValue: "+",
+                menu: "OPERATOR_MENU"
               },
               NUM3: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
+                defaultValue: 0
               },
               OPERATOR3: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "OPERATOR_MENU",
-                defaultValue: "+",
+                menu: "OPERATOR_MENU"
               },
               NUM4: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
-            },
+                defaultValue: 0
+              }
+        
+        
+            }
           },
           {
             opcode: "negaAbs",
@@ -310,9 +323,9 @@
             arguments: {
               NUMBER: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0,
-              },
-            },
+                defaultValue: 0
+              }
+            }
           },
           {
             opcode: "smoothing",
@@ -321,18 +334,17 @@
             arguments: {
               MATH: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "mathMenu",
-                defaultValue: "sin",
+                menu: "mathMenu"
               },
               SPEED: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 50,
+                defaultValue: 50
               },
               LIMIT: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 25,
+                defaultValue: 25
               }
-            },
+            }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Strings" },
           {
@@ -342,17 +354,17 @@
             arguments: {
               STRING1: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "foo",
+                defaultValue: "foo"
               },
               STRING2: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "bar",
+                defaultValue: "bar"
               },
               CHANCE: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 50,
-              },
-            },
+                defaultValue: 50
+              }
+            }
           },
           {
             opcode: "replaceKey",
@@ -361,21 +373,21 @@
             arguments: {
               STRING: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "SharkPool is cool. SharkPool is great.",
+                defaultValue: "SharkPool is cool. SharkPool is great."
               },
               KEY: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "is",
+                defaultValue: "is"
               },
               ORDER: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 2,
+                defaultValue: 2
               },
               REPLACE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "isnt",
-              },
-            },
+                defaultValue: "isnt"
+              }
+            }
           },
           {
             opcode: "replaceKeys",
@@ -384,25 +396,25 @@
             arguments: {
               STRING: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "SharkPool is cool. SharkPool is great.",
+                defaultValue: "SharkPool is cool. SharkPool is great."
               },
               KEY: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "is",
+                defaultValue: "is"
               },
               ORDER: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 1,
+                defaultValue: 1
               },
               ORDER2: {
                 type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 2,
+                defaultValue: 2
               },
               REPLACE: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "isnt",
-              },
-            },
+                defaultValue: "isnt"
+              }
+            }
           },
           {
             opcode: "shuffleArray",
@@ -411,14 +423,13 @@
             arguments: {
               WORDS: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "[\"word1\", \"word2\", \"word3\"]",
+                defaultValue: '["word1", "word2", "word3"]'
               },
               SHUFFLE_OPTION: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "shuffleOption",
-                defaultValue: "random",
-              },
-            },
+                menu: "shuffleOption"
+              }
+            }
           },
           {
             opcode: "tripleJoin",
@@ -428,7 +439,7 @@
               STRING1: { type: Scratch.ArgumentType.STRING },
               STRING2: { type: Scratch.ArgumentType.STRING },
               STRING3: { type: Scratch.ArgumentType.STRING }
-            },
+            }
           },
           {
             opcode: "quadrupleJoin",
@@ -439,7 +450,7 @@
               STRING2: { type: Scratch.ArgumentType.STRING },
               STRING3: { type: Scratch.ArgumentType.STRING },
               STRING4: { type: Scratch.ArgumentType.STRING }
-            },
+            }
           },
           {
             opcode: "fiveJoin",
@@ -450,15 +461,15 @@
               STRING2: { type: Scratch.ArgumentType.STRING },
               STRING3: { type: Scratch.ArgumentType.STRING },
               STRING4: { type: Scratch.ArgumentType.STRING },
-              STRING5: { type: Scratch.ArgumentType.STRING },
-            },
+              STRING5: { type: Scratch.ArgumentType.STRING }
+            }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Experimental" },
           {
             opcode: "refresh",
             blockType: Scratch.BlockType.COMMAND,
             text: "refresh extensions",
-            isTerminal: true,
+            isTerminal: true
           },
           {
             opcode: "request",
@@ -468,60 +479,53 @@
               THING: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "reqMenu",
-                defaultValue: "redraw",
-              },
-            },
+                defaultValue: "redraw"
+              }
+            }
           }
         ],
         menus: {
           TARGETS: {
             acceptReporters: true,
-            items: "_getTargets",
+            items: "_getTargets"
           },
           ROUND_MENU: {
             acceptReporters: true,
-            items: ["whole number", "tenths", "hundredths", "thousandths"],
+            items: ["whole number", "tenths", "hundredths", "thousandths"]
           },
           LETTER_TYPE_MENU: {
             acceptReporters: true,
-            items: ["lowercase", "uppercase"],
+            items: ["lowercase", "uppercase"]
           },
           reqMenu: {
             acceptReporters: true,
-            items: ["redraw", "toolbox update", "block refresh"],
+            items: ["redraw", "toolbox update", "block refresh"]
           },
           EFFECT_MENU: {
             acceptReporters: true,
-            items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"],
+            items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"]
           },
           mathMenu: {
             acceptReporters: true,
-            items: ["sin", "cos"],
+            items: ["sin", "cos"]
           },
           OPERATOR_MENU: ["+", "-", "*", "/"],
           encoder: ["encode", "decode"],
           cosInfo: {
             acceptReporters: true,
             items: [
-              "name",
-              "width",
-              "height",
-              "type",
-              "rotation center x",
-              "rotation center y",
-              "content",
-              "data.uri"
-            ],
+              "name", "width", "height", "type",
+              "rotation center x", "rotation center y",
+              "content", "data.uri"
+            ]
           },
           shuffleOption: {
             acceptReporters: true,
             items: [
               "random",
-              "ascending",
-              "descending",
-              "ascending by length",
-              "descending by length"
-            ],
+              "ascending", "descending",
+              "ascending by length", "descending by length"
+            ]
           }
         },
       };
@@ -568,32 +572,8 @@
         target = vm.runtime.getSpriteTargetByName(target);
       }
       if (!target) return;
-      const VALUE = args.VALUE;
-      switch (args.EFFECT) {
-        case "color":
-          target.setEffect("color", VALUE);
-          break;
-        case "fisheye":
-          target.setEffect("fisheye", VALUE);
-          break;
-        case "whirl":
-          target.setEffect("whirl", VALUE);
-          break;
-        case "pixelate":
-          target.setEffect("pixelate", VALUE);
-          break;
-        case "mosaic":
-          target.setEffect("mosaic", VALUE);
-          break;
-        case "brightness":
-          target.setEffect("brightness", VALUE);
-          break;
-        case "ghost":
-          target.setEffect("ghost", VALUE);
-          break;
-        default:
-          break;
-      }
+      const VALUE = Scratch.Cast.toNumber(args.VALUE);
+      target.setEffect(args.EFFECT, VALUE);
     }
 
     tripleJoin({ STRING1, STRING2, STRING3 }) { return `${STRING1}${STRING2}${STRING3}` }
@@ -601,21 +581,13 @@
     fiveJoin({ STRING1, STRING2, STRING3, STRING4, STRING5 }) { return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}` }
 
     tripleOperator(args) {
-      const nums = [
-        Scratch.Cast.toNumber(args.NUM1),
-        Scratch.Cast.toNumber(args.NUM2),
-        Scratch.Cast.toNumber(args.NUM3),
-      ];
+      const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2), Scratch.Cast.toNumber(args.NUM3)];
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`);
     }
 
     quadrupleOperator(args) {
-      const nums = [
-        Scratch.Cast.toNumber(args.NUM1),
-        Scratch.Cast.toNumber(args.NUM2),
-        Scratch.Cast.toNumber(args.NUM3),
-        Scratch.Cast.toNumber(args.NUM4)
-      ];
+      const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2),
+        Scratch.Cast.toNumber(args.NUM3), Scratch.Cast.toNumber(args.NUM4)];
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
     }
 
@@ -711,6 +683,8 @@
       return newString;
     }
 
+    costumeCnt(args) { return this.costumeInfo({ SPRITE : args.SPRITE, OVERRIDE : true}) }
+
     costumeInfo(args) {
       let target = args.SPRITE;
       if (target === "Stage") {
@@ -720,6 +694,7 @@
       }
       if (!target) return "";
       const targetInfo = target.getCostumes();
+      if (args.OVERRIDE !== undefined) return target.sprite.costumes.length;
       let index = Math.round(Math.abs(Scratch.Cast.toString(args.NUM))) - 1;
       if (!index || index === Infinity || index === -Infinity) index = 0;
       if (index > target.sprite.costumes.length - 1) index = target.sprite.costumes.length - 1;
@@ -755,20 +730,11 @@
       return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
     }
 
-    cloudCode(args) {
-      if (args.CODE === "encode") {
-        return this.encodeText(args.TEXT);
-      } else {
-        return this.decodeText(args.TEXT);
-      }
-    }
+    cloudCode(args) { return args.CODE === "encode" ? this.encodeText(args.TEXT) : this.decodeText(args.TEXT) }
 
     encodeText(txt) {
-      const encodedString = txt
-        .split("")
-        .map(char => char.charCodeAt(0))
-        .map(value => value.toString().padStart(3, "0"))
-        .join("");
+      const encodedString = txt.split("").map(char => char.charCodeAt(0))
+        .map(value => value.toString().padStart(3, "0")).join("");
       return encodedString;
     }
 
@@ -791,17 +757,13 @@
         const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
         if (target) {
           vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
-        } else {
-          return;
-        }
+        } else { return }
       }
     }
 
     repeatForUntil(args, util) {
       const condition = Scratch.Cast.toBoolean(args.CON);
-      if (typeof util.stackFrame.loopCounter === "undefined") {
-        util.stackFrame.loopCounter = Math.round(Scratch.Cast.toNumber(args.NUM));
-      }
+      if (typeof util.stackFrame.loopCounter === "undefined") util.stackFrame.loopCounter = Math.round(Scratch.Cast.toNumber(args.NUM));
       util.stackFrame.loopCounter--;
       if (!condition && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
     }
@@ -820,6 +782,8 @@
         }
       }
     }
+
+    removeThorns(args) { return args.SVG.replaceAll("linejoin=\"miter\"", "linejoin=\"round\"") }
   }
 
   Scratch.extensions.register(new Sharktilities());
