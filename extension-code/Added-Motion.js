@@ -135,6 +135,30 @@
               }
             }
           },
+          {
+            opcode: "whileGlide",
+            blockType: Scratch.BlockType.LOOP,
+            text: "while gliding [NAME] [SECS] secs to x: [X] y: [Y] run",
+            filter: [Scratch.TargetType.SPRITE],
+            arguments: {
+              X: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+              Y: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0,
+              },
+              SECS: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1,
+              },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS2",
+              }
+            }
+          },
           "---",
           {
             opcode: "directSprite",
@@ -283,7 +307,7 @@
 
     rotateStyle(_, util) { return util.target.rotationStyle }
 
-    betterGlide(args, util) {
+    betterGlide(args, util, loop) {
       const target = args.NAME === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.NAME);
       if (!util.stackFrame.startTime) {
         util.stackFrame.startTime = new Date().getTime();
@@ -296,7 +320,11 @@
           target.setXY(util.stackFrame.endX, util.stackFrame.endY);
           return;
         }
-        util.yield();
+        if (loop === "on") {
+          util.startBranch(1, true);
+        } else {
+          util.yield();
+        }
       } else {
         const currentTime = new Date().getTime();
         const timeElapsed = currentTime - util.stackFrame.startTime;
@@ -308,12 +336,18 @@
             util.stackFrame.startX + dx,
             util.stackFrame.startY + dy
           );
-          util.yield();
+          if (loop === "on") {
+            util.startBranch(1, true);
+          } else {
+            util.yield();
+          }
         } else {
           target.setXY(util.stackFrame.endX, util.stackFrame.endY);
         }
       }
     }
+
+    whileGlide(args, util) { this.betterGlide(args, util, "on") }
 
     _getTargets(enable) {
       const spriteNames = [];
