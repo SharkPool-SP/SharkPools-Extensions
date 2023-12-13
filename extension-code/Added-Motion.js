@@ -1,16 +1,14 @@
 // Name: Added Motion
 // ID: SPaddedmotion
 // Description: New Motion related Blocks!
-// By: SharkPool <https://github.com/SharkPool-SP>
+// By: SharkPool
 
-//  Version 1.3.0
+//  Version 1.4.0
 
 (function(Scratch) {
   "use strict";
 
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error("Added Motion must run unsandboxed");
-  }
+  if (!Scratch.extensions.unsandboxed) throw new Error("Added Motion must run unsandboxed");
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
@@ -47,16 +45,21 @@
               }
             }
           },
+          {
+            opcode: "rotateStyle",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "rotation style",
+            filter: [Scratch.TargetType.SPRITE],
+          },
           "---",
           {
             opcode: "randomcoordinate",
             blockType: Scratch.BlockType.REPORTER,
-            text: "random [COORDINATE] coordinate with max change [MAXCHANGE] in [STAGE] stage",
+            text: "random [COORDINATE] with max change [MAXCHANGE] in [STAGE] stage",
             arguments: {
               COORDINATE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "COORDINATE",
-                defaultValue: "x",
               },
               MAXCHANGE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -65,19 +68,14 @@
               STAGE: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "STAGE",
-                defaultValue: "freeroam",
               }
             }
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Sprite Controlling",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Sprite Controlling" },
           {
             opcode: "moveSprite",
             blockType: Scratch.BlockType.COMMAND,
             text: "set [NAME] position to x [x] y [y]",
-            filter: [Scratch.TargetType.SPRITE],
             arguments: {
               x: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -97,7 +95,6 @@
             opcode: "moveSprite2",
             blockType: Scratch.BlockType.COMMAND,
             text: "change [NAME] position by x [x] y [y]",
-            filter: [Scratch.TargetType.SPRITE],
             arguments: {
               x: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -115,10 +112,34 @@
           },
           "---",
           {
+            opcode: "betterGlide",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "glide [NAME] [SECS] secs to x: [X] y: [Y]",
+            filter: [Scratch.TargetType.SPRITE],
+            arguments: {
+              X: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+              Y: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0,
+              },
+              SECS: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1,
+              },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS2",
+              }
+            }
+          },
+          "---",
+          {
             opcode: "directSprite",
             blockType: Scratch.BlockType.COMMAND,
             text: "set [NAME] direction to [ANGLE]",
-            filter: [Scratch.TargetType.SPRITE],
             arguments: {
               ANGLE: {
                 type: Scratch.ArgumentType.ANGLE,
@@ -134,7 +155,6 @@
             opcode: "directSprite2",
             blockType: Scratch.BlockType.COMMAND,
             text: "change [NAME] direction by [ANGLE] degrees",
-            filter: [Scratch.TargetType.SPRITE],
             arguments: {
               ANGLE: {
                 type: Scratch.ArgumentType.ANGLE,
@@ -151,7 +171,6 @@
             opcode: "sizeSprite",
             blockType: Scratch.BlockType.COMMAND,
             text: "set [NAME] size to [SIZE]",
-            filter: [Scratch.TargetType.SPRITE],
             arguments: {
               SIZE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -167,7 +186,6 @@
             opcode: "sizeSprite2",
             blockType: Scratch.BlockType.COMMAND,
             text: "change [NAME] size by [SIZE]",
-            filter: [Scratch.TargetType.SPRITE],
             arguments: {
               SIZE: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -181,14 +199,8 @@
           }
         ],
         menus: {
-          COORDINATE: {
-            acceptReporters: false,
-            items: ["x", "y"]
-          },
-          STAGE: {
-            acceptReporters: false,
-            items: ["freeroam", "boxed"]
-          },
+          COORDINATE: ["x", "y"],
+          STAGE: ["freeroam", "boxed"],
           TARGETS: {
             acceptReporters: true,
             items: this._getTargets(false),
@@ -254,67 +266,67 @@
     }
 
     randomcoordinate(args, util) {
-      const menuSelection = args.COORDINATE;
       const maxChange = Scratch.Cast.toNumber(args.MAXCHANGE);
-      const stage = args.STAGE;
-
-      let coordinateValue = 0;
-      switch (menuSelection) {
-        case "x":
-          coordinateValue = util.target.x;
-          break;
-        case "y":
-          coordinateValue = util.target.y;
-          break;
-      }
-
+      let coordinateValue = util.target[args.COORDINATE];
       const randomChange = Math.floor(Math.random() * (maxChange + 1));
       const sign = Math.random() < 0.5 ? -1 : 1;
-
-      if (stage === "freeroam") {
+      if (args.STAGE === "freeroam") {
         coordinateValue += sign * randomChange;
-      } else if (stage === "boxed") {
-        const canvasWidth = util.target.runtime.constructor.STAGE_WIDTH;
-        const canvasHeight = util.target.runtime.constructor.STAGE_HEIGHT;
-        const maxCanvasValueX = canvasWidth / 2;
-        const maxCanvasValueY = canvasHeight / 2;
-
+      } else if (args.STAGE === "boxed") {
+        const canvasWidth = parseFloat(Scratch.renderer.canvas.style.width) / 2;
+        const canvasHeight = parseFloat(Scratch.renderer.canvas.style.height) / 2;
         coordinateValue += sign * randomChange;
-        switch (menuSelection) {
-          case "x":
-            coordinateValue = Math.min(maxCanvasValueX, Math.abs(coordinateValue)) * sign;
-            break;
-          case "y":
-            coordinateValue = Math.min(maxCanvasValueY, Math.abs(coordinateValue)) * sign;
-            break;
-        }
+        coordinateValue = Math.min(args.COORDINATE === "x" ? canvasWidth : canvasHeight, Math.abs(coordinateValue)) * sign;
       }
       return coordinateValue;
     }
 
+    rotateStyle(_, util) { return util.target.rotationStyle }
+
+    betterGlide(args, util) {
+      const target = args.NAME === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.NAME);
+      if (!util.stackFrame.startTime) {
+        util.stackFrame.startTime = new Date().getTime();
+        util.stackFrame.duration = Scratch.Cast.toNumber(args.SECS);
+        util.stackFrame.startX = target.x;
+        util.stackFrame.startY = target.y;
+        util.stackFrame.endX = Scratch.Cast.toNumber(args.X);
+        util.stackFrame.endY = Scratch.Cast.toNumber(args.Y);
+        if (util.stackFrame.duration <= 0) {
+          target.setXY(util.stackFrame.endX, util.stackFrame.endY);
+          return;
+        }
+        util.yield();
+      } else {
+        const currentTime = new Date().getTime();
+        const timeElapsed = currentTime - util.stackFrame.startTime;
+        if (timeElapsed < util.stackFrame.duration * 1000) {
+          const frac = timeElapsed / (util.stackFrame.duration * 1000);
+          const dx = frac * (util.stackFrame.endX - util.stackFrame.startX);
+          const dy = frac * (util.stackFrame.endY - util.stackFrame.startY);
+          target.setXY(
+            util.stackFrame.startX + dx,
+            util.stackFrame.startY + dy
+          );
+          util.yield();
+        } else {
+          target.setXY(util.stackFrame.endX, util.stackFrame.endY);
+        }
+      }
+    }
+
     _getTargets(enable) {
       const spriteNames = [];
-      if (enable) {
-        spriteNames.push({
-          text: "myself", value: "_myself_",
-        });
-      }
+      if (enable) spriteNames.push({ text: "myself", value: "_myself_" });
       const targets = Scratch.vm.runtime.targets;
       for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
         if (target.isOriginal) {
           const targetName = target.getName();
-          spriteNames.push({
-            text: targetName,
-            value: targetName,
-          });
+          spriteNames.push({ text: targetName, value: targetName });
         }
       }
-      if (spriteNames.length > 0) {
-        return spriteNames;
-      } else {
-        return [""];
-      }
+      return spriteNames.length > 0 ? spriteNames : [""];
     }
   }
 
