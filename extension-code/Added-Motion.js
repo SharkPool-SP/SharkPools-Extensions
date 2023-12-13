@@ -23,7 +23,7 @@
         name: "Added Motion",
         color1: "#4c97ff",
         color2: "#3373cc",
-	      menuIconURI,
+        menuIconURI,
         blocks: [
           {
             opcode: "moveinangledirection",
