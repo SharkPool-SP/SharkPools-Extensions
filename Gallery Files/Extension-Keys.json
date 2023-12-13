@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "update"
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
@@ -46,7 +46,7 @@
       "credits": "New Motion Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "update"
     },
     "Geometry-Dash-API": {
       "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool. Thank you RobTopGames and ColonGD",
@@ -70,7 +70,7 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
@@ -130,7 +130,7 @@
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
-      "status": "update"
+      "status": ""
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
