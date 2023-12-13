@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.0.0
+// Version 2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -385,6 +385,7 @@
             opcode: "isScreen",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SCREEN] ?",
+            disableMonitor: true,
             arguments: {
               SCREEN: {
                 type: Scratch.ArgumentType.STRING,
@@ -762,12 +763,10 @@
     }
 
     setAtt(args) {
-      let box = document.querySelectorAll(`[class^="question"]`)[0];
+      let box = document.querySelectorAll(`[class*="question"]`)[0];
       if (!box) return;
       const canvas = getComputedStyle(document.querySelector("canvas"));
-      if (args.width) {
-        box.style.width = `${args.width * (parseInt(canvas.width) / 480)}px`;
-      }
+      if (args.width) box.style.width = `${args.width * (parseInt(canvas.width) / 480)}px`;
       if (args.x !== "" && args.y !== "") {
         const x = args.x + (parseInt(canvas.width) / 2) - (args.width * (parseInt(canvas.width) / 480) / 2);
         const y = args.y + (parseInt(canvas.height) / 2) - (this.wait[1] === "stage" ? 53 : 39);
@@ -810,8 +809,8 @@
     screenOff() { return Scratch.vm.renderer.canvas.width / Scratch.vm.runtime.stageWidth }
 
     isScreen(args) {
-      const value = this.screenOff();
-      return args.SCREEN === "fullscreen" ? value > 1.5 : value < 0.5;
+      const values = [parseFloat(Scratch.vm.renderer.canvas.style.width), Scratch.vm.runtime.stageWidth];
+      return args.SCREEN === "fullscreen" ? values[0] > values[1] : values[0] < values[1];
     }
 
     _getTargets(mouse, myself) {
