@@ -88,7 +88,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
@@ -203,6 +203,12 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Money-Utilities.js",
       "tags": ".all.fetching",
       "status": ""
+    },
+    "Display-Text": {
+      "credits": "Display Advanced Text in Your Projects!. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
+      "tags": ".all.expanded.utilities",
+      "status": "new"
     },
     "Example": {
       "credits": "",
