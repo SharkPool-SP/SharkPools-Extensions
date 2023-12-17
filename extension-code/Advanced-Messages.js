@@ -1,18 +1,16 @@
 // Name: Advanced Messages
 // ID: SPmessages
 // Description: More Message Blocks that do cool stuff!
-// By: SharkPool <https://github.com/SharkPool-SP>
+// By: SharkPool
 
-// Version V.1.0.0
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
-
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error("Advanced Messages Extension must run unsandboxed!");
-  }
+  if (!Scratch.extensions.unsandboxed) throw new Error("Advanced Messages Extension must run unsandboxed!");
 
   let allMessages = [];
+  let recievers = [];
 
   class SPmessages {
     getInfo() {
@@ -140,7 +138,17 @@
               }
             },
           },
-          "---",
+          {
+            opcode: "getRecievers",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "receivers of [MSG]",
+            arguments: {
+              MSG: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "message 1",
+              }
+            },
+          },
           {
             opcode: "allowSender",
             blockType: Scratch.BlockType.COMMAND,
@@ -152,6 +160,7 @@
               }
             },
           },
+          "---",
           {
             opcode: "deleteMessage",
             blockType: Scratch.BlockType.COMMAND,
@@ -187,6 +196,7 @@
         });
       }
       allMessages[name] = { data: data, canContinue: canContinue };
+      recievers[name] = { sprites: [], id: [] };
     }
 
     async broadcast1(args) {
@@ -230,32 +240,45 @@
       return waitForMessage();
     }
 
-    whenReceive1(args) {
-      return !!(allMessages[args.MSG]);
-    }
-
-    whenReceive2(args) {
-      return !!(allMessages[args.MSG]);
-    }
-
-    whenReceiveData1(args) {
-      return !!(allMessages[args.MSG] && allMessages[args.MSG].data === args.DATA);
-    }
-
-    whenReceiveData2(args) {
-      return !!(allMessages[args.MSG] && allMessages[args.MSG].data === args.DATA);
-    }
-
-    receivedData(args) {
+    whenReceive1(args, util) {
       if (allMessages[args.MSG]) {
-        return allMessages[args.MSG].data;
-      } else return "";
+        let name = util.target.sprite.name;
+        if (!util.target.isOriginal) {
+          const cloneNum = recievers[args.MSG] ? recievers[args.MSG].sprites.filter(item => item.startsWith(`${name} (clone #`)).length + 1 : 1;
+          name = `${name} (clone #${cloneNum})`;
+        }
+        if (recievers[args.MSG].id.indexOf(util.target.id) === -1) recievers[args.MSG].sprites.push(name);
+        if (recievers[args.MSG].id.indexOf(util.target.id) === -1) recievers[args.MSG].id.push(util.target.id);
+        return true;
+      } else { return false }
     }
+
+    whenReceive2(args) { return Scratch.Cast.toBoolean(allMessages[args.MSG]) }
+
+    whenReceiveData1(args, util) {
+      if (allMessages[args.MSG] && allMessages[args.MSG].data === args.DATA) {
+        let name = util.target.sprite.name;
+        if (!util.target.isOriginal) {
+          const cloneNum = recievers[args.MSG] ? recievers[args.MSG].sprites.filter(item => item.startsWith(`${name} (clone #`)).length + 1 : 1;
+          name = `${name} (clone #${cloneNum})`;
+        }
+        if (recievers[args.MSG].id.indexOf(util.target.id) === -1) recievers[args.MSG].sprites.push(name);
+        if (recievers[args.MSG].id.indexOf(util.target.id) === -1) recievers[args.MSG].id.push(util.target.id);
+        return true;
+      } else { return false }
+    }
+
+    whenReceiveData2(args) { return Scratch.Cast.toBoolean(allMessages[args.MSG] && allMessages[args.MSG].data === args.DATA) }
+
+    receivedData(args) { return allMessages[args.MSG] ? allMessages[args.MSG].data : "" }
+
+    getRecievers(args) { return allMessages[args.MSG] ? JSON.stringify(recievers[args.MSG].sprites) : "[]" }
 
     allowSender(args) {
       if (allMessages[args.MSG]) {
         allMessages[args.MSG].canContinue = true;
         delete allMessages[args.MSG];
+        delete recievers[args.MSG];
       }
     }
 
@@ -263,12 +286,13 @@
       return new Promise((resolve) => {
         if (allMessages[args.MSG]) {
           delete allMessages[args.MSG];
+          delete recievers[args.MSG];
         }
         resolve();
       });
     }
 
-    deleteAll() { allMessages = [] }
+    deleteAll() { allMessages = []; recievers = [] }
   }
 
   Scratch.extensions.register(new SPmessages());
