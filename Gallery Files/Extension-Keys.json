@@ -40,7 +40,7 @@
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities",
-      "status": "update"
+      "status": ""
     },
     "Added-Motion": {
       "credits": "New Motion Blocks made by SharkPool",
@@ -70,7 +70,7 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
@@ -178,7 +178,7 @@
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
       "tags": ".all.expanded.utilities",
-      "status": ""
+      "status": "update"
     },
     "Fetch-Progress": {
       "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
