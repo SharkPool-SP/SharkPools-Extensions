@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.0.1
+// Version 2.1.0
 
 (function (Scratch) {
   "use strict";
@@ -362,6 +362,21 @@
             }
           },
           {
+            opcode: "advancedAskReporter",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "ask [QUESTION] as [THING]",
+            arguments: {
+              THING: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "Asking"
+              },
+              QUESTION: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "what is your name?"
+              }
+            }
+          },
+          {
             opcode: "setAtt",
             blockType: Scratch.BlockType.COMMAND,
             text: "set ask monitor x: [x] y: [y] width: [width]",
@@ -560,9 +575,7 @@
       return loudness;
     }
 
-    calculateAverageLoudness(loudnessArray) {
-      return loudnessArray.reduce((acc, loudness) => acc + loudness, 0) / loudnessArray.length +1;
-    }
+    calculateAverageLoudness(loudnessArray) { return loudnessArray.reduce((acc, loudness) => acc + loudness, 0) / loudnessArray.length +1 }
 
     toggleMicrophone(args) {
       if (args.STATE === "enabled") {
@@ -579,9 +592,7 @@
         this.audioContext.close().then(() => {
           this.audioContext = null;
           this.loudnessArray = [];
-        }).catch(error => {
-          console.error("Error while closing audio context:", error);
-        });
+        }).catch(error => { console.error("Error while closing audio context:", error) });
       }
     }
 
@@ -672,9 +683,7 @@
     spriteCurrentTouching(args, util) {
       const list = [];
       const spriteNames = this._getTargets();
-      if (args.SPRITE === "_myself_") {
-        return this.spriteCurrentTouchingMyself(util);
-      }
+      if (args.SPRITE === "_myself_") return this.spriteCurrentTouchingMyself(util);
       const thisSprite = args.SPRITE === "_mouse_" ? "_mouse_" : args.SPRITE;
       if (!thisSprite) return "[]";
       for (let i = 0; i < spriteNames.length; i++) {
@@ -695,9 +704,7 @@
         const target = util.target;
         let caseTouch;
         caseTouch = target.isTouchingObject(sprite1);
-        if (caseTouch) {
-          list.push(spriteNames[i].value);
-        }
+        if (caseTouch) list.push(spriteNames[i].value);
       }
       return JSON.stringify(list);
     }
@@ -780,13 +787,15 @@
       this.wait = [true, args.THING];
       runtime.ext_scratch3_sensing.askAndWait(args, util);
       if (!util.target.isStage && wasVisible) {util.target.setVisible(true)}
-      if (args.WAIT === "wait") {
+      if (args.WAIT === "wait" || args.WAIT === undefined) {
         return new Promise(resolve => {
           const checkWait = () => this.wait[0] ? setTimeout(checkWait, 100) : resolve();
           checkWait();
         });
       }
     }
+
+    advancedAskReporter(args, util) { return this.advancedAsk(args, util).then(() => runtime.ext_scratch3_sensing.getAnswer()) }
 
     mouseClick(args, util) {return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)])}
     realX() {return window.mouseX}
