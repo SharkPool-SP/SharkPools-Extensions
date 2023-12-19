@@ -216,6 +216,12 @@
       "tags": ".all.expanded.utilities",
       "status": "new"
     },
+    "QR-Codes": {
+      "credits": "Create and Read QR Codes. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
+      "tags": ".all.fetching.utilities",
+      "status": "new"
+    },
     "Example": {
       "credits": "",
       "url": "",
