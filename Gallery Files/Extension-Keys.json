@@ -214,12 +214,18 @@
       "credits": "Color Utilities and Color Conversions. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
-      "status": "new"
+      "status": ""
     },
     "QR-Codes": {
       "credits": "Create and Read QR Codes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
       "tags": ".all.fetching.utilities",
+      "status": "new"
+    },
+    "Runtime-Events": {
+      "credits": "Events from the Runtime. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
+      "tags": ".all.expanded.utilities",
       "status": "new"
     },
     "Example": {
