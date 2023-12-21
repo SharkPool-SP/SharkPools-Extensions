@@ -49,10 +49,10 @@
       "status": ""
     },
     "Geometry-Dash-API": {
-      "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool. Thank you RobTopGames and ColonGD",
+      "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool and GD Colon. Thank you RobTopGames.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geometry-Dash-API.js",
       "tags": ".all.utilities.fetching",
-      "status": ""
+      "status": "update"
     },
     "Sound-Waves": {
       "credits": "Play various oscillators in your project. Made by SharkPool",
