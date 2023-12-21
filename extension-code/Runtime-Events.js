@@ -113,7 +113,7 @@
           {
             opcode: "onRunT",
             blockType: Scratch.BlockType.EVENT,
-            text: "when [MENU] changes",
+            text: "when [MENU] is set",
             isEdgeActivated: false,
             arguments: {
               MENU: { type: Scratch.ArgumentType.STRING, menu: "RUNTIME_OPT" }
