@@ -3,7 +3,7 @@
 // Description: Color Utilities and Color Conversions
 // By: SharkPool
 
-//  Version 1.0.0
+//  Version 1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -42,11 +42,21 @@
           {
             opcode: "changeHexAtt",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set [ATT] of [COLOR] to [NUM]%",
+            text: "change [ATT] of [COLOR] by [NUM]",
             arguments: {
               ATT: { type: Scratch.ArgumentType.STRING, menu: "COLATTS" },
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
+            }
+          },
+          {
+            opcode: "mergeHex",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "mix [COLOR] and [COLOR2] by [NUM]%",
+            arguments: {
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
+              COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 }
             }
           },
           {
@@ -258,6 +268,17 @@
         color = this.hsv2hex(hsvColor);
       }
       return color;
+    }
+
+    mergeHex(args) {
+      const rgb0 = this.hex2RGBA(args.COLOR);
+      const rgb1 = this.hex2RGBA(args.COLOR2);
+      const off = [Math.abs(args.NUM / 100), 1 - Math.abs(args.NUM / 100)];
+      return this.RGBA2hex({
+        r: (off[0] * rgb0.r) + (off[1] * rgb1.r),
+        g: (off[0] * rgb0.g) + (off[1] * rgb1.g),
+        b: (off[0] * rgb0.b) + (off[1] * rgb1.b)
+      });
     }
 
     // Gradient blocks
