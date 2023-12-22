@@ -64,7 +64,7 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
@@ -94,7 +94,7 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "update"
+      "status": ""
     },
     "Recording": {
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
@@ -196,7 +196,7 @@
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "update"
     },
     "Money-Utilities": {
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
