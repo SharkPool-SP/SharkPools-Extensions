@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.1.0
+// Version 2.2.0
 
 (function (Scratch) {
   "use strict";
@@ -21,7 +21,7 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   var timer = 0;
-  
+
   class HyperSenseSP {
     constructor() {
       runtime.shouldExecuteStopClicked = true;
@@ -43,7 +43,7 @@
       this.scrollDistance = 0;
       this.oldScroll = [0, 0];
       this.loudnessArray = [];
-      document.addEventListener("wheel", this.handleScroll);
+      window.addEventListener("wheel", this.handleScroll);
       this.isMicrophoneEnabled = false;
       this.pressedKey = null;
       this.wait = [false, "sprite"];
@@ -84,6 +84,11 @@
             opcode: "monitorScrollWheel",
             blockType: Scratch.BlockType.REPORTER,
             text: "scroll wheel distance"
+          },
+          {
+            opcode: "scrollVel",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "scroll velocity"
           },
           {
             opcode: "monitorScrollWheelLimited",
@@ -509,6 +514,8 @@
 
     monitorScrollWheel() { return this.scrollDistance }
 
+    scrollVel() { return this.oldScroll[1] * -1 }
+
     monitorScrollWheelLimited(args) {
       const min = Scratch.Cast.toNumber(args.MIN);
       const max = Scratch.Cast.toNumber(args.MAX);
@@ -521,13 +528,14 @@
 
     handleScroll = (event) => {
       this.scrollDistance += event.deltaY;
-      if (this.scrollWheelBool({EVENT:"up", FH:true})) runtime.startHats("HyperSenseSP_scrollWheelHat");
-      if (this.scrollWheelBool({EVENT:"down", FH:true})) runtime.startHats("HyperSenseSP_scrollWheelHat2");
+      this.oldScroll[1] = event.deltaY;
+      if (this.scrollWheelBool({ EVENT:"up" })) runtime.startHats("HyperSenseSP_scrollWheelHat");
+      if (this.scrollWheelBool({ EVENT:"down" })) runtime.startHats("HyperSenseSP_scrollWheelHat2");
     };
 
     scrollWheelBool(args, fromHat) {
-      const status = eval(`this.scrollDistance ${args.EVENT === "down" ? ">" : "<"} this.oldScroll[${fromHat ? 1 : 0}]`);
-      if (status) this.oldScroll[fromHat ? 1 : 0] = this.scrollDistance;
+      const status = eval(`this.scrollDistance ${args.EVENT === "down" ? ">" : "<"} this.oldScroll[0]`);
+      if (status) this.oldScroll[0] = this.scrollDistance;
       return (!!status);
     }
 
@@ -545,9 +553,7 @@
       microphone.connect(analyser);
       this.updateMicrophoneLoudness(analyser);
     };
-    handleMicrophoneError = (error) => {
-      console.error("Error accessing microphone:", error);
-    };
+    handleMicrophoneError = (error) => { console.error("Error accessing microphone:", error) };
 
     updateMicrophoneLoudness(analyser) {
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
@@ -555,17 +561,13 @@
         analyser.getByteFrequencyData(dataArray);
         const loudness = this.calculateLoudness(dataArray);
         this.loudnessArray.push(loudness);
-        if (this.loudnessArray.length >= loudnessArrayLength) {
-          this.loudnessArray.shift();
-        }
+        if (this.loudnessArray.length >= loudnessArrayLength) this.loudnessArray.shift();
       }, 100);
     }
 
     calculateLoudness(dataArray) {
       let sum = 0;
-      for (let i = 0; i < dataArray.length; i++) {
-        sum += dataArray[i];
-      }
+      for (let i = 0; i < dataArray.length; i++) { sum += dataArray[i] }
       return sum / dataArray.length;
     }
 
