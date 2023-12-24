@@ -4,235 +4,274 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/12/2023"
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/17/2023"
     },
     "Time-Calculations": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Time-Calculation.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 09/11/2023"
     },
     "Scratch-Utilities": {
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 10/05/2023"
     },
     "Niche-Toolbox": {
       "credits": "Utility Blocks made by Ashimee. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Niche-Toolbox.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/09/2023"
     },
     "Seeds": {
       "credits": "Generate random seeded numbers, generated terrain, and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Seeds.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/29/2023"
     },
     "Tune-Shark": {
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/07/2023"
     },
     "Added-Motion": {
       "credits": "New Motion Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/12/2023"
     },
     "Geometry-Dash-API": {
       "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool and GD Colon. Thank you RobTopGames.",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geometry-Dash-API.js",
       "tags": ".all.utilities.fetching",
-      "status": "update"
+      "status": "update",
+      "date": "Last Updated: 12/20/2023"
     },
     "Sound-Waves": {
       "credits": "Play various oscillators in your project. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sound-Waves.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 09/18/2023"
     },
     "Hyper-Sense": {
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "update",
+      "date": "Last Updated: 12/22/2023"
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/13/2023"
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 08/15/2023"
     },
     "Particle-Tools": {
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 10/20/2023"
     },
     "Sprite-Effects": {
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/07/2023"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/14/2023"
     },
     "Recording": {
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": ""
+      "status": "",
+      "date": "Released: 09/18/2023"
     },
     "Newgrounds-Audio": {
       "credits": "Fetch Audio and Audio Information from Newgrounds. Made by SharkPool, works best with Tune Shark",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Newgrounds-Audio.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 10/16/2023"
     },
     "Sprite-Parenting": {
       "credits": "Link sprites together and make them follow the parent's data. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Parenting.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Released: 09/24/2023"
     },
     "Lazy-Collisions": {
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Released: 08/24/2023"
     },
     "Files-Expanded": {
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": ""
+      "status": "",
+      "date": "Released: 10/02/2023"
     },
     "Monitors-Plus": {
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/14/2023"
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities",
-      "status": "update"
+      "status": "update",
+      "date": "Last Updated: 12/18/2023"
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by DNin01 and Meehdrescher",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Gamepad-Expanded.js",
       "tags": ".all.expanded.utilities",
-      "status": ""
+      "status": "",
+      "date": "Released: 10/??/2023"
     },
     "Tile-Grids": {
       "credits": "Place Sprites on Tile Grids. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tile-Grids.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Released: 10/09/2023"
     },
     "Since-2000": {
       "credits": "An expansion of the Since 2000 Blocks. Made By ION, modified by Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Since-2000.js",
       "tags": ".all.expanded",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 12/05/2023"
     },
     "Animations": {
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/12/2023"
     },
     "Pause-Utilities": {
       "credits": "Pause your Project and Chosen Scripts. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/26/2023"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Text-to-Speech.js",
       "tags": ".all.expanded.fetching.utilities",
-      "status": ""
+      "status": "",
+      "date": "Released: 10/25/2023"
     },
     "Advanced-Messages": {
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
       "tags": ".all.expanded.utilities",
-      "status": "update"
+      "status": "update",
+      "date": "Last Updated: 12/20/2023"
     },
     "Fetch-Progress": {
       "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Fetch-Progress.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/08/2023"
     },
     "Geolocation": {
       "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geolocation.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "",
+      "date": "Last Updated: 11/??/2023"
     },
     "Spotify": {
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
-      "status": "update"
+      "status": "update",
+      "date": "Last Updated: 12/20/2023"
     },
     "Money-Utilities": {
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Money-Utilities.js",
       "tags": ".all.fetching",
-      "status": ""
+      "status": "",
+      "date": "Released: 11/27/2023"
     },
     "Display-Text": {
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "update"
+      "status": "update",
+      "date": "Last Updated: 12/19/2023"
     },
     "Color-Master": {
       "credits": "Color Utilities and Color Conversions. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
-      "status": "update"
+      "status": "update",
+      "date": "Last Updated: 12/20/2023"
     },
     "QR-Codes": {
       "credits": "Create and Read QR Codes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
       "tags": ".all.fetching.utilities",
-      "status": "new"
+      "status": "new",
+      "date": "Released: 12/20/2023"
     },
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
       "tags": ".all.expanded.utilities",
-      "status": "new"
+      "status": "new",
+      "date": "Released: 12/20/2023"
     },
     "Example": {
       "credits": "",
       "url": "",
       "tags": ".all.utilities.expanded.fetching",
-      "status": ""
+      "status": "",
+      "date": ""
     }
   },
   "GAL text": [
