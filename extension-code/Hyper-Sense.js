@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.2.0
+// Version 2.2.1
 
 (function (Scratch) {
   "use strict";
@@ -21,6 +21,7 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   var timer = 0;
+  let publicVars = {};
 
   class HyperSenseSP {
     constructor() {
@@ -56,7 +57,6 @@
         this.pressedKey = this.pressedKey;
         currentlyPressedKey = this.pressedKey;
       });
-
       document.addEventListener("keyup", (event) => {
         keyHitPass[currentlyPressedKey] = 0;
         const releasedKey = event.key.toUpperCase();
@@ -64,7 +64,6 @@
         currentlyPressedKey = Object.keys(this.pressedKeys).pop() || null;
         keyPressTime = 0;
       });
-
       document.addEventListener("mousemove", (event) => {
         window.mouseX = event.clientX;
         window.mouseY = event.clientY;
@@ -773,7 +772,10 @@
 
     setAtt(args) {
       let box = document.querySelectorAll(`[class*="question"]`)[0];
-      if (!box) return;
+      if (!box) {
+        publicVars.askStuff = args;
+        return;
+      }
       const canvas = getComputedStyle(document.querySelector("canvas"));
       if (args.width) box.style.width = `${args.width * (parseInt(canvas.width) / 480)}px`;
       if (args.x !== "" && args.y !== "") {
@@ -789,6 +791,7 @@
       this.wait = [true, args.THING];
       runtime.ext_scratch3_sensing.askAndWait(args, util);
       if (!util.target.isStage && wasVisible) {util.target.setVisible(true)}
+      if (publicVars.askStuff) this.setAtt(publicVars.askStuff);
       if (args.WAIT === "wait" || args.WAIT === undefined) {
         return new Promise(resolve => {
           const checkWait = () => this.wait[0] ? setTimeout(checkWait, 100) : resolve();
