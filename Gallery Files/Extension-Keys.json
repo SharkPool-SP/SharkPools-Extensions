@@ -266,6 +266,13 @@
       "status": "",
       "date": "Released: 12/20/2023"
     },
+    "Speech-Bubbles": {
+      "credits": "Customizable Speech Bubbles. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Speech-Bubbles.js",
+      "tags": ".all.expanded.utilities",
+      "status": "new",
+      "date": "Released: 12/28/2023"
+    },
     "Example": {
       "credits": "",
       "url": "",
