@@ -3,7 +3,7 @@
 // Description: Color Utilities and Color Conversions
 // By: SharkPool
 
-//  Version 1.1.0
+//  Version 1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -42,7 +42,7 @@
           {
             opcode: "changeHexAtt",
             blockType: Scratch.BlockType.REPORTER,
-            text: "change [ATT] of [COLOR] by [NUM]",
+            text: "set [ATT] of [COLOR] to [NUM]",
             arguments: {
               ATT: { type: Scratch.ArgumentType.STRING, menu: "COLATTS" },
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
@@ -57,6 +57,14 @@
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 }
+            }
+          },
+          {
+            opcode: "invertHex",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "invert [COLOR]",
+            arguments: {
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
             }
           },
           {
@@ -279,6 +287,14 @@
         g: (off[0] * rgb0.g) + (off[1] * rgb1.g),
         b: (off[0] * rgb0.b) + (off[1] * rgb1.b)
       });
+    }
+
+    invertHex(args) {
+      const rgb = this.hex2RGBA(args.COLOR);
+      rgb.r = 255 - rgb.r;
+      rgb.g = 255 - rgb.g;
+      rgb.b = 255 - rgb.b;
+      return this.RGBA2hex(rgb);
     }
 
     // Gradient blocks
