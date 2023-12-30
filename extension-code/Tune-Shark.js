@@ -3,7 +3,7 @@
 // Description: Advanced Sound Engine, inspired by LilyMakesThings
 // By: SharkPool
 
-// Version V.2.3.0
+// Version V.2.4.0
 // Credit to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -12,6 +12,8 @@
   if (!Scratch.extensions.unsandboxed) throw new Error("Tune Shark extension must be run unsandboxed");
 
   let enableBlock = true;
+  let startedLoop = false;
+  let controller = false;
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwLDAsMTAyLjE4NTE4LDEwMi4xODUxOCIgaGVpZ2h0PSIxMDIuMTg1MTgiIHdpZHRoPSIxMDIuMTg1MTgiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI0OC45MDc0MSwtMTQ4LjkwNzQxKSI+PGcgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9Ij48cGF0aCBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0iIzg0ODQ4NCIgZD0iTTI0OC45MDc0MSwyMDBjMCwtMjguMjE3NjYgMjIuODc0OTMsLTUxLjA5MjU5IDUxLjA5MjU5LC01MS4wOTI1OWMyOC4yMTc2NiwwIDUxLjA5MjU5LDIyLjg3NDkzIDUxLjA5MjU5LDUxLjA5MjU5YzAsMjguMjE3NjYgLTIyLjg3NDkzLDUxLjA5MjU5IC01MS4wOTI1OSw1MS4wOTI1OWMtMjguMjE3NjYsMCAtNTEuMDkyNTksLTIyLjg3NDkzIC01MS4wOTI1OSwtNTEuMDkyNTl6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSJub25lIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNmZmZmZmYiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBkPSJNMzIyLjMxMzMsMjMyLjkyMTI4bC0wLjAwMDQzLC0wLjAwMjA4Yy0xLjE4NCwyLjM5NTg3IC00LjQxMDE4LDMuNzE3NjMgLTcuODA4MywzLjAyMTA3Yy0zLjg5MTU1LC0wLjc5ODA4IC02LjUzNDQyLC0zLjk0MDg3IC01LjkwMjczLC03LjAxOTk5YzAuNjMxNDgsLTMuMDc5NyA0LjI5Nzc3LC00LjkyODM3IDguMTg5MzMsLTQuMTMwMjljMS43NzIxMiwwLjM2MzIzIDMuMjgzMjYsMS4yMTMzIDQuMzQ2MTcsMi4zMjE0NWw2LjMxNTc1LC0xMy4zOTY5Yy05Ljk4MzkyLC0zLjkwNzUxIC0xOC42NzI4MywtNC44MTYxOCAtMTguNjcyODMsLTQuODE2MThsLTguNDkxNjIsMTguMDEyMzRjLTAuOTEzNDYsMi43NjU4NiAtNC4zODE0Nyw0LjM2NzM2IC04LjA1MDg1LDMuNjE1MjljLTMuODkxMTYsLTAuNzk3OSAtNi41MzM4NSwtMy45NDEwNyAtNS45MDI1NSwtNy4wMjAzOGMwLjYzMTMsLTMuMDc5MzEgNC4yOTc1OSwtNC45Mjc5OSA4LjE4OTMzLC00LjEzMDI5YzEuODA1MTcsMC4zNjk4OCAzLjM0MTYsMS4yNDUwMyA0LjQwNzQ5LDIuMzgzNzJsMTEuMzcyNTUsLTI0LjEwMzQyYzAsMCAxMi43ODgxNiwwLjIyMjY0IDI1LjQ2NDk3LDYuNzIyMzN6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2U9IiNmZmZmZmYiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0ibm9uZSIgZD0iTTI3NC44MTgyNSwxNzguMTkxNTZsMy42ODc2LDIxLjYwMzkyIj48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0iI2ZmZmZmZiIgZD0iTTI4MC4wMzkzOCwyMDAuNDM3NDVjMS4yNTk2NywyLjM3NzYgLTAuNzA0MDcsNS41MTAwNyAtNC4zODYxMyw2Ljk5NjU3Yy0zLjY4MjA2LDEuNDg2NSAtNy42ODgxMywwLjc2NDExIC04Ljk0NzgsLTEuNjEzNDljLTEuMjU5NjcsLTIuMzc3NiAwLjcwNDA3LC01LjUxMDA3IDQuMzg2MTMsLTYuOTk2NTdjMy42ODIwNiwtMS40ODY1IDcuNjg4MTMsLTAuNzY0MTEgOC45NDc4LDEuNjEzNDl6Ij48L3BhdGg+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSIjMDAwMDAwIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNmZmZmZmYiIGQ9Ik0yNzIuNzg3MTQsMTc1Ljc0Njk1YzAsMCA4Ljg1MzU3LC0xLjU1NTA0IDExLjI3NzM3LDIuNTI2NzVjMi4xNjY1NywzLjY0ODg1IDAuMDY1MjcsNy45MzA3OCAwLjE5MzQ3LDkuMjM4MDdjMC4xMjgyLDEuMzA3MjkgMS45ODQwNSwxLjAxMTU5IDEuOTg0MDUsMS4wMTE1OWwtMC4wMTIxLDEuNTI3MTFjMCwwIC0yLjYxMjk1LDAuNjEwMjggLTMuMTEyNCwtMS4yMDMzMmMtMC40OTk0NSwtMS44MTM1OSAtMC41MTAzOSwtNS40NTMzNiAtMi41NzU2MiwtNy41MDUzMmMtMi4wNjU4MSwtMi4wNTE3NyAtNi44NzUwOSwtMC42OTIwNyAtNi44NzUwOSwtMC42OTIwNyI+PC9wYXRoPjxwYXRoIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZmlsbD0iI2ZmZmZmZiIgZD0iTTMwOS4wNzk1NCwxODQuNjY2ODFjLTAuMzI1ODksMi4wNjkyNCAtMi4yOTkxMywzLjIzMzIzIC00LjA5MzM3LDMuOTEwMThjLTEuNjEyMDYsMC43MDk1MSAtMy40Njg4LDAuOTg0OTkgLTUuMTU1MTQsMC4zNjE0NWMtMS41OTQ2MiwtMC4zNzIyOSAtMy4xMTUzOCwtMS43NjU0OSAtMi45MjYyLC0zLjUxNTE2YzAuMTUwOSwtMi4wMzc0NiAxLjg1MzI3LC0zLjczNTEyIDMuNzU0NjEsLTQuMzA0MzZjMS44OTQ4NiwtMC43ODA5NiA0LjE1NTczLC0wLjcxMzc3IDUuOTY1MTcsMC4yNTI5MmMwLjg5MTg1LDAuNDEyNTQgMi4xMzkwOCwtMTMuODE3NjMgMi45NjU3NiwtMjAuMTExODRjMC4wOTgxOSwtMC42MjcxNCAyLjUyNDk2LC0wLjQ2MDE3IDIuNDU1NTMsMC4xNDc2YzAsMCAtMS44MTEyLDE1LjE2Nzc0IC0yLjk2NjM3LDIzLjI1OTIxeiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjUxLjA5MjU5OjUxLjA5MjU5LS0+";
@@ -25,10 +27,23 @@
   const settingsIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI4Ni4zNDQ5MiIgaGVpZ2h0PSI3OC45NzQwMSIgdmlld0JveD0iMCwwLDg2LjM0NDkyLDc4Ljk3NDAxIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTk2LjgyNzU0LC0xNDAuNTEzMDEpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE5Ni44Mjc1NCwyMTkuNDg3MDJ2LTc4Ljk3NDAxaDg2LjM0NDkydjc4Ljk3NDAxeiIgZmlsbD0iIzg0ODQ4NCIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTIxMi40MjMyLDE3Ni4wODE5OGMtMi4yMzEyMSwtMC45MDE0MyAtMy4zMDkyLC0zLjQ0MDkzIC0yLjQwNzc4LC01LjY3MjEzbDEuNzUzMiwtNC4zMzk1YzAuOTAxNDMsLTIuMjMxMjEgMy40NDA5MywtMy4zMDkyIDUuNjcyMTMsLTIuNDA3NzhsMTguMDI3NTQsNy4yODMzYy0yLjEyODcyLDEuMDg4NDggLTMuODkwMzYsMi45MTkwOSAtNC44NTYyNiw1LjMwOTg5Yy0wLjk0OTkzLDIuMzUxMjUgLTAuOTY5ODcsNC44NDczNSAtMC4yMzI4OSw3LjA4MDU5eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIi8+PHBhdGggZD0iTTI0My45MTgwMiwxNTIuNDIzMmMwLjkwMTQzLC0yLjIzMTIxIDMuNDQwOTMsLTMuMzA5MiA1LjY3MjEzLC0yLjQwNzc4bDQuMzM5NSwxLjc1MzJjMi4yMzEyMSwwLjkwMTQzIDMuMzA5MiwzLjQ0MDkzIDIuNDA3NzgsNS42NzIxM2wtNy4xNTM2OCwxNy43MDY2OWMtMS4xMDI0NywtMi4wMDU4IC0yLjg3NzIxLC0zLjY1ODU2IC01LjE2NDg2LC00LjU4Mjc5Yy0yLjQ1NjExLC0wLjk5MjI5IC01LjA3MDI3LC0wLjk2OTggLTcuMzc3NzcsLTAuMTI5Nzl6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMjM2LjA4MTk3LDIwNy41NzY4MWMtMC45MDE0MywyLjIzMTIxIC0zLjQ0MDkzLDMuMzA5MiAtNS42NzIxMywyLjQwNzc4bC00LjMzOTUsLTEuNzUzMmMtMi4yMzEyMSwtMC45MDE0MyAtMy4zMDkyLC0zLjQ0MDkzIC0yLjQwNzc4LC01LjY3MjEzbDcuMjQzMTQsLTE3LjkyODE0YzEuMDc2NDIsMi4yMDcxNSAyLjk0MTMxLDQuMDM5MjIgNS4zOTc0Miw1LjAzMTUyYzIuMjg3NjQsMC45MjQyMyA0LjcxMjQsMC45NjgxMSA2Ljg5ODc2LDAuMjkxMDR6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMjY4LjIzMTM4LDE5My45Mjk2NmMtMC45MDE0MywyLjIzMTIxIC0zLjQ0MDkzLDMuMzA5MiAtNS42NzIxMywyLjQwNzc4bC0xNy42MDAxNywtNy4xMTA2NGMyLjA4MTQ1LC0xLjA5NDU3IDMuODAxLC0yLjkwNDAxIDQuNzUwOTIsLTUuMjU1MjdjMC45NjU5MSwtMi4zOTA4MSAwLjk3MDI4LC00LjkzMTM3IDAuMTk1MDUsLTcuMTkzMDdsMTcuNjcxNzYsNy4xMzk1N2MyLjIzMTIxLDAuOTAxNDMgMy4zMDkyLDMuNDQwOTMgMi40MDc3OCw1LjY3MjEzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIi8+PHBhdGggZD0iTTIxMi40MjMyLDE3Ni4wODE5OGMtMi4yMzEyMSwtMC45MDE0MyAtMy4zMDkyLC0zLjQ0MDkzIC0yLjQwNzc4LC01LjY3MjEzbDEuNzUzMiwtNC4zMzk1YzAuOTAxNDMsLTIuMjMxMjEgMy40NDA5MywtMy4zMDkyIDUuNjcyMTMsLTIuNDA3NzhsMTAuMDc2NDcsNC4wNzA5OWwtNC4yNDY1MiwtMTAuMDAzNzdjLTAuOTQwMjksLTIuMjE1MTEgMC4wOTMxNCwtNC43NzMwNyAyLjMwODI1LC01LjcxMzM2bDQuMzA4MTksLTEuODI4NzljMi4yMTUxMSwtMC45NDAyOSA0Ljc3MzA3LDAuMDkzMTQgNS43MTMzNiwyLjMwODI1bDcuNTM4MTQsMTcuNzU4MDVjLTUuMDQ1MTMsLTEuNTMgLTEwLjUxMzcyLDEuMDE5NDkgLTEyLjUyNjYzLDYuMDAxODFjLTAuOTQ5OTMsMi4zNTEyNSAtMC45Njk4Nyw0Ljg0NzM1IC0wLjIzMjg5LDcuMDgwNTl6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMjY4LjIzMTM4LDE5My45Mjk2NmMtMC45MDE0MywyLjIzMTIxIC0zLjQ0MDkzLDMuMzA5MiAtNS42NzIxMywyLjQwNzc4bC0xMC4wNzY0NywtNC4wNzA5OWw0LjI0NjUyLDEwLjAwMzc3YzAuOTQwMjksMi4yMTUxMSAtMC4wOTMxNCw0Ljc3MzA3IC0yLjMwODI1LDUuNzEzMzZsLTQuMzA4MTksMS44Mjg3OWMtMi4yMTUxMSwwLjk0MDI5IC00Ljc3MzA3LC0wLjA5MzE0IC01LjcxMzM2LC0yLjMwODI1bC03LjQ3NjgyLC0xNy42MTM2MWM1LjExNjEzLDEuNzAwMDggMTAuNzM5NywtMC44NTA3MSAxMi43ODczNCwtNS45MTg5N2MwLjk2NTkxLC0yLjM5MDgxIDAuOTcwMjgsLTQuOTMxMzcgMC4xOTUwNSwtNy4xOTMwN2wxNy42NzE3Niw3LjEzOTU3YzIuMjMxMjEsMC45MDE0MyAzLjMwOTIsMy40NDA5MyAyLjQwNzc4LDUuNjcyMTN6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMjE3LjcyOTc5LDE5Ni43MjkyOWMtMi4yMTUxMSwwLjk0MDI5IC00Ljc3MzA3LC0wLjA5MzE0IC01LjcxMzM2LC0yLjMwODI1bC0xLjgyODc5LC00LjMwODE5Yy0wLjk0MDI5LC0yLjIxNTExIDAuMDkzMTQsLTQuNzczMDcgMi4zMDgyNSwtNS43MTMzNmwxMC4wMDM3NywtNC4yNDY1MmwtMTAuMDc2NDcsLTQuMDcwOTljLTIuMjMxMjEsLTAuOTAxNDMgLTMuMzA5MiwtMy40NDA5MyAtMi40MDc3OCwtNS42NzIxM2wxLjc1MzIsLTQuMzM5NWMwLjkwMTQzLC0yLjIzMTIxIDMuNDQwOTMsLTMuMzA5MiA1LjY3MjEzLC0yLjQwNzc4bDE4LjAyNzU0LDcuMjgzM2MtMi4xMjg3MiwxLjA4ODQ4IC0zLjg5MDM2LDIuOTE5MDkgLTQuODU2MjYsNS4zMDk4OWMtMi4wMDIzNyw0Ljk1NjIzIDAuMTI3NDgsMTAuNTU2MDQgNC43Njg1NywxMi45ODA5eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIi8+PHBhdGggZD0iTTI2OC4yMzEzOCwxOTMuOTI5NjZjLTAuOTAxNDMsMi4yMzEyMSAtMy40NDA5MywzLjMwOTIgLTUuNjcyMTMsMi40MDc3OGwtMTcuNjAwMTcsLTcuMTEwNjRjMi4wODE0NSwtMS4wOTQ1NyAzLjgwMSwtMi45MDQwMSA0Ljc1MDkyLC01LjI1NTI3YzIuMDU4NDEsLTUuMDk0OTUgLTAuMjQ5OTQsLTEwLjg3MDAyIC01LjE2NDE1LC0xMy4xNzY5N2wxNy43MjQzNiwtNy41MjM4NGMyLjIxNTExLC0wLjk0MDI5IDQuNzczMDcsMC4wOTMxNCA1LjcxMzM2LDIuMzA4MjVsMS44Mjg3OSw0LjMwODE5YzAuOTQwMjksMi4yMTUxMSAtMC4wOTMxNCw0Ljc3MzA3IC0yLjMwODI1LDUuNzEzMzZsLTEwLjAwMzc3LDQuMjQ2NTFsMTAuMDc2NDcsNC4wNzA5OWMyLjIzMTIxLDAuOTAxNDMgMy4zMDkyLDMuNDQwOTMgMi40MDc3OCw1LjY3MjEzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIi8+PHBhdGggZD0iTTI2OC4yMzEzOCwxOTMuOTI5NjZjLTAuOTAxNDMsMi4yMzEyMSAtMy40NDA5MywzLjMwOTIgLTUuNjcyMTMsMi40MDc3OGwtMi4wMDExOCwtMC44MDg0OWMtNi44NDU4Miw5LjA3NDYyIC0xOS4xNjQ4OCwxMi44MTQxOSAtMzAuMjA2NjgsOC4zNTMxOWMtMTEuMDQxODEsLTQuNDYxIC0xNy4zMDU5OCwtMTUuNzA4MzggLTE1LjkyNzAxLC0yNi45OTE2NWwtMi4wMDExOCwtMC44MDg0OWMtMi4yMzEyMSwtMC45MDE0MyAtMy4zMDkyLC0zLjQ0MDkzIC0yLjQwNzc4LC01LjY3MjEzbDEuNzUzMiwtNC4zMzk1YzAuOTAxNDMsLTIuMjMxMjEgMy40NDA5MywtMy4zMDkyIDUuNjcyMTMsLTIuNDA3NzhsMi4wMDExOCwwLjgwODQ5YzYuODQ1ODIsLTkuMDc0NjIgMTkuMTY0ODcsLTEyLjgxNDE5IDMwLjIwNjY4LC04LjM1MzE5YzExLjA0MTgxLDQuNDYxIDE3LjMwNTk5LDE1LjcwODM4IDE1LjkyNzAxLDI2Ljk5MTY1bDIuMDAxMTgsMC44MDg0OWMyLjIzMTIxLDAuOTAxNDMgMy4zMDkyLDMuNDQwOTMgMi40MDc3OCw1LjY3MjEzek0yNDkuNzEsMTgzLjk3MTU0YzIuMTMwNjUsLTUuMjczNzYgLTAuNDE3MzQsLTExLjI3NjIxIC01LjY5MTEsLTEzLjQwNjg2Yy01LjI3Mzc2LC0yLjEzMDY1IC0xMS4yNzYyMSwwLjQxNzM0IC0xMy40MDY4Niw1LjY5MTFjLTIuMTMwNjUsNS4yNzM3NiAwLjQxNzM0LDExLjI3NjIxIDUuNjkxMSwxMy40MDY4NmM1LjI3Mzc2LDIuMTMwNjUgMTEuMjc2MjEsLTAuNDE3MzQgMTMuNDA2ODYsLTUuNjkxMXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzAwMDAwMCIvPjwvZz48L2c+PC9zdmc+";
 
+  const stopSign =
+"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxNCAxNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTQgMTQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojRUM1OTU5O3N0cm9rZTojQjg0ODQ4O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cjwvc3R5bGU+Cjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iNC4zLDAuNSA5LjcsMC41IDEzLjUsNC4zIDEzLjUsOS43IDkuNywxMy41IDQuMywxMy41IDAuNSw5LjcgMC41LDQuMyAiLz4KPC9zdmc+Cg==";
+  const startFlag =
+"data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNi42MyAxNy41Ij48ZGVmcz48c3R5bGU+LmNscy0xLC5jbHMtMntmaWxsOiM0Y2JmNTY7c3Ryb2tlOiM0NTk5M2Q7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO30uY2xzLTJ7c3Ryb2tlLXdpZHRoOjEuNXB4O308L3N0eWxlPjwvZGVmcz48dGl0bGU+aWNvbi0tZ3JlZW4tZmxhZzwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNLjc1LDJBNi40NCw2LjQ0LDAsMCwxLDguNDQsMmgwYTYuNDQsNi40NCwwLDAsMCw3LjY5LDBWMTIuNGE2LjQ0LDYuNDQsMCwwLDEtNy42OSwwaDBhNi40NCw2LjQ0LDAsMCwwLTcuNjksMCIvPjxsaW5lIGNsYXNzPSJjbHMtMiIgeDE9IjAuNzUiIHkxPSIxNi43NSIgeDI9IjAuNzUiIHkyPSIwLjc1Ii8+PC9zdmc+";
+
   class SPtuneShark {
     constructor() {
       this.sounds = {};
       this.overlappables = {};
+      this.overriddenVol = {};
+
+      Scratch.vm.runtime.on("PROJECT_START", () => {
+        if (controller) this.controlAllSounds({ CONTROL : "stop" });
+      });
+      Scratch.vm.runtime.on("PROJECT_STOP_ALL", () => {
+        if (controller) this.controlAllSounds({ CONTROL : "stop" });
+      });
     }
     getInfo() {
       return {
@@ -374,6 +389,20 @@
             text: "delete all sounds",
             blockIconURI: settingsIconURI
           },
+          {
+            opcode: "enableControllers",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "toggle sound link to [GO] [STOP] [ON_OFF]",
+            blockIconURI: settingsIconURI,
+            arguments: {
+              GO: { type: Scratch.ArgumentType.IMAGE, dataURI: startFlag },
+              STOP: { type: Scratch.ArgumentType.IMAGE, dataURI: stopSign },
+              ON_OFF: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "overlapMenu"
+              }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Array Sound Grouping" },
           {
             opcode: "playSounds",
@@ -505,15 +534,44 @@
         Scratch.vm.extensionManager.refreshBlocks();
       }
     }
-    
+
+    strainVolume() {
+      if (startedLoop) return;
+      startedLoop = true;
+      let volOverride = {};
+      const loop = () => {
+        let proVol = Scratch.vm.runtime.audioEngine.inputNode.gain.value;
+        proVol = Math.round(proVol * 10000) / 100;
+        try {
+          const names = Object.keys(this.sounds);
+          if (names.length > 0) {
+            names.forEach(name => {
+              const curVol = this.overriddenVol[name].val || 100;
+              const volume = Math.max(0, Math.min(100, curVol * (proVol / 100)));
+              const soundInstances = this.sounds[name];
+              if (soundInstances && soundInstances.length > 0) {
+                soundInstances.forEach((audio) => { audio.volume = volume / 100 });
+              }
+            });
+          }
+          setTimeout(loop, 0);
+        } catch {}
+      };
+      loop();
+    }
+
     importSound(args) {
+      if (this.sounds[args.NAME] !== undefined) this.deleteSound(args);
       const audio = new Audio(args.URL);
       this.sounds[args.NAME] = [audio];
+      this.overriddenVol[args.NAME] = { val : 100 };
+      this.strainVolume();
     }
 
     importMenuSound(args, util) {
+      if (this.sounds[args.NAME] !== undefined) this.deleteSound(args);
       const index = this.SoundIndex(args.SOUND, util);
-      if (index < 0) return "";
+      if (index < 0) return;
       const sprite = util.target.sprite;
       const soundDataURI = sprite.sounds[index].asset.encodeDataURI();
       const { URI = soundDataURI, NAME } = args;
@@ -530,8 +588,8 @@
       const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
-          audio.play()
-          if (audio.currentTime !== 0) this.checkOverlap(args);
+          if (audio.currentTime > 0.2 && audio.currentTime !== audio.duration) this.checkOverlap(args);
+          audio.play();
         });
       }
     }
@@ -540,7 +598,7 @@
       const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => {
-          if (audio.currentTime !== args.START_TIME && audio.currentTime !== 0) this.checkOverlap(args);
+          if (audio.currentTime !== args.START_TIME && audio.currentTime > 0.2) this.checkOverlap(args);
           audio.currentTime = args.START_TIME;
           audio.play();
         });
@@ -601,6 +659,7 @@
       const soundInstances = this.sounds[args.NAME];
       if (soundInstances && soundInstances.length > 0) {
         soundInstances.forEach((audio) => { audio.volume = args.VOLUME / 100 });
+        this.overriddenVol[args.NAME] = { val : args.VOLUME };
       }
     }
 
@@ -678,7 +737,7 @@
           const audio = soundInstances[0];
           return (audio.currentTime !== 0 && !audio.paused);
         }
-        return "false";
+        return false;
       }
     }
 
@@ -687,18 +746,12 @@
       if (soundInstances && soundInstances.length > 0) {
         const audio = soundInstances[0];
         switch (args.PROPERTY) {
-          case "length":
-            return audio.duration;
-          case "volume":
-            return audio.volume * 100;
-          case "speed":
-            return audio.playbackRate;
-          case "pitch":
-            return this.getPitchFromAudio(audio);
-          case "paused?":
-            return audio.paused;
-          case "looping?":
-            return audio.loop;
+          case "length": return audio.duration;
+          case "volume": return this.overriddenVol[args.NAME].val;
+          case "speed": return audio.playbackRate;
+          case "pitch": return this.getPitchFromAudio(audio);
+          case "paused?": return audio.paused;
+          case "looping?": return audio.loop;
         }
       }
       return 0;
@@ -724,13 +777,17 @@
     deleteAllSounds() {
       this.controlAllSounds("stop");  
       this.sounds = {};
+      this.overlappables = {};
     }
 
     deleteSound(args) {
       this.stopSound(args);
       delete this.sounds[args.NAME];
+      delete this.overlappables[args.NAME];
     }
-    
+
+    enableControllers(args) { controller = args.ON_OFF === "on" }
+
     playSounds(args) {
       const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
@@ -791,6 +848,7 @@
         const soundInstances = this.sounds[name];
         if (soundInstances && soundInstances.length > 0) {
           soundInstances.forEach((audio) => { audio.volume = adjustedVolume / 100 });
+          this.overriddenVol[name] = { val : adjustedVolume };
         }
       });
     }
@@ -842,7 +900,7 @@
           }
         }
       }
-      return soundInstances ? "Time Input Doesnt Exist!" : "Audio Doesnt Exist!";
+      return soundInstances ? "Invalid Time Input!" : "Audio Doesnt Exist!";
     }
 
     async convertURLToURI(args) {
@@ -866,31 +924,29 @@
 
     returnInfo(args) {
       const soundInstances = this.sounds[args.NAME];
-      if (soundInstances && soundInstances.length > 0) return this.sounds[args.NAME][0].src;
+      if (soundInstances && soundInstances.length > 0) return Scratch.Cast.toString(this.sounds[args.NAME][0].src);
       return "Audio Doesnt Exist!";
     }
 
     checkOverlap(args) {
       if (this.overlappables[args.NAME] !== undefined) {
         const sourcePlayer = this.sounds[args.NAME][0];
-        const audio = new Audio(this.overlappables[args.NAME].src);
-        audio.playbackRate = sourcePlayer.playbackRate || audio.defaultPlaybackRate;
-        audio.currentTime = args.START_TIME || 0;
-        audio.volume = sourcePlayer.volume || 1;
-        audio.play();
+        const audioOver = new Audio(this.overlappables[args.NAME].src);
+        audioOver.playbackRate = sourcePlayer.playbackRate || audioOver.defaultPlaybackRate;
+        audioOver.currentTime = args.START_TIME || 0;
+        audioOver.volume = sourcePlayer.volume || 1;
+        audioOver.play();
 
         const checkConditionInterval = setInterval(() => {
-          audio.playbackRate = sourcePlayer.playbackRate || audio.defaultPlaybackRate;
-          audio.volume = sourcePlayer.volume || 1;
-          if (sourcePlayer.paused) {
-            audio.pause();
-          } else {
-            audio.play();
-          }
+          audioOver.playbackRate = sourcePlayer.playbackRate || audioOver.defaultPlaybackRate;
+          audioOver.volume = sourcePlayer.volume || 1;
+          audioOver[sourcePlayer.paused ? "pause" : "play"]();
           if (sourcePlayer.paused && sourcePlayer.currentTime === 0) {
-            audio.pause();
-            audio.currentTime = 0;
-            if (audio.context) audio.context.close();
+            audioOver.pause();
+            audioOver.currentTime = 0;
+            if (audioOver.context) {
+              audioOver.context.close();
+            } else { audioOver.src = "" }
             clearInterval(checkConditionInterval);
           }
         }, 100);
