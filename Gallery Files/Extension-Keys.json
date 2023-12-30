@@ -190,11 +190,11 @@
       "date": "Last Updated: 11/12/2023"
     },
     "Pause-Utilities": {
-      "credits": "Pause your Project and Chosen Scripts. Made by SharkPool",
+      "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 11/26/2023"
+      "status": "update",
+      "date": "Last Updated: 12/30/2023"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
