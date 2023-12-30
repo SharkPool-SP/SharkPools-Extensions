@@ -76,6 +76,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "unpause project"
           },
+          { blockType: Scratch.BlockType.LABEL, text: "↓ Doesnt work in PenguinMod ↓" },
           {
             opcode: "whenProjectPaused",
             blockType: Scratch.BlockType.EVENT,
