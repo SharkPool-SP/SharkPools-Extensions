@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.2.1
+// Version 2.3.0
 
 (function (Scratch) {
   "use strict";
@@ -399,6 +399,17 @@
               }
             }
           },
+          {
+            opcode: "setAskType",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set ask monitor input to [TYPE]",
+            arguments: {
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "INPUTS"
+              }
+            }
+          },
           "---",
           {
             opcode: "isScreen",
@@ -465,6 +476,7 @@
         menus: {
           microphoneStates: ["enabled", "disabled"],
           SCREENS: ["fullscreen", "smallscreen"],
+          INPUTS: ["text", "password", "number", "color"],
           TARGETS: { acceptReporters: true, items: this._getTargets(true, false) },
           TARGETS2: { acceptReporters: true, items: this._getTargets(true, true) },
           TARGETS3: { acceptReporters: true, items: this._getTargets(false, true) },
@@ -792,12 +804,24 @@
       runtime.ext_scratch3_sensing.askAndWait(args, util);
       if (!util.target.isStage && wasVisible) {util.target.setVisible(true)}
       if (publicVars.askStuff) this.setAtt(publicVars.askStuff);
+      if (publicVars.askType) this.setAskType(publicVars.askType);
       if (args.WAIT === "wait" || args.WAIT === undefined) {
         return new Promise(resolve => {
           const checkWait = () => this.wait[0] ? setTimeout(checkWait, 100) : resolve();
           checkWait();
         });
       }
+    }
+
+    setAskType(args) {
+      let box = document.querySelector(runtime.isPackaged ? `[class="sc-question-input"]` :
+        `[class*="question"] [class^="input_input-form_l9eYg"]`);
+      if (!box) {
+        publicVars.askType = args;
+        return;
+      }
+      box.type = args.TYPE;
+      box.pattern = args.TYPE === "number" ? "[0-9]*" : "none";
     }
 
     advancedAskReporter(args, util) { return this.advancedAsk(args, util).then(() => runtime.ext_scratch3_sensing.getAnswer()) }
@@ -808,12 +832,10 @@
 
     getAllString(args) {
       let regex;
-      if (args.TEXT === "letters") {
-        regex = /[^A-Za-z]/g;
-      } else if (args.TEXT === "numbers") {
-        regex = /[^0-9]/g;
-      } else {
-        regex = /[A-Za-z0-9]/g;
+      switch (args.TEXT) {
+        case "numbers": {regex = /[^0-9]/g; break }
+        case "special characters": {regex = /[A-Za-z0-9]/g; break }
+        default: regex = /[^A-Za-z]/g;
       }
       return args.STRING.replace(regex, "");
     }
