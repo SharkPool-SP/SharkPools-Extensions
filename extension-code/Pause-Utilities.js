@@ -1,15 +1,14 @@
 // Name: Pause Utilities
 // ID: SPPause
 // Description: Pause the Project and certain Scripts
-// By: SharkPool <https://github.com/SharkPool-SP>
+// By: SharkPool
 
-// Version V.1.2.0
+// Version V.1.3.0
 
 (function (Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) {
-    alert("Pause Utilities Extension must run unsandboxed!");
-  }
+  if (!Scratch.extensions.unsandboxed) alert("Pause Utilities Extension must run unsandboxed!");
+  const vm = Scratch.vm;
   const runtime = Scratch.vm.runtime;
   const Cast = Scratch.Cast;
   let storedScripts = {};
@@ -22,6 +21,41 @@
 
   runtime.on("PROJECT_STOP_ALL", () => { storedScripts = {} });
 
+  function beginScan(srcUtil) {
+    // for packager
+    const getUtil = () => {
+      if (srcUtil === undefined) {
+        srcUtil = runtime.getTargetForStage();
+        setTimeout(function() { getUtil() }, 100);
+      }
+    };
+    getUtil();
+    const check = () => {
+      try {
+        if (srcUtil.runtime.ioDevices.clock._paused) {
+          const allUtils = vm.runtime.targets;
+          for (var i = 0; i < allUtils.length; i++) {
+            const util = allUtils[i];
+            const object = util.blocks._blocks;
+            const keyV = getKeyByValue(object, "opcode", "SPPause_whenProjectPaused");
+            if (keyV) {
+              vm.setEditingTarget(util.id);
+              vm.runtime.toggleScript(object[keyV].id, util);
+            }
+          }
+        }
+      } catch {}
+      setTimeout(function() { check() }, 0);
+    };
+    check();
+  }
+  function getKeyByValue(object, name, value) {
+    for (const key in object) {
+      if (object[key][name] === value) return key;
+    }
+    return "";
+  }
+
   class SPPause {
     getInfo() {
       return {
@@ -31,10 +65,7 @@
         menuIconURI,
         blockIconURI,
         blocks: [
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: Scratch.extensions.isPenguinMod ? "Manual Blocks" : "Manual Block"
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Project Control" },
           {
             opcode: "pause",
             blockType: Scratch.BlockType.COMMAND,
@@ -43,10 +74,15 @@
           {
             opcode: "unpause",
             blockType: Scratch.BlockType.COMMAND,
-            text: "unpause project",
-            hideFromPalette: !Scratch.extensions.isPenguinMod
+            text: "unpause project"
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Automatic Blocks" },
+          {
+            opcode: "whenProjectPaused",
+            blockType: Scratch.BlockType.EVENT,
+            text: "when project is paused",
+            isEdgeActivated: false
+          },
+          { blockType: Scratch.BlockType.LABEL, text: "Script Control" },
           {
             opcode: "pauseLoop",
             blockType: Scratch.BlockType.COMMAND,
@@ -125,17 +161,25 @@
       if (Scratch.extensions.isPenguinMod) {
         runtime.pause();
       } else {
-        const pauseButton = document.querySelector("img.pause-btn.addons-display-none-pause");
+        const pauseButton = document.querySelector(
+          runtime.isPackaged ? `[class*="pause-button"]` :
+          "img.pause-btn.addons-display-none-pause"
+        );
         if (pauseButton) {
           pauseButton.click();
         } else {
-          console.log("Pause button not found.");
+          console.log("Pause button not found");
         }
       }
     }
 
-    //penguinmod exlusive 
-    unpause() { runtime.play() }
+    unpause() {
+      if (Scratch.extensions.isPenguinMod) {
+        runtime.play()
+      } else {
+        this.pause();
+      }
+    }
 
     pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
 
@@ -172,6 +216,8 @@
 
     allPausedScripts() { return JSON.stringify(Object.keys(storedScripts)) }
   }
+
+  beginScan(vm.runtime.getTargetForStage())
 
   Scratch.extensions.register(new SPPause());
 })(Scratch);
