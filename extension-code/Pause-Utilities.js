@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.3.0
+// Version V.1.4.0
 
 (function (Scratch) {
   "use strict";
@@ -12,6 +12,7 @@
   const runtime = Scratch.vm.runtime;
   const Cast = Scratch.Cast;
   let storedScripts = {};
+  let projectPaused = false;
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTgiIHdpZHRoPSIxOCI+PHBhdGggZD0iTTIzMS40MjkgMTg4LjkyOVYxNzEuMDdoNC4yODV2MTcuODU4em0xMi4xNDIgMFYxNzEuMDdoNC4yODZ2MTcuODU4eiIgdHJhbnNmb3JtPSJtYXRyaXgoMS4wMzMwOSAwIDAgLjk1NDI3IC0yMzguNTczIC0xNjIuNzY5KSIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsPSIjZmZhZTAwIiBzdHJva2U9IiNkODk0MDAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOm5vcm1hbCIvPjwvc3ZnPg==";
@@ -33,6 +34,7 @@
     const check = () => {
       try {
         if (srcUtil.runtime.ioDevices.clock._paused) {
+          projectPaused = true;
           const allUtils = vm.runtime.targets;
           for (var i = 0; i < allUtils.length; i++) {
             const util = allUtils[i];
@@ -43,7 +45,7 @@
               vm.runtime.toggleScript(object[keyV].id, util);
             }
           }
-        }
+        } else { projectPaused = false }
       } catch {}
       setTimeout(function() { check() }, 0);
     };
@@ -82,6 +84,11 @@
             blockType: Scratch.BlockType.EVENT,
             text: "when project is paused",
             isEdgeActivated: false
+          },
+          {
+            opcode: "isProjectPaused",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is project paused?"
           },
           { blockType: Scratch.BlockType.LABEL, text: "Script Control" },
           {
@@ -181,6 +188,9 @@
         this.pause();
       }
     }
+
+    // by itself, the block is useless, but with the event block it is :D
+    isProjectPaused() { return projectPaused }
 
     pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
 
