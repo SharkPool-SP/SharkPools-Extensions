@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.3.0
+// Version 2.3.1
 
 (function (Scratch) {
   "use strict";
@@ -345,7 +345,7 @@
               }
             }
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Miscellaneous" },
+          { blockType: Scratch.BlockType.LABEL, text: "Asking" },
           {
             opcode: "advancedAsk",
             blockType: Scratch.BlockType.COMMAND,
@@ -381,6 +381,16 @@
             }
           },
           {
+            opcode: "stopAsking",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "stop asking question"
+          },
+          {
+            opcode: "currentTyped",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "typed answer"
+          },
+          {
             opcode: "setAtt",
             blockType: Scratch.BlockType.COMMAND,
             text: "set ask monitor x: [x] y: [y] width: [width]",
@@ -410,7 +420,7 @@
               }
             }
           },
-          "---",
+          { blockType: Scratch.BlockType.LABEL, text: "Miscellaneous" },
           {
             opcode: "isScreen",
             blockType: Scratch.BlockType.BOOLEAN,
@@ -815,7 +825,7 @@
 
     setAskType(args) {
       let box = document.querySelector(runtime.isPackaged ? `[class="sc-question-input"]` :
-        `[class*="question"] [class^="input_input-form_l9eYg"]`);
+        `[class*="question"] [class^="input_input-form"]`);
       if (!box) {
         publicVars.askType = args;
         return;
@@ -825,6 +835,18 @@
     }
 
     advancedAskReporter(args, util) { return this.advancedAsk(args, util).then(() => runtime.ext_scratch3_sensing.getAnswer()) }
+
+    stopAsking() {
+      let box = document.querySelector(`[class*="question-submit-button"]`);
+      if (!box) return;
+      box.click();
+    }
+
+    currentTyped() {
+      let box = document.querySelector(runtime.isPackaged ? `[class="sc-question-input"]` :
+        `[class*="question"] [class^="input_input-form"]`);
+      return box ? box.value : "";
+    }
 
     mouseClick(args, util) {return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)])}
     realX() {return window.mouseX}
