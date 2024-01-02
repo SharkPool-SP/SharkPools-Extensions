@@ -46,7 +46,7 @@
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/29/2023"
     },
     "Added-Motion": {
@@ -242,7 +242,7 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/27/2023"
     },
     "Color-Master": {
@@ -270,8 +270,22 @@
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Speech-Bubbles.js",
       "tags": ".all.expanded.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 12/28/2023"
+    },
+    "Font-Manager": {
+      "credits": "Manage, Create, and Delete Fonts from Your Project. Made by SharkPool and Ashimee",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Font-Manager.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 01/01/2024"
+    },
+    "Script-Management": {
+      "credits": "Monitor and Control Scripts in Your Project. Made by Ashimee",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Management.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 01/01/2024"
     },
     "Example": {
       "credits": "",
