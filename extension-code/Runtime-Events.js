@@ -146,11 +146,6 @@
         }
       };
     }
-
-    allFonts() {
-      const customFonts = Scratch.vm.runtime.fontManager ? Scratch.vm.runtime.fontManager.getFonts().map((i) => ({ text: i.name, value: i.family })) : [];
-      return [...fontMenu, ...customFonts];
-    }
   }
 
   Scratch.extensions.register(new SPevents());
