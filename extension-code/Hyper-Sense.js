@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.3.1
+// Version 2.4.0
 
 (function (Scratch) {
   "use strict";
@@ -12,7 +12,6 @@
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzguMjE0IiBoZWlnaHQ9IjEzOC4yMTQiIHZpZXdCb3g9IjAsMCwxMzguMjE0LDEzOC4yMTQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzAuODkzLC0xMTAuODkzKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTcwLjg5MywxODBjMCwtMzguMTY2NzQgMzAuOTQwMjYsLTY5LjEwNyA2OS4xMDcsLTY5LjEwN2MzOC4xNjY3NCwwIDY5LjEwNywzMC45NDAyNiA2OS4xMDcsNjkuMTA3YzAsMzguMTY2NzQgLTMwLjk0MDI2LDY5LjEwNyAtNjkuMTA3LDY5LjEwN2MtMzguMTY2NzQsMCAtNjkuMTA3LC0zMC45NDAyNiAtNjkuMTA3LC02OS4xMDd6IiBmaWxsPSIjNWNiMWQ2IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIvPjxwYXRoIGQ9Ik0yNzMuNTY4MTMsMjE2LjIzNjU5Yy0wLjY4MjI5LDAgLTEuMzY0NTcsLTAuMjYwNzQgLTEuODg2MDYsLTAuNzgwMDZsLTY2LjU3ODkzLC02Ni41ODExYy0xLjA0MDgxLC0xLjA0MDgxIC0xLjA0MDgxLC0yLjczMTI5IDAsLTMuNzcyMWMxLjA0MDgxLC0xLjA0MDgxIDIuNzMxMjksLTEuMDQwODEgMy43NzIxLDBsNjYuNTc4OTMsNjYuNTc4OTNjMS4wNDA4MSwxLjA0MDgxIDEuMDQwODEsMi43MzEyOSAwLDMuNzcyMWMtMC41MjE0OSwwLjUxOTMyIC0xLjIwMzc4LDAuNzgyMjMgLTEuODg2MDYsMC43ODIyM3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMy4xMDcxMSwxNTguNDM2MDZjMCw4LjEwMjY0IC02LjU2ODU5LDE0LjY3MTIzIC0xNC42NzEyMywxNC42NzEyM2MtOC4xMDI2NCwwIC0xNC42NzEyMywtNi41Njg1OSAtMTQuNjcxMjMsLTE0LjY3MTIzYzAsLTguMTAyNjQgNi41Njg1OSwtMTQuNjcxMjMgMTQuNjcxMjMsLTE0LjY3MTIzYzguMTAyNjQsMCAxNC42NzEyMyw2LjU2ODU5IDE0LjY3MTIzLDE0LjY3MTIzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjMxLjA3MzQ3LDE4OC43MjQyNmMtNy44ODU4MywtMS44NjIwOSAtMTIuNzY5MDIsLTkuNzY0MzUgLTEwLjkwNjkyLC0xNy42NTAxN2MxLjg2MjA5LC03Ljg4NTgzIDkuNzY0MzUsLTEyLjc2OTAyIDE3LjY1MDE3LC0xMC45MDY5MmM3Ljg4NTgzLDEuODYyMDkgMTIuNzY5MDIsOS43NjQzNSAxMC45MDY5MiwxNy42NTAxN2MtMS44NjIwOSw3Ljg4NTgzIC05Ljc2NDM1LDEyLjc2OTAyIC0xNy42NTAxNywxMC45MDY5MnoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI2NS4xMjAwMSwxOTAuNDQ2NzljMCw4LjEwMjY0IC02LjU3MDc2LDE0LjY3MzM5IC0xNC42NzMzOSwxNC42NzMzOWMtOC4xMDI2NCwwIC0xNC42NzEyMywtNi41NzA3NiAtMTQuNjcxMjMsLTE0LjY3MzM5YzAsLTguMTAyNjQgNi41Njg1OSwtMTQuNjcxMjMgMTQuNjcxMjMsLTE0LjY3MTIzYzguMTAyNjQsMCAxNC42NzMzOSw2LjU3MDc2IDE0LjY3MzM5LDE0LjY3MTIzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjczLjU2ODEzLDIxNi4yMzY1OWMtMC42ODIyOSwwIC0xLjM2NDU3LC0wLjI2MDc0IC0xLjg4NjA2LC0wLjc4MDA2bC0xNi4zMzk5OCwtMTYuMzM5OThjLTEuMDQyOTgsLTEuMDQwODEgLTEuMDQyOTgsLTIuNzMxMjkgMCwtMy43NzIxYzEuMDQyOTgsLTEuMDQwODEgMi43MjkxMiwtMS4wNDA4MSAzLjc3MjEsMGwxNi4zMzk5OCwxNi4zMzk5OGMxLjA0MDgxLDEuMDQwODEgMS4wNDA4MSwyLjczMTI5IDAsMy43NzIxYy0wLjUyMTQ5LDAuNTE3MTQgLTEuMjAzNzgsMC43ODAwNiAtMS44ODYwNiwwLjc4MDA2eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48ZyBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMS41Ij48cGF0aCBkPSJNMTgyLjY2ODI2LDE4MGwxMi44MDY5MSwtMTIuODA2OTF2MjUuNjEzODF6Ii8+PHBhdGggZD0iTTI1Mi44MDY5LDEzNS40NzUxNmgtMjUuNjEzODFsMTIuODA2OSwtMTIuODA2OXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9Ii8+PHBhdGggZD0iTTI5Ny4zMzE3NSwxODBsLTEyLjgwNjksMTIuODA2OXYtMjUuNjEzODF6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIvPjxwYXRoIGQ9Ik0yMjcuMTkzMSwyMjQuNTI0ODRoMjUuNjEzODFsLTEyLjgwNjksMTIuODA2OXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9Ii8+PC9nPjwvZz48L2c+PC9zdmc+";
 
-  const loudnessArrayLength = 20;
   let currentlyPressedKey = null;
   let keyPressTime = 0;
   const keyHitPass = {};
@@ -420,6 +419,17 @@
               }
             }
           },
+          {
+            opcode: "setAskType2",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set ask monitor input to dropdown with options from [TYPE]",
+            arguments: {
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "LISTS"
+              }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Miscellaneous" },
           {
             opcode: "isScreen",
@@ -439,6 +449,11 @@
             text: "stage size offset"
           },
           "---",
+          {
+            opcode: "averageMicrophoneLoudness",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "average loudness"
+          },
           {
             opcode: "getSpriteName",
             blockType: Scratch.BlockType.REPORTER,
@@ -465,32 +480,22 @@
               }
             },
           },
-          "---",
           {
             opcode: "toggleMicrophone",
             blockType: Scratch.BlockType.COMMAND,
             text: "toggle microphone to [STATE]",
-            arguments: {
-              STATE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "microphoneStates",
-              }
-            }
-          },
-          {
-            opcode: "averageMicrophoneLoudness",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "average microphone loudness"
+            hideFromPalette: true, // Depreciated Block
+            arguments: { STATE: { type: Scratch.ArgumentType.STRING } }
           },
         ],
         menus: {
-          microphoneStates: ["enabled", "disabled"],
           SCREENS: ["fullscreen", "smallscreen"],
           INPUTS: ["text", "password", "number", "color"],
           TARGETS: { acceptReporters: true, items: this._getTargets(true, false) },
           TARGETS2: { acceptReporters: true, items: this._getTargets(true, true) },
           TARGETS3: { acceptReporters: true, items: this._getTargets(false, true) },
           TARGETS4: { acceptReporters: true, items: this._getTargets(false, false) },
+          LISTS: { acceptReporters: true, items: this.getLists() },
           Asking: ["stage", "sprite"],
           shouldWait: ["wait", "continue"],
           SCROLL_EVENTS: ["up", "down"],
@@ -521,8 +526,7 @@
               { text: "left", value: 0 },
               { text: "scroll wheel", value: 1 },
               { text: "right", value: 2 },
-              { text: "back", value: 3 },
-              { text: "foward", value: 4 }
+              { text: "back", value: 3 }, { text: "foward", value: 4 }
             ],
           }
         }
@@ -560,64 +564,13 @@
       return (!!status);
     }
 
-    initMicrophone() {
-      if (this.isMicrophoneEnabled) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-          .then(this.handleMicrophoneSuccess).catch(this.handleMicrophoneError);
-      }
-    }
-    handleMicrophoneSuccess = (stream) => {
-      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const microphone = this.audioContext.createMediaStreamSource(stream);
-      const analyser = this.audioContext.createAnalyser();
-      analyser.fftSize = 256;
-      microphone.connect(analyser);
-      this.updateMicrophoneLoudness(analyser);
-    };
-    handleMicrophoneError = (error) => { console.error("Error accessing microphone:", error) };
-
-    updateMicrophoneLoudness(analyser) {
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-      setInterval(() => {
-        analyser.getByteFrequencyData(dataArray);
-        const loudness = this.calculateLoudness(dataArray);
-        this.loudnessArray.push(loudness);
-        if (this.loudnessArray.length >= loudnessArrayLength) this.loudnessArray.shift();
-      }, 100);
-    }
-
-    calculateLoudness(dataArray) {
-      let sum = 0;
-      for (let i = 0; i < dataArray.length; i++) { sum += dataArray[i] }
-      return sum / dataArray.length;
-    }
-
     averageMicrophoneLoudness() {
-      let loudness = this.calculateAverageLoudness(this.loudnessArray);
-      if (isNaN(loudness)) loudness = "Microphone is Disabled!"
-      return loudness;
+      if (this.loudnessArray.length >= 30) this.loudnessArray = [];
+      this.loudnessArray.push(vm.runtime.ext_scratch3_sensing.getLoudness());
+      let sum = this.loudnessArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      return Math.round((sum / this.loudnessArray.length) * 100) / 100;
     }
-
-    calculateAverageLoudness(loudnessArray) { return loudnessArray.reduce((acc, loudness) => acc + loudness, 0) / loudnessArray.length +1 }
-
-    toggleMicrophone(args) {
-      if (args.STATE === "enabled") {
-        this.isMicrophoneEnabled = true;
-        this.initMicrophone();
-      } else {
-        this.isMicrophoneEnabled = false;
-        this.disableMicrophone();
-      }
-    }
-
-    disableMicrophone() {
-      if (this.audioContext) {
-        this.audioContext.close().then(() => {
-          this.audioContext = null;
-          this.loudnessArray = [];
-        }).catch(error => { console.error("Error while closing audio context:", error) });
-      }
-    }
+    toggleMicrophone(args) { console.warn("Depreciated Block") }
 
     handleKeyPress(key, loop) {
       if (key === "Any") {
@@ -830,15 +783,41 @@
         publicVars.askType = args;
         return;
       }
-      box.type = args.TYPE;
-      box.pattern = args.TYPE === "number" ? "[0-9]*" : "none";
+      const element = document.getElementById("SP-input_select");
+      if (element) box.parentNode.removeChild(element);
+      if (args.TYPE === "dropdown") {
+        const width = box.parentNode.getBoundingClientRect().width;
+        let dropdown = document.createElement("select");
+        dropdown.id = "SP-input_select";
+        dropdown.setAttribute("style", `background: #fff; color: #505050; width: ${width - 40}px; display: block; border-width: 2px; border-color: #D9D9D9; transform: translate(0px,3px);`);
+        args.LIST.forEach(item => {
+          let option = document.createElement("option");
+          option.value = item; option.text = item;
+          dropdown.appendChild(option);
+        });
+        box.parentNode.appendChild(dropdown);
+        box.style.display = "none";
+        box.value = dropdown.value;
+        dropdown.addEventListener("change", function() { box.value = dropdown.value });
+        const button = document.querySelector(`[class*="question-submit-button"]`);
+        button.addEventListener("click", function() {
+          setTimeout(function() { runtime.ext_scratch3_sensing._answer = box.value }, 10);
+        });
+      } else {
+        box.type = args.TYPE;
+        box.pattern = args.TYPE === "number" ? "[0-9]*" : "none";
+        box.style.display = "block";
+      }
     }
+
+    setAskType2(args, util) { this.setAskType({...args, TYPE : "dropdown", LIST : this.look4List(args.TYPE, util) }) }
 
     advancedAskReporter(args, util) { return this.advancedAsk(args, util).then(() => runtime.ext_scratch3_sensing.getAnswer()) }
 
     stopAsking() {
       let box = document.querySelector(`[class*="question-submit-button"]`);
       if (!box) return;
+      runtime.ext_scratch3_sensing._answer = box.value;
       box.click();
     }
 
@@ -884,6 +863,24 @@
         }
       }
       return spriteNames.length > 0 ? spriteNames : [""];
+    }
+
+    getLists() {
+      const globalLists = Object.values(vm.runtime.getTargetForStage().variables).filter((x) => x.type == "list");
+      const localLists = Object.values(vm.editingTarget.variables).filter((x) => x.type == "list");
+      const uniqueLists = [...new Set([...globalLists, ...localLists])];
+      if (uniqueLists.length === 0) return [{ text: "make a list", value: "make a list" }];
+      return uniqueLists.map((i) => ({ text: i.name, value: i.id }));
+    }
+
+    look4List(list, util) {
+      const id = util.target.lookupVariableById(list);
+      if (id && id.type === "list") {
+        return id.value;
+      } else {
+        const name = util.target.lookupVariableByNameAndType(list, "list");
+        return name ? name.value : ["undefined list"];
+      }
     }
   }
 
