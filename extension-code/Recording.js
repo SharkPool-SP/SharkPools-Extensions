@@ -237,6 +237,7 @@
           target = vm.runtime.getTargetForStage().id;
         } else {
           target = runtime.getSpriteTargetByName(target).id;
+          if (!target) return;
         }
         Scratch.fetch(await this.convertBlobToBase64(this.recording, "mp3"))
           .then((r) => r.arrayBuffer())
