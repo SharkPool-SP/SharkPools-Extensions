@@ -25,8 +25,8 @@
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": "",
-      "date": "Last Updated: 10/05/2023"
+      "status": "update",
+      "date": "Last Updated: 01/02/2024"
     },
     "Niche-Toolbox": {
       "credits": "Utility Blocks made by Ashimee. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
@@ -200,8 +200,8 @@
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Text-to-Speech.js",
       "tags": ".all.expanded.fetching.utilities",
-      "status": "",
-      "date": "Released: 10/25/2023"
+      "status": "update",
+      "date": "Last Updated: 01/02/2024"
     },
     "Advanced-Messages": {
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
