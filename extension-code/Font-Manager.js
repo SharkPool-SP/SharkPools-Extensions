@@ -4,7 +4,7 @@
 // By: SharkPool
 // By: Ashimee <https://scratch.mit.edu/users/0znzw/>
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -30,20 +30,33 @@
    * @param {bool} [generateId] - Whether to create id from an md5 hash of data
    * (This is done for the possibility of extending the class).
    */
-  class Asset extends vm.assets[0].constructor {
+  class Asset extends (vm.assets[0] ? vm.assets[0].constructor : Object) {
     constructor(assetType, assetId, dataFormat, data, generateId) {
       super(assetType, assetId, dataFormat, data, generateId);
     }
   }
 
-	function findDiff(allFonts) {
-  	let newArray = [];
-  	for (let i = 0; i < allFonts.length; i++) { newArray[i] = allFonts[i].family }
-  	let addedFonts = newArray.filter(font => !oldFontList.includes(font));
-  	let removedFonts = oldFontList.filter(font => !newArray.includes(font));
-  	oldFontList = newArray;
-  	return { ADDED : addedFonts, REMOVED : removedFonts };
-	}
+  // wait until vm.assets[0] exists
+  function waitForAssets() {
+    return new Promise((resolve) => {
+      const intervalId = setInterval(() => {
+        if (vm.assets[0]) {
+          clearInterval(intervalId);
+          resolve();
+        }
+      }, 100);
+    });
+  }
+  waitForAssets();
+
+  function findDiff(allFonts) {
+    let newArray = [];
+    for (let i = 0; i < allFonts.length; i++) { newArray[i] = allFonts[i].family }
+    let addedFonts = newArray.filter(font => !oldFontList.includes(font));
+    let removedFonts = oldFontList.filter(font => !newArray.includes(font));
+    oldFontList = newArray;
+    return { ADDED : addedFonts, REMOVED : removedFonts };
+  }
 
   class SPASfontManager {
     constructor() {
