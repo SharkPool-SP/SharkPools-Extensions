@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.4.0
+// Version 2.4.1
 
 (function (Scratch) {
   "use strict";
@@ -866,11 +866,13 @@
     }
 
     getLists() {
-      const globalLists = Object.values(vm.runtime.getTargetForStage().variables).filter((x) => x.type == "list");
-      const localLists = Object.values(vm.editingTarget.variables).filter((x) => x.type == "list");
-      const uniqueLists = [...new Set([...globalLists, ...localLists])];
-      if (uniqueLists.length === 0) return [{ text: "make a list", value: "make a list" }];
-      return uniqueLists.map((i) => ({ text: i.name, value: i.id }));
+      try {
+        const globalLists = Object.values(vm.runtime.getTargetForStage().variables).filter((x) => x.type == "list");
+        const localLists = Object.values(vm.editingTarget.variables).filter((x) => x.type == "list");
+        const uniqueLists = [...new Set([...globalLists, ...localLists])];
+        if (uniqueLists.length === 0) return [{ text: "make a list", value: "make a list" }];
+        return uniqueLists.map((i) => ({ text: i.name, value: i.id }));
+      } catch { return ["make a list"] }
     }
 
     look4List(list, util) {
