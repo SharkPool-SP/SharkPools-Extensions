@@ -88,7 +88,7 @@
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/27/2023"
     },
     "Particle-Tools": {
@@ -249,7 +249,7 @@
       "credits": "Color Utilities and Color Conversions. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/28/2023"
     },
     "QR-Codes": {
@@ -263,8 +263,8 @@
       "credits": "Events from the Runtime. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
       "tags": ".all.expanded.utilities",
-      "status": "",
-      "date": "Released: 12/20/2023"
+      "status": "update",
+      "date": "Last Updated: 01/02/2024"
     },
     "Speech-Bubbles": {
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
