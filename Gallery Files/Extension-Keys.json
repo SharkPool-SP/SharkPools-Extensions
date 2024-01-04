@@ -316,7 +316,7 @@
     "https://surv.is-a.dev/unsafe-extensions/0znzw/NicheToolbox.js"
   ],
   "config": {
-    "cosName": ["*Copied","*Downloaded","*Credits","@new","@update","@fav","GitUser"],
+    "cosName": ["*Copied","*Downloaded","*Credits","@new","@update","@fav","GitUser", "searchUI"],
     "blank": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIHZpZXdCb3g9Ii0xIC0xIDIgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPCEtLSBFeHBvcnRlZCBieSBTY3JhdGNoIC0gaHR0cDovL3NjcmF0Y2gubWl0LmVkdS8gLS0+Cjwvc3ZnPg=="
   },
   "site": {
