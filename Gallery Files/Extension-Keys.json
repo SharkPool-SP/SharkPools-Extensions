@@ -46,8 +46,8 @@
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 12/29/2023"
+      "status": "update",
+      "date": "Last Updated: 01/04/2024"
     },
     "Added-Motion": {
       "credits": "New Motion Blocks made by SharkPool",
@@ -109,7 +109,7 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/02/2023"
     },
     "Recording": {
@@ -193,7 +193,7 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/31/2023"
     },
     "Text-to-Speech": {
@@ -277,14 +277,14 @@
       "credits": "Manage, Create, and Delete Fonts from Your Project. Made by SharkPool and Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Font-Manager.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Last Updated: 01/03/2024"
     },
     "Script-Management": {
       "credits": "Monitor and Control Scripts in Your Project. Made by Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Management.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 01/01/2024"
     },
     "Example": {
