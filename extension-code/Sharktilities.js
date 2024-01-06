@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.2.8.1
+// Version V.2.9.0
 
 (function (Scratch) {
   "use strict";
@@ -15,12 +15,12 @@
   const vm = Scratch.vm;
 
   // This function was taken from Looks Plus by Lily
-  const requireNonPackagedRuntime = (blockName) => {
+  const packageTest = (blockName) => {
     if (Scratch.vm.runtime.isPackaged) {
       alert(`To use this block, the creator of the packaged project must uncheck "Remove raw asset data after loading to save RAM" under advanced settings in the packager.`);
-      return false;
+      return true;
     }
-    return true;
+    return false;
   };
 
   function rgbToHsl(r, g, b) {
@@ -48,7 +48,7 @@
       r = g = b = l;
     } else {
       const hue2rgb = (p, q, t) => {
-       if (t < 0) t += 1;
+        if (t < 0) t += 1;
         if (t > 1) t -= 1;
         if (t < 1 / 6) return p + (q - p) * 6 * t;
         if (t < 1 / 2) return q;
@@ -393,13 +393,11 @@
     }
 
     roundToNearest({ NUMBER, ROUND_TYPE }) {
-      switch (ROUND_TYPE) {
-        case "whole number": return Math.round(NUMBER);
-        case "tenths": return Math.round(NUMBER * 10) / 10;
-        case "hundredths": return Math.round(NUMBER * 100) / 100;
-        case "thousandths": return Math.round(NUMBER * 1000) / 1000;
-        default: return Math.round(NUMBER);
-      }
+      const precision = {
+        "whole number": 0, "tenths": 1, "hundredths": 2, "thousandths": 3,
+      }[ROUND_TYPE] || Math.max(0, Math.round(Scratch.Cast.toNumber(ROUND_TYPE)));
+      const multiplier = Math.pow(10, precision);
+      return Math.round(NUMBER * multiplier) / multiplier;
     }
 
     randomLetter({ LETTER_TYPE }) {
@@ -412,11 +410,7 @@
 
     setSpriteEffect(args) {
       let target = args.SPRITE;
-      if (target === "Stage") {
-        target = vm.runtime.getTargetForStage();
-      } else {
-        target = vm.runtime.getSpriteTargetByName(target);
-      }
+      target = (target === "Stage") ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
       if (!target) return;
       const VALUE = Scratch.Cast.toNumber(args.VALUE);
       target.setEffect(args.EFFECT, VALUE);
@@ -470,25 +464,18 @@
 
     hexBrightness(args) {
       const hexColor = args.COLOR.replace(/^#/, "");
-      const r = parseInt(hexColor.substring(0, 2), 16);
-      const g = parseInt(hexColor.substring(2, 4), 16);
-      const b = parseInt(hexColor.substring(4, 6), 16);
-      const CHANGE = args.CHANGE / 100;
-    
+      const [r, g, b] = hexColor.match(/.{1,2}/g).map(channel => parseInt(channel, 16));
       const hslColor = rgbToHsl(r, g, b);
-      const newLightness = Math.min(1, Math.max(0, hslColor[2] + CHANGE));
+      const newLightness = Math.min(1, Math.max(0, hslColor[2] + (args.CHANGE / 100)));
       const newRgbColor = hslToRgb(hslColor[0], hslColor[1], newLightness);
-      const newHexColor = `#${componentToHex(newRgbColor[0])}${componentToHex(newRgbColor[1])}${componentToHex(newRgbColor[2])}`;
-      return newHexColor;
+      return `#${newRgbColor.map(channel => componentToHex(channel)).join("")}`;
     }
 
     smoothing(args, util) {
       const speed = Scratch.Cast.toNumber(args.SPEED) / 10;
       const limit = Scratch.Cast.toNumber(args.LIMIT);
-      const type = args.MATH;
       const timer = util.ioQuery("clock", "projectTimer");
-      const output = Math[type](timer * speed) * limit;
-      return output;
+      return Math[args.MATH](timer * speed) * limit;
     }
 
     refresh() { vm.extensionManager.refreshBlocks() }
@@ -498,9 +485,7 @@
         Scratch.vm.runtime.requestRedraw();
       } else if (args.THING === "block refresh") {
         Scratch.vm.extensionManager.refreshBlocks();
-      } else {
-        Scratch.vm.runtime.requestToolboxExtensionsUpdate();
-      }
+      } else { Scratch.vm.runtime.requestToolboxExtensionsUpdate() }
     }
 
     replaceKey(args) {
@@ -518,11 +503,10 @@
       const string = args.STRING;
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
-      const order = args.ORDER;
-      const order2 = order > args.ORDER2 ? order : args.ORDER2;
+      const order2 = args.ORDER > args.ORDER2 ? args.ORDER : args.ORDER2;
       const newString = string.replace(regex, function(match) {
         index++;
-        return index >= order && index <= order2 ? args.REPLACE : match;
+        return index >= args.ORDER && index <= order2 ? args.REPLACE : match;
       });
       return newString;
     }
@@ -531,33 +515,23 @@
 
     costumeInfo(args) {
       let target = args.SPRITE;
-      if (target === "Stage") {
-        target = vm.runtime.getTargetForStage();
-      } else {
-        target = vm.runtime.getSpriteTargetByName(target);
-      }
+      target = (target === "Stage") ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
       if (!target) return "";
       const targetInfo = target.getCostumes();
       if (args.OVERRIDE !== undefined) return target.sprite.costumes.length;
       let index = Math.round(Math.abs(Scratch.Cast.toString(args.NUM))) - 1;
-      if (!index || index === Infinity || index === -Infinity) index = 0;
+      if (!index || Scratch.Cast.toString(index).includes("Infinity")) index = 0;
       if (index > target.sprite.costumes.length - 1) index = target.sprite.costumes.length - 1;
       const costume = targetInfo[index];
       switch (args.INFO) {
         case "name": return costume.name;
         case "width": return costume.size[0];
         case "height": return costume.size[1];
-        case "type":
-          if (!requireNonPackagedRuntime("costume format")) { return "unknown" }
-          return costume.dataFormat;
+        case "type": return packageTest("costume format") ? "unknown" : costume.dataFormat;
         case "rotation center x": return costume.rotationCenterX;
         case "rotation center y": return costume.rotationCenterY;
-        case "content":
-          if (!requireNonPackagedRuntime("costume content")) { return "" }
-          return costume.asset.decodeText();
-        case "data.uri":
-          if (!requireNonPackagedRuntime("costume content")) { return "" }
-          return costume.asset.encodeDataURI();
+        case "content": return packageTest("costume content") ? "" : costume.asset.decodeText();
+        case "data.uri": return packageTest("costume content") ? "" : costume.asset.encodeDataURI();
         default: return "";
       }
     }
