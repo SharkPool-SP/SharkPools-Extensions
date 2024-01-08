@@ -25,7 +25,7 @@
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/02/2024"
     },
     "Niche-Toolbox": {
@@ -46,7 +46,7 @@
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/04/2024"
     },
     "Added-Motion": {
@@ -116,7 +116,7 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/02/2024"
     },
     "Newgrounds-Audio": {
@@ -193,14 +193,14 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 12/31/2023"
+      "status": "update",
+      "date": "Last Updated: 01/08/2024"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Text-to-Speech.js",
       "tags": ".all.expanded.fetching.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/02/2024"
     },
     "Advanced-Messages": {
