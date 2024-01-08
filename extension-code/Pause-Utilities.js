@@ -113,6 +113,45 @@
               }
             }
           },
+          "---",
+          {
+            opcode: "pauseClones",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "pause clones of [SPRITE] with [VAR] set to [NUM]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS2"
+              },
+              VAR: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my variable"
+              },
+              NUM: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              }
+            }
+          },
+          {
+            opcode: "unpauseClones",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "unpause clones of [SPRITE] with [VAR] set to [NUM]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS2"
+              },
+              VAR: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my variable"
+              },
+              NUM: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Script Control" },
           {
             opcode: "pauseLoop",
@@ -186,18 +225,16 @@
           },
         ],
         menus: {
-          TARGETS: {
-            acceptReporters: true,
-            items: "_getTargets"
-          }
+          TARGETS: { acceptReporters: true, items: this._getTargets(0) },
+          TARGETS2: { acceptReporters: true, items: this._getTargets(1) }
         }
       };
     }
 
-    _getTargets() {
+    _getTargets(ind) {
       const spriteNames = [];
       const targets = Scratch.vm.runtime.targets;
-      for (let index = 0; index < targets.length; index++) {
+      for (let index = ind; index < targets.length; index++) {
         const target = targets[index];
         if (target.isOriginal) spriteNames.push(target.getName());
       }
@@ -237,11 +274,26 @@
       const target = args.SPRITE === "Stage" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       if (target) this.searchThreads(target.id, 0);
     }
+    pauseClones(args) { this.modifyClones.call(this, args, 1) }
+    unpauseClones(args) { this.modifyClones.call(this, args, 0) }
+
     searchThreads(target, cntrl) {
       const thread = runtime.threads;
       thread.forEach(t => {
         if (t.target.id === target && t.status !== cntrl) t.status = cntrl;
       });
+    }
+    modifyClones(args, cntrl) {
+      const target = runtime.getSpriteTargetByName(args.SPRITE);
+      if (target) {
+        const clones = target.sprite.clones;
+        const varName = args.VAR;
+        const numValue = args.NUM;
+        for (let i = 1; i < clones.length; i++) {
+          const variable = clones[i].lookupVariableByNameAndType(varName, "");
+          if (variable && variable.value === numValue) this.searchThreads(clones[i].id, cntrl);
+        }
+      }
     }
 
     pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
