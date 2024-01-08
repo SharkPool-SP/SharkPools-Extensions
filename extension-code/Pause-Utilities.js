@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.4.0
+// Version V.1.5.0
 
 (function (Scratch) {
   "use strict";
@@ -90,6 +90,29 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is project paused?"
           },
+          { blockType: Scratch.BlockType.LABEL, text: "Sprite Control" },
+          {
+            opcode: "pauseSprite",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "pause [SPRITE]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS"
+              }
+            }
+          },
+          {
+            opcode: "unpauseSprite",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "unpause [SPRITE]",
+            arguments: {
+              SPRITE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS"
+              }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Script Control" },
           {
             opcode: "pauseLoop",
@@ -162,7 +185,23 @@
             disableMonitor: true
           },
         ],
+        menus: {
+          TARGETS: {
+            acceptReporters: true,
+            items: "_getTargets"
+          }
+        }
       };
+    }
+
+    _getTargets() {
+      const spriteNames = [];
+      const targets = Scratch.vm.runtime.targets;
+      for (let index = 0; index < targets.length; index++) {
+        const target = targets[index];
+        if (target.isOriginal) spriteNames.push(target.getName());
+      }
+      return spriteNames.length > 0 ? spriteNames : [""];
     }
 
     pause() {
@@ -175,9 +214,7 @@
         );
         if (pauseButton) {
           pauseButton.click();
-        } else {
-          console.log("Pause button not found");
-        }
+        } else { console.log("Pause button not found") }
       }
     }
 
@@ -191,6 +228,21 @@
 
     // by itself, the block is useless, but with the event block it is :D
     isProjectPaused() { return projectPaused }
+
+    pauseSprite(args) {
+      const target = args.SPRITE === "Stage" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
+      if (target) this.searchThreads(target.id, 1);
+    }
+    unpauseSprite(args) {
+      const target = args.SPRITE === "Stage" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
+      if (target) this.searchThreads(target.id, 0);
+    }
+    searchThreads(target, cntrl) {
+      const thread = runtime.threads;
+      thread.forEach(t => {
+        if (t.target.id === target && t.status !== cntrl) t.status = cntrl;
+      });
+    }
 
     pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
 
