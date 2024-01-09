@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.5.0
+// Version V.1.5.1
 
 (function (Scratch) {
   "use strict";
@@ -22,32 +22,31 @@
 
   runtime.on("PROJECT_STOP_ALL", () => { storedScripts = {} });
 
-  function beginScan(srcUtil) {
-    // for packager
-    const getUtil = () => {
-      if (srcUtil === undefined) {
-        srcUtil = runtime.getTargetForStage();
-        setTimeout(function() { getUtil() }, 100);
-      }
-    };
-    getUtil();
+  function beginScan() {
+    let isChecking = false;
     const check = () => {
+      if (isChecking) return;
+      isChecking = true;
       try {
-        if (srcUtil.runtime.ioDevices.clock._paused) {
-          projectPaused = true;
-          const allUtils = vm.runtime.targets;
-          for (var i = 0; i < allUtils.length; i++) {
-            const util = allUtils[i];
-            const object = util.blocks._blocks;
-            const keyV = getKeyByValue(object, "opcode", "SPPause_whenProjectPaused");
-            if (keyV) {
-              vm.setEditingTarget(util.id);
-              vm.runtime.toggleScript(object[keyV].id, util);
+        projectPaused = runtime.ioDevices.clock._paused;
+        if (!projectPaused) return;
+        const allUtils = vm.runtime.targets;
+        for (let i = 0; i < allUtils.length; i++) {
+          const util = allUtils[i];
+          const object = util.blocks._blocks;
+          const keyV = getKeyByValue(object, "opcode", "SPPause_whenProjectPaused");
+          if (keyV) {
+            vm.setEditingTarget(util.id);
+            if (runtime.threads) {
+              const threadExists = runtime.threads.some(thread => thread.topBlock === object[keyV].id);
+              if (!threadExists) vm.runtime.toggleScript(object[keyV].id, util);
             }
           }
-        } else { projectPaused = false }
-      } catch {}
-      setTimeout(function() { check() }, 0);
+        }
+      } catch {} finally {
+        isChecking = false;
+        setTimeout(check, 10);
+      }
     };
     check();
   }
@@ -332,7 +331,6 @@
     allPausedScripts() { return JSON.stringify(Object.keys(storedScripts)) }
   }
 
-  beginScan(vm.runtime.getTargetForStage())
-
+  beginScan()
   Scratch.extensions.register(new SPPause());
 })(Scratch);
