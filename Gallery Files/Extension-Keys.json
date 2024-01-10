@@ -116,8 +116,8 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "",
-      "date": "Last Updated: 01/02/2024"
+      "status": "update",
+      "date": "Last Updated: 01/09/2024"
     },
     "Newgrounds-Audio": {
       "credits": "Fetch Audio and Audio Information from Newgrounds. Made by SharkPool, works best with Tune Shark",
