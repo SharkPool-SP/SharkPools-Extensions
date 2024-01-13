@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/06/2024"
     },
     "YouTube-Operations": {
@@ -32,8 +32,8 @@
       "credits": "Utility Blocks made by Ashimee. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Niche-Toolbox.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 11/09/2023"
+      "status": "update",
+      "date": "Last Updated: 01/12/2024"
     },
     "Seeds": {
       "credits": "Generate random seeded numbers, generated terrain, and more! Made by SharkPool",
@@ -158,7 +158,7 @@
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/06/2024"
     },
     "Gamepad-Expanded": {
@@ -242,7 +242,7 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/06/2024"
     },
     "Color-Master": {
@@ -284,8 +284,8 @@
       "credits": "Monitor and Control Scripts in Your Project. Made by Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Management.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Released: 01/01/2024"
+      "status": "update",
+      "date": "Last Updated: 01/12/2024"
     },
     "Example": {
       "credits": "",
