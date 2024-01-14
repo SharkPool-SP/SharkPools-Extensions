@@ -232,7 +232,7 @@
       "date": "Last Updated: 12/20/2023"
     },
     "Google-Spreadsheets": {
-      "credits": "Read and Write Google Spreadsheet Data. Made by SharkPool",
+      "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
       "status": "new",
