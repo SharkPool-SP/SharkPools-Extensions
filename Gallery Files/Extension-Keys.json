@@ -81,8 +81,8 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 12/13/2023"
+      "status": "update",
+      "date": "Last Updated: 01/14/2024"
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
@@ -249,8 +249,8 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "",
-      "date": "Last Updated: 01/06/2024"
+      "status": "update",
+      "date": "Last Updated: 01/14/2024"
     },
     "Color-Master": {
       "credits": "Color Utilities and Color Conversions. Made by SharkPool",
