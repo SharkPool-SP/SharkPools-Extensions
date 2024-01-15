@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.5.1
+// Version V.1.6.0
 
 (function (Scratch) {
   "use strict";
@@ -26,23 +26,30 @@
     let isChecking = false;
     const check = () => {
       if (isChecking) return;
+      const isPM = Scratch.extensions.isPenguinMod;
       isChecking = true;
       try {
         projectPaused = runtime.ioDevices.clock._paused;
-        if (!projectPaused) return;
+        if (!projectPaused && !isPM) return;
         const allUtils = vm.runtime.targets;
         for (let i = 0; i < allUtils.length; i++) {
           const util = allUtils[i];
           const object = util.blocks._blocks;
-          const keyV = getKeyByValue(object, "opcode", "SPPause_whenProjectPaused");
-          if (keyV) {
-            vm.setEditingTarget(util.id);
+          const keysV = getKeysByValue(object, "opcode", "SPPause_whenProjectPaused");
+          for (const keyV of keysV) {
+            if (projectPaused) vm.setEditingTarget(util.id);
             if (runtime.threads) {
-              const threadExists = runtime.threads.some(thread => thread.topBlock === object[keyV].id);
-              if (!threadExists) vm.runtime.toggleScript(object[keyV].id, util);
+              let threadExists = runtime.threads.some(thread => thread.topBlock === object[keyV].id);
+              if (!threadExists) {
+                if (projectPaused) {
+                  vm.runtime.toggleScript(object[keyV].id, util);
+                  checkReset(object[keyV].id);
+                } else if (isPM) { checkReset(object[keyV].id) }
+              } else { checkReset(object[keyV].id) }
             }
           }
         }
+        if (isPM) vm.runtime._step();
       } catch {} finally {
         isChecking = false;
         setTimeout(check, 10);
@@ -50,11 +57,16 @@
     };
     check();
   }
-  function getKeyByValue(object, name, value) {
+  function getKeysByValue(object, name, value) {
+    const keys = [];
     for (const key in object) {
-      if (object[key][name] === value) return key;
+      if (object[key][name] === value) keys.push(key);
     }
-    return "";
+    return keys;
+  }
+  function checkReset(ID) {
+    const threadExists = runtime.threads.find(thread => thread.topBlock === ID);
+    if (threadExists.status === undefined) threadExists.status = 4;
   }
 
   class SPPause {
@@ -77,7 +89,6 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "unpause project"
           },
-          { blockType: Scratch.BlockType.LABEL, text: "↓ Doesnt work in PenguinMod ↓" },
           {
             opcode: "whenProjectPaused",
             blockType: Scratch.BlockType.EVENT,
