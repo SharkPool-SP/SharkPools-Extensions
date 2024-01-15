@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.2.9.0
+// Version V.3.0.0
 
 (function (Scratch) {
   "use strict";
@@ -251,6 +251,15 @@
             }
           },
           {
+            opcode: "noContain",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "[STRING1] not contains [STRING2]?",
+            arguments: {
+              STRING1: { type: Scratch.ArgumentType.STRING, defaultValue: "SharkPool" },
+              STRING2: { type: Scratch.ArgumentType.STRING, defaultValue: "shark" }
+            }
+          },
+          {
             opcode: "replaceKey",
             blockType: Scratch.BlockType.REPORTER,
             text: "replace [KEY] #[ORDER] of [STRING] with [REPLACE]",
@@ -282,6 +291,7 @@
               SHUFFLE_OPTION: { type: Scratch.ArgumentType.STRING, menu: "shuffleOption" }
             }
           },
+          "---",
           {
             opcode: "tripleJoin",
             blockType: Scratch.BlockType.REPORTER,
@@ -351,7 +361,7 @@
           },
           reqMenu: {
             acceptReporters: true,
-            items: ["redraw", "toolbox update", "block refresh"]
+            items: ["redraw", "project step", "toolbox update", "block refresh"]
           },
           EFFECT_MENU: {
             acceptReporters: true,
@@ -362,6 +372,7 @@
             items: ["sin", "cos"]
           },
           OPERATOR_MENU: ["+", "-", "*", "/"],
+          OPERATORS: [">", "<", "="],
           encoder: ["encode", "decode"],
           cosInfo: {
             acceptReporters: true,
@@ -440,18 +451,10 @@
       } catch { return "Invalid Array" }
       if (!Array.isArray(words)) return "Invalid Array";
       switch (args.SHUFFLE_OPTION) {
-        case "ascending":
-          words.sort();
-          break;
-        case "descending":
-          words.sort().reverse();
-          break;
-        case "descending by length":
-          words.sort((a, b) => b.length - a.length);
-          break;
-        case "ascending by length":
-          words.sort((a, b) => a.length - b.length);
-          break;
+        case "ascending": { words.sort(); break }
+        case "descending": { words.sort().reverse(); break }
+        case "descending by length": { words.sort((a, b) => b.length - a.length); break }
+        case "ascending by length": { words.sort((a, b) => a.length - b.length); break }
         default:
           for (let i = words.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -480,12 +483,11 @@
 
     refresh() { vm.extensionManager.refreshBlocks() }
 
-    request(args) {
-      if (args.THING === "redraw") {
-        Scratch.vm.runtime.requestRedraw();
-      } else if (args.THING === "block refresh") {
-        Scratch.vm.extensionManager.refreshBlocks();
-      } else { Scratch.vm.runtime.requestToolboxExtensionsUpdate() }
+    async request(args) {
+      if (args.THING === "redraw") Scratch.vm.runtime.requestRedraw();
+      else if (args.THING === "block refresh") Scratch.vm.extensionManager.refreshBlocks();
+      else if (args.THING === "project step") await this.ignoreError(vm.runtime._step());
+      else Scratch.vm.runtime.requestToolboxExtensionsUpdate();
     }
 
     replaceKey(args) {
@@ -542,6 +544,8 @@
       return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
     }
 
+    noContain(args) { return !vm.runtime.ext_scratch3_operators.contains(args) }
+
     cloudCode(args) { return args.CODE === "encode" ? this.encodeText(args.TEXT) : this.decodeText(args.TEXT) }
 
     encodeText(txt) {
@@ -566,9 +570,8 @@
         vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
       } else {
         const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
-        if (target) {
-          vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
-        } else { return }
+        if (target) vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
+        else return;
       }
     }
 
@@ -597,10 +600,11 @@
 
     removeThorns(args) { return args.SVG.replaceAll("linejoin=\"miter\"", "linejoin=\"round\"") }
 
-    stepInter() {
+    async stepInter() { await this.ignoreError(vm.runtime.frameLoop.stepCallback()) }
+    ignoreError(call) {
       return new Promise(async (resolve, reject) => {
         try {
-          vm.runtime.frameLoop.stepCallback();
+          call();
           await new Promise(resolve => setTimeout(resolve, 1));
           resolve();
         } catch { reject() }
