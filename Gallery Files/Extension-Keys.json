@@ -116,7 +116,7 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/09/2024"
     },
     "Newgrounds-Audio": {
@@ -193,7 +193,7 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/08/2024"
     },
     "Text-to-Speech": {
@@ -277,7 +277,7 @@
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Speech-Bubbles.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/09/2024"
     },
     "Font-Manager": {
