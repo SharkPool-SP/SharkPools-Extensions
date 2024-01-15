@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.4.1
+// Version 2.4.2
 
 (function (Scratch) {
   "use strict";
@@ -523,10 +523,10 @@
           mouseButtons: {
             acceptReporters: true,
             items: [
-              { text: "left", value: 0 },
-              { text: "scroll wheel", value: 1 },
-              { text: "right", value: 2 },
-              { text: "back", value: 3 }, { text: "foward", value: 4 }
+              { text: "left", value: "0" },
+              { text: "scroll wheel", value: "1" },
+              { text: "right", value: "2" },
+              { text: "back", value: "3" }, { text: "foward", value: "4" }
             ],
           }
         }
@@ -595,26 +595,22 @@
 
     isKeyHit(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
-      const loop = false;
-      return this.handleKeyPress(key, loop);
+      return this.handleKeyPress(key, false);
     }
 
     whenKeyHit(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
-      const loop = false;
-      return this.handleKeyPress(key, loop);
+      return this.handleKeyPress(key, false);
     }
 
     whenKeyPressed(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
-      const loop = true;
-      return this.handleKeyPress(key, loop);
+      return this.handleKeyPress(key, true);
     }
 
     isKeyPressed(args) {
       const key = Scratch.Cast.toString(args.KEY).replace(" ", "");
-      const loop = true;
-      return this.handleKeyPress(key, loop);
+      return this.handleKeyPress(key, true);
     }
 
     currentKey() {
@@ -641,11 +637,7 @@
       let key = Scratch.Cast.toString(args.KEY).replace(" ", "");
       if (isNaN(parseFloat(key))) key = key.toUpperCase();
       if (key === "SPACE") key = " ";
-      if (key === this.pressedKey || args.KEY === "Any") {
-        return keyPressTime;
-      } else {
-        return 0;
-      }
+      return key === this.pressedKey || args.KEY === "Any" ? keyPressTime : 0;
     }
 
     spriteTouchingSprite(args, util) {
@@ -707,9 +699,7 @@
       return formattedList;
     }
 
-    colorAtPosition(args) {
-      return this.colorTouching(Scratch.Cast.toNumber(args.x), Scratch.Cast.toNumber(args.y));
-    }
+    colorAtPosition(args) { return this.colorTouching(Scratch.Cast.toNumber(args.x), Scratch.Cast.toNumber(args.y)) }
     
     colorTouchingSprite(args, util) {
       let hex;
@@ -828,8 +818,8 @@
     }
 
     mouseClick(args, util) {return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)])}
-    realX() {return window.mouseX}
-    realY() {return window.mouseY}
+    realX() { return window.mouseX }
+    realY() { return window.mouseY }
 
     getAllString(args) {
       let regex;
