@@ -14,7 +14,7 @@
       "status": "",
       "date": "Last Updated: 11/17/2023"
     },
-    "Time-Calculations": {
+    "Time-Calculation": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Time-Calculation.js",
       "tags": ".all.utilities.expanded",
