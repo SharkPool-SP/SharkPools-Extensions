@@ -1,9 +1,9 @@
 // Name: Sharktilities
-// ID: Sharktilities
+// ID: SharkPoolSharktilities
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.0.1
+// Version V.3.0.2
 
 (function (Scratch) {
   "use strict";
@@ -14,6 +14,7 @@
 
   const vm = Scratch.vm;
   var lastValues = {};
+  const regeneratedReporters = ["SharkPoolSharktilities_whenChanged"];
 
   // This function was taken from Looks Plus by Lily
   const packageTest = (blockName) => {
@@ -70,19 +71,20 @@
   }
 
   // Inspired by LilyMakesThings <3
-  vm.on("EXTENSION_ADDED", tryBlocks);
-  vm.on("BLOCKSINFO_UPDATE", tryBlocks);
+  vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
+  vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
   vm.runtime.on("BEFORE_EXECUTE", () => { vm.runtime.startHats("SharkPoolSharktilities_whenChanged") });
-  tryBlocks();
-  function tryBlocks() {
+
+  tryUseScratchBlocks();
+  function tryUseScratchBlocks() {
     if (!window.ScratchBlocks) return;
-    vm.removeListener("EXTENSION_ADDED", tryBlocks);
-    vm.removeListener("BLOCKSINFO_UPDATE", tryBlocks);
+    vm.removeListener("EXTENSION_ADDED", tryUseScratchBlocks);
+    vm.removeListener("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
+    const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-      return (block.isShadow() &&
-        (block.type == "argument_reporter_boolean" || block.type == "argument_reporter_boolean" ||
-          block.type == "argument_reporter_string_number" || block.type == "SharkPoolSharktilities_changeV")
-      );
+      const result = originalCheck(block);
+      if (result) return;
+      return block.isShadow() && regeneratedReporters.includes(block.type);
     };
   }
 
