@@ -28,13 +28,6 @@
       "status": "",
       "date": "Last Updated: 01/02/2024"
     },
-    "Niche-Toolbox": {
-      "credits": "Utility Blocks made by Ashimee. The 'Color at X&Y' and 'Sound to Data.URI' extensions were merged here!",
-      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Niche-Toolbox.js",
-      "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 01/12/2024"
-    },
     "Seeds": {
       "credits": "Generate random seeded numbers, generated terrain, and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Seeds.js",
