@@ -14,7 +14,7 @@
 
   const vm = Scratch.vm;
   var lastValues = {};
-  const regeneratedReporters = ["SharkPoolSharktilities_whenChanged"];
+  const regeneratedReporters = ["SharkPoolSharktilities_changeV"];
 
   // This function was taken from Looks Plus by Lily
   const packageTest = (blockName) => {
