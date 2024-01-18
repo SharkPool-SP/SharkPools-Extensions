@@ -67,7 +67,7 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/15/2024"
     },
     "Better-Input": {
@@ -95,7 +95,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/09/2023"
     },
     "Image-Effects": {
