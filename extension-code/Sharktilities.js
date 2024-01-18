@@ -83,7 +83,7 @@
     const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = originalCheck(block);
-      if (result) return;
+      if (result) return true;
       return block.isShadow() && regeneratedReporters.includes(block.type);
     };
   }
