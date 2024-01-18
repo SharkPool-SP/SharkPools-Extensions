@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.6.0
+// Version V.1.6.1
 
 (function (Scratch) {
   "use strict";
@@ -49,7 +49,7 @@
             }
           }
         }
-        if (isPM) vm.runtime._step();
+        if (isPM && projectPaused) vm.runtime._step();
       } catch {} finally {
         isChecking = false;
         setTimeout(check, 10);
