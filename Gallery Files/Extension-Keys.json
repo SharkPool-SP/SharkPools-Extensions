@@ -207,8 +207,8 @@
       "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Fetch-Progress.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Last Updated: 11/08/2023"
+      "status": "update",
+      "date": "Last Updated: 01/18/2024"
     },
     "Geolocation": {
       "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
