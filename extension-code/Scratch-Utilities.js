@@ -3,7 +3,7 @@
 // Description: Fetch data from Scratch!
 // By: SharkPool
 
-// Version 2.1.0
+// Version 2.2.0
 
 (function (Scratch) {
   "use strict";
@@ -123,12 +123,10 @@
             },
           },
           { blockType: Scratch.BlockType.LABEL, text: "Cloud Data" },
-          { blockType: Scratch.BlockType.LABEL, text: "-Coming Soon-" },
           {
             opcode: "getCloudData",
             blockType: Scratch.BlockType.REPORTER,
-            text: "get [NUM2] offset [NUM1] [MENU] of cloud data from project ID [ID]",
-            hideFromPalette: true,
+            text: "get [NUM2] [MENU] offset [NUM1] of cloud data from project ID [ID]",
             arguments: {
               MENU: { type: Scratch.ArgumentType.STRING, menu: "CLOUD" },
               ID: { type: Scratch.ArgumentType.NUMBER, defaultValue: 820242622 },
@@ -144,7 +142,7 @@
           },
           CLOUD: {
             acceptReporters: true,
-            items: ["values", "server names", "senders", "dates"]
+            items: ["all", "values", "variables", "users", "dates"]
           },
         },
       };
@@ -281,7 +279,21 @@
       return newPage === Infinity || newPage === 0 ? 1 : newPage;
     }
 
-    getCloudData(args) { return "[]" } // Scratch Needs to Fix Their Servers First
+    async getCloudData(args) {
+      const lim = Math.round(args.NUM2);
+      const off = Math.round(args.NUM1);
+      try {
+        const response = await fetch(`https://corsproxy.io/?https://clouddata.scratch.mit.edu/logs?projectid=${args.ID}&limit=${lim}&offset=${off}&cache=${Math.random()}`);
+        const text = await response.json();
+        if (args.MENU === "all") return JSON.stringify(text);
+        const values = { "users": "user", "variables": "name", "values": "value", "dates": "timestamp" };
+        if (values[args.MENU] === undefined) return "[]";
+        let jsonData;
+        if (args.MENU === "dates") jsonData = text.map(item => new Date(item[values[args.MENU]]).toLocaleString());
+        else jsonData = text.map(item => item[values[args.MENU]]);
+        return JSON.stringify(jsonData);
+      } catch { return "[]" }
+    }
   }
 
   Scratch.extensions.register(new SPscratchUtilities());
