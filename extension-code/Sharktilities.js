@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.0.2
+// Version V.3.1.0
 
 (function (Scratch) {
   "use strict";
@@ -98,12 +98,15 @@
         blocks: [
           { blockType: Scratch.BlockType.LABEL, text: "Management" },
           {
-            opcode: "costumeCnt",
+            opcode: "penLayer",
             blockType: Scratch.BlockType.REPORTER,
-            text: "# of costumes in [SPRITE]",
-            arguments: {
-              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
-            }
+            text: "get pen layer",
+            disableMonitor: true
+          },
+          {
+            opcode: "costumeCnt", blockType: Scratch.BlockType.REPORTER,
+            text: "# of costumes in [SPRITE]", hideFromPalette: true, // deprecated
+            arguments: { SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" } }
           },
           {
             opcode: "costumeInfo",
@@ -661,6 +664,55 @@
           resolve();
         } catch { reject() }
       });
+    }
+
+    async penLayer() {
+      const rng = Math.random();
+      const stage = vm.runtime.getTargetForStage();
+      const oldBg = stage.getCostumes()[stage.currentCostume].name;
+      if (!await this.addBackup(rng)) return;
+      const targets = vm.runtime.targets;
+      const showingTargets = targets.filter(target => target.visible);
+      targets.slice(1).forEach(target => target.setVisible(false));
+      const showSprites = async (hiddenTargets, uri) => {
+        hiddenTargets.forEach(target => target.setVisible(true));
+        await this.deleteBackup(rng, oldBg);
+        return uri;
+      };
+      return new Promise((resolve) => {
+        Scratch.vm.runtime.renderer.requestSnapshot((uri) => {
+          resolve(showSprites(showingTargets, uri));
+        });
+      });
+    }
+    // Modified Asset Manager Code (Thx Lily <3)
+    async addBackup(rng) {
+      const res = await Scratch.fetch("data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIHZpZXdCb3g9Ii0xIC0xIDIgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPCEtLSBFeHBvcnRlZCBieSBTY3JhdGNoIC0gaHR0cDovL3NjcmF0Y2gubWl0LmVkdS8gLS0+Cjwvc3ZnPg==");
+      const blob = await res.blob();
+      const arrayBuffer = await new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result);
+        fr.readAsArrayBuffer(blob);
+      });
+      const asset = vm.runtime.storage.createAsset(
+        vm.runtime.storage.AssetType.ImageVector, "svg",
+        new Uint8Array(arrayBuffer), null, true
+      );
+      const md5ext = `${asset.assetId}.${asset.dataFormat}`;
+      try {
+        await vm.addCostume(
+          md5ext, { asset, md5ext, name: `SP-penLayer-Stage-${rng}` },
+          vm.runtime.getTargetForStage().id
+        );
+        return true;
+      } catch (e) { return false }
+    }
+    deleteBackup(rng, oldBg) {
+      const target = vm.runtime.getTargetForStage();
+      const index = target.getCostumeIndexByName(`SP-penLayer-Stage-${rng}`);
+      if (index < 0) return;
+      if (target.sprite.costumes.length > 0) target.deleteCostume(index);
+      vm.runtime.ext_scratch3_looks._setBackdrop(target, oldBg);
     }
   }
 
