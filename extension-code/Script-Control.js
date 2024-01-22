@@ -3,7 +3,7 @@
 // Description: Control Scripts
 // By: SharkPool
 
-// Version V.1.2.0
+// Version V.1.2.1
 
 (function (Scratch) {
   "use strict";
@@ -158,22 +158,39 @@
     }
 
     doScripts(args) {
-      const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
-      if (args.TYPE === "restart") this.doScripts({ ...args, TYPE: "stop" });
-      const control = args.TYPE === "stop" ? "_stopThread" : "_restartThread";
-      Object.keys(storedScripts).forEach(key => {
-        if (key.includes(`SP-${ID}+`)) {
-          try {
-            const index = storedScripts[key].ind;
-            if (this.check4Deletion(index.topBlock)) {
-              if (args.TYPE === "start") {
-                vm.runtime._pushThread(index.topBlock, storedScripts[key].target, { stackClick: true });
-              } else {
-                if (index !== -1) runtime[control](index);
-              }
-            } else { console.error("Script Was Deleted!") }
-          } catch {}
-        }
+      // Needs to be a Promise, Stopped then Started Threads get Confused
+      return new Promise((resolve, reject) => {
+        const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
+        if (args.TYPE === "restart") this.doScripts({ ...args, TYPE: "stop" }).then(() => resolve()).catch(error => reject(error));
+        const control = args.TYPE === "stop" ? "_stopThread" : "_restartThread";
+        const promises = [];
+        Object.keys(storedScripts).forEach(key => {
+          if (key.includes(`SP-${ID}+`)) {
+            try {
+              const index = storedScripts[key].ind;
+              if (this.check4Deletion(index.topBlock)) {
+                if (args.TYPE === "start") {
+                  promises.push(
+                    new Promise((resolveThread, rejectThread) => {
+                      vm.runtime._pushThread(index.topBlock, storedScripts[key].target, { stackClick: true });
+                      resolveThread();
+                    })
+                  );
+                } else {
+                  if (index !== -1) {
+                    promises.push(
+                      new Promise((resolveControl, rejectControl) => {
+                        runtime[control](index);
+                        resolveControl();
+                      })
+                    );
+                  }
+                }
+              } else { console.error("Script Was Deleted!") }
+            } catch (e) { reject(e) }
+          }
+        });
+        Promise.all(promises).then(() => resolve()).catch(error => reject(error));
       });
     }
 
@@ -213,7 +230,7 @@
         for (let i = 0; i <= num; i++) {
           newID = thread.blockContainer.getNextBlock(newID);
         }
-        util.stopThisScript(); // intentional keeping this out of "if", allows stopping threads
+        if (num >= 0) util.stopThisScript();
         if (newID && newID !== myID) vm.runtime.toggleScript(newID, { target: util.target });
         resolve();
       });
