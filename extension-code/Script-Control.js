@@ -3,7 +3,7 @@
 // Description: Control Scripts
 // By: SharkPool
 
-// Version V.1.1.0
+// Version V.1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -48,6 +48,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "remove all logged scripts"
           },
+          "---",
           {
             opcode: "doScripts",
             blockType: Scratch.BlockType.COMMAND,
@@ -57,6 +58,24 @@
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
             }
           },
+          {
+            opcode: "skipBlocks",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "start script with custom ID [ID] skip [NUM] blocks",
+            arguments: {
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
+            }
+          },
+          {
+            opcode: "skipMyBlocks",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "skip [NUM] blocks in this script",
+            arguments: {
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
+            }
+          },
+          "---",
           {
             opcode: "whileScript",
             blockType: Scratch.BlockType.LOOP,
@@ -69,6 +88,14 @@
             opcode: "isScript",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "script with custom ID [ID] running?",
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
+            }
+          },
+          {
+            opcode: "isManual",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "script with custom ID [ID] manually running?",
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
             }
@@ -132,7 +159,6 @@
 
     doScripts(args) {
       const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
-      const oldTarget = vm.editingTarget.id;
       if (args.TYPE === "restart") this.doScripts({ ...args, TYPE: "stop" });
       const control = args.TYPE === "stop" ? "_stopThread" : "_restartThread";
       Object.keys(storedScripts).forEach(key => {
@@ -141,8 +167,7 @@
             const index = storedScripts[key].ind;
             if (this.check4Deletion(index.topBlock)) {
               if (args.TYPE === "start") {
-                vm.setEditingTarget(storedScripts[key].target.id);
-                vm.runtime.toggleScript(index.topBlock, storedScripts[key].target);
+                vm.runtime._pushThread(index.topBlock, storedScripts[key].target, { stackClick: true });
               } else {
                 if (index !== -1) runtime[control](index);
               }
@@ -150,7 +175,48 @@
           } catch {}
         }
       });
-      setTimeout(function() { vm.setEditingTarget(oldTarget) }, 0); // avoida the bugga
+    }
+
+    skipBlocks(args) {
+      const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
+      const num = Scratch.Cast.toNumber(args.NUM) - 1;
+      Object.keys(storedScripts).forEach(key => {
+        if (key.includes(`SP-${ID}+`)) {
+          try {
+            const index = storedScripts[key].ind;
+            if (this.check4Deletion(index.topBlock)) {
+              let newID = index.topBlock;
+              for (let i = 0; i <= num; i++) {
+                newID = index.blockContainer.getNextBlock(newID);
+              }
+              if (newID) {
+                runtime._stopThread(index);
+                vm.runtime._pushThread(newID, storedScripts[key].target, { stackClick: true });
+              }
+            } else { console.error("Script Was Deleted!") }
+          } catch {}
+        }
+      });
+    }
+
+    skipMyBlocks(args, util) {
+      return new Promise(resolve => {
+        const num = Scratch.Cast.toNumber(args.NUM) - 1;
+        const myID = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
+        const thread = util.thread;
+        let newID = thread.topBlock;
+        while (newID !== myID && newID) { newID = thread.blockContainer.getNextBlock(newID) }
+        if (!newID) {
+          resolve();
+          return;
+        }
+        for (let i = 0; i <= num; i++) {
+          newID = thread.blockContainer.getNextBlock(newID);
+        }
+        util.stopThisScript(); // intentional keeping this out of "if", allows stopping threads
+        if (newID && newID !== myID) vm.runtime.toggleScript(newID, { target: util.target });
+        resolve();
+      });
     }
 
     whileScript(args, util) {
@@ -164,6 +230,18 @@
       Object.keys(storedScripts).forEach(key => {
         if (key.includes(`SP-${ID}+`)) {
           value = this.checkThreads(storedScripts[key].id);
+        }
+      });
+      return value;
+    }
+
+    isManual(args) {
+      let value = false;
+      const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
+      Object.keys(storedScripts).forEach(key => {
+        if (key.includes(`SP-${ID}+`)) {
+          const thread = runtime.threads[this.getIndexByVal(runtime.threads, "topBlock", storedScripts[key].id)];
+          if (thread) value = thread.stackClick;
         }
       });
       return value;
