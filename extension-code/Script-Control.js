@@ -3,7 +3,7 @@
 // Description: Control Scripts
 // By: SharkPool
 
-// Version V.1.2.1
+// Version V.1.2.2
 
 (function (Scratch) {
   "use strict";
@@ -196,7 +196,7 @@
 
     skipBlocks(args) {
       const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
-      const num = Scratch.Cast.toNumber(args.NUM) - 1;
+      const num = Scratch.Cast.toNumber(args.NUM);
       Object.keys(storedScripts).forEach(key => {
         if (key.includes(`SP-${ID}+`)) {
           try {
@@ -218,7 +218,7 @@
 
     skipMyBlocks(args, util) {
       return new Promise(resolve => {
-        const num = Scratch.Cast.toNumber(args.NUM) - 1;
+        const num = Scratch.Cast.toNumber(args.NUM);
         const myID = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
         const thread = util.thread;
         let newID = thread.topBlock;
@@ -231,7 +231,7 @@
           newID = thread.blockContainer.getNextBlock(newID);
         }
         if (num >= 0) util.stopThisScript();
-        if (newID && newID !== myID) vm.runtime.toggleScript(newID, { target: util.target });
+        if (newID && newID !== myID) vm.runtime._pushThread(newID, util.target);
         resolve();
       });
     }
