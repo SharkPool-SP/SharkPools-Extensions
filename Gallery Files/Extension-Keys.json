@@ -287,6 +287,13 @@
       "status": "update",
       "date": "Last Updated: 01/21/2024"
     },
+    "Layer-Control": {
+      "credits": " Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new",
+      "date": "Released: 01/22/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
