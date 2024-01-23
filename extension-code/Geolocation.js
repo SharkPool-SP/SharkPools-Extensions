@@ -35,11 +35,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get [TYPE]",
             arguments: {
-              TYPE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TYPES",
-                defaultValue: "latitude"
-              }
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "TYPES" }
             }
           },
           {
@@ -53,10 +49,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get [TYPE] from IP [IP]",
             arguments: {
-              TYPE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "IP_MENU",
-              },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "IP_MENU" },
               IP: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "161.185.160.93"
@@ -68,10 +61,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get country name from code [CODE]",
             arguments: {
-              CODE: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "CA"
-              }
+              CODE: { type: Scratch.ArgumentType.STRING, defaultValue: "CA" }
             }
           },
           "---",
@@ -80,21 +70,14 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "distance from lat [LAT1] long [LONG1] to lat [LAT2] long [LONG2] in [UNIT]",
             arguments: {
-              UNIT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "UNITS",
-                defaultValue: "miles"
-              },
+              UNIT: { type: Scratch.ArgumentType.STRING, menu: "UNITS" },
               LAT1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               LAT2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
               LONG1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               LONG2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 }
             }
           },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "Unreliable Blocks",
-          },
+          { blockType: Scratch.BlockType.LABEL, text: "Unreliable Blocks" },
           {
             opcode: "getOthers",
             blockType: Scratch.BlockType.REPORTER,
@@ -102,8 +85,7 @@
             arguments: {
               TYPE: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "TYPES2",
-                defaultValue: "altitude"
+                menu: "TYPES2"
               }
             }
           }
@@ -146,12 +128,8 @@
             navigator.geolocation.getCurrentPosition(resolve, reject);
           });
           return (position.coords[THING])? position.coords[THING] : "";
-        } catch (error) {
-          return "Error: " + error.message;
-        }
-      } else {
-        return "Geolocation isn't supported by this browser";
-      }
+        } catch (error) { return "Error: " + error.message }
+      } else { return "Geolocation isn't supported by this browser" }
     }
 
     async getIP() {
