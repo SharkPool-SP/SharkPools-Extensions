@@ -19,9 +19,9 @@
     getInfo() {
       return {
         id: "SPlayering",
+        name: "Layer Control",
         color1: "#bb71e6",
         menuIconURI,
-        name: "Layer Control",
         blocks: [
           {
             opcode: "getAllID",
