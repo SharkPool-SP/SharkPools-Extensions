@@ -74,7 +74,7 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/14/2024"
     },
     "Camera-Sensing-Plus": {
@@ -102,7 +102,7 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/19/2024"
     },
     "Recording": {
@@ -186,7 +186,7 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/17/2024"
     },
     "Text-to-Speech": {
@@ -242,7 +242,7 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/19/2024"
     },
     "Color-Master": {
@@ -288,7 +288,7 @@
       "date": "Last Updated: 01/21/2024"
     },
     "Layer-Control": {
-      "credits": " Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
+      "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
       "tags": ".all.utilities.expanded",
       "status": "new",
