@@ -11,8 +11,8 @@
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Last Updated: 11/17/2023"
+      "status": "update",
+      "date": "Last Updated: 01/23/2024"
     },
     "Time-Calculation": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
