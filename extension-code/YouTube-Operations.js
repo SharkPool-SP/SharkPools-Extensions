@@ -3,18 +3,45 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.5.3
+// Version V.1.6.0
 
 (function (Scratch) {
   "use strict";
   
-  if (!Scratch.extensions.unsandboxed) throw new Error("This Extension must run unsandboxed");
+  if (!Scratch.extensions.unsandboxed) throw new Error("YouTube Operations must run unsandboxed");
 
   const menuIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNDUuMzU3NjQiIGhlaWdodD0iMTQ1LjM1NzY0IiB2aWV3Qm94PSIwLDAsMTQ1LjM1NzY0LDE0NS4zNTc2NCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE2Ny4zMjExOCwtMTA3LjMyMTE4KSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0xNjcuMzIxMTgsMTgwYzAsLTQwLjEzOTQgMzIuNTM5NDIsLTcyLjY3ODgyIDcyLjY3ODgyLC03Mi42Nzg4MmM0MC4xMzk0LDAgNzIuNjc4ODIsMzIuNTM5NDIgNzIuNjc4ODIsNzIuNjc4ODJjMCw0MC4xMzk0IC0zMi41Mzk0Miw3Mi42Nzg4MiAtNzIuNjc4ODIsNzIuNjc4ODJjLTQwLjEzOTQsMCAtNzIuNjc4ODIsLTMyLjUzOTQyIC03Mi42Nzg4MiwtNzIuNjc4ODJ6IiBmaWxsPSIjZmYwMDAwIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMjY2LjczNTExLDE4My45NjIxN2MtMTAuNTg2MzgsNS44NTkwNiAtMzAuMDk5NDcsMTYuNjU4NjIgLTM2LjI4NjY5LDIwLjA4Mjk1Yy0zLjY5NDk2LDIuMDQ0OTkgLTcuOTEyMTYsMS4wMzg2NiAtNy45MTIxNiwtMy45MTI3OGMwLC0xMS43NTY5MiAwLC0zMi41OTcxNSAwLC0zOS4zNzEwMWMwLC00LjE4NDE2IDMuNTIzNywtNy4wNTM5NiA2Ljc2OTcsLTUuMjU3NDVjNi4wMDQyNSwzLjMyMzA3IDI2LjUwMDE1LDE0LjY2NjU3IDM3LjQyODg5LDIwLjcxNTExYzQuMjA2MzgsMi4zMjgwMyA0LjIwMDQ2LDUuNDE4NTYgMC4wMDAyNSw3Ljc0MzE4eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIi8+PC9nPjwvZz48L3N2Zz4=";
+"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNDUuMzU3NjQiIGhlaWdodD0iMTQ1LjM1NzY0IiB2aWV3Qm94PSIwLDAsMTQ1LjM1NzY0LDE0NS4zNTc2NCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE2Ny4zMjExOCwtMTA3LjMyMTE4KSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0xNjcuMzIxMTgsMTgwYzAsLTQwLjEzOTQgMzIuNTM5NDIsLTcyLjY3ODgyIDcyLjY3ODgyLC03Mi42Nzg4MmM0MC4xMzk0LDAgNzIuNjc4ODIsMzIuNTM5NDIgNzIuNjc4ODIsNzIuNjc4ODJjMCw0MC4xMzk0IC0zMi41Mzk0Miw3Mi42Nzg4MiAtNzIuNjc4ODIsNzIuNjc4ODJjLTQwLjEzOTQsMCAtNzIuNjc4ODIsLTMyLjUzOTQyIC03Mi42Nzg4MiwtNzIuNjc4ODJ6IiBmaWxsPSIjYzMwMDAwIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMTc2LjM2MTcyLDE4MGMwLC0zNS4xNDY0NSAyOC40OTE4MywtNjMuNjM4MjggNjMuNjM4MjgsLTYzLjYzODI4YzM1LjE0NjQ1LDAgNjMuNjM4MjgsMjguNDkxODMgNjMuNjM4MjgsNjMuNjM4MjhjMCwzNS4xNDY0NSAtMjguNDkxODMsNjMuNjM4MjggLTYzLjYzODI4LDYzLjYzODI4Yy0zNS4xNDY0NSwwIC02My42MzgyOCwtMjguNDkxODMgLTYzLjYzODI4LC02My42MzgyOHoiIGZpbGw9IiNmZjAwMDAiIHN0cm9rZT0iIzAwMDAwMCIvPjxwYXRoIGQ9Ik0yNjYuNzM1MTEsMTgzLjk2MjE3Yy0xMC41ODYzOCw1Ljg1OTA2IC0zMC4wOTk0NywxNi42NTg2MiAtMzYuMjg2NjksMjAuMDgyOTVjLTMuNjk0OTYsMi4wNDQ5OSAtNy45MTIxNiwxLjAzODY2IC03LjkxMjE2LC0zLjkxMjc4YzAsLTExLjc1NjkyIDAsLTMyLjU5NzE1IDAsLTM5LjM3MTAxYzAsLTQuMTg0MTYgMy41MjM3LC03LjA1Mzk2IDYuNzY5NywtNS4yNTc0NWM2LjAwNDI1LDMuMzIzMDcgMjYuNTAwMTUsMTQuNjY2NTcgMzcuNDI4ODksMjAuNzE1MTFjNC4yMDYzOCwyLjMyODAzIDQuMjAwNDYsNS40MTg1NiAwLjAwMDI1LDcuNzQzMTh6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiLz48L2c+PC9nPjwvc3ZnPg==";
 
   const blockIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNjguOTYyNzMiIGhlaWdodD0iMTY4Ljk2MjczIiB2aWV3Qm94PSIwLDAsMTY4Ljk2MjczLDE2OC45NjI3MyI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE1NS41MTg2NCwtOTUuNTE4NjQpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE1NS41MTg2NCwxODBjMCwtNDYuNjU3NzYgMzcuODIzNiwtODQuNDgxMzYgODQuNDgxMzYsLTg0LjQ4MTM2YzQ2LjY1Nzc2LDAgODQuNDgxMzYsMzcuODIzNiA4NC40ODEzNiw4NC40ODEzNmMwLDQ2LjY1Nzc2IC0zNy44MjM2LDg0LjQ4MTM2IC04NC40ODEzNiw4NC40ODEzNmMtNDYuNjU3NzYsMCAtODQuNDgxMzYsLTM3LjgyMzYgLTg0LjQ4MTM2LC04NC40ODEzNnoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzAwMDAwMCIvPjxwYXRoIGQ9Ik0xNjcuMzIxMTgsMTgwYzAsLTQwLjEzOTQgMzIuNTM5NDIsLTcyLjY3ODgyIDcyLjY3ODgyLC03Mi42Nzg4MmM0MC4xMzk0LDAgNzIuNjc4ODIsMzIuNTM5NDIgNzIuNjc4ODIsNzIuNjc4ODJjMCw0MC4xMzk0IC0zMi41Mzk0Miw3Mi42Nzg4MiAtNzIuNjc4ODIsNzIuNjc4ODJjLTQwLjEzOTQsMCAtNzIuNjc4ODIsLTMyLjUzOTQyIC03Mi42Nzg4MiwtNzIuNjc4ODJ6IiBmaWxsPSIjZmYwMDAwIiBzdHJva2U9IiMwMDAwMDAiLz48cGF0aCBkPSJNMjcxLjkzNjIzLDE4NC45NjYyOGMtMTMuMjY5MjQsNy4zNDM5IC0zNy43Mjc0NCwyMC44ODAzNCAtNDUuNDgyNjYsMjUuMTcyNDhjLTQuNjMxMzYsMi41NjMyNCAtOS45MTczLDEuMzAxODggLTkuOTE3MywtNC45MDQzOGMwLC0xNC43MzY0MiAwLC00MC44NTgxIDAsLTQ5LjM0ODYzYzAsLTUuMjQ0NTMgNC40MTY3LC04Ljg0MTYxIDguNDg1MzEsLTYuNTg5ODJjNy41MjU4OCw0LjE2NTIyIDMzLjIxNTk2LDE4LjM4MzQ1IDQ2LjkxNDMzLDI1Ljk2NDg1YzUuMjcyMzgsMi45MTgwMSA1LjI2NDk2LDYuNzkxNzYgMC4wMDAzMSw5LjcwNTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiLz48L2c+PC9nPjwvc3ZnPg==";
+"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIzMy4yMDU3MyIgaGVpZ2h0PSIyNS4xOTYyMiIgdmlld0JveD0iMCwwLDMzLjIwNTczLDI1LjE5NjIyIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjIzLjM5NzE0LC0xNjcuNDAxODkpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMjU2LjYwMjg3LDE4MGMwLDAgMCw1Ljg1NzYxIC0wLjY5NDMzLDguNjYzNDdjLTAuMzgyNjIsMS41NDk1NyAtMS41MDYxNywyLjc2NzMxIC0yLjkzNTc0LDMuMTgyMDNjLTIuNTg4NDUsMC43NTI2MSAtMTIuOTcyODUsMC43NTI2MSAtMTIuOTcyODUsMC43NTI2MWMwLDAgLTEwLjM4NDI1LDAgLTEyLjk3MjgyLC0wLjc1MjYxYy0xLjQyOTU3LC0wLjQxNDcyIC0yLjU1MzAyLC0xLjYzMjQ2IC0yLjkzNTcsLTMuMTgyMDNjLTAuNjk0MjksLTIuODA1ODUgLTAuNjk0MjksLTguNjYzNDcgLTAuNjk0MjksLTguNjYzNDdjMCwwIDAsLTUuODU3NTkgMC42OTQyOSwtOC42NjM0MmMwLjM4MjY4LC0xLjU0OTU4IDEuNTA2MTIsLTIuNzY3MzMgMi45MzU3LC0zLjE4MjEzYzIuNTg4NTYsLTAuNzUyNTYgMTIuOTcyODIsLTAuNzUyNTYgMTIuOTcyODIsLTAuNzUyNTZjMCwwIDEwLjM4NDQsMCAxMi45NzI4NSwwLjc1MjU2YzEuNDI5NTcsMC40MTQ4IDIuNTUzMTMsMS42MzI1NCAyLjkzNTc0LDMuMTgyMTNjMC42OTE1NCwyLjgwNTgyIDAuNjk0MzMsOC42NjM0MiAwLjY5NDMzLDguNjYzNDJ6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTI1NC4yODUwNiwxODBjMCwwIDAsNC42NDk2IC0wLjU5NzQsNi44NzY4Yy0wLjMyOTIsMS4yMyAtMS4yOTU5LDIuMTk2NiAtMi41MjU5LDIuNTI1OGMtMi4yMjcxLDAuNTk3NCAtMTEuMTYxOCwwLjU5NzQgLTExLjE2MTgsMC41OTc0YzAsMCAtOC45MzQ1OCwwIC0xMS4xNjE3NywtMC41OTc0Yy0xLjIzLC0wLjMyOTIgLTIuMTk2NjEsLTEuMjk1OCAtMi41MjU4NiwtMi41MjU4Yy0wLjU5NzM3LC0yLjIyNzIgLTAuNTk3MzcsLTYuODc2OCAtMC41OTczNywtNi44NzY4YzAsMCAwLC00LjY0OTU4IDAuNTk3MzcsLTYuODc2NzZjMC4zMjkyNiwtMS4yMzAwMSAxLjI5NTg2LC0yLjE5NjYyIDIuNTI1ODYsLTIuNTI1ODdjMi4yMjcxOSwtMC41OTczNyAxMS4xNjE3NywtMC41OTczNyAxMS4xNjE3NywtMC41OTczN2MwLDAgOC45MzQ3LDAgMTEuMTYxOCwwLjU5NzM3YzEuMjMsMC4zMjkyNiAyLjE5NjcsMS4yOTU4NiAyLjUyNTksMi41MjU4N2MwLjU5NSwyLjIyNzE4IDAuNTk3NCw2Ljg3Njc2IDAuNTk3NCw2Ljg3Njc2eiIgZmlsbD0iI2ZmMDAwMCIvPjxwYXRoIGQ9Ik0yMzcuMTQwMjYsMTc1LjcxNTMzbDcuNDIyNCw0LjI4NTA3bC03LjQyMjQsNC4yODV6IiBmaWxsPSIjZmZmZmZmIi8+PC9nPjwvZz48L3N2Zz4=";
+
+  let player = "window";
+  //let playerOpts = { controls: 1, autoplay: 1, loop: 0 } -- Stopped Working, see L:378
+
+  // Modified From iFrame (Turbowarp -- Garbomuffin)
+  let iframe = null;
+  const createFrame = (src, args) => {
+    iframe = document.createElement("iframe");
+    iframe.style.width = `${Scratch.Cast.toNumber(args.WIDTH)}px`;
+    iframe.style.height = `${Scratch.Cast.toNumber(args.HEIGHT)}px`;
+    iframe.style.border = "none";
+    iframe.style.position = "absolute";
+    iframe.style.transform =
+      `translate(${Scratch.Cast.toNumber(args.LEFT) - 50}%, ${Scratch.Cast.toNumber(args.TOP) - 50}%)`;
+    iframe.setAttribute("allowtransparency", "true");
+    iframe.setAttribute("src", src);
+    iframe.style.pointerEvents = "auto"; //playerOpts.controls ? "auto" : "none";
+    Scratch.renderer.addOverlay(iframe, "scale-centered");
+  };
+  const closeFrame = () => {
+    if (iframe) {
+      Scratch.renderer.removeOverlay(iframe);
+      iframe = null;
+    }
+  };
+  Scratch.vm.runtime.on("RUNTIME_DISPOSED", closeFrame);
+  Scratch.vm.runtime.on("PROJECT_STOP_ALL", closeFrame);
 
   class SPyoutubeoperations {
     constructor() { this.youtubeWindows = {} }
@@ -77,50 +104,6 @@
               }
             }
           },
-          "---",
-          {
-            opcode: "openYouTubeLinkInNewWindow",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start",
-            arguments: {
-              ID: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "dQw4w9WgXcQ"
-              },
-              WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 800 },
-              HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 600 },
-              LEFT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              TOP: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
-            }
-          },
-          {
-            opcode: "openYouTubeLinkInNewWindowAtTime",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]",
-            arguments: {
-              ID: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "dQw4w9WgXcQ"
-              },
-              WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 800 },
-              HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 600 },
-              LEFT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              TOP: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              MINUTES: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              SECONDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
-            }
-          },
-          {
-            opcode: "closeYouTubeWindow",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "close video window with ID: [VIDEO_ID]",
-            arguments: {
-              VIDEO_ID: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "dQw4w9WgXcQ"
-              }
-            }
-          },
           { blockType: Scratch.BlockType.LABEL, text: "Users" },
           {
             opcode: "fetchUserThing",
@@ -137,8 +120,64 @@
               }
             }
           },
+          { blockType: Scratch.BlockType.LABEL, text: "Video Player" },
+          {
+            opcode: "setPlayer",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "play videos on [TYPE]",
+            arguments: {
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "DISPLAY"
+              }
+            }
+          },
+          {
+            opcode: "openYouTubeLinkInNewWindow",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start",
+            arguments: {
+              ID: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "dQw4w9WgXcQ"
+              },
+              WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 },
+              HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 360 },
+              LEFT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              TOP: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            }
+          },
+          {
+            opcode: "openYouTubeLinkInNewWindowAtTime",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]",
+            arguments: {
+              ID: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "dQw4w9WgXcQ"
+              },
+              WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 },
+              HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 360 },
+              LEFT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              TOP: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              MINUTES: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              SECONDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            }
+          },
+          {
+            opcode: "closeYouTubeWindow",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "close video window with ID: [VIDEO_ID]",
+            arguments: {
+              VIDEO_ID: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "dQw4w9WgXcQ"
+              }
+            }
+          }
         ],
         menus: {
+          DISPLAY: ["window", "canvas"],
           STAT_OPTIONS: {
             acceptReporters: true,
             items: ["like", "dislike", "view count", "rating", "date created"]
@@ -198,35 +237,6 @@
         }
         return "";
       } catch { return "Failed to Fetch" }
-    }
-
-    openYouTubeLinkInNewWindow(args) { this.openYouTubeLinkInNewWindowAtTime(args) }
-
-    openYouTubeLinkInNewWindowAtTime(args) {
-      const videoId = args.ID;
-      const minutes = Scratch.Cast.toNumber(args.MINUTES) || 0;
-      const seconds = Scratch.Cast.toNumber(args.SECONDS) || 0;
-      const startTime = minutes * 60 + seconds;
-      const url = `https://www.yout-ube.com/watch?v=${videoId}&t=${startTime}`;
-      let params = "fullscreen=yes";
-      params += isNaN(args.WIDTH) ? "" : `,width=${Math.max(100, Math.min(args.WIDTH, window.screen.width))}`;
-      params += isNaN(args.HEIGHT) ? "" : `,height=${Math.max(100, Math.min(args.HEIGHT, window.screen.height))}`;
-      params += isNaN(args.LEFT) ? "" : `,left=${Math.max(0, Math.min(args.LEFT, window.screen.width))}`;
-      params += isNaN(args.TOP) ? "" : `,top=${Math.max(0, Math.min(args.TOP, window.screen.height))}`;
-      const newWindow = window.open(url, "_blank", params);
-      if (newWindow) {
-        this.youtubeWindows[videoId] = newWindow;
-        newWindow.focus();
-      }
-    }
-
-    closeYouTubeWindow(args) {
-      const videoId = args.VIDEO_ID;
-      const windowToClose = this.youtubeWindows[videoId];
-      if (windowToClose) {
-        windowToClose.close();
-        delete this.youtubeWindows[videoId];
-      }
     }
 
     async fetchtitle(args) {
@@ -351,6 +361,55 @@
         return "[]";
       } catch { return "Failed to Fetch" }
     }
+
+    openYouTubeLinkInNewWindow(args) { this.openYouTubeLinkInNewWindowAtTime(args) }
+
+    openYouTubeLinkInNewWindowAtTime(args) {
+      const minutes = Scratch.Cast.toNumber(args.MINUTES) || 0;
+      const seconds = Scratch.Cast.toNumber(args.SECONDS) || 0;
+      const startTime = minutes * 60 + seconds;
+      let url = `https://www.yout-ube.com/watch?v=${args.ID}&t=${startTime}&fullscreen=yes`;
+      let params = "";
+
+      params += `&width=${Math.max(100, Math.min(Scratch.Cast.toNumber(args.WIDTH), window.screen.width))}`;
+      params += `&height=${Math.max(100, Math.min(Scratch.Cast.toNumber(args.HEIGHT), window.screen.height))}`;
+      params += `&left=${Math.max(0, Math.min(Scratch.Cast.toNumber(args.LEFT), window.screen.width))}`;
+      params += `&top=${Math.max(0, Math.min(Scratch.Cast.toNumber(args.TOP), window.screen.height))}`;
+      /*
+        params += `&autoplay=${playerOpts.autoplay}`;
+        params += `&controls=${playerOpts.controls}&disablekb=${playerOpts.controls}`;
+        params += `&loop=${playerOpts.loop}`;
+        --These stopped working for some reason. No Idea Why. Keeping it in just in case
+      */
+      url += params;
+      if (player === "window") {
+        const newWindow = window.open(url, "_blank", params.replaceAll("&", ","));
+        if (newWindow) {
+          this.youtubeWindows[args.ID] = newWindow;
+          const onWindLoad = () => {
+            newWindow.removeEventListener("load", onWindLoad);
+            newWindow.focus();
+          };
+          newWindow.addEventListener("load", onWindLoad);
+        }
+      } else {
+        closeFrame();
+        createFrame(url, args);
+      }
+    }
+
+    closeYouTubeWindow(args) {
+      const videoId = args.VIDEO_ID;
+      if (player === "window") {
+        const windowToClose = this.youtubeWindows[videoId];
+        if (windowToClose) {
+          windowToClose.close();
+          delete this.youtubeWindows[videoId];
+        }
+      } else { closeFrame() }
+    }
+
+    setPlayer(args) { player = args.TYPE }
   }
   
   Scratch.extensions.register(new SPyoutubeoperations());
