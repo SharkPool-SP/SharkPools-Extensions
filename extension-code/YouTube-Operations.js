@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.6.0
+// Version V.1.6.1
 
 (function (Scratch) {
   "use strict";
@@ -28,7 +28,7 @@
     iframe.style.border = "none";
     iframe.style.position = "absolute";
     iframe.style.transform =
-      `translate(${Scratch.Cast.toNumber(args.LEFT) - 50}%, ${Scratch.Cast.toNumber(args.TOP) - 50}%)`;
+      `translate(${Scratch.Cast.toNumber(args.LEFT) - 50}%, ${Scratch.Cast.toNumber(args.TOP * -1) - 50}%)`;
     iframe.setAttribute("allowtransparency", "true");
     iframe.setAttribute("src", src);
     iframe.style.pointerEvents = "auto"; //playerOpts.controls ? "auto" : "none";
