@@ -294,6 +294,13 @@
       "status": "new",
       "date": "Released: 01/22/2024"
     },
+     "Example": {
+      "credits": "ion/ammunimium",
+      "url": "https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code/Timezones.js",
+      "tags": ".all.utilities.expanded.fetching.searchQ",
+      "status": "new",
+      "date": "Released: 01/25/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
