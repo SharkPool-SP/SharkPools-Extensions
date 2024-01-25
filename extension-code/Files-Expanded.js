@@ -1,7 +1,7 @@
 // Name: Files Expanded
 // ID: files
 // Description: Read, upload, and download files.
-// By: SharkPool, GarboMuffin, Drago Cuven, and 0znzw
+// By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
 // Version 1.3.0
 
