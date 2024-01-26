@@ -294,7 +294,7 @@
       "status": "new",
       "date": "Released: 01/22/2024"
     },
-    "Example": {
+    "Timezones": {
       "credits": "Convert and Get Time in Different Timezones. Made by ion/ammunimium",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Timezones.js",
       "tags": ".all.utilities",
