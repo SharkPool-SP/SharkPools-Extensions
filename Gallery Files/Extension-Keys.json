@@ -294,10 +294,10 @@
       "status": "new",
       "date": "Released: 01/22/2024"
     },
-     "Example": {
-      "credits": "ion/ammunimium",
-      "url": "https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code/Timezones.js",
-      "tags": ".all.utilities.expanded.fetching.searchQ",
+    "Example": {
+      "credits": "Convert and Get Time in Different Timezones. Made by ion/ammunimium",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Timezones.js",
+      "tags": ".all.utilities",
       "status": "new",
       "date": "Released: 01/25/2024"
     },
