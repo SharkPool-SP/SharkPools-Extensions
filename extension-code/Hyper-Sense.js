@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.4.2
+// Version 2.4.3
 
 (function (Scratch) {
   "use strict";
@@ -506,7 +506,7 @@
               "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
               "U", "V", "W", "X", "Y", "Z",
               "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-              "Arrow Up", "Arrow Down", "Arrow Left", "Arrow Right",
+              "Up Arrow", "Down Arrow", "Left Arrow", "Right Arrow",
               "Space", "Enter", "Shift", "Control", "Alt", "Escape",
               "Backspace", "Tab", "Caps Lock",
               "Insert", "Page Up", "Page Down"
@@ -617,7 +617,7 @@
       if (currentlyPressedKey === null) {
         return "No Keys Pressed";
       } else if (currentlyPressedKey.includes("ARROW") || currentlyPressedKey === "CAPSLOCK") {
-        return (currentlyPressedKey === "CAPSLOCK") ? "Caps Lock" : "Arrow " + currentlyPressedKey.charAt(5).toUpperCase() + currentlyPressedKey.slice(6).toLowerCase(); //makes it "Arrow Left"
+        return (currentlyPressedKey === "CAPSLOCK") ? "Caps Lock" : `${ currentlyPressedKey.charAt(5).toUpperCase() + currentlyPressedKey.slice(6).toLowerCase() } Arrow`;
       }
       return currentlyPressedKey.charAt(0).toUpperCase() + currentlyPressedKey.slice(1).toLowerCase();
     }
@@ -626,7 +626,7 @@
       let pressedKeysArray = Object.keys(this.pressedKeys);
       pressedKeysArray = pressedKeysArray.map((key) => {
         if (key.includes("ARROW") || key === "CAPSLOCK") {
-          return (key === "CAPSLOCK") ? "Caps Lock" : "Arrow " + key.charAt(5).toUpperCase() + key.slice(6).toLowerCase();
+          return (key === "CAPSLOCK") ? "Caps Lock" : `${ key.charAt(5).toUpperCase() + key.slice(6).toLowerCase() } Arrow`;
         }
         return key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
       });
@@ -641,11 +641,10 @@
     }
 
     spriteTouchingSprite(args, util) {
-      const sprite1 = args.SPRITE1;
       const sprite2 = args.SPRITE2;
       const target = sprite2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(sprite2);
       if (!target) return false;
-      return target.isTouchingObject(sprite1);
+      return target.isTouchingObject(args.SPRITE1);
     }
 
     spriteCurrentTouching(args, util) {
