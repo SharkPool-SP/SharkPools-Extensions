@@ -17,10 +17,11 @@
     ```
     "[Extension-Name]": {
        "credits": "[A Short Description of your Extension with Credits]",
-       "url": "[Link to the RAW GITHUB FILE for your Extension Code]", <-- **If you can't do this, SharkPool can do it for you!**
+       "url": "[Link to the RAW GITHUB FILE for your Extension Code]",
        "tags": "[Tags that Relate to your Extension]"
-       "status": "[use '**new**' if its a new extension or '**update**' if its an update to an existing extension]"
+       "status": "[use 'new' if its a new extension or 'update' if its an update to an existing extension]"
     }
+  (If you cant link the raw file then SharkPool will do it for you)
   - Sub Rule 1: Extension Name **MUST NOT** include spaces, use '-' instead
   - Sub Rule 2: Tags **MUST** start with '.all'
   - Sub Rule 3: Tags **MUST** be split by '.' and MUST be from this list:
