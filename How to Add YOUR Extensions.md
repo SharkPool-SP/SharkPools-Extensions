@@ -9,12 +9,9 @@
   - Rule 1: It **MUST** be 300x150px SVG
   - Rule 2: It **MUST** have a curved outline bordering the thumbnail (Copy the Borders used in Existing Thumbnails)
 
-**Step 3**: Add your Extension Code and Thumbnail to the 'extension-code' and 'extension-thumbs' folders on Github
-  (https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)
-  (https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)
+**Step 3**: Add your Extension Code and Thumbnail to the '[extension-code](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)' and '[extension-thumbs](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)' folders on Github
 
-**Step 4**: Edit and Add to the Extension Keys JSON
-  (https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension%20Keys.json)
+**Step 4**: Edit and Add to the [Extension Keys JSON](https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension%20Keys.json)
   - Rule 1: Under the 'extensions' key, you need to add a new sub-key right before the 'example' extension
   - Rule 2: Format it like this, replace the [text] with your links/text:
     ```
