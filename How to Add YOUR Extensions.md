@@ -17,13 +17,13 @@
   (https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension%20Keys.json)
   - Rule 1: Under the 'extensions' key, you need to add a new sub-key right before the 'example' extension
   - Rule 2: Format it like this, replace the [text] with your links/text:
-    >    "[Extension-Name]": {
-      "credits": "[A Short Description of your Extension with Credits]",
-      "url": "[Link to the RAW GITHUB FILE for your Extension Code]", <-- **If you can't do this, SharkPool can do it for you!**
-      "tags": "[Tags that Relate to your Extension]"
-      "status": "[use '**new**' if its a new extension or '**update**' if its an update to an existing extension]"
+    ```
+    "[Extension-Name]": {
+       "credits": "[A Short Description of your Extension with Credits]",
+       "url": "[Link to the RAW GITHUB FILE for your Extension Code]", <-- **If you can't do this, SharkPool can do it for you!**
+       "tags": "[Tags that Relate to your Extension]"
+       "status": "[use '**new**' if its a new extension or '**update**' if its an update to an existing extension]"
     }
-
   - Sub Rule 1: Extension Name **MUST NOT** include spaces, use '-' instead
   - Sub Rule 2: Tags **MUST** start with '.all'
   - Sub Rule 3: Tags **MUST** be split by '.' and MUST be from this list:
