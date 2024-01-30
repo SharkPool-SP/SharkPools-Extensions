@@ -137,7 +137,7 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/24/2024"
     },
     "Monitors-Plus": {
@@ -228,7 +228,7 @@
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 01/13/2024"
     },
     "Money-Utilities": {
@@ -291,7 +291,7 @@
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
       "tags": ".all.utilities.expanded",
-      "status": "new",
+      "status": "",
       "date": "Released: 01/22/2024"
     },
     "Timezones": {
