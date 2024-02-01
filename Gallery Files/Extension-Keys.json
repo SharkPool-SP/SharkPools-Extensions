@@ -102,8 +102,8 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 01/19/2024"
+      "status": "update",
+      "date": "Last Updated: 01/31/2024"
     },
     "Recording": {
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
