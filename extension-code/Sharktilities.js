@@ -668,53 +668,15 @@
       });
     }
 
-    async penLayer() {
-      const rng = Math.random();
-      const stage = vm.runtime.getTargetForStage();
-      const oldBg = stage.getCostumes()[stage.currentCostume].name;
-      if (!await this.addBackup(rng)) return;
-      const targets = vm.runtime.targets;
-      const showingTargets = targets.filter(target => target.visible);
-      targets.slice(1).forEach(target => target.setVisible(false));
-      const showSprites = async (hiddenTargets, uri) => {
-        hiddenTargets.forEach(target => target.setVisible(true));
-        await this.deleteBackup(rng, oldBg);
-        return uri;
-      };
-      return new Promise((resolve) => {
-        Scratch.vm.runtime.renderer.requestSnapshot((uri) => {
-          resolve(showSprites(showingTargets, uri));
-        });
-      });
-    }
-    // Modified Asset Manager Code (Thx Lily <3)
-    async addBackup(rng) {
-      const res = await Scratch.fetch("data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIHZpZXdCb3g9Ii0xIC0xIDIgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPCEtLSBFeHBvcnRlZCBieSBTY3JhdGNoIC0gaHR0cDovL3NjcmF0Y2gubWl0LmVkdS8gLS0+Cjwvc3ZnPg==");
-      const blob = await res.blob();
-      const arrayBuffer = await new Promise((resolve, reject) => {
-        const fr = new FileReader();
-        fr.onload = () => resolve(fr.result);
-        fr.readAsArrayBuffer(blob);
-      });
-      const asset = vm.runtime.storage.createAsset(
-        vm.runtime.storage.AssetType.ImageVector, "svg",
-        new Uint8Array(arrayBuffer), null, true
-      );
-      const md5ext = `${asset.assetId}.${asset.dataFormat}`;
-      try {
-        await vm.addCostume(
-          md5ext, { asset, md5ext, name: `SP-penLayer-Stage-${rng}` },
-          vm.runtime.getTargetForStage().id
-        );
-        return true;
-      } catch (e) { return false }
-    }
-    deleteBackup(rng, oldBg) {
-      const target = vm.runtime.getTargetForStage();
-      const index = target.getCostumeIndexByName(`SP-penLayer-Stage-${rng}`);
-      if (index < 0) return;
-      if (target.sprite.costumes.length > 0) target.deleteCostume(index);
-      vm.runtime.ext_scratch3_looks._setBackdrop(target, oldBg);
+    penLayer() {
+      const penID = vm.renderer._penSkinId;
+      if (!penID) return "";
+      const imageData = vm.runtime.renderer.extractDrawableScreenSpace(penID).imageData;
+      var canvas = document.createElement("canvas");
+      canvas.width = imageData.width;
+      canvas.height = imageData.height;
+      canvas.getContext("2d").putImageData(imageData, 0, 0);
+      return canvas.toDataURL("image/png");
     }
   }
 
