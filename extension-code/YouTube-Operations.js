@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.6.1
+// Version V.1.6.2
 
 (function (Scratch) {
   "use strict";
@@ -319,7 +319,7 @@
         const response = await fetch("https://api.codetabs.com/v1/proxy?quest=" + args.VIDEO_ID);
         if (response.ok) {
           const text = await response.text();
-          let match;
+          let match = "";
           let pattern;
           switch (args.STAT) {
             case "description":
@@ -328,8 +328,9 @@
               return match[1].replace(/\\n/g, "\n");
             case "length":
               pattern = /"endTimeMs":"([^"]+)"/;
-              match = text.match(pattern)[1];
-              if (!match) {
+              match = text.match(pattern);
+              if (match && match[1]) match = match[1];
+              else {
                 console.error("error, finding failsafe...");
                 pattern = /"lengthSeconds":"([^"]+)"/;
                 match = text.match(pattern)[1] * 1000;
