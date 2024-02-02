@@ -298,8 +298,15 @@
       "credits": "Convert and Get Time in Different Timezones. Made by ion/ammunimium",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Timezones.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 01/25/2024"
+    },
+    "Perlin-Noise": {
+      "credits": "Generate Perlin Noise. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Perlin-Noise.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 02/01/2024"
     },
     "Example": {
       "credits": "",
