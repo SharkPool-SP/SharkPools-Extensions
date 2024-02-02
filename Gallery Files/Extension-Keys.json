@@ -12,7 +12,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
       "status": "update",
-      "date": "Last Updated: 01/23/2024"
+      "date": "Last Updated: 02/02/2024"
     },
     "Time-Calculation": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
@@ -67,7 +67,7 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/27/2024"
     },
     "Better-Input": {
