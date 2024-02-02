@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.1.0
+// Version V.3.1.1
 
 (function (Scratch) {
   "use strict";
@@ -546,20 +546,22 @@
     }
 
     replaceKey(args) {
-      const string = args.STRING;
+      const string = Scratch.Cast.toString(args.STRING);
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
       const newString = string.replace(regex, function(match) {
         index++;
-        return index === args.ORDER ? args.REPLACE : match;
+        return index === Scratch.Cast.toNumber(args.ORDER) ? args.REPLACE : match;
       });
       return newString;
     }
 
     replaceKeys(args) {
-      const string = args.STRING;
+      const string = Scratch.Cast.toString(args.STRING);
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
+      args.ORDER = Scratch.Cast.toNumber(args.ORDER);
+      args.ORDER2 = Scratch.Cast.toNumber(args.ORDER2);
       const order2 = args.ORDER > args.ORDER2 ? args.ORDER : args.ORDER2;
       const newString = string.replace(regex, function(match) {
         index++;
