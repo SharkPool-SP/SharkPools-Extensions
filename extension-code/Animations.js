@@ -753,24 +753,24 @@
     }
 
     _setKeyframe(target, keyframe, data) {
+      let startTime, startX, startY, deltaX, deltaY, startSize, deltaSize, startDir, deltaDir;
       if (!keyFramesPlaying.some(item => JSON.stringify(item) === JSON.stringify([data, keyframe]))) {
         keyFramesPlaying.push([data, keyframe]);
       }
       keyFramesPlaying.push([data, keyframe]);
       const key = keyframe[Object.keys(keyframe)[0]];
       const animationDuration = data.fps * 20;
-      let startTime;
       if (JSON.stringify(keyframe).includes("DIR")) {
-        const startDir = key.dir1;
-        const deltaDir = key.dir2 - key.dir1;
+        startDir = key.dir1;
+        deltaDir = key.dir2 - key.dir1;
       } else if (JSON.stringify(keyframe).includes("SZ")) {
-        const startSize = key.size1;
-        const deltaSize = key.size2 - key.size1;
+        startSize = key.size1;
+        deltaSize = key.size2 - key.size1;
       } else {
-        const startX = key.x1;
-        const startY = key.y1;
-        const deltaX = key.x2 - key.x1;
-        const deltaY = key.y2 - key.y1;
+        startX = key.x1;
+        startY = key.y1;
+        deltaX = key.x2 - key.x1;
+        deltaY = key.y2 - key.y1;
       }
       if (JSON.stringify(keyframe).includes("XY")) {
         const animateXY = (timestamp) => {
