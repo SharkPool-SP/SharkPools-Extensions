@@ -556,6 +556,11 @@
       this.oldScroll[1] = event.deltaY;
       if (this.scrollWheelBool({ EVENT:"up" })) runtime.startHats("HyperSenseSP_scrollWheelHat");
       if (this.scrollWheelBool({ EVENT:"down" })) runtime.startHats("HyperSenseSP_scrollWheelHat2");
+      // Resets the velocity after 100ms
+      clearTimeout(this.scrollTimer);
+      this.scrollTimer = setTimeout(() => {
+        this.oldScroll[1] = 0;
+      }, 100);
     };
 
     scrollWheelBool(args, fromHat) {
