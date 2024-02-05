@@ -88,8 +88,8 @@
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 10/20/2023"
+      "status": "update",
+      "date": "Last Updated: 02/04/2024"
     },
     "Sprite-Effects": {
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
