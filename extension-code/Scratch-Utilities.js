@@ -89,6 +89,15 @@
           },
           { blockType: Scratch.BlockType.LABEL, text: "Projects" },
           {
+            opcode: "getProject",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get project.json of ID [ID]",
+            arguments: {
+              ID: { type: Scratch.ArgumentType.NUMBER, defaultValue: 820242622 }
+            },
+          },
+          "---",
+          {
             opcode: "getProjectID",
             blockType: Scratch.BlockType.REPORTER,
             text: "get ID of project titled [TITLE] by [USERNAME]",
@@ -274,6 +283,19 @@
       } catch { return "[]" }
     }
 
+    async getProject(args) {
+      const ID = Math.abs(Scratch.Cast.toNumber(args.ID));
+      try {
+        let response = await fetch(`https://corsproxy.io/?https://api.scratch.mit.edu/projects/${ID}`);
+        let json = await response.json();
+        if (!json) return "{}";
+        const token = json.project_token;
+        response = await fetch(`https://projects.scratch.mit.edu/${ID}?token=${token}`);
+        json = await response.json();
+        if (!json) return "{}";
+        return JSON.stringify(json);
+      } catch { return "{}" }
+    }
     pageFix(page) {
       let newPage = Math.abs(Math.round(Scratch.Cast.toNumber(page)));
       return newPage === Infinity || newPage === 0 ? 1 : newPage;
