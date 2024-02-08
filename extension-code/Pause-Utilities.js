@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.6.2
+// Version V.1.6.3
 
 (function (Scratch) {
   "use strict";
@@ -95,6 +95,12 @@
             isEdgeActivated: false
           },
           {
+            opcode: "whenProjectUnPaused",
+            blockType: Scratch.BlockType.EVENT,
+            text: "when project is unpaused",
+            isEdgeActivated: false
+          },
+          {
             opcode: "isProjectPaused",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is project paused?"
@@ -137,8 +143,8 @@
                 defaultValue: "my variable"
               },
               NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "0"
               }
             }
           },
@@ -156,8 +162,8 @@
                 defaultValue: "my variable"
               },
               NUM: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "0"
               }
             }
           },
@@ -258,18 +264,14 @@
           runtime.isPackaged ? `[class*="pause-button"]` :
           "img.pause-btn.addons-display-none-pause"
         );
-        if (pauseButton) {
-          pauseButton.click();
-        } else { console.log("Pause button not found") }
+        if (pauseButton) pauseButton.click();
+        else console.log("Pause button not found");
       }
     }
 
     unpause() {
-      if (Scratch.extensions.isPenguinMod) {
-        runtime.play()
-      } else {
-        this.pause();
-      }
+      if (Scratch.extensions.isPenguinMod) runtime.play()
+      else this.pause();
     }
 
     // by itself, the block is useless, but with the event block it is :D
