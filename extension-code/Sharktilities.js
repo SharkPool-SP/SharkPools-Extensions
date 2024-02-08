@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.1.1
+// Version V.3.2.0
 
 (function (Scratch) {
   "use strict";
@@ -165,6 +165,14 @@
             arguments: {
               CON1: { type: Scratch.ArgumentType.BOOLEAN },
               CON2: { type: Scratch.ArgumentType.BOOLEAN },
+            }
+          },
+          {
+            opcode: "broadcastRun",
+            blockType: Scratch.BlockType.LOOP,
+            text: "broadcast [MSG] and repeat while waiting",
+            arguments: {
+              MSG: { type: Scratch.ArgumentType.STRING, defaultValue: "message1" }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Numbers and Letters" },
@@ -677,6 +685,22 @@
       canvas.height = imageData.height;
       canvas.getContext("2d").putImageData(imageData, 0, 0);
       return canvas.toDataURL("image/png");
+    }
+
+    broadcastRun(args, util) {
+      if (!util.stackFrame.broadcastVar) util.stackFrame.broadcastVar = vm.runtime.getTargetForStage().lookupBroadcastByInputValue(args.MSG)
+      if (util.stackFrame.broadcastVar) {
+        const opt = util.stackFrame.broadcastVar.name;
+        if (!util.stackFrame.startedThreads) {
+          util.stackFrame.startedThreads = util.startHats("event_whenbroadcastreceived", { BROADCAST_OPTION: opt });
+          if (util.stackFrame.startedThreads.length === 0) return;
+        }
+        const waiting = util.stackFrame.startedThreads.some(thread => vm.runtime.threads.indexOf(thread) !== -1);
+        if (waiting) {
+          if (util.stackFrame.startedThreads.every(thread => vm.runtime.isWaitingThread(thread))) util.yieldTick();
+          else util.startBranch(1, true);
+        }
+      }
     }
   }
 
