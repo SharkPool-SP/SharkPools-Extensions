@@ -3,11 +3,10 @@
 // Description: Control Scripts
 // By: SharkPool
 
-// Version V.1.2.2
+// Version V.1.3.0
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) throw new Error("Script Control must be run unsandboxed");
 
   const vm = Scratch.vm;
@@ -31,6 +30,14 @@
             opcode: "logScript",
             blockType: Scratch.BlockType.COMMAND,
             text: "log this script with custom ID [ID]",
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
+            }
+          },
+          {
+            opcode: "markScript",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "log this script with custom ID [ID] at this block",
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
             }
@@ -99,7 +106,15 @@
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
             }
-          }
+          },
+          {
+            opcode: "indexLog",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "index of log in script with custom ID [ID]",
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "script-1" }
+            }
+          },
         ],
         menus: {
           CONTROL: {
@@ -150,11 +165,31 @@
 
     logScript(args, util) {
       const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
+      const blockID = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
       const topBlock = util.thread.topBlock;
       const index = this.getIndexByVal(runtime.threads, "topBlock", topBlock);
       storedScripts[`SP-${ID}+${topBlock}`] = {
-        id : topBlock, ind : runtime.threads[index], target : util.target
+        id : topBlock, ind : runtime.threads[index], target : util.target, indexBlock : this.getIndex(util.thread, blockID)
       };
+    }
+
+    markScript(args, util) {
+      const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
+      const blockID = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
+      storedScripts[`SP-${ID}+${blockID}`] = {
+        id : blockID, ind : { topBlock: blockID }, target : util.target, indexBlock : this.getIndex(util.thread, blockID)
+      };
+    }
+    getIndex(thread, id) {
+      let curBlock = thread.topBlock;
+      let ind = 0;
+      while(curBlock !== id) {
+        ind++;
+        const blockInfo = thread.blockContainer.getBlock(curBlock);
+        if (blockInfo.next !== null) curBlock = blockInfo.next;
+        else return ind;
+      }
+      return ind;
     }
 
     doScripts(args) {
@@ -260,6 +295,15 @@
           const thread = runtime.threads[this.getIndexByVal(runtime.threads, "topBlock", storedScripts[key].id)];
           if (thread) value = thread.stackClick;
         }
+      });
+      return value;
+    }
+
+    indexLog(args) {
+      let value = "";
+      const ID = Scratch.Cast.toString(args.ID).replaceAll(" ", "-");
+      Object.keys(storedScripts).forEach(key => {
+        if (key.includes(`SP-${ID}+`)) value = storedScripts[key].indexBlock;
       });
       return value;
     }
