@@ -286,7 +286,7 @@
     async getProject(args) {
       const ID = Math.abs(Scratch.Cast.toNumber(args.ID));
       try {
-        let response = await fetch(`https://corsproxy.io/?https://api.scratch.mit.edu/projects/${ID}`);
+        let response = await fetch(`https://corsproxy.io/?https://api.scratch.mit.edu/projects/${ID}?cache=${Math.random()}`);
         let json = await response.json();
         if (!json) return "{}";
         const token = json.project_token;
@@ -296,6 +296,7 @@
         return JSON.stringify(json);
       } catch { return "{}" }
     }
+
     pageFix(page) {
       let newPage = Math.abs(Math.round(Scratch.Cast.toNumber(page)));
       return newPage === Infinity || newPage === 0 ? 1 : newPage;
