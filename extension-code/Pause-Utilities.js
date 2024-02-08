@@ -95,12 +95,6 @@
             isEdgeActivated: false
           },
           {
-            opcode: "whenProjectUnPaused",
-            blockType: Scratch.BlockType.EVENT,
-            text: "when project is unpaused",
-            isEdgeActivated: false
-          },
-          {
             opcode: "isProjectPaused",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is project paused?"
