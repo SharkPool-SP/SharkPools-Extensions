@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.2.0
+// Version V.3.2.1
 
 (function (Scratch) {
   "use strict";
@@ -102,6 +102,13 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get pen layer",
             disableMonitor: true
+          },
+          {
+            opcode: "getText", blockType: Scratch.BlockType.REPORTER,
+            text: "what is [SPRITE] saying",
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" }
+            }
           },
           {
             opcode: "costumeCnt", blockType: Scratch.BlockType.REPORTER,
@@ -391,7 +398,11 @@
         menus: {
           TARGETS: {
             acceptReporters: true,
-            items: "_getTargets"
+            items: this._getTargets(0)
+          },
+          TARGETS2: {
+            acceptReporters: true,
+            items: this._getTargets(1)
           },
           ROUND_MENU: {
             acceptReporters: true,
@@ -435,6 +446,16 @@
       };
     }
 
+    _getTargets(ind) {
+      const spriteNames = [];
+      const targets = Scratch.vm.runtime.targets;
+      for (let index = ind; index < targets.length; index++) {
+        const target = targets[index];
+        if (target.isOriginal) spriteNames.push(target.getName());
+      }
+      return spriteNames.length > 0 ? spriteNames : [""];
+    }
+
     whenChanged(args, util) {
       const params = util.thread.sharktilsPars;
       if (typeof params === "undefined") util.thread.stackFrames[0].sharktilsPars = {};
@@ -454,16 +475,6 @@
       const params = stack[0].sharktilsPars;
       if (typeof params === "undefined") return "";
       return params.diff || "";
-    }
-
-    _getTargets() {
-      const spriteNames = [];
-      const targets = Scratch.vm.runtime.targets;
-      for (let index = 0; index < targets.length; index++) {
-        const target = targets[index];
-        if (target.isOriginal) spriteNames.push(target.getName());
-      }
-      return spriteNames.length > 0 ? spriteNames : [""];
     }
 
     roundToNearest({ NUMBER, ROUND_TYPE }) {
@@ -601,6 +612,13 @@
         case "data.uri": return packageTest("costume content") ? "" : costume.asset.encodeDataURI();
         default: return "";
       }
+    }
+
+    getText(args) {
+      const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
+      if (!target) return "";
+      if (!target._customState["Scratch.looks"]) return "";
+      return target._customState["Scratch.looks"].text;
     }
 
     randomCharRange(args) { 
