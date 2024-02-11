@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.2.1
+// Version V.3.2.2
 
 (function (Scratch) {
   "use strict";
@@ -288,6 +288,17 @@
               LIMIT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 25 }
             }
           },
+          {
+            opcode: "smoothing2",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "smooth [MATH] [NUM] at speed [SPEED] and limit [LIMIT]",
+            arguments: {
+              MATH: { type: Scratch.ArgumentType.STRING, menu: "mathMenu" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              SPEED: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              LIMIT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 25 }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Strings" },
           {
             opcode: "rndString",
@@ -548,11 +559,18 @@
       return `#${newRgbColor.map(channel => componentToHex(channel)).join("")}`;
     }
 
+    smooth(spd, lim, type, num) {
+      const speed = Scratch.Cast.toNumber(spd) / 10;
+      const limit = Scratch.Cast.toNumber(lim);
+      return Math[type](num * speed) * limit || 0;
+    }
+
     smoothing(args, util) {
-      const speed = Scratch.Cast.toNumber(args.SPEED) / 10;
-      const limit = Scratch.Cast.toNumber(args.LIMIT);
-      const timer = util.ioQuery("clock", "projectTimer");
-      return Math[args.MATH](timer * speed) * limit;
+      return this.smooth(args.SPEED, args.LIMIT, args.MATH, util.ioQuery("clock", "projectTimer"));
+    }
+
+    smoothing2(args) {
+      return this.smooth(args.SPEED, args.LIMIT, args.MATH, Scratch.Cast.toNumber(args.NUM));
     }
 
     refresh() { vm.extensionManager.refreshBlocks() }
