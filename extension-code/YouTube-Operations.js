@@ -3,11 +3,10 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.6.2
+// Version V.1.7.0
 
 (function (Scratch) {
   "use strict";
-  
   if (!Scratch.extensions.unsandboxed) throw new Error("YouTube Operations must run unsandboxed");
 
   const menuIconURI =
@@ -86,6 +85,17 @@
             text: "fetch [STAT] of video [VIDEO_ID]",
             arguments: {
               STAT: { type: Scratch.ArgumentType.STRING, menu: "STAT_OPTION" },
+              VIDEO_ID: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "dQw4w9WgXcQ"
+              }
+            }
+          },
+          {
+            opcode: "vid2MP4",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "video [VIDEO_ID] to mp4",
+            arguments: {
               VIDEO_ID: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "dQw4w9WgXcQ"
@@ -248,14 +258,26 @@
         const videoId = args.VIDEO_ID;
         const response = await fetch("https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D"+videoId+"&format=json");
         if (response.ok) {
-          const jsonData = await response.json()
+          const jsonData = await response.json();
           if (stat == "author") return jsonData.author_url.slice(24);
           else if (stat == "title") return jsonData.title; 
           else return jsonData.thumbnail_url;
         }
         return "";
-      }
-      catch { return "Failed to Fetch" }
+      } catch { return "Failed to Fetch" }
+    }
+
+    async vid2MP4(args) {
+      try {
+        const response = await fetch(`https://yt2html5.com/?id=${args.VIDEO_ID}`);
+        if (response.ok) {
+          const jsonData = await response.text();
+          const start = jsonData.indexOf(`"url":"`) + 7;
+          const end = jsonData.indexOf("\"", start + 1);
+          if (start !== -1 && end !== -1) return jsonData.substring(start, end);
+        }
+        return "";
+      } catch { return "Failed to Fetch" }
     }
 
     async fetchUserThing(args) {
