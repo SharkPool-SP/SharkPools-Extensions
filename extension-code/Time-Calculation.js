@@ -283,10 +283,10 @@
     }
 
     converttotime(args) {
-      const tStamp = args.VALUE ? args.VALUE : 0;
-      const seconds = args.ROUND === "rounded" ? Math.round(tStamp % 60) : tStamp % 60;
-      const minutes = Math.round((tStamp / 60) % 60);
-      const hours = Math.round((tStamp / 3600) % 24);
+      const totalSeconds = Scratch.Cast.toNumber(args.VALUE);
+      const seconds = args.ROUND === "rounded" ? Math.round(totalSeconds % 60).toString().padStart(2, "0") : (totalSeconds % 60).toFixed(3);
+      const minutes = Math.round((totalSeconds / 60) % 60).toString().padStart(2, "0");
+      const hours = Math.round(totalSeconds / 3600).toString().padStart(2, "0");
       return `${hours}:${minutes}:${seconds}`;
     }
 
