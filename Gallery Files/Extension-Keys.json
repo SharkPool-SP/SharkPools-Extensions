@@ -4,14 +4,14 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": "update",
-      "date": "Last Updated: 02/11/2024"
+      "status": "",
+      "date": "Last Updated: 02/16/2024"
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/10/2024"
     },
     "Time-Calculation": {
@@ -25,7 +25,7 @@
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/07/2024"
     },
     "Seeds": {
@@ -60,7 +60,7 @@
       "credits": "Play various oscillators in your project. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sound-Waves.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/28/2024"
     },
     "Hyper-Sense": {
@@ -88,7 +88,7 @@
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/04/2024"
     },
     "Sprite-Effects": {
@@ -144,14 +144,14 @@
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/03/2024"
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/03/2024"
     },
     "Gamepad-Expanded": {
@@ -179,14 +179,14 @@
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/02/2024"
     },
     "Pause-Utilities": {
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/07/2024"
     },
     "Text-to-Speech": {
@@ -284,7 +284,7 @@
       "credits": "Monitor and Control Scripts in Your Project. Made by SharkPool, Inspired by Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Control.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/07/2024"
     },
     "Layer-Control": {
@@ -298,7 +298,7 @@
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Renderer-Control.js",
       "tags": ".all.utilities.expanded",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/01/2024"
     },
     "Timezones": {
@@ -312,8 +312,15 @@
       "credits": "Generate Perlin Noise. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Perlin-Noise.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/01/2024"
+    },
+    "Extra-Control": {
+      "credits": "New Advanced Control Blocks. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Control.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new",
+      "date": "Released: 02/16/2024"
     },
     "Example": {
       "credits": "",
