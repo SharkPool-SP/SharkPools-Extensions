@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.2.2
+// Version V.3.2.3
 
 (function (Scratch) {
   "use strict";
@@ -156,23 +156,14 @@
             hideFromPalette: true, text: "old value"
           },
           {
-            opcode: "repeatForUntil",
-            text: "repeat [NUM] or until [CON]",
-            blockType: Scratch.BlockType.LOOP,
-            arguments: {
-              NUM: { type: Scratch.ArgumentType.STRING, defaultValue: 10 },
-              CON: { type: Scratch.ArgumentType.BOOLEAN }
-            }
+            opcode: "repeatForUntil", text: "repeat [NUM] or until [CON]",
+            blockType: Scratch.BlockType.LOOP, hideFromPalette: true, // deprecated
+            arguments: { NUM: { type: Scratch.ArgumentType.STRING, defaultValue: 10 }, CON: { type: Scratch.ArgumentType.BOOLEAN } }
           },
           {
-            opcode: "spayedCondition",
-            blockType: Scratch.BlockType.LOOP,
-            text: ["if [CON1] start loop", "repeat until [CON2]" + " "],
-            branchIconURI: "",
-            arguments: {
-              CON1: { type: Scratch.ArgumentType.BOOLEAN },
-              CON2: { type: Scratch.ArgumentType.BOOLEAN },
-            }
+            opcode: "spayedCondition", blockType: Scratch.BlockType.LOOP,
+            text: ["if [CON1] start loop", "repeat until [CON2]"], hideFromPalette: true, // deprecated
+            arguments: { CON1: { type: Scratch.ArgumentType.BOOLEAN }, CON2: { type: Scratch.ArgumentType.BOOLEAN } }
           },
           {
             opcode: "broadcastRun",
@@ -684,11 +675,9 @@
     }
 
     spayedCondition(args, util) {
-      if (typeof util.stackFrame.index === "undefined")
-        util.stackFrame.index = true;
-      if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index) {
-        return;
-      } else {
+      if (typeof util.stackFrame.index === "undefined") util.stackFrame.index = true;
+      if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index) return;
+      else {
         if (!Scratch.Cast.toBoolean(args.CON2)) {
           util.stackFrame.index = false;
           util.startBranch(1, true);
