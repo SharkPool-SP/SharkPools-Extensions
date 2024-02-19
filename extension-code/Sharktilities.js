@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.2.3
+// Version V.3.3.0
 
 (function (Scratch) {
   "use strict";
@@ -234,6 +234,18 @@
               SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg>" }
             }
           },
+          {
+            opcode: "genShape",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "make shape with points [POINTS] filled [COLOR] as [TYPE] width [WIDTH] height [HEIGHT]",
+            arguments: {
+              POINTS: { type: Scratch.ArgumentType.STRING, defaultValue: "0,0 200,0 100, 200" },
+              COLOR: { type: Scratch.ArgumentType.COLOR },
+              WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "RETURN" }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Math" },
           {
             opcode: "tripleOperator",
@@ -428,6 +440,7 @@
           },
           OPERATOR_MENU: ["+", "-", "*", "/"],
           OPERATORS: [">", "<", "="],
+          RETURN: ["svg", "encoded svg", "png"],
           encoder: ["encode", "decode"],
           cosInfo: {
             acceptReporters: true,
@@ -726,6 +739,32 @@
           else util.startBranch(1, true);
         }
       }
+    }
+
+    genShape(args) {
+      const width = Scratch.Cast.toString(args.WIDTH);
+      const height = Scratch.Cast.toString(args.HEIGHT);
+      const curNoise =
+        `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="${args.POINTS.replace(/[^0-9, ]/g, "")}" fill="${args.COLOR}" />
+        </svg>`;
+      if (args.TYPE === "encoded svg") return `data:image/svg+xml;base64,${btoa(curNoise)}`;
+      if (args.TYPE === "png") {
+        // eslint-disable-next-line
+        const img = new Image();
+        img.src = `data:image/svg+xml;base64,${btoa(curNoise)}`;
+        return new Promise((resolve) => {
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL());
+          };
+        });
+      }
+      return curNoise.trim();
     }
   }
 
