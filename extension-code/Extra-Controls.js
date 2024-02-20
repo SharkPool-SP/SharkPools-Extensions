@@ -195,7 +195,7 @@
             text: "delete this clone and tell main sprite",
             isTerminal: true
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Unfinished" },
+          { blockType: Scratch.BlockType.LABEL, text: "Mostly Functional" },
           {
             opcode: "breakLoop",
             extensions: ["colours_control"],
