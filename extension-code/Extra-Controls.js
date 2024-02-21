@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -41,6 +41,7 @@
   ];
 
   let keybinds = {};
+  let hats = { ...runtime._hats };
   runtime.on("KEY_PRESSED", key => {
     key = key.toLowerCase();
     if (keybinds[key]) {
@@ -78,6 +79,23 @@
         color3: "#CF8B17",
         menuIconURI,
         blocks: [
+          {
+            opcode: "forceHat",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.COMMAND,
+            text: "force hat [HAT] to [TYPE] on activate",
+            arguments: {
+              HAT: { type: Scratch.ArgumentType.STRING, menu: "HAT_MENU" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "ACTIVATE" }
+            }
+          },
+          {
+            opcode: "resetHats",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.COMMAND,
+            text: "reset forced hats"
+          },
+          "---",
           {
             opcode: "keybind",
             extensions: ["colours_control"],
@@ -241,6 +259,11 @@
           }
         ],
         menus: {
+          ACTIVATE: ["finish", "restart"],
+          HAT_MENU: {
+            acceptReporters: true,
+            items: "organizeHats"
+          },
           varsMenu: {
             acceptReporters: true,
             items: "getPrivateVars"
@@ -262,6 +285,40 @@
         .getVariableMap().getVariablesOfType("").filter((model) => model.isLocal).map((model) => (model.name));
       if (vars.length > 0) return vars;
       else return [""];
+    }
+
+    organizeHats() {
+      const allHats = runtime._hats;
+      const vanillaHats = [
+        {text: "when I start as clone", value: "control_start_as_clone"},
+        {text: "when green flag clicked", value: "event_whenflagclicked"},
+        {text: "when key pressed", value: "event_whenkeypressed"},
+        {text: "when sprite clicked", value: "event_whenthisspriteclicked"},
+        {text: "when stage clicked", value: "event_whenstageclicked"},
+        {text: "when backdrop switches", value: "event_whenbackdropswitchesto"},
+        {text: "when touching object", value: "event_whentouchingobject"},
+        {text: "when value greater than", value: "event_whengreaterthan"},
+        {text: "when broadcast received", value: "event_whenbroadcastreceived"}
+      ];
+      const startIndex = Object.keys(allHats).findIndex(key => key === "event_whenbroadcastreceived");
+      const filteredHats = Object.keys(allHats)
+        .filter((key, index) => index > startIndex)
+        .map(key => ({ text: key, value: key }));
+      return [...vanillaHats, ...filteredHats];
+    }
+
+    forceHat(args) {
+      const type = args.TYPE === "restart";
+      const thisHat = runtime._hats[args.HAT];
+      if (thisHat) thisHat.restartExistingThreads = type;
+    }
+
+    resetHats(args) {
+      const currentHats = runtime._hats;
+      for (const key in hats) {
+        currentHats[key].restartExistingThreads = hats[key].restartExistingThreads;
+      }
+      hats = { ...runtime._hats };
     }
 
     keybind(args) {
