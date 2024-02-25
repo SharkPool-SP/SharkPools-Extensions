@@ -224,6 +224,13 @@
       "status": "",
       "date": "Last Updated: 12/20/2023"
     },
+    "SoundCloud-API": {
+      "credits": "Fetch Songs and Statistics from Soundcloud. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SoundCloud-API.js",
+      "tags": ".all.fetching",
+      "status": "",
+      "date": "Released: 02/24/2024"
+    },
     "Google-Spreadsheets": {
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Google-Spreadsheets.js",
