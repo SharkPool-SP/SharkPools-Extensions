@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.2.0
+// Version V.1.2.1
 
 (function (Scratch) {
   "use strict";
@@ -73,6 +73,42 @@
       if (result) return true;
       return block.isShadow() && regeneratedReporters.includes(block.type);
     };
+  }
+
+  // Thank you so much to @FurryR for the help <3
+  const { JSGenerator, ScriptTreeGenerator } = vm.exports.i_will_not_ask_for_help_when_these_break();
+  const _IRdescendStackedBlock = ScriptTreeGenerator.prototype.descendStackedBlock;
+  ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
+    if (block.opcode === "SPadvControl_breakLoop") {
+      // confirm if inside loop
+      if (check4CBlock(block.id, this.blocks)) return { kind: "SPadvControl.break" };
+      else return _IRdescendStackedBlock.call(this, block);
+    } else return _IRdescendStackedBlock.call(this, block);
+  };
+  const _JSdescendStackedBlock = JSGenerator.prototype.descendStackedBlock;
+  JSGenerator.prototype.descendStackedBlock = function (node) {
+    if (node.kind === "SPadvControl.break") {
+      this.source += "break;\n";
+    } else return _JSdescendStackedBlock.call(this, node);
+  };
+
+  function check4CBlock(id, container) {
+    let newID = container.getBlock(id);
+    let con = true;
+    while (con) {
+      if (newID.parent !== null) {
+        newID = container.getBlock(newID.parent);
+        if (container.getBranch(newID.id) !== null) {
+          newID = true;
+          con = false;
+        }
+      } else {
+        newID = false;
+        con = false;
+        break;
+      }
+    }
+    return newID;
   }
 
   class SPadvControl {
@@ -618,14 +654,16 @@
       return params.arg || "";
     }
 
-    // Todo: Somehow tell breaked loops inside a loop to continue running the outer loop
-    // Cant do it currently... maybe in the future. This is the best we get
+    // Will work like a normal Break Loop when compiler is on, otherwise will run this:
     breakLoop(_, util) {
       return new Promise(resolve => {
         const container = util.thread.blockContainer;
         const myID = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
         let newID = myID;
         let con = true;
+        if (!runtime.compilerOptions.enabled) {
+          console.warn("For this 'Break Out Loop' block to work properly, please Enable the Compiler");
+        }
         while (con) {
           if (newID.parent !== null) {
             newID = container.getBlock(newID.parent);
