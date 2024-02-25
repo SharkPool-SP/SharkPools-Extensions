@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.2.1
+// Version V.1.2.2
 
 (function (Scratch) {
   "use strict";
@@ -76,25 +76,31 @@
   }
 
   // Thank you so much to @FurryR for the help <3
-  const { JSGenerator, ScriptTreeGenerator } = vm.exports.i_will_not_ask_for_help_when_these_break();
-  const _IRdescendStackedBlock = ScriptTreeGenerator.prototype.descendStackedBlock;
-  ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
-    if (block.opcode === "SPadvControl_breakLoop") {
-      // confirm if inside loop
-      if (check4CBlock(block.id, this.blocks)) return { kind: "SPadvControl.break" };
-      else return _IRdescendStackedBlock.call(this, block);
-    } else return _IRdescendStackedBlock.call(this, block);
-  };
-  const _JSdescendStackedBlock = JSGenerator.prototype.descendStackedBlock;
-  JSGenerator.prototype.descendStackedBlock = function (node) {
-    if (node.kind === "SPadvControl.break") {
-      this.source += "break;\n";
-    } else return _JSdescendStackedBlock.call(this, node);
-  };
-
+  function getCompiler() {
+    if (vm.exports.JSGenerator && vm.exports.ScriptTreeGenerator) return vm.exports;
+    else if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
+  }
+  const compiler = getCompiler();
+  if (compiler) {
+    const { JSGenerator, ScriptTreeGenerator } = compiler;
+    const _IRdescendStackedBlock = ScriptTreeGenerator.prototype.descendStackedBlock;
+    ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
+      if (block.opcode === "SPadvControl_breakLoop") {
+        // confirm if inside loop
+        if (check4CBlock(block.id, this.blocks)) return { kind: "SPadvControl.break" };
+        else return _IRdescendStackedBlock.call(this, block);
+      } else return _IRdescendStackedBlock.call(this, block);
+    };
+    const _JSdescendStackedBlock = JSGenerator.prototype.descendStackedBlock;
+    JSGenerator.prototype.descendStackedBlock = function (node) {
+      if (node.kind === "SPadvControl.break") this.source += "break;\n";
+      else return _JSdescendStackedBlock.call(this, node);
+    };
+  }
   function check4CBlock(id, container) {
     let newID = container.getBlock(id);
     let con = true;
+    if (!newID) return false;
     while (con) {
       if (newID.parent !== null) {
         newID = container.getBlock(newID.parent);
@@ -663,6 +669,10 @@
         let con = true;
         if (!runtime.compilerOptions.enabled) {
           console.warn("For this 'Break Out Loop' block to work properly, please Enable the Compiler");
+        }
+        if (!newID) {
+          resolve();
+          return;
         }
         while (con) {
           if (newID.parent !== null) {
