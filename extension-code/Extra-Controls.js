@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.1.1
+// Version V.1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -21,6 +21,9 @@
 
   const newThread =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIyMS4zMzMzMyIgaGVpZ2h0PSIyMS4zMzMzMyIgdmlld0JveD0iMCwwLDIxLjMzMzMzLDIxLjMzMzMzIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjI5LjMzMzMzLC0xNjkuMzMzMzMpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMjQ0LjM0NzY4LDE3Ni41OTA5OGgtMi4xMDY5NGwtMC4yODAyLDIuMTc0MTlsLTMuOTczMzUsMC4wMDYxMWwtMC4yNzQ5NSwtMi4xODAzaC0yLjA1Nzk3Yy0wLjU4NjQxLDAgLTAuODY5MjEsLTAuNzMyNjUgLTAuNDYzOTksLTEuMTU2ODJsNC4zNDQ4NywtNC41NzU4N2MwLjI1NzA5LC0wLjI1NzA3IDAuNjc0NTYsLTAuMjU3MDcgMC45MTgxOCwwbDQuMzU5NTYsNC41NzU4N2MwLjQwNDAxLDAuNDI0MTcgMC4xMTAxOSwxLjE1NjgyIC0wLjQ2NTIyLDEuMTU2ODIiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLW9wYWNpdHk9IjAuMiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0yNDQuMzQ3NjgsMTgzLjQwOTAzYzAuNTc1NCwwIDAuODY5MjIsMC43MzI2NSAwLjQ2NTIyLDEuMTU2ODJsLTQuMzU5NTYsNC41NzU4N2MtMC4yNDM2MywwLjI1NzA3IC0wLjY2MTA5LDAuMjU3MDcgLTAuOTE4MTgsMGwtNC4zNDQ4NywtNC41NzU4N2MtMC40MDUyMywtMC40MjQxNyAtMC4xMjI0MiwtMS4xNTY4MiAwLjQ2Mzk5LC0xLjE1NjgyaDIuMDU3OTdsMC4yNTI2LC0yLjE0ODZsMy45ODA2MiwwLjAyMzE2bDAuMjk1MjgsMi4xMjU0NGgyLjEwNjk0IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2Utb3BhY2l0eT0iMC4yIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHBhdGggZD0iTTI0NC4zNDc2OCwxNzYuNTkwOThoLTIuMTA2OTRsLTAuOTA0NzIsNi44MzgxYy0wLjA5Nzk0LDAuNzg0MDcgLTAuNzk1NzYsMS4zMzY3NyAtMS41NTQ4LDEuMjIxMDljLTAuNjEyMTIsLTAuMDg5OTggLTEuMDg5NTgsLTAuNjA0MTIgLTEuMTY0MjYsLTEuMjIxMDlsLTAuOTA0NzIsLTYuODM4MWgtMi4wNTc5N2MtMC41ODY0MSwwIC0wLjg2OTIxLC0wLjczMjY1IC0wLjQ2Mzk5LC0xLjE1NjgybDQuMzQ0ODcsLTQuNTc1ODdjMC4yNTcwOSwtMC4yNTcwNyAwLjY3NDU2LC0wLjI1NzA3IDAuOTE4MTgsMGw0LjM1OTU2LDQuNTc1ODdjMC40MDQwMSwwLjQyNDE3IDAuMTEwMTksMS4xNTY4MiAtMC40NjUyMiwxLjE1NjgyIiBmaWxsPSIjZmZmZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0NC4zNDc2OCwxODMuNDA5MDNjMC41NzU0LDAgMC44NjkyMiwwLjczMjY1IDAuNDY1MjIsMS4xNTY4MmwtNC4zNTk1Niw0LjU3NTg3Yy0wLjI0MzYzLDAuMjU3MDcgLTAuNjYxMDksMC4yNTcwNyAtMC45MTgxOCwwbC00LjM0NDg3LC00LjU3NTg3Yy0wLjQwNTIzLC0wLjQyNDE3IC0wLjEyMjQyLC0xLjE1NjgyIDAuNDYzOTksLTEuMTU2ODJoMi4wNTc5N2wwLjkwNDcyLC02LjgzODExYzAuMDc0NjgsLTAuNjE2OTcgMC41NTIxNCwtMS4xMzExMSAxLjE2NDI2LC0xLjIyMTA5YzAuNzU5MDQsLTAuMTE1NjggMS40NTY4NiwwLjQzNzAyIDEuNTU0OCwxLjIyMTA5bDAuOTA0NzIsNi44MzgxMWgyLjEwNjk0IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMjkuMzMzMzMsMTkwLjY2NjY3di0yMS4zMzMzM2gyMS4zMzMzM3YyMS4zMzMzM3oiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48L2c+PC9nPjwvc3ZnPg==";
+
+  const timeIcon =
+"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxOC40MTAyNSIgaGVpZ2h0PSIxOC40MTAyNSIgdmlld0JveD0iMCwwLDE4LjQxMDI1LDE4LjQxMDI1Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjMwLjc5NDg4LC0xNzAuNzk0OSkiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIzMi45MjMxLDE4MC42NzQyM2MwLC0yLjUzOTI3IDEuMzM3MzYsLTQuNzY2MTggMy4zNDYxNSwtNi4wMTQ4di0wLjY3ODM2YzAsLTAuOTU2NjQgMC43NzU1MSwtMS43MzIxNSAxLjczMjE1LC0xLjczMjE1aDMuOTk3MjVjMC45NTY2NCwwIDEuNzMyMTUsMC43NzU1MSAxLjczMjE1LDEuNzMyMTV2MC42NzgzNmMyLjAwODc5LDEuMjQ4NjMgMy4zNDYxNiwzLjQ3NTU0IDMuMzQ2MTYsNi4wMTQ4YzAsMy45MDg0OCAtMy4xNjg0NSw3LjA3NjkyIC03LjA3NjkzLDcuMDc2OTJjLTMuOTA4NDgsMCAtNy4wNzY5MiwtMy4xNjg0NCAtNy4wNzY5MiwtNy4wNzY5MnpNMjQxLjYyNTU4LDE3Ny44OTQ4N2MwLjIyMzM3LDAgMC4zMzc0MiwtMC4yODQ0MSAwLjE4MDU5LC0wLjQ0OTA3bC0xLjY5MjM1LC0xLjc3NjMzYy0wLjA5NDU3LC0wLjA5OTggLTAuMjU2NjMsLTAuMDk5OCAtMC4zNTY0MywwbC0xLjY4NjY1LDEuNzc2MzNjLTAuMTU3MzEsMC4xNjQ2NiAtMC4wNDc1MiwwLjQ0OTA3IDAuMTgwMTIsMC40NDkwN2gwLjc5ODg5bDAuMzQzOTIsMi41OTk0M2MtMC4yMSwwLjE1OTgzIC0wLjM0NTU3LDAuNDEyNDQgLTAuMzQ1NTcsMC42OTY3MmMwLDAuNDgzMjUgMC4zOTE3NSwwLjg3NSAwLjg3NSwwLjg3NWMwLjAxMTM1LDAgMC4wMjI2NiwtMC4wMDAyMSAwLjAzMzksLTAuMDAwNjRsMS44OTY0OSwxLjY5ODgybC0xLjAzODU4LDAuNzIyOGMtMC4xNjA5NywwLjE2MDk3IC0wLjAzNzQ5LDAuNDM5NzEgMC4xOTAxOCwwLjQ0NDlsMi40NDg3LDAuMDYzNDFjMC4xNDExMywwIDAuMjU1NzIsLTAuMTE0NiAwLjI1MjAzLC0wLjI1MjA0bC0wLjA1OTM4LC0yLjQ1MjczYy0wLjAwNTU0LC0wLjIyNzMzIC0wLjI4NzI5LC0wLjM0Nzc4IC0wLjQ0NTIzLC0wLjE4OTgzbC0wLjU3ODM0LDAuNTc4MzRsLTEuODI4OTcsLTEuNDAxNTdjMC4wMDI3OSwtMC4wMjg0NCAwLjAwNDIxLC0wLjA1NzI4IDAuMDA0MjEsLTAuMDg2NDZjMCwtMC4yNzk2NSAtMC4xMzExOSwtMC41Mjg2NiAtMC4zMzUzOCwtMC42ODg4NGwtMC4wMjM0NSwtMi44MTc4NHoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIwLjIiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjc1Ii8+PHBhdGggZD0iTTIzMC43OTQ4OSwxODkuMjA1MTZ2LTE4LjQxMDI1aDE4LjQxMDI1djE4LjQxMDI1eiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjMyLjkyMzEsMTgwLjY3NDIzYzAsLTIuNTM5MjcgMS4zMzczNiwtNC43NjYxOCAzLjM0NjE1LC02LjAxNDh2LTAuNjc4MzZjMCwtMC45NTY2NCAwLjc3NTUxLC0xLjczMjE1IDEuNzMyMTUsLTEuNzMyMTVoMy45OTcyNWMwLjk1NjY0LDAgMS43MzIxNSwwLjc3NTUxIDEuNzMyMTUsMS43MzIxNXYwLjY3ODM2YzIuMDA4NzksMS4yNDg2MyAzLjM0NjE1LDMuNDc1NTQgMy4zNDYxNSw2LjAxNDhjMCwzLjkwODQ4IC0zLjE2ODQ1LDcuMDc2OTIgLTcuMDc2OTIsNy4wNzY5MmMtMy45MDg0OCwwIC03LjA3NjkyLC0zLjE2ODQ0IC03LjA3NjkyLC03LjA3Njkyek0yNDEuNjI1NTgsMTc3Ljg5NDg3YzAuMjIzMzcsMCAwLjMzNzQzLC0wLjI4NDQxIDAuMTgwNiwtMC40NDkwN2wtMS42OTIzNSwtMS43NzYzMmMtMC4wOTQ1NywtMC4wOTk4IC0wLjI1NjYzLC0wLjA5OTggLTAuMzU2NDMsMGwtMS42ODY2NSwxLjc3NjMyYy0wLjE1NzMxLDAuMTY0NjYgLTAuMDQ3NTIsMC40NDkwNyAwLjE4MDEyLDAuNDQ5MDdoMC43OTg4OWwwLjM0MzkyLDIuNTk5NDNjLTAuMjEsMC4xNTk4MyAtMC4zNDU1NywwLjQxMjQ0IC0wLjM0NTU3LDAuNjk2NzFjMCwwLjQ4MzI1IDAuMzkxNzUsMC44NzUgMC44NzUsMC44NzVjMC4wMTEzNSwwIDAuMDIyNjUsLTAuMDAwMjEgMC4wMzM5LC0wLjAwMDY0bDEuNDIyODEsMS44NTY3MWwtMC41NjQ5LDAuNTY0OTFjLTAuMTYwOTcsMC4xNjA5NyAtMC4wMzc0OSwwLjQzOTcxIDAuMTkwMTcsMC40NDQ5bDIuNDQ4NywwLjA2MzQxYzAuMTQxMTMsMCAwLjI1NTczLC0wLjExNDYgMC4yNTIwNCwtMC4yNTIwNGwtMC4wNTkzOCwtMi40NTI3MmMtMC4wMDU1NCwtMC4yMjczMyAtMC4yODcyOSwtMC4zNDc3OCAtMC40NDUyMywtMC4xODk4NGwtMC41NzgzNCwwLjU3ODM0bC0xLjgyODk4LC0xLjQwMTU3YzAuMDAyNzksLTAuMDI4NDQgMC4wMDQyMiwtMC4wNTcyOCAwLjAwNDIyLC0wLjA4NjQ2YzAsLTAuMjc5NjUgLTAuMTMxMTksLTAuNTI4NjYgLTAuMzM1MzgsLTAuNjg4ODRsMC4zNDQ5NywtMi42MDczMXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjIiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwIi8+PC9nPjwvZz48L3N2Zz4=";
 
   const keysMenu = [
     { text: "space", value: "space" },
@@ -40,6 +43,7 @@
     { text: "7", value: "7" }, { text: "8", value: "8" }, { text: "9", value: "9" }
   ];
 
+  let conditionStorage = [];
   let keybinds = {};
   let hats = { ...runtime._hats };
   runtime.on("KEY_PRESSED", key => {
@@ -53,6 +57,8 @@
       });
     }
   });
+  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = [] });
+  runtime.on("PROJECT_START", () => { conditionStorage = [] });
 
   vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
   vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
@@ -164,6 +170,17 @@
           },
           "---",
           {
+            opcode: "breakLoop",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.COMMAND,
+            text: "break out loop [ICON]",
+            isTerminal: true,
+            arguments: {
+              ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: breakIcon }
+            }
+          },
+          "---",
+          {
             opcode: "simuRun",
             extensions: ["colours_control"],
             blockType: Scratch.BlockType.CONDITIONAL,
@@ -183,7 +200,11 @@
             opcode: "asyncCode",
             extensions: ["colours_control"],
             blockType: Scratch.BlockType.LOOP,
-            text: "async"
+            branchIconURI: "",
+            text: "[ICON] async",
+            arguments: {
+              ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: timeIcon }
+            }
           },
           { blockType: Scratch.BlockType.XML, xml: `<block type="SPadvControl_newThreadAdv"><value name="ARGS"><shadow type="text"><field name="TEXT">{ info : 1 }</field></shadow></value><value name="FRAME"><shadow type="SPadvControl_threadArgs"></shadow></value></block>` },
           {
@@ -198,6 +219,38 @@
           {
             opcode: "threadArgs", blockType: Scratch.BlockType.REPORTER,
             hideFromPalette: true, text: "argument"
+          },
+          "---",
+          {
+            opcode: "ifRunBlock",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.CONDITIONAL,
+            text: "step through blocks while [CON]",
+            branchCount: 1,
+            arguments: {
+              CON: { type: Scratch.ArgumentType.BOOLEAN }
+            }
+          },
+          {
+            opcode: "ifPart",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.CONDITIONAL,
+            text: ["if [CON]", "my ID [ID]"],
+            branchCount: 1,
+            arguments: {
+              CON: { type: Scratch.ArgumentType.BOOLEAN },
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-block1" }
+            }
+          },
+          {
+            opcode: "elsePart",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.CONDITIONAL,
+            text: ["else", "my ID [ID]"],
+            branchCount: 1,
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-block1" }
+            }
           },
           "---",
           {
@@ -246,17 +299,6 @@
             text: "delete this clone and tell main sprite",
             isTerminal: true
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Mostly Functional" },
-          {
-            opcode: "breakLoop",
-            extensions: ["colours_control"],
-            blockType: Scratch.BlockType.COMMAND,
-            text: "break out loop [ICON]",
-            isTerminal: true,
-            arguments: {
-              ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: breakIcon }
-            }
-          }
         ],
         menus: {
           ACTIVATE: ["finish", "restart"],
@@ -284,7 +326,7 @@
       const vars = typeof Blockly === "undefined" ? [] : Blockly.getMainWorkspace()
         .getVariableMap().getVariablesOfType("").filter((model) => model.isLocal).map((model) => (model.name));
       if (vars.length > 0) return vars;
-      else return [""];
+      else return ["private variable"];
     }
 
     organizeHats() {
@@ -500,13 +542,41 @@
                 clearInterval(interval);
                 resolve();
               }
-            }, 1);
+            }, 10);
           });
           blockInfo.parent = oldInfo[0];
           blockInfo.next = oldInfo[1];
           ID = blockInfo.next;
         }
       }
+    }
+
+    ifRunBlock(args, util) {
+      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const con = Scratch.Cast.toBoolean(args.CON);
+      if (branch) {
+        if (con) {
+          if (util.stackFrame.SPctrlThread === undefined) util.stackFrame.SPctrlThread = runtime._pushThread(branch, util.target);
+          if (runtime.isActiveThread(util.stackFrame.SPctrlThread)) util.startBranch(2, true);
+        } else if (util.stackFrame.SPctrlThread !== undefined) {
+          const thread = util.stackFrame.SPctrlThread;
+          if (runtime.isActiveThread(thread)) thread.stopThisScript();
+        }
+      }
+    }
+
+    ifPart(args, util) {
+      const con = Scratch.Cast.toBoolean(args.CON);
+      const ID = Scratch.Cast.toString(args.ID);
+      const index = conditionStorage.indexOf(ID);
+      if (index !== -1) conditionStorage.splice(index, 1);
+      if (con) util.startBranch(1, false);
+      else conditionStorage.push(ID);
+    }
+
+    elsePart(args, util) {
+      const ID = Scratch.Cast.toString(args.ID);
+      if (conditionStorage.indexOf(ID) !== -1) util.startBranch(1, false);
     }
 
     asClone(args, util) {
@@ -535,15 +605,15 @@
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 0);
       if (branch) {
         const thread = util.sequencer.runtime._pushThread(branch, util.target);
-        const params = thread.advCtrl;
-        if (typeof params === "undefined") thread.stackFrames[0].advCtrl = {};
-        thread.stackFrames[0].advCtrl.arg = Scratch.Cast.toString(args.ARGS);
+        const params = thread.SPadvCtrl;
+        if (typeof params === "undefined") thread.stackFrames[0].SPadvCtrl = {};
+        thread.stackFrames[0].SPadvCtrl.arg = Scratch.Cast.toString(args.ARGS);
       }
     }
     threadArgs(args, util) {
       const stack = util.thread.stackFrames;
       if (typeof stack === "undefined") return "";
-      const params = stack[0].advCtrl;
+      const params = stack[0].SPadvCtrl;
       if (typeof params === "undefined") return "";
       return params.arg || "";
     }
