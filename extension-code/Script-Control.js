@@ -3,7 +3,7 @@
 // Description: Control Scripts
 // By: SharkPool
 
-// Version V.1.3.0
+// Version V.1.3.1
 
 (function (Scratch) {
   "use strict";
@@ -320,7 +320,7 @@ function addLinearGradientToBody() {
     </defs></svg>`;
   document.body.append(grad1);
 }
-if (!Scratch.vm.runtime.isPackaged) addLinearGradientToBody();
+if (typeof scaffolding === "undefined") addLinearGradientToBody();
 
 function documentChangedCallback(mutationsList, observer) {
   var elements = document.querySelectorAll("g[data-category=\"Script Control\"] path");
@@ -330,7 +330,7 @@ function documentChangedCallback(mutationsList, observer) {
     pathElement.setAttribute("fill", currentFill.replace(/#3a6062/g, "url(#SPscripts-GRAD1)"));
   });
 }
-if (!Scratch.vm.runtime.isPackaged) {
+if (typeof scaffolding === "undefined") {
   var observer = new MutationObserver(documentChangedCallback);
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
