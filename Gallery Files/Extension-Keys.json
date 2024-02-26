@@ -225,7 +225,7 @@
       "date": "Last Updated: 12/20/2023"
     },
     "SoundCloud-API": {
-      "credits": "Fetch Songs and Statistics from Soundcloud. Made by SharkPool",
+      "credits": "Fetch Tracks, Artists, and Statistics from Soundcloud. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SoundCloud-API.js",
       "tags": ".all.fetching",
       "status": "new",
