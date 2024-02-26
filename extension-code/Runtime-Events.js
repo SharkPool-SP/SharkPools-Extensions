@@ -3,7 +3,7 @@
 // Description: Events from the Runtime
 // By: SharkPool
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -64,10 +64,7 @@
             const util = allUtils[i];
             const object = util.blocks._blocks;
             const keyV = getKeyByValue(object, "opcode", "SPevents_onProjectLoad");
-            if (keyV) {
-              vm.setEditingTarget(util.id);
-              vm.runtime.toggleScript(object[keyV].id, util);
-            }
+            if (keyV) vm.runtime._pushThread(object[keyV].id, util);
           }
         }, 10);
       });
@@ -175,38 +172,38 @@
     }
   }
 
+  function addLinearGradientToBody() {
+    var grad1 = document.createElement("div");
+    grad1.innerHTML = `<svg><defs>
+      <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPevents-GRAD1">
+      <stop offset="0" stop-color="#7b9cbb"/><stop offset="0.5" stop-color="#435b67"/></linearGradient>
+      </defs></svg>`;
+    var grad2 = document.createElement("div");
+    grad2.innerHTML = `<svg><defs>
+      <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPevents-GRAD2">
+      <stop offset="0" stop-color="#435b67"/><stop offset="0.5" stop-color="#7b9cbb"/></linearGradient>
+      </defs></svg>`;
+    document.body.append(grad1, grad2);
+  }
+  if (typeof scaffolding === "undefined") addLinearGradientToBody();
+
+  function documentChangedCallback(mutationsList, observer) {
+    var elements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
+    var pathElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
+    pathElements.forEach(function(pathElement) {
+      var currentFill = pathElement.getAttribute("fill");
+      pathElement.setAttribute("fill", currentFill.replace(/#7b9cbb/g, "url(#SPevents-GRAD1)"));
+    });
+    var rectElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] rect.blocklyBlockBackground");
+    rectElements.forEach(function(rectElement) {
+      var currentFill = rectElement.getAttribute("fill");
+      rectElement.setAttribute("fill", currentFill.replace(/#7b9cbb/g, "url(#SPevents-GRAD2)"));
+    });
+  }
+  if (typeof scaffolding === "undefined") {
+    var observer = new MutationObserver(documentChangedCallback);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
   Scratch.extensions.register(new SPevents());
 })(Scratch);
-
-function addLinearGradientToBody() {
-  var grad1 = document.createElement("div");
-  grad1.innerHTML = `<svg><defs>
-    <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPevents-GRAD1">
-    <stop offset="0" stop-color="#7b9cbb"/><stop offset="0.5" stop-color="#435b67"/></linearGradient>
-    </defs></svg>`;
-  var grad2 = document.createElement("div");
-  grad2.innerHTML = `<svg><defs>
-    <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPevents-GRAD2">
-    <stop offset="0" stop-color="#435b67"/><stop offset="0.5" stop-color="#7b9cbb"/></linearGradient>
-    </defs></svg>`;
-  document.body.append(grad1, grad2);
-}
-if (!Scratch.vm.runtime.isPackaged) addLinearGradientToBody();
-
-function documentChangedCallback(mutationsList, observer) {
-  var elements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
-  var pathElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
-  pathElements.forEach(function(pathElement) {
-    var currentFill = pathElement.getAttribute("fill");
-    pathElement.setAttribute("fill", currentFill.replace(/#7b9cbb/g, "url(#SPevents-GRAD1)"));
-  });
-  var rectElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] rect.blocklyBlockBackground");
-  rectElements.forEach(function(rectElement) {
-    var currentFill = rectElement.getAttribute("fill");
-    rectElement.setAttribute("fill", currentFill.replace(/#7b9cbb/g, "url(#SPevents-GRAD2)"));
-  });
-}
-if (!Scratch.vm.runtime.isPackaged) {
-  var observer = new MutationObserver(documentChangedCallback);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-}
