@@ -188,7 +188,6 @@
   if (typeof scaffolding === "undefined") addLinearGradientToBody();
 
   function documentChangedCallback(mutationsList, observer) {
-    var elements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
     var pathElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
     pathElements.forEach(function(pathElement) {
       var currentFill = pathElement.getAttribute("fill");
