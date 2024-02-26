@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.3.0
+// Version V.1.3.1
 
 (function (Scratch) {
   "use strict";
@@ -371,8 +371,9 @@
     getTargets(enable) {
       const spriteNames = [];
       if (enable) spriteNames.push({ text: "myself", value: "_myself_" });
+      else spriteNames.push({ text: "Stage", value: "_stage_" });
       const targets = Scratch.vm.runtime.targets;
-      for (let index = 0; index < targets.length; index++) {
+      for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
         if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
       }
@@ -631,7 +632,7 @@
 
     async runInSprite(args, util) {
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
-      const newTarget = runtime.getSpriteTargetByName(args.SPRITE);
+      const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       if (branch && newTarget) {
         const thread = runtime._pushThread(branch, util.target);
         thread.target = newTarget;
