@@ -3,7 +3,7 @@
 // Description: Color Utilities and Color Conversions
 // By: SharkPool
 
-//  Version 1.2.0
+//  Version 1.2.1
 
 (function (Scratch) {
   "use strict";
@@ -327,7 +327,7 @@ function addLinearGradientToBody() {
   document.body.appendChild(grad1);
   document.body.appendChild(grad2);
 }
-if (!Scratch.vm.runtime.isPackaged) addLinearGradientToBody();
+if (typeof scaffolding === "undefined") addLinearGradientToBody();
 
 function documentChangedCallback(mutationsList, observer) {
   var elements = document.querySelectorAll("g[data-category=\"Color Master\"] path");
@@ -344,7 +344,7 @@ function documentChangedCallback(mutationsList, observer) {
     rectElement.setAttribute("fill", newFill);
   });
 }
-if (!Scratch.vm.runtime.isPackaged) {
+if (typeof scaffolding === "undefined") {
   var observer = new MutationObserver(documentChangedCallback);
   var observerConfig = { childList: true, subtree: true };
   observer.observe(document.documentElement, observerConfig);
