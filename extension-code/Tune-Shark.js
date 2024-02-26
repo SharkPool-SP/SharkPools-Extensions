@@ -3,12 +3,11 @@
 // Description: Advanced Sound Engine, inspired by LilyMakesThings
 // By: SharkPool
 
-// Version V.2.5.0
+// Version V.2.5.1
 // Credit to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) throw new Error("Tune Shark extension must be run unsandboxed");
 
   let enableBlock = true;
@@ -48,7 +47,6 @@
       this.sounds = {};
       this.overlappables = {};
       this.overriddenVol = {};
-
       Scratch.vm.runtime.on("PROJECT_START", () => {
         if (controller) this.controlAllSounds({ CONTROL : "stop" });
       });
@@ -379,6 +377,13 @@
             opcode: "allSounds",
             blockType: Scratch.BlockType.REPORTER,
             text: "all sounds",
+            disableMonitor: true,
+            blockIconURI: settingsIconURI
+          },
+          {
+            opcode: "allPlaySounds",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "all playing sounds",
             disableMonitor: true,
             blockIconURI: settingsIconURI
           },
@@ -809,6 +814,16 @@
     }
 
     allSounds() { return JSON.stringify(Object.keys(this.sounds)) }
+
+    allPlaySounds() {
+      const playingSounds = [];
+      Object.entries(this.sounds).forEach(([key, soundInstances]) => {
+        soundInstances.forEach(audio => {
+          if (!audio.paused) playingSounds.push(key);
+        });
+      });
+      return JSON.stringify(playingSounds);
+    }
 
     deleteAllSounds() {
       this.controlAllSounds("stop");  
