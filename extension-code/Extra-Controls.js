@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.2.2
+// Version V.1.2.3
 
 (function (Scratch) {
   "use strict";
@@ -627,8 +627,9 @@
       if (branch) {
         for (var i = 1; i < clones.length; i++) {
           if (clones[i]) {
-            const variable = clones[i].lookupVariableByNameAndType(args.VAR);
-            if (variable && variable.value === args.VAL) runtime._pushThread(branch, clones[i]);
+            const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
+            const value = Scratch.Cast.toString(args.VAL);
+            if (variable && Scratch.Cast.toString(variable.value) === value) runtime._pushThread(branch, clones[i]);
           }
         }
       }
