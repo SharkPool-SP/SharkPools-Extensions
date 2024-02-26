@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.2.3
+// Version V.1.3.0
 
 (function (Scratch) {
   "use strict";
@@ -325,12 +325,23 @@
           },
           "---",
           {
+            opcode: "runInSprite",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.CONDITIONAL,
+            text: ["as [SPRITE] do", "then [TYPE] to finish"],
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "contType" },
+            }
+          },
+          {
             opcode: "asClone",
             extensions: ["colours_control"],
-            blockType: Scratch.BlockType.LOOP,
-            text: "as clones of myself with [VAR] set to [VAL]",
+            blockType: Scratch.BlockType.CONDITIONAL,
+            text: "as clones of [SPRITE] with [VAR] set to [VAL]",
             arguments: {
-              VAR: { type: Scratch.ArgumentType.STRING, menu: "varsMenu" },
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets2" },
+              VAR: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "0" }
             }
           },
@@ -344,31 +355,28 @@
         ],
         menus: {
           ACTIVATE: ["finish", "restart"],
-          HAT_MENU: {
-            acceptReporters: true,
-            items: "organizeHats"
-          },
-          varsMenu: {
-            acceptReporters: true,
-            items: "getPrivateVars"
-          },
+          HAT_MENU: { acceptReporters: true, items: "organizeHats" },
+          targets: { acceptReporters: true, items: this.getTargets(false) },
+          targets2: { acceptReporters: true, items: this.getTargets(true) },
           runTypes: {
             acceptReporters: true,
             items: ["forward", "reversed", "forward and reversed", "randomized"]
           },
-          keys: {
-            acceptReporters: true,
-            items: keysMenu
-          }
+          contType: { acceptReporters: true, items: ["wait", "dont wait"] },
+          keys: { acceptReporters: true, items: keysMenu }
         },
       };
     }
 
-    getPrivateVars() {
-      const vars = typeof Blockly === "undefined" ? [] : Blockly.getMainWorkspace()
-        .getVariableMap().getVariablesOfType("").filter((model) => model.isLocal).map((model) => (model.name));
-      if (vars.length > 0) return vars;
-      else return ["private variable"];
+    getTargets(enable) {
+      const spriteNames = [];
+      if (enable) spriteNames.push({ text: "myself", value: "_myself_" });
+      const targets = Scratch.vm.runtime.targets;
+      for (let index = 0; index < targets.length; index++) {
+        const target = targets[index];
+        if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
+      }
+      return spriteNames.length > 0 ? spriteNames : [""];
     }
 
     organizeHats() {
@@ -621,15 +629,44 @@
       if (conditionStorage.indexOf(ID) !== -1) util.startBranch(1, false);
     }
 
+    async runInSprite(args, util) {
+      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const newTarget = runtime.getSpriteTargetByName(args.SPRITE);
+      if (branch && newTarget) {
+        const thread = runtime._pushThread(branch, util.target);
+        thread.target = newTarget;
+        thread.tryCompile();
+        if (args.TYPE === "wait") {
+          await new Promise(resolve => {
+            const interval = setInterval(() => {
+              if (!vm.runtime.isActiveThread(thread)) {
+                clearInterval(interval);
+                resolve();
+              }
+            }, 1);
+          });
+        }
+      }
+    }
+
     asClone(args, util) {
-      const clones = util.target.sprite.clones;
+      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      if (!target) return;
+      const clones = target.sprite.clones;
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
       if (branch) {
         for (var i = 1; i < clones.length; i++) {
           if (clones[i]) {
             const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
             const value = Scratch.Cast.toString(args.VAL);
-            if (variable && Scratch.Cast.toString(variable.value) === value) runtime._pushThread(branch, clones[i]);
+            if (variable && Scratch.Cast.toString(variable.value) === value) {
+              if (args.SPRITE === "_myself_") runtime._pushThread(branch, clones[i]);
+              else {
+                const thread = runtime._pushThread(branch, util.target);
+                thread.target = clones[i];
+                thread.tryCompile();
+              }
+            }
           }
         }
       }
