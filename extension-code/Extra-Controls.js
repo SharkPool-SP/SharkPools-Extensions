@@ -636,7 +636,7 @@
       if (branch && newTarget) {
         const thread = runtime._pushThread(branch, util.target);
         thread.target = newTarget;
-        thread.tryCompile();
+        if (runtime.compilerOptions.enabled) thread.tryCompile();
         if (args.TYPE === "wait") {
           await new Promise(resolve => {
             const interval = setInterval(() => {
@@ -665,7 +665,7 @@
               else {
                 const thread = runtime._pushThread(branch, util.target);
                 thread.target = clones[i];
-                thread.tryCompile();
+                if (runtime.compilerOptions.enabled) thread.tryCompile();
               }
             }
           }
