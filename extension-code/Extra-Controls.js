@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.3.1
+// Version V.1.3.2
 
 (function (Scratch) {
   "use strict";
@@ -122,6 +122,7 @@
       return {
         id: "SPadvControl",
         name: "Extra Controls",
+        docsURI: "https://extensions.penguinmod.com/docs/Extra-Control",
         color1: "#FFAB19",
         color2: "#EC9C13",
         color3: "#CF8B17",
