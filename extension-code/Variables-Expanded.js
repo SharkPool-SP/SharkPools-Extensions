@@ -458,7 +458,6 @@
     async setVariableToType(args, util) { await this.setMonitor(args.VARIABLE, util, args.VARIABLE, args.TYPE) }
 
     async setDisplay(args, util) {
-      const safeName = xmlEscape(args.NAME);
       const type = this.getMonitor(args.VARIABLE, util);
       let variableId = this.findVariable(args.VARIABLE, util);
       if (type.includes("readout") || type === "slider") {
