@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.3.2
+// Version V.1.3.3
 
 (function (Scratch) {
   "use strict";
@@ -336,12 +336,36 @@
             }
           },
           {
+            opcode: "getInSprite",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get [THING] from [SPRITE]",
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets" },
+              THING: {}
+            }
+          },
+          "---",
+          {
             opcode: "asClone",
             extensions: ["colours_control"],
             blockType: Scratch.BlockType.CONDITIONAL,
             text: "as clones of [SPRITE] with [VAR] set to [VAL]",
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets2" },
+              VAR: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "0" }
+            }
+          },
+          {
+            opcode: "getInClone",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get [THING] from clone [ID] of [SPRITE] with [VAR] set to [VAL]",
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets2" },
+              THING: {},
+              ID: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               VAR: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "0" }
             }
@@ -651,6 +675,15 @@
       }
     }
 
+    async getInSprite(args, util) {
+      const container = util.thread.blockContainer;
+      let branch = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
+      branch = branch.inputs.THING;
+      const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
+      if (branch !== undefined && newTarget) return await this.getTargetVal(newTarget, branch, util.target);
+      return "";
+    }
+
     asClone(args, util) {
       const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       if (!target) return;
@@ -672,6 +705,48 @@
           }
         }
       }
+    }
+
+    async getInClone(args, util) {
+      const container = util.thread.blockContainer;
+      let branch = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
+      branch = branch.inputs.THING;
+
+      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      if (!target) return "";
+      const clones = target.sprite.clones;
+      let newTarget = [];
+      for (let i = 1; i < clones.length; i++) {
+        if (clones[i]) {
+          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
+          const value = Scratch.Cast.toString(args.VAL);
+          if (variable && Scratch.Cast.toString(variable.value) === value) newTarget.push(clones[i]);
+        }
+      }
+      newTarget = newTarget[Scratch.Cast.toNumber(args.ID) - 1];
+      if (branch !== undefined && newTarget) return await this.getTargetVal(newTarget, branch, util.target);
+      return "";
+    }
+
+    async getTargetVal(newTarget, block, ogTarget) {
+      const oldVal = runtime.compilerOptions.enabled;
+      runtime.compilerOptions.enabled = false;
+      if (block.block === null) return "";
+      const thread = runtime._pushThread(block.block, ogTarget);
+      runtime.compilerOptions.enabled = oldVal;
+      thread.isCompiled = false;
+      thread.target = newTarget;
+      let checks = 0;
+      return new Promise(resolve => {
+        const interval = setInterval(() => {
+          const reported = Scratch.Cast.toString(thread.justReported);
+          if (reported !== "null" || checks >= 100) {
+            clearInterval(interval);
+            resolve(reported);
+          }
+          checks++;
+        }, 1);
+      });
     }
 
     deleteRun(args, util) {
