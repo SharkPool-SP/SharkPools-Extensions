@@ -3,11 +3,10 @@
 // Description: Apply a variety of new effects to the data URI of Images or Costumes.
 // By: SharkPool
 
-// Version V.2.2.0
+// Version V.2.3.1
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) throw new Error("Image Effects must run unsandboxed");
   Scratch.vm.extensionManager.loadExtensionURL("https://extensions.turbowarp.org/Lily/Skins.js");
 
@@ -174,6 +173,15 @@
             opcode: "clipImage",
             blockType: Scratch.BlockType.REPORTER,
             text: "clip [CUTOUT] from [MAIN]",
+            arguments: {
+              MAIN: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" },
+              CUTOUT: { type: Scratch.ArgumentType.STRING, defaultValue: "cutout-here" }
+            }
+          },
+          {
+            opcode: "overlayImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "clip [CUTOUT] onto [MAIN]",
             arguments: {
               MAIN: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" },
               CUTOUT: { type: Scratch.ArgumentType.STRING, defaultValue: "cutout-here" }
@@ -461,6 +469,35 @@
             );
             context.setTransform(1, 0, 0, 1, 0, 0);
             context.globalCompositeOperation = "source-over";
+            resolve(canvas.toDataURL("image/png"));
+          };
+          cutoutImage.src = this.confirmAsset(args.CUTOUT, "png");
+        };
+        mainImage.src = this.confirmAsset(args.MAIN, "png");
+      });
+    }
+
+    overlayImage(args) {
+      return new Promise((resolve, reject) => {
+        const mainImage = new Image();
+        mainImage.onload = () => {
+          const cutoutImage = new Image();
+          cutoutImage.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(mainImage.width, cutoutImage.width);
+            canvas.height = Math.max(mainImage.height, cutoutImage.height);
+            const context = canvas.getContext("2d");
+
+            context.drawImage(mainImage, 0, 0);
+            const scaledWidth = cutoutImage.width + this.scale[0];
+            const scaledHeight = cutoutImage.height + this.scale[1];
+            const cutX = this.cutPos[0] + mainImage.width / 2 - scaledWidth / 2;
+            const cutY = this.cutPos[1] - mainImage.height / 2 + scaledHeight / 2;
+
+            context.translate(cutX + scaledWidth / 2, cutY * -1 + scaledHeight / 2);
+            context.rotate(((this.cutoutDirection + 270) * Math.PI) / 180);
+            context.drawImage(cutoutImage, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+            context.setTransform(1, 0, 0, 1, 0, 0);
             resolve(canvas.toDataURL("image/png"));
           };
           cutoutImage.src = this.confirmAsset(args.CUTOUT, "png");
@@ -1039,13 +1076,6 @@
           newY1 = Math.max(0, Math.min(height - 1, newY1));
           newX2 = Math.max(0, Math.min(width - 1, newX2));
           newY2 = Math.max(0, Math.min(height - 1, newY2));
-          const newR1 = data[(newY1 * width + newX1) * 4];
-          const newG1 = data[(newY1 * width + newX1) * 4 + 1];
-          const newB1 = data[(newY1 * width + newX1) * 4 + 2];
-
-          const newR2 = data[(newY2 * width + newX2) * 4];
-          const newG2 = data[(newY2 * width + newX2) * 4 + 1];
-          const newB2 = data[(newY2 * width + newX2) * 4 + 2];
           const leftColor = [(rgb1[0] * r) / 255, (rgb1[1] * g) / 255, (rgb1[2] * b) / 255];
           const rightColor = [(rgb2[0] * r) / 255, (rgb2[1] * g) / 255, (rgb2[2] * b) / 255];
           const leftIndex = (newY1 * width + newX1) * 4;
