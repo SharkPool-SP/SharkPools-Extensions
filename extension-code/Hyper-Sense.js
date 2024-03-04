@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.4.3
+// Version 2.4.4
 
 (function (Scratch) {
   "use strict";
@@ -249,6 +249,21 @@
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Touching Expanded" },
+          {
+            opcode: "spritePointing",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is [SPRITE1] pointing towards [SPRITE2]?",
+            arguments: {
+              SPRITE1: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS3"
+              },
+              SPRITE2: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "TARGETS"
+              }
+            }
+          },
           {
             opcode: "spriteTouchingSprite",
             blockType: Scratch.BlockType.BOOLEAN,
@@ -643,6 +658,17 @@
       if (isNaN(parseFloat(key))) key = key.toUpperCase();
       if (key === "SPACE") key = " ";
       return key === this.pressedKey || args.KEY === "Any" ? keyPressTime : 0;
+    }
+
+    spritePointing(args, util) {
+      const target = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      if (!target) return false;
+      const fakeUtil = { ...util, target, ioQuery : util.ioQuery };
+      const oldDir = target.direction;
+      runtime.ext_scratch3_motion.pointTowards({ TOWARDS : args.SPRITE2 }, fakeUtil);
+      const newDir = target.direction;
+      target.setDirection(oldDir);
+      return newDir === oldDir;
     }
 
     spriteTouchingSprite(args, util) {
