@@ -1,3 +1,10 @@
+// Name: Garbage Utilities
+// ID: garbageutilities
+// Description: garbage blocks
+// By: LittleBlueGamer
+
+//  Version 1.2.1
+
 class GarbageUtilities {
     getInfo() {
         return {
