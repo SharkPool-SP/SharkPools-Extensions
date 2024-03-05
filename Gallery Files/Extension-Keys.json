@@ -105,6 +105,13 @@
       "status": "update",
       "date": "Last Updated: 03/03/2024"
     },
+    "Garbage-Utilities": {
+      "credits": "A few garbage blocks. Made by LittleBlueGamer",
+      "url": "https://raw.githubusercontent.com/LittleBlueGamer427/sp-gallery-lbg/main/extension-code/Garbage-Utilities.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "sharkpool change this part plz"
+    },
     "Recording": {
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
@@ -328,13 +335,6 @@
       "tags": ".all.utilities.expanded",
       "status": "update",
       "date": "Last Updated: 03/04/2024"
-    },
-    "Garbage-Utilities": {
-      "credits": "A few garbage blocks. Made by LittleBlueGamer",
-      "url": "https://raw.githubusercontent.com/LittleBlueGamer427/sp-gallery-lbg/main/extension-code/Garbage-Utilities.js",
-      "tags": ".all.utilities",
-      "status": "new",
-      "date": "sharkpool change this part plz"
     },
     "Example": {
       "credits": "",
