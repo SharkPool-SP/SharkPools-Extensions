@@ -594,7 +594,7 @@
           const block = blocks._blocks[key];
           let input = blocks.getBlock(block.inputs?.CALL?.block)?.fields?.TEXT?.value === callID;
           if (!input && block.opcode === "SPadvControl_onCall") {
-            promises.push(this.getOutput(block.inputs?.CALL?.block, util.target)
+            promises.push(this.getOutput(block.inputs?.CALL?.block, target)
               .then(output => {
                 input = output === callID
                 if (block.opcode === "SPadvControl_onCall" && input) {
