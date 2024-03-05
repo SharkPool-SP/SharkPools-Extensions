@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.3.3
+// Version V.1.3.4
 
 (function (Scratch) {
   "use strict";
@@ -583,8 +583,57 @@
       return threads2Wait;
     }
 
+    runBranch(args, util) {
+      const callID = Scratch.Cast.toString(args.ID);
+      const promises = [];
+      const threads2Wait = []; // used for "run and wait"
+      for (const target of runtime.targets) {
+        const blocks = target.blocks;
+        const blockKeys = Object.keys(blocks._blocks);
+        for (const key of blockKeys) {
+          const block = blocks._blocks[key];
+          let input = blocks.getBlock(block.inputs?.CALL?.block)?.fields?.TEXT?.value === callID;
+          if (!input && block.opcode === "SPadvControl_onCall") {
+            promises.push(this.getOutput(block.inputs?.CALL?.block, util.target)
+              .then(output => {
+                input = output === callID
+                if (block.opcode === "SPadvControl_onCall" && input) {
+                  const blockID = blocks._blocks[key].id;
+                  const branch = blocks.getBranch(blockID, 1);
+                  if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
+                }
+              })
+            );
+          }
+          if (block.opcode === "SPadvControl_onCall" && input) {
+            const blockID = blocks._blocks[key].id;
+            const branch = blocks.getBranch(blockID, 1);
+            if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
+          }
+        }
+      }
+      if (promises.length === 0) return threads2Wait;
+      else return Promise.all(promises).then(() => threads2Wait);
+    }
+    async getOutput(blockID, target) {
+      const oldVal = runtime.compilerOptions.enabled;
+      runtime.compilerOptions.enabled = false;
+      const thread = runtime._pushThread(blockID, target);
+      runtime.compilerOptions.enabled = oldVal;
+      thread.isCompiled = false;
+      return new Promise(resolve => {
+        const interval = setInterval(() => {
+          const reported = Scratch.Cast.toString(thread.justReported);
+          if (reported !== "null") {
+            clearInterval(interval);
+            resolve(reported);
+          }
+        }, 1);
+      });
+    }
+
     async runBranchWait(args, util) {
-      let threads2Wait = this.runBranch(args, util);
+      let threads2Wait = await this.runBranch(args, util);
       await new Promise(resolve => {
         const interval = setInterval(() => {
           for (let i = threads2Wait.length - 1; i >= 0; i--) {
@@ -736,15 +785,13 @@
       runtime.compilerOptions.enabled = oldVal;
       thread.isCompiled = false;
       thread.target = newTarget;
-      let checks = 0;
       return new Promise(resolve => {
         const interval = setInterval(() => {
           const reported = Scratch.Cast.toString(thread.justReported);
-          if (reported !== "null" || checks >= 100) {
+          if (reported !== "null") {
             clearInterval(interval);
             resolve(reported);
           }
-          checks++;
         }, 1);
       });
     }
