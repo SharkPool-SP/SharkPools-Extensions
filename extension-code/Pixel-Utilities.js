@@ -1,6 +1,6 @@
 // Name: Pixel Utilities
 // ID: lbgpixelutilities
-// Description: Random Utility Blocks by LittleBlueGamer427
+// Description: Random Utility Blocks by LittleBlueGamer
 // By: LittleBlueGamer427
 
 // Version V.1.0.0
