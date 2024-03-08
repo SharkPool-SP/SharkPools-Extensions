@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.3.0
+// Version V.3.3.1
 
 (function (Scratch) {
   "use strict";
@@ -210,7 +210,7 @@
           {
             opcode: "setSpriteEffect",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set [EFFECT] effect to [VALUE] for [SPRITE]",
+            text: "set [EFFECT] to [VALUE] of [SPRITE]",
             arguments: {
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "EFFECT_MENU" },
               VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
@@ -244,6 +244,17 @@
               WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
               HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "RETURN" }
+            }
+          },
+          "---",
+          {
+            opcode: "unboundSound",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set [EFFECT] of [SPRITE] to [VALUE] unclamped",
+            arguments: {
+              EFFECT: { type: Scratch.ArgumentType.STRING, menu: "SOUND" },
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Math" },
@@ -412,11 +423,11 @@
         menus: {
           TARGETS: {
             acceptReporters: true,
-            items: this._getTargets(0)
+            items: this._getTargets(true)
           },
           TARGETS2: {
             acceptReporters: true,
-            items: this._getTargets(1)
+            items: this._getTargets(false)
           },
           ROUND_MENU: {
             acceptReporters: true,
@@ -440,6 +451,7 @@
           },
           OPERATOR_MENU: ["+", "-", "*", "/"],
           OPERATORS: [">", "<", "="],
+          SOUND: ["volume", "pitch", "pan"],
           RETURN: ["svg", "encoded svg", "png"],
           encoder: ["encode", "decode"],
           cosInfo: {
@@ -463,10 +475,12 @@
 
     _getTargets(ind) {
       const spriteNames = [];
+      spriteNames.push({ text: "myself", value: "_myself_" });
+      if (ind) spriteNames.push({ text: "Stage", value: "_stage_" });
       const targets = Scratch.vm.runtime.targets;
-      for (let index = ind; index < targets.length; index++) {
+      for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
-        if (target.isOriginal) spriteNames.push(target.getName());
+        if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
       }
       return spriteNames.length > 0 ? spriteNames : [""];
     }
@@ -508,9 +522,9 @@
 
     randomSingleInteger() { return Math.random() < 0.5 ? -1 : 1 }
 
-    setSpriteEffect(args) {
+    setSpriteEffect(args, util) {
       let target = args.SPRITE;
-      target = (target === "Stage") ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
+      target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
       if (!target) return;
       const VALUE = Scratch.Cast.toNumber(args.VALUE);
       target.setEffect(args.EFFECT, VALUE);
@@ -613,9 +627,9 @@
 
     costumeCnt(args) { return this.costumeInfo({ SPRITE : args.SPRITE, OVERRIDE : true}) }
 
-    costumeInfo(args) {
+    costumeInfo(args, util) {
       let target = args.SPRITE;
-      target = (target === "Stage") ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
+      target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
       if (!target) return "";
       const targetInfo = target.getCostumes();
       if (args.OVERRIDE !== undefined) return target.sprite.costumes.length;
@@ -636,8 +650,8 @@
       }
     }
 
-    getText(args) {
-      const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
+    getText(args, util) {
+      const target = args.SPRITE === "_myself_" ? util.target : vm.runtime.getSpriteTargetByName(args.SPRITE);
       if (!target) return "";
       if (!target._customState["Scratch.looks"]) return "";
       return target._customState["Scratch.looks"].text;
@@ -671,7 +685,7 @@
     rndString(args) { return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1 }
 
     setTargetCostume(args) {
-      if (args.SPRITE === "Stage") {
+      if (args.SPRITE === "_stage_") {
         vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
       } else {
         const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
@@ -765,6 +779,30 @@
         });
       }
       return curNoise.trim();
+    }
+
+    unboundSound(args, util) {
+      let target = args.SPRITE;
+      target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
+      if (!target) return;
+      const value = Scratch.Cast.toNumber(args.VALUE);
+      if (args.EFFECT === "volume") return this._updateVolume(value, target);
+      else return this._updateEffect(args, target);
+    }
+    _updateEffect(args, target) {
+      const effect = args.EFFECT.toLowerCase();
+      const soundState = vm.runtime.ext_scratch3_sound._getSoundState(target);
+      if (!Object.prototype.hasOwnProperty.call(soundState.effects, effect)) return;
+      soundState.effects[effect] = args.VALUE;
+      vm.runtime.ext_scratch3_sound._syncEffectsForTarget(target);
+      if (vm.runtime.runtimeOptions.miscLimits) return Promise.resolve();
+      vm.runtime.requestRedraw();
+    }
+    _updateVolume(volume, target) {
+      target.volume = volume;
+      vm.runtime.ext_scratch3_sound._syncEffectsForTarget(target);
+      if (vm.runtime.runtimeOptions.miscLimits) return Promise.resolve();
+      vm.runtime.requestRedraw();
     }
   }
 
