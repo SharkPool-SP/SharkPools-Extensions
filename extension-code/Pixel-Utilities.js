@@ -1,11 +1,11 @@
 // Name: Pixel Utilities
 // ID: lbgpixelutilities
-// Description: Random Utility Blocks by LittleBlueGamer427
-// By: LittleBlueGamer427
+// Description: Random Utility Blocks by LittleBlueGamer
+// By: LittleBlueGamer
 
-// Version V.1.0.0
+// Version V.1.1.0
 
-(function (Scratch) {
+(function(Scratch) {
   "use strict";
 
   class GarbageUtilities {
@@ -18,9 +18,36 @@
         color3: "#004d94",
         blocks: [
           {
+            blockType: Scratch.BlockType.HAT,
+            opcode: "whenConditionGoesYes",
+            text: "when [CONDITION1] goes Y E S",
+            isEdgeActivated: true,
+            arguments: {
+              CONDITION1: {
+                type: Scratch.BlockType.BOOLEAN
+              }
+            }
+          },
+          {
+            blockType: Scratch.BlockType.BOOLEAN,
+            opcode: "trueOrFalseBoolean",
+            text: "[trueorfalse]",
+            arguments: {
+              trueorfalse: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "trueorfalsemenu"
+              }
+            }
+          },
+          {
+            blockType: Scratch.BlockType.BOOLEAN,
+            opcode: "isGamePackaged",
+            text: "is this game packaged"
+          },
+          {
             opcode: "percentChance",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "[percent] % chance of returning true",
+            text: "[percent] chance of returning true",
             arguments: {
               percent: {
                 type: Scratch.ArgumentType.NUMBER,
@@ -74,7 +101,24 @@
             },
           },
         ],
+        menus: {
+          trueorfalsemenu: {
+            acceptReporters: true,
+            items: ["true", "false"],
+          }
+        },
       };
+    }
+    whenConditionGoesYes(args) {
+      return Scratch.Cast.toBoolean(args.CONDITION1 ?? false);
+    }
+
+    trueOrFalseBoolean(args) {
+      return Scratch.Cast.toBoolean(args.trueorfalse);
+    }
+
+    isGamePackaged() {
+      return Scratch.vm.runtime.isPackaged;
     }
 
     percentChance(args) {
