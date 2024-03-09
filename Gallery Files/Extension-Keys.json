@@ -102,7 +102,7 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/03/2024"
     },
     "Pixel-Utilities": {
@@ -130,7 +130,7 @@
       "credits": "Link sprites together and make them follow the parent's data. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Parenting.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/29/2024"
     },
     "Lazy-Collisions": {
@@ -235,14 +235,14 @@
       "credits": "Fetch Tracks, Artists, and Statistics from Soundcloud. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SoundCloud-API.js",
       "tags": ".all.fetching",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/24/2024"
     },
     "Google-Spreadsheets": {
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/27/2024"
     },
     "Money-Utilities": {
@@ -256,7 +256,7 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/27/2024"
     },
     "Color-Master": {
