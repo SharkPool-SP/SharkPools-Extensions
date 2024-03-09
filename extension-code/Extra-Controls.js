@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.3.4
+// Version V.1.4.0
 
 (function (Scratch) {
   "use strict";
@@ -45,6 +45,7 @@
 
   let conditionStorage = [];
   let keybinds = {};
+  let errorTimes = [];
   let hats = { ...runtime._hats };
   runtime.on("KEY_PRESSED", key => {
     key = key.toLowerCase();
@@ -57,8 +58,8 @@
       });
     }
   });
-  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = [] });
-  runtime.on("PROJECT_START", () => { conditionStorage = [] });
+  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = []; errorTimes = [] });
+  runtime.on("PROJECT_START", () => { conditionStorage = []; errorTimes = [] });
 
   vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
   vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
@@ -248,6 +249,12 @@
             arguments: {
               ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: timeIcon }
             }
+          },
+          {
+            opcode: "tryCatch",
+            blockType: Scratch.BlockType.CONDITIONAL,
+            text: ["try", "catch"],
+            branchCount: 2
           },
           { blockType: Scratch.BlockType.XML, xml: `<block type="SPadvControl_newThreadAdv"><value name="ARGS"><shadow type="text"><field name="TEXT">{ info : 1 }</field></shadow></value><value name="FRAME"><shadow type="SPadvControl_threadArgs"></shadow></value></block>` },
           {
@@ -647,6 +654,26 @@
       });
     }
 
+    async tryCatch(_, util) {
+      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      if (branch) {
+        const thread = runtime._pushThread(branch, util.target);
+        await new Promise(resolve => {
+          const checkThread = () => {
+            thread.pushTime = Math.floor(Date.now() / 100) * 100;
+            if (!vm.runtime.isActiveThread(thread)) resolve();
+            else if (errorTimes.indexOf(thread.pushTime) !== -1) {
+              thread.stopThisScript();
+              resolve();
+            }
+            else setTimeout(checkThread, 1);
+          };
+          checkThread();
+        });
+        if (errorTimes.indexOf(thread.pushTime) !== -1) util.startBranch(2, false);
+      }
+    }
+
     async asyncCode(args, util) {
       const target = util.target;
       const container = target.blocks;
@@ -886,6 +913,8 @@
       return value;
     }
   }
+
+  window.onerror = function() { errorTimes.push(Math.floor(Date.now() / 100) * 100) };
 
   Scratch.extensions.register(new SPadvControl());
 })(Scratch);
