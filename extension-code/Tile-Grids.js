@@ -1,12 +1,13 @@
-// Name: Grids
+// Name: Tile Grids
 // ID: SPgrids
 // Description: Place Sprites on Grids.
-// By: SharkPool <https://github.com/SharkPool-SP>
+// By: SharkPool
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
+  if (!Scratch.extensions.unsandboxed) throw new Error("Tile Grids must run unsandboxed");
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
