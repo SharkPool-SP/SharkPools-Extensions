@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.0
+// Version V.1.4.1
 
 (function (Scratch) {
   "use strict";
@@ -45,7 +45,7 @@
 
   let conditionStorage = [];
   let keybinds = {};
-  let errorTimes = [];
+  let issueTimes = [];
   let hats = { ...runtime._hats };
   runtime.on("KEY_PRESSED", key => {
     key = key.toLowerCase();
@@ -58,8 +58,8 @@
       });
     }
   });
-  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = []; errorTimes = [] });
-  runtime.on("PROJECT_START", () => { conditionStorage = []; errorTimes = [] });
+  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = []; issueTimes = [] });
+  runtime.on("PROJECT_START", () => { conditionStorage = []; issueTimes = [] });
 
   vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
   vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
@@ -662,7 +662,7 @@
           const checkThread = () => {
             thread.pushTime = Math.floor(Date.now() / 100) * 100;
             if (!vm.runtime.isActiveThread(thread)) resolve();
-            else if (errorTimes.indexOf(thread.pushTime) !== -1) {
+            else if (issueTimes.indexOf(thread.pushTime) !== -1) {
               thread.stopThisScript();
               resolve();
             }
@@ -670,7 +670,7 @@
           };
           checkThread();
         });
-        if (errorTimes.indexOf(thread.pushTime) !== -1) util.startBranch(2, false);
+        if (issueTimes.indexOf(thread.pushTime) !== -1) util.startBranch(2, false);
       }
     }
 
@@ -914,7 +914,7 @@
     }
   }
 
-  window.onerror = function() { errorTimes.push(Math.floor(Date.now() / 100) * 100) };
+  window.onerror = function() { issueTimes.push(Math.floor(Date.now() / 100) * 100) };
 
   Scratch.extensions.register(new SPadvControl());
 })(Scratch);
