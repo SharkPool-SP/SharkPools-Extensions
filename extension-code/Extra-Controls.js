@@ -914,7 +914,7 @@
     }
   }
 
-  window.onerror = function() { errorTimes.push(Math.floor(Date.now() / 100) * 100) };
+  //window.onerror = function() { errorTimes.push(Math.floor(Date.now() / 100) * 100) };
 
   Scratch.extensions.register(new SPadvControl());
 })(Scratch);
