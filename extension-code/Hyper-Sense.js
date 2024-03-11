@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.4.4
+// Version 2.5.0
 
 (function (Scratch) {
   "use strict";
@@ -19,26 +19,15 @@
   const renderer = Scratch.renderer;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  var timer = 0;
   let publicVars = {};
 
   class HyperSenseSP {
     constructor() {
-      runtime.shouldExecuteStopClicked = true;
       runtime.on("BEFORE_EXECUTE", () => {
-        timer++;
         runtime.shouldExecuteStopClicked = false;
         runtime.startHats("HyperSenseSP_whenKeyPressed");
       });
-      runtime.on("PROJECT_START", () => { timer = 0 });
-      runtime.on("PROJECT_STOP_ALL", () => { timer = 0 });
-      runtime.on("AFTER_EXECUTE", () => { runtime.shouldExecuteStopClicked = true });
       runtime.on("ANSWER", () => { this.wait = [false, "sprite"] });
-      const originalGreenFlag = vm.greenFlag;
-      vm.greenFlag = function () {
-        runtime.shouldExecuteStopClicked = false;
-        originalGreenFlag.call(this);
-      };
 
       this.scrollDistance = 0;
       this.oldScroll = [0, 0];
@@ -74,7 +63,8 @@
         id: "HyperSenseSP",
         name: "Hyper Sense",
         color1: "#5cb1d6",
-        color2: "#2e8eb8",
+        color2: "#47a8d1",
+        color3: "#2e8eb8",
         menuIconURI,
         blocks: [
           { blockType: Scratch.BlockType.LABEL, text: "Scrolling" },
@@ -93,14 +83,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "scroll wheel distance limited from [MIN] to [MAX]",
             arguments: {
-              MIN: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              MAX: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              }
+              MIN: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              MAX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             },
           },
           {
@@ -108,10 +92,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set scroll wheel distance to [DISTANCE]",
             arguments: {
-              DISTANCE: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              DISTANCE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -119,10 +100,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "change scroll wheel distance by [DISTANCE]",
             arguments: {
-              DISTANCE: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              }
+              DISTANCE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             },
           },
           {
@@ -131,10 +109,7 @@
             text: "when scrolled up",
             isEdgeActivated: false,
             arguments: {
-              EVENT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "SCROLL_EVENTS"
-              }
+              EVENT: { type: Scratch.ArgumentType.STRING, menu: "SCROLL_EVENTS" }
             },
           },
           {
@@ -147,11 +122,9 @@
             opcode: "scrollWheelBool",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is scrolling [EVENT]?",
+            disableMonitor: true,
             arguments: {
-              EVENT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "SCROLL_EVENTS"
-              }
+              EVENT: { type: Scratch.ArgumentType.STRING, menu: "SCROLL_EVENTS" }
             },
           },
           { blockType: Scratch.BlockType.LABEL, text: "Mouse Detection" },
@@ -160,10 +133,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is mouse [BUTTON] down?",
             arguments: {
-              BUTTON: {
-                type: Scratch.ArgumentType.NUMBER,
-                menu: "mouseButtons"
-              }
+              BUTTON: { type: Scratch.ArgumentType.NUMBER, menu: "mouseButtons" }
             }
           },
           {
@@ -182,10 +152,7 @@
             blockType: Scratch.BlockType.HAT,
             text: "when [KEY] key hit",
             arguments: {
-              KEY: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "keys"
-              }
+              KEY: { type: Scratch.ArgumentType.STRING, menu: "keys" }
             }
           },
           {
@@ -193,10 +160,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is key [KEY] hit?",
             arguments: {
-              KEY: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "keys"
-              }
+              KEY: { type: Scratch.ArgumentType.STRING, menu: "keys" }
             }
           },
           "---", //yes, these blocks do technically exist, but they dont have special keys like Tab
@@ -241,11 +205,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "seconds [KEY] key pressed",
             arguments: {
-              KEY: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "keys",
-                defaultValue: "A"
-              }
+              KEY: { type: Scratch.ArgumentType.STRING, menu: "keys" }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Touching Expanded" },
@@ -254,14 +214,8 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE1] pointing towards [SPRITE2]?",
             arguments: {
-              SPRITE1: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS3"
-              },
-              SPRITE2: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              }
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             }
           },
           {
@@ -269,14 +223,8 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE1] touching [SPRITE2]?",
             arguments: {
-              SPRITE1: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              SPRITE2: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS3"
-              }
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" }
             }
           },
           {
@@ -284,10 +232,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "sprites touching [SPRITE]",
             arguments: {
-              SPRITE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS2"
-              }
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" }
             }
           },
           {
@@ -295,14 +240,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get neighbors of [SPRITE] with diameter [DIAMETER]",
             arguments: {
-              SPRITE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS4"
-              },
-              DIAMETER: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 200
-              }
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS4" },
+              DIAMETER: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 }
             }
           },
           "---",
@@ -311,10 +250,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "color touching [SPRITE]",
             arguments: {
-              SPRITE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS2"
-              }
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" }
             }
           },
           {
@@ -322,14 +258,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "color at x [x] y [y]",
             arguments: {
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Strings" },
@@ -338,10 +268,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [STRING] real?",
             arguments: {
-              STRING: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: ""
-              }
+              STRING: { type: Scratch.ArgumentType.STRING }
             }
           },
           {
@@ -349,14 +276,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get [TEXT] in string [STRING]",
             arguments: {
-              STRING: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "rotating a 6 makes a 9!"
-              },
-              TEXT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "string_types",
-              }
+              STRING: { type: Scratch.ArgumentType.STRING, defaultValue: "rotating a 6 makes a 9!" },
+              TEXT: { type: Scratch.ArgumentType.STRING, menu: "string_types" }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Asking" },
@@ -365,18 +286,9 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "ask [QUESTION] as [THING] and [WAIT]",
             arguments: {
-              THING: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "Asking"
-              },
-              QUESTION: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "what is your name?"
-              },
-              WAIT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "shouldWait"
-              }
+              THING: { type: Scratch.ArgumentType.STRING, menu: "Asking" },
+              QUESTION: { type: Scratch.ArgumentType.STRING, defaultValue: "what is your name?" },
+              WAIT: { type: Scratch.ArgumentType.STRING, menu: "shouldWait" }
             }
           },
           {
@@ -384,14 +296,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "ask [QUESTION] as [THING]",
             arguments: {
-              THING: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "Asking"
-              },
-              QUESTION: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "what is your name?"
-              }
+              THING: { type: Scratch.ArgumentType.STRING, menu: "Asking" },
+              QUESTION: { type: Scratch.ArgumentType.STRING, defaultValue: "what is your name?" }
             }
           },
           {
@@ -405,44 +311,43 @@
             text: "typed answer"
           },
           {
+            opcode: "isAsking",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is asking?"
+          },
+          "---",
+          {
             opcode: "setAtt",
             blockType: Scratch.BlockType.COMMAND,
             text: "set ask monitor x: [x] y: [y] width: [width]",
             arguments: {
-              x: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              y: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
-              width: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 480
-              }
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              width: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 }
             }
           },
           {
             opcode: "setAskType",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set ask monitor input to [TYPE]",
+            text: "set ask box input to [TYPE]",
             arguments: {
-              TYPE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "INPUTS"
-              }
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "INPUTS" }
             }
           },
           {
             opcode: "setAskType2",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set ask monitor input to dropdown with options from [TYPE]",
+            text: "set ask box input to dropdown with items in [TYPE]",
             arguments: {
-              TYPE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "LISTS"
-              }
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "LISTS" }
+            }
+          },
+          {
+            opcode: "setAskType3",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set ask box input to dropdown with items in array [TYPE]",
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, defaultValue: "[\"option 1\", \"option 2\"]" }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Miscellaneous" },
@@ -452,10 +357,7 @@
             text: "is [SCREEN] ?",
             disableMonitor: true,
             arguments: {
-              SCREEN: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "SCREENS"
-              }
+              SCREEN: { type: Scratch.ArgumentType.STRING, menu: "SCREENS" }
             }
           },
           {
@@ -485,21 +387,22 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set drag mode of [SPRITE] to [DRAG]",
             arguments: {
-              SPRITE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS4"
-              },
-              DRAG: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "DRAG_MODES",
-              }
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" },
+              DRAG: { type: Scratch.ArgumentType.STRING, menu: "DRAG_MODES" }
             },
           },
           {
-            opcode: "toggleMicrophone",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "toggle microphone to [STATE]",
-            hideFromPalette: true, // Depreciated Block
+            opcode: "spriteDragging",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is [SPRITE] [DRAG] ?",
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" },
+              DRAG: { type: Scratch.ArgumentType.STRING, menu: "DRAG_TYPE" }
+            },
+          },
+          {
+            opcode: "toggleMicrophone", blockType: Scratch.BlockType.COMMAND,
+            text: "toggle microphone to [STATE]", hideFromPalette: true, // Depreciated Block
             arguments: { STATE: { type: Scratch.ArgumentType.STRING } }
           },
         ],
@@ -525,16 +428,11 @@
               "Space", "Enter", "Shift", "Control", "Alt", "Escape",
               "Backspace", "Tab", "Caps Lock",
               "Insert", "Page Up", "Page Down"
-            ],
+            ]
           },
-          DRAG_MODES: {
-            acceptReporters: true,
-            items: ["draggable", "not draggable"],
-          },
-          string_types: {
-            acceptReporters: true,
-            items: ["numbers", "letters", "special characters"],
-          },
+          DRAG_MODES: { acceptReporters: true, items: ["draggable", "not draggable"] },
+          DRAG_TYPE: ["draggable", "being dragged"],
+          string_types: { acceptReporters: true, items: ["numbers", "letters", "special characters"] },
           mouseButtons: {
             acceptReporters: true,
             items: [
@@ -573,9 +471,7 @@
       if (this.scrollWheelBool({ EVENT:"down" })) runtime.startHats("HyperSenseSP_scrollWheelHat2");
       // Resets the velocity after 100ms
       clearTimeout(this.scrollTimer);
-      this.scrollTimer = setTimeout(() => {
-        this.oldScroll[1] = 0;
-      }, 100);
+      this.scrollTimer = setTimeout(() => { this.oldScroll[1] = 0 }, 100);
     };
 
     scrollWheelBool(args, fromHat) {
@@ -634,9 +530,8 @@
     }
 
     currentKey() {
-      if (currentlyPressedKey === null) {
-        return "No Keys Pressed";
-      } else if (currentlyPressedKey.includes("ARROW") || currentlyPressedKey === "CAPSLOCK") {
+      if (currentlyPressedKey === null) return "No Keys Pressed";
+      else if (currentlyPressedKey.includes("ARROW") || currentlyPressedKey === "CAPSLOCK") {
         return (currentlyPressedKey === "CAPSLOCK") ? "Caps Lock" : `${ currentlyPressedKey.charAt(5).toUpperCase() + currentlyPressedKey.slice(6).toLowerCase() } Arrow`;
       }
       return currentlyPressedKey.charAt(0).toUpperCase() + currentlyPressedKey.slice(1).toLowerCase();
@@ -645,9 +540,7 @@
     currentKeys() {
       let pressedKeysArray = Object.keys(this.pressedKeys);
       pressedKeysArray = pressedKeysArray.map((key) => {
-        if (key.includes("ARROW") || key === "CAPSLOCK") {
-          return (key === "CAPSLOCK") ? "Caps Lock" : `${ key.charAt(5).toUpperCase() + key.slice(6).toLowerCase() } Arrow`;
-        }
+        if (key.includes("ARROW") || key === "CAPSLOCK") return (key === "CAPSLOCK") ? "Caps Lock" : `${ key.charAt(5).toUpperCase() + key.slice(6).toLowerCase() } Arrow`;
         return key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
       });
       return JSON.stringify(pressedKeysArray);
@@ -687,9 +580,7 @@
       for (let i = 0; i < spriteNames.length; i++) {
         const target = runtime.getSpriteTargetByName(spriteNames[i].value);
         let caseTouch = target.isTouchingObject(thisSprite);
-        if (caseTouch) {
-          if (spriteNames[i].value !== thisSprite) list.push(spriteNames[i].value);
-        }
+        if (caseTouch && spriteNames[i].value !== thisSprite) list.push(spriteNames[i].value);
       }
       return JSON.stringify(list);
     }
@@ -755,9 +646,15 @@
       return `#${r}${g}${b}`;
     }
 
-    spriteDragMode(args) {
-      const target = runtime.getSpriteTargetByName(args.SPRITE);
-      target.setDraggable(args.DRAG === "draggable");
+    spriteDragMode(args, util) {
+      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      if (target) target.setDraggable(args.DRAG === "draggable");
+    }
+
+    spriteDragging(args, util) {
+      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      if (target) return target[args.DRAG === "draggable" ? "draggable" : "dragging"];
+      return false;
     }
 
     boolean(args) {
@@ -832,6 +729,13 @@
 
     setAskType2(args, util) { this.setAskType({...args, TYPE : "dropdown", LIST : this.look4List(args.TYPE, util) }) }
 
+    setAskType3(args, util) {
+      try {
+        const array = JSON.parse(args.TYPE);
+        if (array.length > 0) this.setAskType({...args, TYPE : "dropdown", LIST : array })
+      } catch {}
+    }
+
     advancedAskReporter(args, util) { return this.advancedAsk(args, util).then(() => runtime.ext_scratch3_sensing.getAnswer()) }
 
     stopAsking() {
@@ -845,6 +749,13 @@
       let box = document.querySelector(runtime.isPackaged ? `[class="sc-question-input"]` :
         `[class*="question"] [class^="input_input-form"]`);
       return box ? box.value : "";
+    }
+
+    isAsking() {
+      return Scratch.Cast.toBoolean(
+        document.querySelector(runtime.isPackaged ? `[class="sc-question-input"]` :
+          `[class*="question"] [class^="input_input-form"]`)
+      );
     }
 
     mouseClick(args, util) {return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)])}
@@ -897,9 +808,8 @@
 
     look4List(list, util) {
       const id = util.target.lookupVariableById(list);
-      if (id && id.type === "list") {
-        return id.value;
-      } else {
+      if (id && id.type === "list") return id.value;
+      else {
         const name = util.target.lookupVariableByNameAndType(list, "list");
         return name ? name.value : ["undefined list"];
       }
