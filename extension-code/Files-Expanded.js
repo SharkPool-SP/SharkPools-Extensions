@@ -3,7 +3,7 @@
 // Description: Read, upload, and download files.
 // By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
-// Version 1.3.0
+// Version 1.4.0
 
 (function (Scratch) {
   "use strict";
@@ -19,9 +19,8 @@
     textV: "Select or drop file", fontWeight: 40, letterSpacing: "normal"
   };
   const builtInFonts = [
-    "Scratch", "Sans Serif", "Serif",
-    "Handwriting", "Marker", "Curly",
-    "Pixel", "inherit"
+    "Sans Serif", "Serif", "Handwriting",
+    "Marker", "Curly", "Pixel", "inherit"
   ];
 
   const MODE_MODAL = "modal";
@@ -32,11 +31,14 @@
     MODE_ONLY_SELECTOR
   ];
   let openFileSelectorMode = MODE_MODAL;
+
   let FileName = "";
   let FileSize = "0kb";
   let RawFileSize = "0";
   let fileDate = "";
   let enableVis = true;
+  let lastData = "";
+  let openModals = 0;
 
   const AS_TEXT = "text";
   const AS_DATA_URL = "url";
@@ -85,7 +87,9 @@
       //    This is important so we can make this just a reporter instead of a command+hat block.
       //    Without an interface, the script would be stalled if the prompt was cancelled.
       /** @param {string} text */
+      openModals++;
       const callback = (text) => {
+        openModals--;
         _resolve(text);
         Scratch.vm.renderer.removeOverlay(outer);
         Scratch.vm.runtime.off("PROJECT_STOP_ALL", handleProjectStopped);
@@ -114,6 +118,7 @@
               default: result; // base64; update this when its out dated
             }
           } else result = reader.result;
+          lastData = result;
           callback(/** @type {string} */ (result));
         };
         reader.onerror = () => {
@@ -280,9 +285,8 @@
    */
   const downloadUntrustedURL = (url, file) => {
     // Don't want to return a Promise here when not actually needed
-    if (isDataURL(url)) {
-      downloadURL(url, file);
-    } else {
+    if (isDataURL(url)) downloadURL(url, file);
+    else {
       return Scratch.fetch(url)
         .then((res) => res.blob())
         .then((blob) => {
@@ -305,23 +309,17 @@
           {
             opcode: "showPicker",
             blockType: Scratch.BlockType.REPORTER,
-            text: "open a file",
-            disableMonitor: true,
-            hideFromPalette: true
+            text: "open a file", hideFromPalette: true
           },
           {
             opcode: "showPickerExtensions",
             blockType: Scratch.BlockType.REPORTER,
-            text: "open a [extension] file",
-            hideFromPalette: true,
+            text: "open a [extension] file", hideFromPalette: true,
             arguments: {
-              extension: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: ".txt"
-              }
+              extension: { type: Scratch.ArgumentType.STRING, defaultValue: ".txt" }
             }
           },
-
+          // Builder Functions ^
           {
             opcode: "showPickerAs",
             blockType: Scratch.BlockType.REPORTER,
@@ -348,16 +346,22 @@
               }
             }
           },
+          "---",
           {
             opcode: "fileInfo",
             blockType: Scratch.BlockType.REPORTER,
-            text: "file [FORMAT]",
+            text: "last opened file [FORMAT]",
             arguments: {
               FORMAT: {
                 type: Scratch.ArgumentType.STRING,
-                menu: "formatted"
+                menu: "FILE_INFO"
               }
             }
+          },
+          {
+            opcode: "modalOpen",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is modal open?"
           },
           { blockType: Scratch.BlockType.LABEL, text: "Downloading" },
           {
@@ -536,14 +540,10 @@
             acceptReporters: true,
             items: [
               { text: "show modal", value: MODE_MODAL },
-              {
-                text: "open selector immediately",
-                value: MODE_IMMEDIATELY_SHOW_SELECTOR
-              },
+              { text: "open selector immediately", value: MODE_IMMEDIATELY_SHOW_SELECTOR },
               {
                 // Will not work if the browser doesn't think we are responding to a click event.
-                text: "only show selector (unreliable)",
-                value: MODE_ONLY_SELECTOR
+                text: "only show selector (unreliable)", value: MODE_ONLY_SELECTOR
               }
             ],
           },
@@ -565,9 +565,9 @@
               { text: "text", value: "textV" }
             ],
           },
-          formatted: {
+          FILE_INFO: {
             acceptReporters: true,
-            items: ["name", "modified date", "size formatted", "size unformatted"],
+            items: ["data", "name", "modified date", "size formatted", "size unformatted"],
           },
           visualColors: {
             acceptReporters: true,
@@ -580,9 +580,8 @@
           borderTypes: {
             acceptReporters: true,
             items: [
-              "dotted", "dashed", "solid",
-              "double", "groove", "ridge",
-              "inset", "outset", "none"
+              "dotted", "dashed", "solid", "double", 
+              "groove", "ridge", "inset", "outset", "none"
             ],
           },
         },
@@ -632,8 +631,11 @@
       if (args.FORMAT === "size formatted") return FileSize;
       else if (args.FORMAT === "size unformatted") return RawFileSize;
       else if (args.FORMAT === "modified date") return fileDate;
+      else if (args.FORMAT === "data") return lastData;
       return FileName
     }
+
+    modalOpen() { return openModals !== 0 }
 
     resetStyle() {
       selectorOptions = {
