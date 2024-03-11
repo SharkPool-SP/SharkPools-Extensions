@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.3.1
+// Version V.3.3.2
 
 (function (Scratch) {
   "use strict";
@@ -325,6 +325,16 @@
             }
           },
           {
+            opcode: "typeString",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "[STRING1] [TYPE] [STRING2]",
+            arguments: {
+              STRING1: { type: Scratch.ArgumentType.STRING, defaultValue: "" },
+              STRING2: { type: Scratch.ArgumentType.STRING, defaultValue: "value" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "STRING" }
+            }
+          },
+          {
             opcode: "noContain",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "[STRING1] not contains [STRING2]?",
@@ -421,22 +431,10 @@
           }
         ],
         menus: {
-          TARGETS: {
-            acceptReporters: true,
-            items: this._getTargets(true)
-          },
-          TARGETS2: {
-            acceptReporters: true,
-            items: this._getTargets(false)
-          },
-          ROUND_MENU: {
-            acceptReporters: true,
-            items: ["whole number", "tenths", "hundredths", "thousandths"]
-          },
-          LETTER_TYPE_MENU: {
-            acceptReporters: true,
-            items: ["lowercase", "uppercase"]
-          },
+          TARGETS: { acceptReporters: true, items: this._getTargets(true) },
+          TARGETS2: { acceptReporters: true, items: this._getTargets(false) },
+          ROUND_MENU: { acceptReporters: true, items: ["whole number", "tenths", "hundredths", "thousandths"] },
+          LETTER_TYPE_MENU: { acceptReporters: true, items: ["lowercase", "uppercase"] },
           reqMenu: {
             acceptReporters: true,
             items: ["redraw", "project step", "toolbox update", "block refresh"]
@@ -445,12 +443,10 @@
             acceptReporters: true,
             items: ["color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"]
           },
-          mathMenu: {
-            acceptReporters: true,
-            items: ["sin", "cos"]
-          },
+          mathMenu: { acceptReporters: true, items: ["sin", "cos"] },
           OPERATOR_MENU: ["+", "-", "*", "/"],
           OPERATORS: [">", "<", "="],
+          STRING: ["||", "??"],
           SOUND: ["volume", "pitch", "pan"],
           RETURN: ["svg", "encoded svg", "png"],
           encoder: ["encode", "decode"],
@@ -592,7 +588,6 @@
     }
 
     refresh() { vm.extensionManager.refreshBlocks() }
-
     async request(args) {
       if (args.THING === "redraw") Scratch.vm.runtime.requestRedraw();
       else if (args.THING === "block refresh") Scratch.vm.extensionManager.refreshBlocks();
@@ -684,10 +679,14 @@
 
     rndString(args) { return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1 }
 
+    typeString(args) {
+      if (args.TYPE === "||") return args.STRING1 || args.STRING2;
+      else return args.STRING1 === "undefined" || args.STRING1 === "null" ? args.STRING2 : args.STRING1;
+    }
+
     setTargetCostume(args) {
-      if (args.SPRITE === "_stage_") {
-        vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
-      } else {
+      if (args.SPRITE === "_stage_") vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
+      else {
         const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
         if (target) vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
         else return;
