@@ -3,7 +3,7 @@
 // Description: Convert Currencies and get Currency Information
 // By: SharkPool
 
-//  Version 1.0.0
+//  Version 1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -99,11 +99,11 @@
     async convertDollar(args) {
       args.CUR1 = Scratch.Cast.toString(args.CUR1).toLowerCase();
       args.CUR2 = Scratch.Cast.toString(args.CUR2).toLowerCase();
-      if (!await Scratch.canFetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${args.CUR1}/${args.CUR2}.json`)) return "";
+      if (!await Scratch.canFetch(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${args.CUR1}.json`)) return "";
       try {
-        const response = await fetch(`https://corsproxy.io?https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${args.CUR1}/${args.CUR2}.json`);
+        const response = await fetch(`https://corsproxy.io?https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${args.CUR1}.json`);
         const data = await response.json();
-        let difference = data[args.CUR2] ? data[args.CUR2] : 1;
+        let difference = data[args.CUR1][args.CUR2] ? data[args.CUR1][args.CUR2] : 1;
         difference = Scratch.Cast.toNumber(args.NUM) * difference;
         return Math.round(difference * 100) / 100;
       } catch (error) {
