@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.7.0
+// Version V.1.7.1
 
 (function (Scratch) {
   "use strict";
@@ -271,10 +271,12 @@
       try {
         const response = await fetch(`https://yt2html5.com/?id=${args.VIDEO_ID}`);
         if (response.ok) {
-          const jsonData = await response.text();
-          const start = jsonData.indexOf(`"url":"`) + 7;
-          const end = jsonData.indexOf("\"", start + 1);
-          if (start !== -1 && end !== -1) return jsonData.substring(start, end);
+          const text = await response.text();
+          const json = JSON.parse(text);
+          if (Object.keys(json.data).length === 0) return "Failed to Fetch";
+          const start = text.indexOf(`"url":"`) + 7;
+          const end = text.indexOf("\"", start + 1);
+          if (start !== -1 && end !== -1) return text.substring(start, end);
         }
         return "";
       } catch { return "Failed to Fetch" }
