@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.3.2
+// Version V.3.3.3
 
 (function (Scratch) {
   "use strict";
@@ -222,7 +222,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "change brightness of [COLOR] by [CHANGE]",
             arguments: {
-              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#FF0000" },
+              COLOR: { type: Scratch.ArgumentType.COLOR },
               CHANGE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             }
           },
@@ -237,12 +237,15 @@
           {
             opcode: "genShape",
             blockType: Scratch.BlockType.REPORTER,
-            text: "make shape with points [POINTS] filled [COLOR] as [TYPE] width [WIDTH] height [HEIGHT]",
+            text: "make [TYPE] shape with points [POINTS] filled [COLOR] width [WIDTH] height [HEIGHT] x [X] y [Y] curve [LINE]",
             arguments: {
               POINTS: { type: Scratch.ArgumentType.STRING, defaultValue: "0,0 200,0 100, 200" },
               COLOR: { type: Scratch.ArgumentType.COLOR },
               WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
               HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              LINE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "RETURN" }
             }
           },
@@ -728,7 +731,7 @@
     }
 
     penLayer() {
-      const penID = vm.renderer._penSkinId;
+      const penID = vm.runtime.ext_pen?._penDrawableId;
       if (!penID) return "";
       const imageData = vm.runtime.renderer.extractDrawableScreenSpace(penID).imageData;
       var canvas = document.createElement("canvas");
@@ -755,11 +758,14 @@
     }
 
     genShape(args) {
-      const width = Scratch.Cast.toString(args.WIDTH);
-      const height = Scratch.Cast.toString(args.HEIGHT);
+      const width = Scratch.Cast.toString(args.WIDTH); const height = Scratch.Cast.toString(args.HEIGHT);
+      const x = Scratch.Cast.toString(args.X); const y = Scratch.Cast.toString(args.Y) * -1;
       const curNoise =
         `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="${args.POINTS.replace(/[^0-9, ]/g, "")}" fill="${args.COLOR}" />
+          <g transform="translate(${x},${y})"> 
+            <polygon points="${args.POINTS.replace(/[^0-9, ]/g, "")}" fill="${args.COLOR}"
+            stroke="${args.COLOR}" stroke-width="${args.LINE}" stroke-linejoin="round" />
+          </g>
         </svg>`;
       if (args.TYPE === "encoded svg") return `data:image/svg+xml;base64,${btoa(curNoise)}`;
       if (args.TYPE === "png") {
