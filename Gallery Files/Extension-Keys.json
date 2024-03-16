@@ -137,8 +137,8 @@
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Released: 08/24/2023"
+      "status": "update",
+      "date": "Last Updated: 03/15/2024"
     },
     "Files-Expanded": {
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and Ashimee",
@@ -333,8 +333,8 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 03/08/2024"
+      "status": "update",
+      "date": "Last Updated: 03/15/2024"
     },
     "Example": {
       "credits": "",
