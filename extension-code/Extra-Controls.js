@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.1
+// Version V.1.4.2
 
 (function (Scratch) {
   "use strict";
@@ -43,7 +43,7 @@
     { text: "7", value: "7" }, { text: "8", value: "8" }, { text: "9", value: "9" }
   ];
 
-  let conditionStorage = [];
+  let conditionStorage = {};
   let keybinds = {};
   let issueTimes = [];
   let hats = { ...runtime._hats };
@@ -58,8 +58,8 @@
       });
     }
   });
-  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = []; issueTimes = [] });
-  runtime.on("PROJECT_START", () => { conditionStorage = []; issueTimes = [] });
+  runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = {}; issueTimes = [] });
+  runtime.on("PROJECT_START", () => { conditionStorage = {}; issueTimes = [] });
 
   vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
   vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
@@ -223,6 +223,16 @@
               ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: breakIcon }
             }
           },
+          {
+            opcode: "waitChanged",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.LOOP,
+            branchCount: -1, branchIconURI: "",
+            text: "wait until [THING] changes",
+            arguments: {
+              THING: {}
+            }
+          },
           "---",
           {
             opcode: "simuRun",
@@ -252,6 +262,7 @@
           },
           {
             opcode: "tryCatch",
+            extensions: ["colours_control"],
             blockType: Scratch.BlockType.CONDITIONAL,
             text: ["try", "catch"],
             branchCount: 2
@@ -259,6 +270,7 @@
           { blockType: Scratch.BlockType.XML, xml: `<block type="SPadvControl_newThreadAdv"><value name="ARGS"><shadow type="text"><field name="TEXT">{ info : 1 }</field></shadow></value><value name="FRAME"><shadow type="SPadvControl_threadArgs"></shadow></value></block>` },
           {
             opcode: "newThreadAdv", blockType: Scratch.BlockType.LOOP,
+            extensions: ["colours_control"],
             text: "start new thread with [FRAME] set to [ARGS]",
             hideFromPalette: true, branchIconURI: newThread,
             arguments: {
@@ -268,7 +280,7 @@
           },
           {
             opcode: "threadArgs", blockType: Scratch.BlockType.REPORTER,
-            hideFromPalette: true, text: "argument"
+            extensions: ["colours_control"], hideFromPalette: true, text: "argument"
           },
           "---",
           {
@@ -298,6 +310,15 @@
             blockType: Scratch.BlockType.CONDITIONAL,
             text: ["else", "my ID [ID]"],
             branchCount: 1,
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-block1" }
+            }
+          },
+          {
+            opcode: "ifElseVal",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "if with ID [ID] true?",
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-block1" }
             }
@@ -570,28 +591,6 @@
 
     runBranch(args, util) {
       const callID = Scratch.Cast.toString(args.ID);
-      const threads2Wait = []; // used for "run and wait"
-      for (const target of runtime.targets) {
-        const blocks = target.blocks;
-        const blockIDs = Object.keys(blocks._blocks)
-          .filter(key => {
-            const block = blocks._blocks[key];
-            return (
-              block.opcode === "SPadvControl_onCall" && 
-              blocks.getBlock(block.inputs.CALL.block)?.fields?.TEXT?.value === callID
-            );
-          })
-          .map(key => blocks._blocks[key].id);
-        for (const blockID of blockIDs) {
-          const branch = blocks.getBranch(blockID, 1);
-          if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
-        }
-      }
-      return threads2Wait;
-    }
-
-    runBranch(args, util) {
-      const callID = Scratch.Cast.toString(args.ID);
       const promises = [];
       const threads2Wait = []; // used for "run and wait"
       for (const target of runtime.targets) {
@@ -600,7 +599,8 @@
         for (const key of blockKeys) {
           const block = blocks._blocks[key];
           let input = blocks.getBlock(block.inputs?.CALL?.block)?.fields?.TEXT?.value === callID;
-          if (!input && block.opcode === "SPadvControl_onCall") {
+          const isText = Scratch.Cast.toBoolean(blocks.getBlock(block.inputs?.CALL?.block)?.fields?.TEXT?.value);
+          if (!input && !isText && block.opcode === "SPadvControl_onCall") {
             promises.push(this.getOutput(block.inputs?.CALL?.block, target)
               .then(output => {
                 input = output === callID
@@ -719,16 +719,18 @@
 
     ifPart(args, util) {
       const con = Scratch.Cast.toBoolean(args.CON);
-      const ID = Scratch.Cast.toString(args.ID);
-      const index = conditionStorage.indexOf(ID);
-      if (index !== -1) conditionStorage.splice(index, 1);
+      conditionStorage[Scratch.Cast.toString(args.ID)] = con;
       if (con) util.startBranch(1, false);
-      else conditionStorage.push(ID);
     }
 
     elsePart(args, util) {
       const ID = Scratch.Cast.toString(args.ID);
-      if (conditionStorage.indexOf(ID) !== -1) util.startBranch(1, false);
+      if (conditionStorage[ID] !== undefined && conditionStorage[ID] === false) util.startBranch(1, false);
+    }
+
+    ifElseVal(args) {
+      const ID = Scratch.Cast.toString(args.ID);
+      return Scratch.Cast.toBoolean(conditionStorage[ID]);
     }
 
     async runInSprite(args, util) {
@@ -849,6 +851,12 @@
       return params.arg || "";
     }
 
+    waitChanged(args, util) {
+      const input = Scratch.Cast.toString(args.THING);
+      if (util.stackFrame.SPwaitChange === undefined) util.stackFrame.SPwaitChange = input;
+      if (Scratch.Cast.compare(util.stackFrame.SPwaitChange, input) === 0) util.startBranch(1, true);
+    }
+
     // Will work like a normal Break Loop when compiler is on, otherwise will run this:
     breakLoop(_, util) {
       return new Promise(resolve => {
@@ -913,7 +921,6 @@
       return value;
     }
   }
-
   window.onerror = function() { issueTimes.push(Math.floor(Date.now() / 100) * 100) };
 
   Scratch.extensions.register(new SPadvControl());
