@@ -3,11 +3,10 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool
 
-// Version V.1.0.1
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) throw new Error("Lazy Collisions must run unsandboxed");
 
   const vm = Scratch.vm;
@@ -31,22 +30,10 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE2] on [SIDE] of [SPRITE1] offset [OFFSET]?",
             arguments: {
-              SIDE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "POSITION2"
-              },
-              SPRITE1: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              SPRITE2: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              OFFSET: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
+              SIDE: { type: Scratch.ArgumentType.STRING, menu: "POSITION2" },
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              OFFSET: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -54,22 +41,10 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE2] near the [SIDE] of [SPRITE1] offset [OFFSET]?",
             arguments: {
-              SIDE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "POSITION2"
-              },
-              SPRITE1: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              SPRITE2: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              OFFSET: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
+              SIDE: { type: Scratch.ArgumentType.STRING, menu: "POSITION2" },
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              OFFSET: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -77,18 +52,9 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE2] [SIDE] [SPRITE1]?",
             arguments: {
-              SIDE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "POSITION3"
-              },
-              SPRITE1: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              SPRITE2: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
+              SIDE: { type: Scratch.ArgumentType.STRING, menu: "POSITION3" },
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             },
           },
           "---",
@@ -97,22 +63,22 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "put [SPRITE2] on [SIDE] of [SPRITE1] offset [OFFSET]",
             arguments: {
-              SIDE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "POSITION"
-              },
-              SPRITE1: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              SPRITE2: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "TARGETS"
-              },
-              OFFSET: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 0
-              },
+              SIDE: { type: Scratch.ArgumentType.STRING, menu: "POSITION" },
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              OFFSET: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
+          { blockType: Scratch.BlockType.LABEL, text: "Clone Target Finder" },
+          {
+            opcode: "findID",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "ID of clone [INDEX] of [TARGET] with [VAR] set to [VAL]",
+            arguments: {
+              TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              VAR: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "0" },
+              INDEX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           }
         ],
@@ -171,15 +137,33 @@
       const costume = sprite.sprite.costumes[costumeIndex];
       const width = Scratch.Cast.toNumber(costume.size[0]);
       const height = Scratch.Cast.toNumber(costume.size[1]);
-      const size = (Math.round(sprite.size) - 100) / 2.1;
-      return [Math.ceil(width), Math.ceil(height), size];
+      return [Math.ceil(width), Math.ceil(height), (Math.round(sprite.size) - 100) / 2.1];
+    }
+
+    findID(args, util) {
+      const target = args.TARGET === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.TARGET);
+      if (!target) return "";
+      const clones = target.sprite.clones;
+      let newTarget = [];
+      for (let i = 1; i < clones.length; i++) {
+        if (clones[i]) {
+          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
+          const value = Scratch.Cast.toString(args.VAL);
+          if (variable && Scratch.Cast.toString(variable.value) === value) newTarget.push(clones[i]);
+        }
+      }
+      return newTarget[Scratch.Cast.toNumber(args.INDEX) - 1]?.id ?? "";
     }
 
     isOnSprite(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
-      const target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      if (!target1) target1 = runtime.getTargetById(args.SPRITE1);
+      if (!target1) return false;
+      let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
+      if (!target) target = runtime.getTargetById(args.SPRITE2);
+      if (!target) return false;
       const spriteAtt = this.getAttribute(target1);
-      const target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       let x = [target1.x - (spriteAtt[0] / 2), target1.x + (spriteAtt[0] / 2)];
       let y = [target1.y - (spriteAtt[1] / 2), target1.y + (spriteAtt[1] / 2)];
       const spriteAtt2 = this.getAttribute(target);
@@ -199,15 +183,19 @@
         case "right side":
           x = Math.round(myX[0] - spriteAtt[1] / 2);
           return (x - offset === Math.round(target1.x) && myY[1] > y[0] && myY[0] < y[1]);
-        default: break;
+        default: return false;
       }
     }
 
     isOnSpriteSide(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
-      const target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      if (!target1) target1 = runtime.getTargetById(args.SPRITE1);
+      if (!target1) return false;
+      let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
+      if (!target) target = runtime.getTargetById(args.SPRITE2);
+      if (!target) return false;
       const spriteAtt = this.getAttribute(target1);
-      const target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       let x = [target1.x - (spriteAtt[0] / 2), target1.x + (spriteAtt[0] / 2)];
       let y = [target1.y - (spriteAtt[1] / 2), target1.y + (spriteAtt[1] / 2)];
       const spriteAtt2 = this.getAttribute(target);
@@ -227,13 +215,17 @@
         case "right side":
           x = Math.round(myX[0] - spriteAtt[1] / 2);
           return (x - offset === Math.round(target1.x));
-        default: break;
+        default: return false;
       }
     }
 
     isSpriteLocation(args, util) {
-      const sprite1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
-      const sprite2 = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
+      let sprite1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      if (!sprite1) sprite1 = runtime.getTargetById(args.SPRITE1);
+      if (!sprite1) return false;
+      let sprite2 = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
+      if (!sprite2) sprite2 = runtime.getTargetById(args.SPRITE2);
+      if (!sprite2) return false;
       const attr1 = this.getAttribute(sprite1);
       const attr2 = this.getAttribute(sprite2);
       const target = [(attr1[1] / 2) * ((sprite2.size / 100) -1), (attr1[0] / 2) * ((sprite2.size / 100) -1)];
@@ -243,18 +235,21 @@
         case "above": return sprite2.y + target[0] > sprite1.y + target2[0];
         case "beside right": return sprite2.x + target[0] > sprite1.x + target2[0];
         case "beside left": return sprite2.x - target[0] < sprite1.x - target2[0];
-        default: break;
+        default: return false;
       }
     }
 
     setOnSprite(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
-      const target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      if (!target1) target1 = runtime.getTargetById(args.SPRITE1);
+      if (!target1) return;
+      let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
+      if (!target) target = runtime.getTargetById(args.SPRITE2);
+      if (!target) return;
       const spriteAtt = this.getAttribute(target1);
-      const target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
-      let x;
-      let y;
       const spriteAtt2 = this.getAttribute(target);
+      let x; let y;
       const x2 = spriteAtt2[0] / 2;
       const y2 = spriteAtt2[1] / 2;
       offset = offset + Math.round(spriteAtt[2] + spriteAtt2[2]);
