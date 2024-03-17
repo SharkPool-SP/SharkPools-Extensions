@@ -3,7 +3,7 @@
 // Description: Random Utility Blocks by LittleBlueGamer
 // By: LittleBlueGamer
 
-// Version V.1.1.0
+// Version V.1.2.0
 
 (function(Scratch) {
   "use strict";
@@ -100,11 +100,50 @@
               }
             },
           },
+          {
+            blockType: Scratch.BlockType.REPORTER,
+            opcode: "framesToSecondsOrViceVersa",
+            text: "convert [framesorseconds] [framestosecsmenu]",
+            arguments: {
+              framesorseconds: {
+                type: Scratch.ArgumentType.NUMBER
+              },
+              framestosecsmenu: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "framessecsconversion"
+              },
+            },
+          },
+          {
+            blockType: Scratch.BlockType.REPORTER,
+            opcode: "makeCompatWithHigherFramerate",
+            text: "og [ogfps], using [multdiv] make [value] current limit compat",
+            arguments: {
+              ogfps: {
+                type: Scratch.ArgumentType.NUMBER
+              },
+              value: {
+                type: Scratch.ArgumentType.NUMBER
+              },
+              multdiv: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "multdivmenu"
+              }
+            }
+          }
         ],
         menus: {
           trueorfalsemenu: {
             acceptReporters: true,
             items: ["true", "false"],
+          },
+          framessecsconversion: {
+            acceptReporters: false,
+            items: ["frames to seconds", "seconds to frames"]
+          },
+          multdivmenu: {
+            acceptReporters: false,
+            items: ["multiplication", "division"]
           }
         },
       };
@@ -134,10 +173,25 @@
     }
 
     getPercentageOfSteps(args) {
-      const origin = args.stepOrigin;
       const percentage = args.percentageInput / 100;
-      const distance = args.stepLocation - origin;
+      const distance = args.stepLocation - args.stepOrigin;
       return distance * percentage;
+    }
+
+    framesToSecondsOrViceVersa(args) {
+      if (args.framestosecsmenu === "frames to seconds") {
+        return args.framesorseconds / Scratch.vm.runtime.frameLoop.framerate;
+      } else {
+        return args.framesorseconds * Scratch.vm.runtime.frameLoop.framerate;
+      }
+    }
+
+    makeCompatWithHigherFramerate(args) {
+      const currentlimit = Scratch.vm.runtime.frameLoop.framerate;
+      const oglimitdivision = currentlimit / args.ogfps;
+      const value = args.value;
+      if (args.multdiv === "multiplication") return value * oglimitdivision;
+      else return value / oglimitdivision;
     }
   }
 
