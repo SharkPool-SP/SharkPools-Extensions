@@ -16,7 +16,8 @@
         color1: "#0085ff",
         color2: "#0069cb",
         color3: "#004d94",
-        blocks: [{
+        blocks: [
+          {
             blockType: Scratch.BlockType.HAT,
             opcode: "whenConditionGoesYes",
             text: "when [CONDITION1] goes Y E S",
