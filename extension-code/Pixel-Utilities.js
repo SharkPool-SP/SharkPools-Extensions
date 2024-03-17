@@ -5,7 +5,7 @@
 
 // Version V.1.2.0
 
-(function (Scratch) {
+(function(Scratch) {
     "use strict";
 
     class GarbageUtilities {
