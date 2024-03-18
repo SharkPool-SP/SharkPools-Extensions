@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.5.0
+// Version 2.5.1
 
 (function (Scratch) {
   "use strict";
@@ -227,6 +227,18 @@
               SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" }
             }
           },
+          {
+            opcode: "spriteTouchingClone",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is [SPRITE1] touching clone of [SPRITE2] with [VAR] set to [VAL]?",
+            arguments: {
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" },
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS4" },
+              VAR: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "0" }
+            }
+          },
+          "---",
           {
             opcode: "spriteCurrentTouching",
             blockType: Scratch.BlockType.REPORTER,
@@ -569,6 +581,23 @@
       const target = sprite2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(sprite2);
       if (!target) return false;
       return target.isTouchingObject(args.SPRITE1);
+    }
+
+    spriteTouchingClone(args, util) {
+      const target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      const target2 = runtime.getSpriteTargetByName(args.SPRITE2);
+      if (!target1 || !target2) return false;
+      const clones = target2.sprite.clones;
+      for (var i = 1; i < clones.length; i++) {
+        if (clones[i]) {
+          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
+          const value = Scratch.Cast.toString(args.VAL);
+          if (variable && Scratch.Cast.toString(variable.value) === value) {
+            if (vm.renderer.isTouchingDrawables(target1.drawableID, [clones[i].drawableID])) return true;
+          }
+        }
+      }
+      return false;
     }
 
     spriteCurrentTouching(args, util) {
