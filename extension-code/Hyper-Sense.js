@@ -803,10 +803,10 @@
 
     // stage size is dynamic, can change during runtime... thus, dont use runtime/renderer variables
     // we also only need to check width since height will return the same value
-    screenOff() { return Scratch.vm.renderer.canvas.width / Scratch.vm.runtime.stageWidth }
+    screenOff() { return vm.renderer.canvas.getBoundingClientRect().width / Scratch.vm.runtime.stageWidth }
 
     isScreen(args) {
-      const values = [parseFloat(Scratch.vm.renderer.canvas.style.width), Scratch.vm.runtime.stageWidth];
+      const values = [vm.renderer.canvas.getBoundingClientRect().width, Scratch.vm.runtime.stageWidth];
       return args.SCREEN === "fullscreen" ? values[0] > values[1] : values[0] < values[1];
     }
 
