@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.3.3
+// Version V.3.3.4
 
 (function (Scratch) {
   "use strict";
@@ -553,18 +553,17 @@
       } catch { return "Invalid Array" }
       if (!Array.isArray(words)) return "Invalid Array";
       switch (args.SHUFFLE_OPTION) {
-        case "ascending": { words.sort(); break }
-        case "descending": { words.sort().reverse(); break }
-        case "descending by length": { words.sort((a, b) => b.length - a.length); break }
-        case "ascending by length": { words.sort((a, b) => a.length - b.length); break }
+        case "ascending": return JSON.stringify(words.sort((a, b) => a - b));
+        case "descending": return JSON.stringify(words.sort((a, b) => b - a).reverse());
+        case "descending by length": return JSON.stringify(words.sort((a, b) => b.length - a.length));
+        case "ascending by length": return JSON.stringify(words.sort((a, b) => a.length - b.length));
         default:
           for (let i = words.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [words[i], words[j]] = [words[j], words[i]];
           }
-          break;
+          return JSON.stringify(words);
       }
-      return JSON.stringify(words);
     }
 
     hexBrightness(args) {
