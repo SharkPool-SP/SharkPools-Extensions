@@ -96,7 +96,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded",
       "status": "update",
-      "date": "Last Updated: 03/19/2024"
+      "date": "Last Updated: 03/22/2024"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
@@ -137,14 +137,14 @@
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/15/2024"
     },
     "Files-Expanded": {
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/10/2024"
     },
     "Monitors-Plus": {
@@ -242,21 +242,21 @@
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/15/2024"
     },
     "Money-Utilities": {
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Money-Utilities.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/13/2024"
     },
     "Display-Text": {
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/13/2024"
     },
     "Color-Master": {
@@ -305,14 +305,14 @@
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/12/2024"
     },
     "Renderer-Control": {
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Renderer-Control.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/12/2024"
     },
     "Timezones": {
@@ -333,7 +333,7 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/15/2024"
     },
     "Example": {
