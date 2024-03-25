@@ -81,8 +81,8 @@
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching",
-      "status": "",
-      "date": "Last Updated: 12/27/2023"
+      "status": "update",
+      "date": "Last Updated: 03/24/2024"
     },
     "Particle-Tools": {
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
