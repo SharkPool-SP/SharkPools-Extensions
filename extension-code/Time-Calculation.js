@@ -1,9 +1,9 @@
 // Name: Time Calculation
 // ID: SPtimeCalc
-// Description: Blocks for calculating and converting time.
-// By: SharkPool <https://github.com/SharkPool-SP>
+// Description: Blocks for calculating and converting Time.
+// By: SharkPool
 
-// Version V.2.0.0
+// Version V.2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -284,9 +284,9 @@
 
     converttotime(args) {
       const totalSeconds = Scratch.Cast.toNumber(args.VALUE);
-      const seconds = args.ROUND === "rounded" ? Math.round(totalSeconds % 60).toString().padStart(2, "0") : (totalSeconds % 60).toFixed(3);
-      const minutes = Math.round((totalSeconds / 60) % 60).toString().padStart(2, "0");
-      const hours = Math.round(totalSeconds / 3600).toString().padStart(2, "0");
+      const seconds = args.ROUND === "rounded" ? Math.round(totalSeconds % 60).toString().padStart(2, "0") : (totalSeconds % 60).toFixed(3).padStart(6, "0");
+      const minutes = Math.floor((totalSeconds / 60) % 60).toString().padStart(2, "0");
+      const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, "0");
       return `${hours}:${minutes}:${seconds}`;
     }
 
@@ -311,7 +311,6 @@
       const date = new Date(year, monthIndex + 1, 0);
       return date.getDate();
     }
-
     _getMonthIndex(month) {
       const months = [
         "January", "February", "March",
