@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.2
+// Version V.1.4.4
 
 (function (Scratch) {
   "use strict";
@@ -24,6 +24,9 @@
 
   const timeIcon =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxOC40MTAyNSIgaGVpZ2h0PSIxOC40MTAyNSIgdmlld0JveD0iMCwwLDE4LjQxMDI1LDE4LjQxMDI1Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjMwLjc5NDg4LC0xNzAuNzk0OSkiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIzMi45MjMxLDE4MC42NzQyM2MwLC0yLjUzOTI3IDEuMzM3MzYsLTQuNzY2MTggMy4zNDYxNSwtNi4wMTQ4di0wLjY3ODM2YzAsLTAuOTU2NjQgMC43NzU1MSwtMS43MzIxNSAxLjczMjE1LC0xLjczMjE1aDMuOTk3MjVjMC45NTY2NCwwIDEuNzMyMTUsMC43NzU1MSAxLjczMjE1LDEuNzMyMTV2MC42NzgzNmMyLjAwODc5LDEuMjQ4NjMgMy4zNDYxNiwzLjQ3NTU0IDMuMzQ2MTYsNi4wMTQ4YzAsMy45MDg0OCAtMy4xNjg0NSw3LjA3NjkyIC03LjA3NjkzLDcuMDc2OTJjLTMuOTA4NDgsMCAtNy4wNzY5MiwtMy4xNjg0NCAtNy4wNzY5MiwtNy4wNzY5MnpNMjQxLjYyNTU4LDE3Ny44OTQ4N2MwLjIyMzM3LDAgMC4zMzc0MiwtMC4yODQ0MSAwLjE4MDU5LC0wLjQ0OTA3bC0xLjY5MjM1LC0xLjc3NjMzYy0wLjA5NDU3LC0wLjA5OTggLTAuMjU2NjMsLTAuMDk5OCAtMC4zNTY0MywwbC0xLjY4NjY1LDEuNzc2MzNjLTAuMTU3MzEsMC4xNjQ2NiAtMC4wNDc1MiwwLjQ0OTA3IDAuMTgwMTIsMC40NDkwN2gwLjc5ODg5bDAuMzQzOTIsMi41OTk0M2MtMC4yMSwwLjE1OTgzIC0wLjM0NTU3LDAuNDEyNDQgLTAuMzQ1NTcsMC42OTY3MmMwLDAuNDgzMjUgMC4zOTE3NSwwLjg3NSAwLjg3NSwwLjg3NWMwLjAxMTM1LDAgMC4wMjI2NiwtMC4wMDAyMSAwLjAzMzksLTAuMDAwNjRsMS44OTY0OSwxLjY5ODgybC0xLjAzODU4LDAuNzIyOGMtMC4xNjA5NywwLjE2MDk3IC0wLjAzNzQ5LDAuNDM5NzEgMC4xOTAxOCwwLjQ0NDlsMi40NDg3LDAuMDYzNDFjMC4xNDExMywwIDAuMjU1NzIsLTAuMTE0NiAwLjI1MjAzLC0wLjI1MjA0bC0wLjA1OTM4LC0yLjQ1MjczYy0wLjAwNTU0LC0wLjIyNzMzIC0wLjI4NzI5LC0wLjM0Nzc4IC0wLjQ0NTIzLC0wLjE4OTgzbC0wLjU3ODM0LDAuNTc4MzRsLTEuODI4OTcsLTEuNDAxNTdjMC4wMDI3OSwtMC4wMjg0NCAwLjAwNDIxLC0wLjA1NzI4IDAuMDA0MjEsLTAuMDg2NDZjMCwtMC4yNzk2NSAtMC4xMzExOSwtMC41Mjg2NiAtMC4zMzUzOCwtMC42ODg4NGwtMC4wMjM0NSwtMi44MTc4NHoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIwLjIiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjc1Ii8+PHBhdGggZD0iTTIzMC43OTQ4OSwxODkuMjA1MTZ2LTE4LjQxMDI1aDE4LjQxMDI1djE4LjQxMDI1eiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjMyLjkyMzEsMTgwLjY3NDIzYzAsLTIuNTM5MjcgMS4zMzczNiwtNC43NjYxOCAzLjM0NjE1LC02LjAxNDh2LTAuNjc4MzZjMCwtMC45NTY2NCAwLjc3NTUxLC0xLjczMjE1IDEuNzMyMTUsLTEuNzMyMTVoMy45OTcyNWMwLjk1NjY0LDAgMS43MzIxNSwwLjc3NTUxIDEuNzMyMTUsMS43MzIxNXYwLjY3ODM2YzIuMDA4NzksMS4yNDg2MyAzLjM0NjE1LDMuNDc1NTQgMy4zNDYxNSw2LjAxNDhjMCwzLjkwODQ4IC0zLjE2ODQ1LDcuMDc2OTIgLTcuMDc2OTIsNy4wNzY5MmMtMy45MDg0OCwwIC03LjA3NjkyLC0zLjE2ODQ0IC03LjA3NjkyLC03LjA3Njkyek0yNDEuNjI1NTgsMTc3Ljg5NDg3YzAuMjIzMzcsMCAwLjMzNzQzLC0wLjI4NDQxIDAuMTgwNiwtMC40NDkwN2wtMS42OTIzNSwtMS43NzYzMmMtMC4wOTQ1NywtMC4wOTk4IC0wLjI1NjYzLC0wLjA5OTggLTAuMzU2NDMsMGwtMS42ODY2NSwxLjc3NjMyYy0wLjE1NzMxLDAuMTY0NjYgLTAuMDQ3NTIsMC40NDkwNyAwLjE4MDEyLDAuNDQ5MDdoMC43OTg4OWwwLjM0MzkyLDIuNTk5NDNjLTAuMjEsMC4xNTk4MyAtMC4zNDU1NywwLjQxMjQ0IC0wLjM0NTU3LDAuNjk2NzFjMCwwLjQ4MzI1IDAuMzkxNzUsMC44NzUgMC44NzUsMC44NzVjMC4wMTEzNSwwIDAuMDIyNjUsLTAuMDAwMjEgMC4wMzM5LC0wLjAwMDY0bDEuNDIyODEsMS44NTY3MWwtMC41NjQ5LDAuNTY0OTFjLTAuMTYwOTcsMC4xNjA5NyAtMC4wMzc0OSwwLjQzOTcxIDAuMTkwMTcsMC40NDQ5bDIuNDQ4NywwLjA2MzQxYzAuMTQxMTMsMCAwLjI1NTczLC0wLjExNDYgMC4yNTIwNCwtMC4yNTIwNGwtMC4wNTkzOCwtMi40NTI3MmMtMC4wMDU1NCwtMC4yMjczMyAtMC4yODcyOSwtMC4zNDc3OCAtMC40NDUyMywtMC4xODk4NGwtMC41NzgzNCwwLjU3ODM0bC0xLjgyODk4LC0xLjQwMTU3YzAuMDAyNzksLTAuMDI4NDQgMC4wMDQyMiwtMC4wNTcyOCAwLjAwNDIyLC0wLjA4NjQ2YzAsLTAuMjc5NjUgLTAuMTMxMTksLTAuNTI4NjYgLTAuMzM1MzgsLTAuNjg4ODRsMC4zNDQ5NywtMi42MDczMXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjIiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwIi8+PC9nPjwvZz48L3N2Zz4=";
+
+  const startFlag =
+"data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNi42MyAxNy41Ij48ZGVmcz48c3R5bGU+LmNscy0xLC5jbHMtMntmaWxsOiM0Y2JmNTY7c3Ryb2tlOiM0NTk5M2Q7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO30uY2xzLTJ7c3Ryb2tlLXdpZHRoOjEuNXB4O308L3N0eWxlPjwvZGVmcz48dGl0bGU+aWNvbi0tZ3JlZW4tZmxhZzwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNLjc1LDJBNi40NCw2LjQ0LDAsMCwxLDguNDQsMmgwYTYuNDQsNi40NCwwLDAsMCw3LjY5LDBWMTIuNGE2LjQ0LDYuNDQsMCwwLDEtNy42OSwwaDBhNi40NCw2LjQ0LDAsMCwwLTcuNjksMCIvPjxsaW5lIGNsYXNzPSJjbHMtMiIgeDE9IjAuNzUiIHkxPSIxNi43NSIgeDI9IjAuNzUiIHkyPSIwLjc1Ii8+PC9zdmc+";
 
   const keysMenu = [
     { text: "space", value: "space" },
@@ -231,6 +234,15 @@
             text: "wait until [THING] changes",
             arguments: {
               THING: {}
+            }
+          },
+          {
+            opcode: "runFlag",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.COMMAND,
+            text: "run [FLAG] and continue",
+            arguments: {
+              FLAG: { type: Scratch.ArgumentType.IMAGE, dataURI: startFlag }
             }
           },
           "---",
@@ -485,6 +497,28 @@
 
     resetBinds() { keybinds = {} }
 
+    runFlag(_, util) {
+      const thisThread = util.thread.topBlock;
+      runtime.emit("PROJECT_START_BEFORE_RESET");
+      runtime.threads
+        .filter(thread => thread.topBlock !== thisThread)
+        .forEach(thread => thread.stopThisScript());
+      // green flag behaviour
+      runtime.emit("PROJECT_START");
+      runtime.updateCurrentMSecs();
+      runtime.ioDevices.clock.resetProjectTimer();
+      runtime.targets.forEach(target => target.clearEdgeActivatedValues());
+      for (let i = runtime.targets.length - 1; i >= 0; i--) {
+        const thisTarget = runtime.targets[i];
+        thisTarget.onGreenFlag();
+        if (!thisTarget.isOriginal) {
+          runtime.disposeTarget(thisTarget);
+          runtime.stopForTarget(thisTarget);
+        }
+      }
+      runtime.startHats("event_whenflagclicked");
+    }
+
     repeatForUntil(args, util) {
       const condition = Scratch.Cast.toBoolean(args.CON);
       if (typeof util.stackFrame.loopCounter === "undefined") util.stackFrame.loopCounter = Math.round(Scratch.Cast.toNumber(args.NUM));
@@ -507,9 +541,8 @@
 
     spayedCondition(args, util) {
       if (typeof util.stackFrame.index === "undefined") util.stackFrame.index = true;
-      if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index) {
-        return;
-      } else {
+      if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index) return;
+      else {
         if (!Scratch.Cast.toBoolean(args.CON2)) {
           util.stackFrame.index = false;
           util.startBranch(1, true);
@@ -598,24 +631,27 @@
         const blockKeys = Object.keys(blocks._blocks);
         for (const key of blockKeys) {
           const block = blocks._blocks[key];
-          let input = blocks.getBlock(block.inputs?.CALL?.block)?.fields?.TEXT?.value === callID;
-          const isText = Scratch.Cast.toBoolean(blocks.getBlock(block.inputs?.CALL?.block)?.fields?.TEXT?.value);
-          if (!input && !isText && block.opcode === "SPadvControl_onCall") {
-            promises.push(this.getOutput(block.inputs?.CALL?.block, target)
-              .then(output => {
-                input = output === callID
-                if (block.opcode === "SPadvControl_onCall" && input) {
-                  const blockID = blocks._blocks[key].id;
-                  const branch = blocks.getBranch(blockID, 1);
-                  if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
-                }
-              })
-            );
-          }
-          if (block.opcode === "SPadvControl_onCall" && input) {
-            const blockID = blocks._blocks[key].id;
-            const branch = blocks.getBranch(blockID, 1);
-            if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
+          if (block.opcode === "SPadvControl_onCall") {
+            let input = blocks.getBlock(block.inputs.CALL.block)?.fields?.TEXT?.value;
+            let isText = Scratch.Cast.toBoolean(input);
+            // If the user simply inputs "false" or "true", we should prevent that
+            if (Scratch.Cast.toString(isText) === input) isText = true;
+            if (input === undefined && !isText) {
+              promises.push(this.getOutput(block.inputs?.CALL?.block, target)
+                .then(output => {
+                  input = output === callID;
+                  if (block.opcode === "SPadvControl_onCall" && input) {
+                    const blockID = blocks._blocks[key].id;
+                    const branch = blocks.getBranch(blockID, 1);
+                    if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
+                  }
+                })
+              );
+            } else if (isText && input === callID) {
+              const blockID = blocks._blocks[key].id;
+              const branch = blocks.getBranch(blockID, 1);
+              if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
+            }
           }
         }
       }
