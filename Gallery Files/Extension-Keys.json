@@ -18,8 +18,8 @@
       "credits": "Blocks for calculating time differences. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Time-Calculation.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 09/11/2023"
+      "status": "update",
+      "date": "Last Updated: 03/26/2024"
     },
     "Scratch-Utilities": {
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
