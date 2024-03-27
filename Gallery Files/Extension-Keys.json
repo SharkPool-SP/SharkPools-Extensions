@@ -362,7 +362,7 @@
     "Copy Error: Couldn't Copy Code",
     "Copied Extension Code!",
     "Copied to PenguinMod!",
-    "..."
+    "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/pages/404.svg"
   ],
   "config": {
     "cosName": ["*Copied","*Downloaded","*Credits","@new","@update","@fav","GitUser", "searchUI"],
