@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.3.4
+// Version V.3.3.5
 
 (function (Scratch) {
   "use strict";
@@ -19,7 +19,7 @@
   // This function was taken from Looks Plus by Lily
   const packageTest = (blockName) => {
     if (Scratch.vm.runtime.isPackaged) {
-      alert(`To use this block, the creator of the packaged project must uncheck "Remove raw asset data after loading to save RAM" under advanced settings in the packager.`);
+      alert(`For SharkTilities to work, the creator of the packaged project must uncheck "Remove raw asset data after loading to save RAM" under advanced settings in the packager.`);
       return true;
     }
     return false;
@@ -31,9 +31,8 @@
     const min = Math.min(r, g, b);
     const diff = max - min;
     let h, s, l = (max + min) / 2;
-    if (diff === 0) {
-      h = s = 0;
-    } else {
+    if (diff === 0) h = s = 0;
+    else {
       s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
       switch (max) {
         case r: h = (g - b) / diff + (g < b ? 6 : 0); break;
@@ -46,9 +45,8 @@
   }
   function hslToRgb(h, s, l) {
     let r, g, b;
-    if (s === 0) {
-      r = g = b = l;
-    } else {
+    if (s === 0) r = g = b = l;
+    else {
       const hue2rgb = (p, q, t) => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
@@ -296,6 +294,16 @@
             }
           },
           {
+            opcode: "simplifyFrac",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "simplify fraction [NUM] / [DENOM]",
+            arguments: {
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 4 },
+              DENOM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 8 }
+            }
+          },
+          "---",
+          {
             opcode: "smoothing",
             blockType: Scratch.BlockType.REPORTER,
             text: "smooth [MATH] at speed [SPEED] and limit [LIMIT]",
@@ -485,8 +493,7 @@
     }
 
     whenChanged(args, util) {
-      const params = util.thread.sharktilsPars;
-      if (typeof params === "undefined") util.thread.stackFrames[0].sharktilsPars = {};
+      if (typeof util.thread.sharktilsPars === "undefined") util.thread.stackFrames[0].sharktilsPars = {};
       const blockId = util.thread.peekStack();
       const input = Scratch.Cast.toString(args.INPUT);
       if (!lastValues[blockId]) lastValues[blockId] = input;
@@ -525,8 +532,7 @@
       let target = args.SPRITE;
       target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
       if (!target) return;
-      const VALUE = Scratch.Cast.toNumber(args.VALUE);
-      target.setEffect(args.EFFECT, VALUE);
+      target.setEffect(args.EFFECT, Scratch.Cast.toNumber(args.VALUE));
     }
 
     tripleJoin({ STRING1, STRING2, STRING3 }) { return `${STRING1}${STRING2}${STRING3}` }
@@ -542,6 +548,15 @@
       const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2),
         Scratch.Cast.toNumber(args.NUM3), Scratch.Cast.toNumber(args.NUM4)];
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
+    }
+
+    simplifyFrac(args) {
+      const numerator = Scratch.Cast.toNumber(args.NUM);
+      const denominator = Scratch.Cast.toNumber(args.DENOM);
+      const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+      const gcdValue = gcd(numerator, denominator);
+      const result = JSON.stringify([numerator / gcdValue, denominator / gcdValue]);
+      return result.includes("null") ? "undefined" : result;
     }
 
     negaAbs({ NUMBER }) { return -Math.abs(Scratch.Cast.toNumber(NUMBER)) }
@@ -567,8 +582,7 @@
     }
 
     hexBrightness(args) {
-      const hexColor = args.COLOR.replace(/^#/, "");
-      const [r, g, b] = hexColor.match(/.{1,2}/g).map(channel => parseInt(channel, 16));
+      const [r, g, b] = args.COLOR.replace(/^#/, "").match(/.{1,2}/g).map(channel => parseInt(channel, 16));
       const hslColor = rgbToHsl(r, g, b);
       const newLightness = Math.min(1, Math.max(0, hslColor[2] + (args.CHANGE / 100)));
       const newRgbColor = hslToRgb(hslColor[0], hslColor[1], newLightness);
@@ -580,14 +594,8 @@
       const limit = Scratch.Cast.toNumber(lim);
       return Math[type](num * speed) * limit || 0;
     }
-
-    smoothing(args, util) {
-      return this.smooth(args.SPEED, args.LIMIT, args.MATH, util.ioQuery("clock", "projectTimer"));
-    }
-
-    smoothing2(args) {
-      return this.smooth(args.SPEED, args.LIMIT, args.MATH, Scratch.Cast.toNumber(args.NUM));
-    }
+    smoothing(args, util) { return this.smooth(args.SPEED, args.LIMIT, args.MATH, util.ioQuery("clock", "projectTimer")) }
+    smoothing2(args) { return this.smooth(args.SPEED, args.LIMIT, args.MATH, Scratch.Cast.toNumber(args.NUM)) }
 
     refresh() { vm.extensionManager.refreshBlocks() }
     async request(args) {
@@ -596,34 +604,39 @@
       else if (args.THING === "project step") await this.ignoreError(vm.runtime._step());
       else Scratch.vm.runtime.requestToolboxExtensionsUpdate();
     }
+    async stepInter() { await this.ignoreError(vm.runtime.frameLoop.stepCallback()) }
+    ignoreError(call) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          call();
+          await new Promise(resolve => setTimeout(resolve, 1));
+          resolve();
+        } catch { reject() }
+      });
+    }
 
     replaceKey(args) {
-      const string = Scratch.Cast.toString(args.STRING);
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
-      const newString = string.replace(regex, function(match) {
+      return Scratch.Cast.toString(args.STRING).replace(regex, (match) => {
         index++;
         return index === Scratch.Cast.toNumber(args.ORDER) ? args.REPLACE : match;
       });
-      return newString;
     }
 
     replaceKeys(args) {
-      const string = Scratch.Cast.toString(args.STRING);
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
-      args.ORDER = Scratch.Cast.toNumber(args.ORDER);
-      args.ORDER2 = Scratch.Cast.toNumber(args.ORDER2);
-      const order2 = args.ORDER > args.ORDER2 ? args.ORDER : args.ORDER2;
-      const newString = string.replace(regex, function(match) {
+      const ord1 = Scratch.Cast.toNumber(args.ORDER);
+      const ord2 = Scratch.Cast.toNumber(args.ORDER2);
+      const order2 = ord1 > ord2 ? ord1 : ord2;
+      return Scratch.Cast.toString(args.STRING).replace(regex, (match) => {
         index++;
-        return index >= args.ORDER && index <= order2 ? args.REPLACE : match;
+        return index >= ord1 && index <= order2 ? args.REPLACE : match;
       });
-      return newString;
     }
 
     costumeCnt(args) { return this.costumeInfo({ SPRITE : args.SPRITE, OVERRIDE : true}) }
-
     costumeInfo(args, util) {
       let target = args.SPRITE;
       target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
@@ -649,8 +662,7 @@
 
     getText(args, util) {
       const target = args.SPRITE === "_myself_" ? util.target : vm.runtime.getSpriteTargetByName(args.SPRITE);
-      if (!target) return "";
-      if (!target._customState["Scratch.looks"]) return "";
+      if (!target || !target._customState["Scratch.looks"]) return "";
       return target._customState["Scratch.looks"].text;
     }
 
@@ -663,18 +675,12 @@
     noContain(args) { return !vm.runtime.ext_scratch3_operators.contains(args) }
 
     cloudCode(args) { return args.CODE === "encode" ? this.encodeText(args.TEXT) : this.decodeText(args.TEXT) }
-
-    encodeText(txt) {
-      const encodedString = txt.split("").map(char => char.charCodeAt(0)).map(value => value.toString().padStart(3, "0")).join("");
-      return encodedString;
-    }
-
+    encodeText(txt) { return txt.split("").map(char => char.charCodeAt(0)).map(value => value.toString().padStart(3, "0")).join("") }
     decodeText(txt) {
       const decodedString = [];
       for (let i = 0; i < txt.length; i += 3) {
         const charCode = parseInt(txt.slice(i, i + 3), 10);
-        const char = String.fromCharCode(charCode);
-        decodedString.push(char);
+        decodedString.push(String.fromCharCode(charCode));
       }
       return decodedString.join("");
     }
@@ -686,22 +692,19 @@
       else return args.STRING1 === "undefined" || args.STRING1 === "null" ? args.STRING2 : args.STRING1;
     }
 
-    setTargetCostume(args) {
+    setTargetCostume(args, util) {
       if (args.SPRITE === "_stage_") vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
       else {
-        const target = vm.runtime.getSpriteTargetByName(args.SPRITE);
+        const target = args.SPRITE === "_myself_" ? util.target : vm.runtime.getSpriteTargetByName(args.SPRITE);
         if (target) vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
-        else return;
       }
     }
 
     repeatForUntil(args, util) {
-      const condition = Scratch.Cast.toBoolean(args.CON);
       if (typeof util.stackFrame.loopCounter === "undefined") util.stackFrame.loopCounter = Math.round(Scratch.Cast.toNumber(args.NUM));
       util.stackFrame.loopCounter--;
-      if (!condition && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
+      if (!Scratch.Cast.toBoolean(args.CON) && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
     }
-
     spayedCondition(args, util) {
       if (typeof util.stackFrame.index === "undefined") util.stackFrame.index = true;
       if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index) return;
@@ -717,17 +720,6 @@
     }
 
     removeThorns(args) { return args.SVG.replaceAll("linejoin=\"miter\"", "linejoin=\"round\"") }
-
-    async stepInter() { await this.ignoreError(vm.runtime.frameLoop.stepCallback()) }
-    ignoreError(call) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          call();
-          await new Promise(resolve => setTimeout(resolve, 1));
-          resolve();
-        } catch { reject() }
-      });
-    }
 
     penLayer() {
       const penID = vm.runtime.ext_pen?._penDrawableId;
@@ -768,7 +760,6 @@
         </svg>`;
       if (args.TYPE === "encoded svg") return `data:image/svg+xml;base64,${btoa(curNoise)}`;
       if (args.TYPE === "png") {
-        // eslint-disable-next-line
         const img = new Image();
         img.src = `data:image/svg+xml;base64,${btoa(curNoise)}`;
         return new Promise((resolve) => {
@@ -789,8 +780,7 @@
       let target = args.SPRITE;
       target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
       if (!target) return;
-      const value = Scratch.Cast.toNumber(args.VALUE);
-      if (args.EFFECT === "volume") return this._updateVolume(value, target);
+      if (args.EFFECT === "volume") return this._updateVolume(Scratch.Cast.toNumber(args.VALUE), target);
       else return this._updateEffect(args, target);
     }
     _updateEffect(args, target) {
