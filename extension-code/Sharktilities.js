@@ -556,7 +556,7 @@
       const gcd = (a, b) => (b ? gcd(b, a % b) : a);
       const gcdValue = gcd(numerator, denominator);
       const result = JSON.stringify([numerator / gcdValue, denominator / gcdValue]);
-      return result.includes("null") ? "undefined" : result;
+      return result.includes("null") ? "[undefined]" : result;
     }
 
     negaAbs({ NUMBER }) { return -Math.abs(Scratch.Cast.toNumber(NUMBER)) }
