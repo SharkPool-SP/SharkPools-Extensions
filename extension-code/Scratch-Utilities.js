@@ -3,16 +3,16 @@
 // Description: Fetch data from Scratch!
 // By: SharkPool
 
-// Version 2.3.0
+// Version 2.4.0
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) throw new Error("Scratch Utilities must run unsandboxed");
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI5OS44NjU0OSIgaGVpZ2h0PSI5OS44NjU0OSIgdmlld0JveD0iMCwwLDk5Ljg2NTQ5LDk5Ljg2NTQ5Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTkwLjA2NzI1LC0xMzAuMDY3MjUpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE5MC4wNjcyNiwxODBjMCwtMjcuNTc3MDkgMjIuMzU1NjYsLTQ5LjkzMjc1IDQ5LjkzMjc1LC00OS45MzI3NWMyNy41NzcwOSwwIDQ5LjkzMjc1LDIyLjM1NTY2IDQ5LjkzMjc1LDQ5LjkzMjc1YzAsMjcuNTc3MDkgLTIyLjM1NTY2LDQ5LjkzMjc1IC00OS45MzI3NSw0OS45MzI3NWMtMjcuNTc3MDksMCAtNDkuOTMyNzUsLTIyLjM1NTY2IC00OS45MzI3NSwtNDkuOTMyNzV6IiBmaWxsPSIjZmFhNTFmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjQzLjg0OTUsMTU4LjUxNjgybDcuMiwtN2wyLjgsMTEuMmMwLDAgNi4yLDQuNjAxIDguMSw3LjhjMy4xLDUuMzAxIDMuMTk5LDkuNiAzLjE5OSw5LjZjMCwwIDYuOTAxLDIuMSA4LjEwMSw3LjZjMS4yLDUuNSAtMy4xLDE2IC0yMS4yOTksMTkuNmMtMTguMiwzLjYgLTMyLjgwMSwtMS4zIC0zOS43LC0xMi40Yy02LjgsLTExIDQsLTI0LjIgMy4zOTksLTIzLjRsLTIuMiwtMTguM2wxMi42LDguMmMwLDAgNC4yOTksLTEuNyA4LjksLTEuOWMxLjY5OSwtMC4xIDQuOCwwLjEgNi4zLDAuMnoiIGZpbGw9IiNmYWE1MWYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0yNjQuNzQ5NSwxODAuNjE3ODJjMCwwIDYuNiwxLjYgNy44LDcuMWMxLjUsNS41IC0zLjQwMSwxNS45IC0yMC42LDE5Yy0zLjksMC43IC03LjQsMS40IC0xMi45LDEuNGMtOC41LDAuMDk5IC0xNy44LC01LjIgLTE3LjEsLTE2LjNjMC4zOTksLTYuNCA4LjUsLTUuOSA4LjUsLTUuOWw3LjEsLTEuOGMwLDAgNy4xLDEuNTk5IDExLjMsMC43YzQuMiwtMC45IDQuMiwtNC4yIDQuMiwtNC4ybDguOCwtMi42MDFsMi40LDJ6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjgwLjI0OTUsMTgxLjQxNzgyYzAsMCAtMS43OTksMS42IC00LjQsMi41Yy0yLjIwMSwwLjggLTYuNiwxLjUgLTYuNiwxLjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhlNTMyMiIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNzkuNjQ4NSwxOTIuNjE3ODJjMCwwIC0xLjgsMC4yIC00LjUsLTAuMTAxYy0yLjc5OSwtMC4xOTkgLTUuMzk5LC0xLjMgLTUuMzk5LC0xLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhlNTMyMiIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjguOTQ5NSwxNjMuNTE3ODJsLTUuMiwtMy42IiBmaWxsPSJub25lIiBzdHJva2U9IiM4ZTUzMjIiIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMjQzLjg0OTUsMTU4LjUxNjgybDcuMiwtN2wyLjgsMTEuMmMwLDAgNi4yLDQuNjAxIDguMSw3LjhjMy4xLDUuMzAxIDMuMTk5LDkuNiAzLjE5OSw5LjZjMCwwIDYuOTAxLDIuMSA4LjEwMSw3LjZjMS4yLDUuNSAtMy4xLDE2IC0yMS4yOTksMTkuNmMtMTguMiwzLjYgLTMyLjgwMSwtMS4zIC0zOS43LC0xMi40Yy02LjgsLTExIDQsLTI0LjIgMy4zOTksLTIzLjRsLTIuMiwtMTguM2wxMi42LDguMmMwLDAgNC4yOTksLTEuNyA4LjksLTEuOWMxLjY5OSwtMC4xIDQuOCwwLjEgNi4zLDAuMnoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhlNTMyMiIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMTEuNjQ5NSwxOTAuNDE2ODJjMCwwIC0zLjUsMC41IC01LjMsMC42Yy0xLjgsMC4xIC01LjgsLTAuMyAtNS44LC0wLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhlNTMyMiIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xOTkuNzUwNSwxODEuMTE3ODJjMCwwIDIuMiwwLjM5OSA2LjIsMi4yYzMuNTk5LDEuNiA1Ljg5OSwzLjMgNS44OTksMy4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM4ZTUzMjIiIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMjU5Ljc0OTUsMTcwLjYxNzgyYzIuOCw0LjMgMi44OTksOS4zIDAuMiwxMWMtMi43LDEuOCAtNy4yLC0wLjMgLTEwLC00LjdjLTIuODAxLC00LjMgLTIuOSwtOS4zIC0wLjIsLTExYzIuNywtMS43IDcuMiwwLjQgMTAsNC43eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjOGU1MzIyIiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTI1OS42NDk1LDE3NC4yMTY4MmMwLjMwMSwxIC0wLjE5OSwyIC0xLjE5OSwyLjNjLTAuOSwwLjMwMSAtMS45LC0wLjMgLTIuMiwtMS4zOTljLTAuMywtMSAwLjIsLTIgMS4yLC0yLjNjMC45OTksLTAuMiAxLjg5OSwwLjM5OSAyLjE5OSwxLjM5OSIgZmlsbD0iIzQxNDE0MiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTIzNi41NDk1LDE3My43MTY4MmMyLjgsNC4zIDIuNSw5LjUgLTAuNywxMS42MDFjLTMuMiwyLjEgLTguMSwwLjMgLTEwLjg5OSwtNC4xMDFjLTIuODAxLC00LjMgLTIuNSwtOS41IDAuNjk5LC0xMS42YzMuMiwtMS45OTkgOC4xLC0wLjE5OSAxMC45LDQuMXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzhlNTMyMiIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMzYuMjQ5NSwxNzcuNjE3ODJjMCwxIC0wLjgsMS44OTkgLTEuNywxLjg5OWMtMSwwIC0xLjcsLTAuOCAtMS43LC0xLjg5OWMwLC0xIDAuOCwtMS45IDEuNywtMS45YzAuOSwwIDEuNywwLjc5OSAxLjcsMS45IiBmaWxsPSIjNDE0MTQyIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjQ3LjU0OTUsMTgzLjYxNzgyYzEuNywtMC4yIDQsLTEuNSA0LjMsMC4zOTljMCwwLjgwMSAtMS42LDQuMTAxIC0zLjM5OSw0LjJjLTIsMC4xMDEgLTUuNSwtMi4zOTkgLTUuNCwtMy44OTljMC4xLC0xLjUgMi45OTksLTAuNSA0LjQ5OSwtMC43eiIgZmlsbD0iIzVmNGI0MyIgc3Ryb2tlPSIjOGU1MzIyIiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTI0Ni4zNDg1LDIwMC4yMTY4MmMtNS4zOTksMS4xMDEgLTcuODk5LC0xLjIgLTcuODk5LC0xLjIiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzhlNTMyMiIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+";
 
+  const vm = Scratch.vm;
   const proxy = "https://corsproxy.io/?";
 
   class SPscratchUtilities {
@@ -109,6 +109,13 @@
             },
           },
           { blockType: Scratch.BlockType.LABEL, text: "Projects" },
+          {
+            opcode: "projectURI",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get project data.uri",
+            disableMonitor: true
+          },
+          "---",
           {
             opcode: "getProject",
             blockType: Scratch.BlockType.REPORTER,
@@ -380,6 +387,18 @@
         else jsonData = text.map(item => item[values[args.MENU]]);
         return JSON.stringify(jsonData);
       } catch { return "[]" }
+    }
+
+    projectURI() {
+      return new Promise((resolve) => {
+        const url = "data:application/octet-stream;base64,";
+        vm.saveProjectSb3().then(blob => {
+          const fileReader = new FileReader();
+          fileReader.onload = () => { resolve(fileReader.result) };
+          fileReader.onerror = () => { resolve(url) }
+          fileReader.readAsDataURL(blob);
+        }).catch(() => { resolve(url) });
+      });
     }
   }
 
