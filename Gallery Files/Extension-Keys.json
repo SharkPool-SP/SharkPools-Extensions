@@ -116,8 +116,8 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "",
-      "date": "Last Updated: 01/19/2024"
+      "status": "update",
+      "date": "Last Updated: 03/31/2024"
     },
     "Newgrounds-Audio": {
       "credits": "Fetch Audio and Audio Information from Newgrounds. Made by SharkPool, works best with Tune Shark",
@@ -152,7 +152,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities",
       "status": "update",
-      "date": "Last Updated: 03/29/2024"
+      "date": "Last Updated: 03/31/2024"
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
