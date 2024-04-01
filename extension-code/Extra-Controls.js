@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.4
+// Version V.1.4.5
 
 (function (Scratch) {
   "use strict";
@@ -52,15 +52,23 @@
   let hats = { ...runtime._hats };
   runtime.on("KEY_PRESSED", key => {
     key = key.toLowerCase();
-    if (keybinds[key]) {
-      // Use this for compatibility with other extensions
-      keybinds[key].keyV.forEach(item => {
-        if (item === "space") item = " ";
-        if (item.includes("arrow")) item = item.charAt(0).toUpperCase() + item.slice(1).replace(" arrow", "");
-        runtime.ioDevices.keyboard.postData({ key: item, isDown: true });
-      });
+    // Use this for compatibility with other extensions
+    if (keybinds[key] !== undefined) keybinds[key].keyV.forEach(item => { postData(item, true) });
+  });
+  runtime.on("AFTER_EXECUTE", () => {
+    const keys = runtime.ioDevices.keyboard._keysPressed;
+    for (let i = 0; i < Object.keys(keybinds).length; i++) {
+      const keyName = Object.keys(keybinds)[i];
+      const key = keybinds[keyName];
+      if (keys.indexOf(keyName.toLowerCase()) === -1) key.keyV.forEach(item => { postData(item, false) });
     }
   });
+  function postData(key, down) {
+    if (key === "space") key = " ";
+    if (key.includes("arrow")) key = key.charAt(0).toUpperCase() + key.slice(1).replace(" arrow", "");
+    runtime.ioDevices.keyboard.postData({ key, isDown: down });
+  }
+
   runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = {}; issueTimes = [] });
   runtime.on("PROJECT_START", () => { conditionStorage = {}; issueTimes = [] });
 
