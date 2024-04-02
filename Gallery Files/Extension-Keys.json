@@ -112,6 +112,13 @@
       "status": "",
       "date": "Last Updated: 03/07/2024"
     },
+    "Fool-Utilities": {
+      "credits": "HAPPY APRIL FOOLS Made by LittleBlueGamer",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Fool-Utilities.js",
+      "tags": ".all",
+      "status": "",
+      "date": "placeholder!"
+    },
     "Recording": {
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
