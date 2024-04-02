@@ -90,7 +90,7 @@
     getInfo() {
       return {
         id: "SharkPoolSharktilities",
-        name: "Sharktilitities",
+        name: "Sharktilities",
         color1: "#33B6FF",
         menuIconURI,
         blocks: [
