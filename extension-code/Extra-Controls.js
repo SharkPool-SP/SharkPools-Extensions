@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.5
+// Version V.1.4.6
 
 (function (Scratch) {
   "use strict";
@@ -379,7 +379,7 @@
             blockType: Scratch.BlockType.CONDITIONAL,
             text: ["as [SPRITE] do", "then [TYPE] to finish"],
             arguments: {
-              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets" },
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets3" },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "contType" },
             }
           },
@@ -429,8 +429,9 @@
         menus: {
           ACTIVATE: ["finish", "restart"],
           HAT_MENU: { acceptReporters: true, items: "organizeHats" },
-          targets: { acceptReporters: true, items: this.getTargets(false) },
-          targets2: { acceptReporters: true, items: this.getTargets(true) },
+          targets: { acceptReporters: true, items: this.getTargets(false, false) },
+          targets2: { acceptReporters: true, items: this.getTargets(true, false) },
+          targets3: { acceptReporters: true, items: this.getTargets(false, true) },
           runTypes: {
             acceptReporters: true,
             items: ["forward", "reversed", "forward and reversed", "randomized"]
@@ -441,10 +442,15 @@
       };
     }
 
-    getTargets(enable) {
+    getTargets(myself, all) {
       const spriteNames = [];
-      if (enable) spriteNames.push({ text: "myself", value: "_myself_" });
-      else spriteNames.push({ text: "Stage", value: "_stage_" });
+      if (myself) spriteNames.push({ text: "myself", value: "_myself_" });
+      if (!myself) spriteNames.push({ text: "Stage", value: "_stage_" });
+      if (all) {
+        spriteNames.push({ text: "All Sprites", value: "_all_" });
+        spriteNames.push({ text: "All Main Sprites", value: "_all_2" });
+        spriteNames.push({ text: "All Clones", value: "_all_3" });
+      }  
       const targets = Scratch.vm.runtime.targets;
       for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
@@ -779,21 +785,37 @@
 
     async runInSprite(args, util) {
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
-      const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
-      if (branch && newTarget) {
-        const thread = runtime._pushThread(branch, util.target);
+      let newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
+      let targets = runtime.targets;
+      let thread;
+      if (!branch) return;
+      if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
+        if (args.SPRITE.includes("2")) targets = targets.filter(target => target.isOriginal); // Main Sprites
+        if (args.SPRITE.includes("3")) targets = targets.filter(target => !target.isOriginal); // Clones
+        newTarget = targets[0];
+      }
+      if (newTarget) {
+        thread = runtime._pushThread(branch, util.target);
         thread.target = newTarget;
         if (runtime.compilerOptions.enabled) thread.tryCompile();
-        if (args.TYPE === "wait") {
-          await new Promise(resolve => {
-            const interval = setInterval(() => {
-              if (!vm.runtime.isActiveThread(thread)) {
-                clearInterval(interval);
-                resolve();
-              }
-            }, 1);
-          });
+      }
+      if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
+        for (let i = 0; i < targets.length; i++) {
+          const newThread = runtime._pushThread(branch, util.target);
+          newThread.target = targets[i];
+          if (runtime.compilerOptions.enabled) newThread.tryCompile();
         }
+      }
+      // Branch is the same, no need to wait for all threads to finish when they are the same
+      if (args.TYPE === "wait" && thread) {
+        await new Promise(resolve => {
+          const interval = setInterval(() => {
+            if (!vm.runtime.isActiveThread(thread)) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 1);
+        });
       }
     }
 
