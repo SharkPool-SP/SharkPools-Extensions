@@ -336,6 +336,13 @@
       "status": "update",
       "date": "Last Updated: 04/02/2024"
     },
+    "More-Operators": {
+      "credits": "New Powerful Operator Blocks. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new",
+      "date": "Released: 04/02/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
