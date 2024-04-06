@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.3.6
+// Version V.3.4.0
 
 (function (Scratch) {
   "use strict";
@@ -152,6 +152,14 @@
           {
             opcode: "changeV", blockType: Scratch.BlockType.REPORTER,
             hideFromPalette: true, text: "old value"
+          },
+          {
+            opcode: "isChanged",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "when [INPUT] is changed",
+            arguments: {
+              INPUT: { type: null }
+            }
           },
           {
             opcode: "repeatForUntil", text: "repeat [NUM] or until [CON]",
@@ -461,6 +469,17 @@
       const params = stack[0].sharktilsPars;
       if (typeof params === "undefined") return "";
       return params.diff || "";
+    }
+
+    isChanged(args, util) {
+      const blockId = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
+      const input = Scratch.Cast.toString(args.INPUT);
+      if (!lastValues[blockId]) lastValues[blockId] = input;
+      if (lastValues[blockId] !== input) {
+        lastValues[blockId] = input;
+        return true;
+      }
+      return false;
     }
 
     randomSingleInteger() { return Math.random() < 0.5 ? -1 : 1 }
