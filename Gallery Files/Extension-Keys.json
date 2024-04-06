@@ -343,6 +343,13 @@
       "status": "new",
       "date": "Released: 04/02/2024"
     },
+    "Captchas": {
+      "credits": "Simple Client-Based Captcha Extension, doesnt promise 100% security. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Captchas.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 04/05/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
