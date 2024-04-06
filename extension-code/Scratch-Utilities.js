@@ -3,7 +3,7 @@
 // Description: Fetch data from Scratch!
 // By: SharkPool
 
-// Version 2.4.0
+// Version 2.4.1
 
 (function (Scratch) {
   "use strict";
@@ -124,6 +124,15 @@
               ID: { type: Scratch.ArgumentType.NUMBER, defaultValue: 820242622 }
             },
           },
+          {
+            opcode: "loadJSON",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "load project from json [JSON]",
+            arguments: {
+              JSON: { type: Scratch.ArgumentType.NUMBER, defaultValue: "{}" }
+            },
+          },
+          "---",
           {
             opcode: "getAsset",
             blockType: Scratch.BlockType.REPORTER,
@@ -354,6 +363,12 @@
         if (!json) return "{}";
         return JSON.stringify(json);
       } catch { return "{}" }
+    }
+
+    loadJSON(args) {
+      try {
+        vm.loadProject(Scratch.Cast.toString(args.JSON));
+      } catch {}
     }
 
     async getAsset(args) {
