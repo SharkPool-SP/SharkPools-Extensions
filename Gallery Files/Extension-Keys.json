@@ -350,6 +350,13 @@
       "status": "new",
       "date": "Released: 04/05/2024"
     },
+    "Better-Comments": {
+      "credits": "Better Comments with More Customization. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Comments.js",
+      "tags": ".all.expanded",
+      "status": "new",
+      "date": "Released: 04/08/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
