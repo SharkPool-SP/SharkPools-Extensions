@@ -38,14 +38,14 @@
     "Tune-Shark": {
       "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
-      "tags": ".all.utilities.categor",
+      "tags": ".all.utilities.category",
       "status": "",
       "date": "Last Updated: 02/25/2024"
     },
     "Added-Motion": {
       "credits": "New Motion Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Added-Motion.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 12/12/2023"
     },
@@ -66,7 +66,7 @@
     "Hyper-Sense": {
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 03/17/2024"
     },
@@ -80,7 +80,7 @@
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
-      "tags": ".all.utilities.expanded.fetching.categor",
+      "tags": ".all.utilities.expanded.fetching.category",
       "status": "",
       "date": "Last Updated: 03/24/2024"
     },
@@ -94,14 +94,14 @@
     "Sprite-Effects": {
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "update",
       "date": "Last Updated: 04/05/2024"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 03/03/2024"
     },
@@ -136,7 +136,7 @@
     "Lazy-Collisions": {
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
-      "tags": ".all.utilities.categor",
+      "tags": ".all.utilities.category",
       "status": "",
       "date": "Last Updated: 03/15/2024"
     },
@@ -150,14 +150,14 @@
     "Monitors-Plus": {
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
-      "tags": ".all.expanded.utilities.categor",
+      "tags": ".all.expanded.utilities.category",
       "status": "update",
       "date": "Last Updated: 04/02/2024"
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
-      "tags": ".all.expanded.utilities.categor",
+      "tags": ".all.expanded.utilities.category",
       "status": "",
       "date": "Last Updated: 02/03/2024"
     },
@@ -206,7 +206,7 @@
     "Advanced-Messages": {
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
-      "tags": ".all.expanded.utilities.categor",
+      "tags": ".all.expanded.utilities.category",
       "status": "",
       "date": "Last Updated: 12/20/2023"
     },
@@ -255,7 +255,7 @@
     "Display-Text": {
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
-      "tags": ".all.expanded.utilities.categor",
+      "tags": ".all.expanded.utilities.category",
       "status": "",
       "date": "Last Updated: 03/13/2024"
     },
@@ -276,14 +276,14 @@
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
-      "tags": ".all.expanded.utilities.categor",
+      "tags": ".all.expanded.utilities.category",
       "status": "",
       "date": "Last Updated: 02/25/2024"
     },
     "Speech-Bubbles": {
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Speech-Bubbles.js",
-      "tags": ".all.expanded.utilities.categor",
+      "tags": ".all.expanded.utilities.category",
       "status": "",
       "date": "Last Updated: 01/09/2024"
     },
@@ -304,14 +304,14 @@
     "Layer-Control": {
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 03/12/2024"
     },
     "Renderer-Control": {
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Renderer-Control.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 03/12/2024"
     },
@@ -332,14 +332,14 @@
     "Extra-Controls": {
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "update",
       "date": "Last Updated: 04/02/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
-      "tags": ".all.utilities.expanded.categor",
+      "tags": ".all.utilities.expanded.category",
       "status": "new",
       "date": "Released: 04/02/2024"
     },
