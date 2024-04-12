@@ -203,10 +203,17 @@
       "status": "",
       "date": "Last Updated: 01/02/2024"
     },
+    "Messages-Plus": {
+      "credits": "Powerful New Message Blocks that work with Vanilla Message! Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Messages-Plus.js",
+      "tags": ".all.expanded.utilities.category",
+      "status": "new",
+      "date": "Released: 04/11/2024"
+    },
     "Advanced-Messages": {
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
-      "tags": ".all.expanded.utilities.category",
+      "tags": ".all.utilities.category",
       "status": "",
       "date": "Last Updated: 12/20/2023"
     },
