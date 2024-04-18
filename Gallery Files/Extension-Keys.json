@@ -347,14 +347,14 @@
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "new",
+      "status": "",
       "date": "Released: 04/02/2024"
     },
     "Captchas": {
       "credits": "Simple Client-Based Captcha Extension, doesnt promise 100% security. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Captchas.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 04/05/2024"
     },
     "Better-Comments": {
