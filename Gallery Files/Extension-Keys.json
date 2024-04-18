@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/05/2024"
     },
     "YouTube-Operations": {
@@ -25,7 +25,7 @@
       "credits": "Blocks for fetching Scratch statistics and info. Made by SharkPool, inspired by NexusKitton's S-Grab",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Scratch-Utilities.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/05/2024"
     },
     "Seeds": {
@@ -95,7 +95,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/05/2024"
     },
     "Image-Effects": {
@@ -116,7 +116,7 @@
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Recording.js",
       "tags": ".all.utilities.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/31/2024"
     },
     "Newgrounds-Audio": {
@@ -151,7 +151,7 @@
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/02/2024"
     },
     "Sty-Lists": {
@@ -207,8 +207,8 @@
       "credits": "Powerful New Message Blocks that work with Vanilla Messages! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Messages-Plus.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "new",
-      "date": "Released: 04/11/2024"
+      "status": "update",
+      "date": "Last Updated: 04/17/2024"
     },
     "Advanced-Messages": {
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
@@ -340,7 +340,7 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/02/2024"
     },
     "More-Operators": {
