@@ -3,7 +3,7 @@
 // Description: Expansion of the "ask and wait" Blocks
 // By: SharkPool
 
-// Version V.4.0.3
+// Version V.4.1.0
 
 (function (Scratch) {
   "use strict";
@@ -68,6 +68,7 @@
        // overlay + Image, input, dropdown button 
       this.mainUIinfo = {
         // Border Radius
+        dimensions: ["auto", "auto"],
         overlayRad: 5, 
         inputRad: 4,
         dropBtnRad: 5,
@@ -455,6 +456,16 @@
               N4: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             },
           },
+          {
+            opcode: "setDimension",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set Textbox width [W] height [H]",
+            blockIconURI: colorIcon,
+            arguments: {
+              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
+            },
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Effects" },
           {
             opcode: "resetEffect",
@@ -696,6 +707,8 @@
       overlay.style.fontFamily = this.fontFamily;
       overlay.style.textAlign = this.textAlign;
       overlay.style.borderRadius = `${this.mainUIinfo.overlayRad}px`;
+      overlay.style.width = this.mainUIinfo.dimensions[0];
+      overlay.style.height = this.mainUIinfo.dimensions[1];
       overlayImageContainer.style.borderRadius = `${this.mainUIinfo.overlayRad}px`;
       overlayImageContainer.style.background = "";
       this.setImageStyles(overlayImageContainer, this.overlayImage[0], this.imgScale[0]);
@@ -929,6 +942,14 @@
       const elementIndex = elementMap[args.ELEMENT];
       if (elementIndex !== undefined) this.imgScale[elementIndex] = args.SCALE;
       else if (this.buttonJSON[args.ELEMENT]) this.buttonJSON[args.ELEMENT].imgScale = args.SCALE;
+      this.activeOverlays.forEach(overlay => this.updateOverlay(overlay));
+    }
+
+    setDimension(args) {
+      const w = `${Scratch.Cast.toNumber(args.W)}px`;
+      const h = `${Scratch.Cast.toNumber(args.H)}px`;
+      // Negative numbers result in auto-dimensions
+      this.mainUIinfo.dimensions = [w.includes("-") ? "auto" : w, h.includes("-") ? "auto" : h];
       this.activeOverlays.forEach(overlay => this.updateOverlay(overlay));
     }
 
