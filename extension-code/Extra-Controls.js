@@ -3,7 +3,10 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.6
+// Version V.1.4.7
+/* TODO:
+  - Find Way to make Blocks using Branches know the OG target
+*/
 
 (function (Scratch) {
   "use strict";
@@ -784,7 +787,9 @@
     }
 
     async runInSprite(args, util) {
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const thisSprite = util.thread.ogTarget !== undefined ? util.thread.ogTarget : util.target;
+      const branch = util.thread.ogTarget !== undefined ? util.thread.ogTarget.blocks.getBranch(util.thread.peekStack(), 1) :
+        util.target.blocks.getBranch(util.thread.peekStack(), 1);
       let newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       let targets = runtime.targets;
       let thread;
@@ -795,14 +800,16 @@
         newTarget = targets[0];
       }
       if (newTarget) {
-        thread = runtime._pushThread(branch, util.target);
+        thread = runtime._pushThread(branch, thisSprite);
         thread.target = newTarget;
+        thread.ogTarget = thisSprite;
         if (runtime.compilerOptions.enabled) thread.tryCompile();
       }
       if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
         for (let i = 0; i < targets.length; i++) {
-          const newThread = runtime._pushThread(branch, util.target);
+          const newThread = runtime._pushThread(branch, thisSprite);
           newThread.target = targets[i];
+          newThread.ogTarget = thisSprite;
           if (runtime.compilerOptions.enabled) newThread.tryCompile();
         }
       }
@@ -829,10 +836,12 @@
     }
 
     asClone(args, util) {
-      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      const thisSprite = util.thread.ogTarget !== undefined ? util.thread.ogTarget : util.target;
+      const target = args.SPRITE === "_myself_" ? thisSprite : runtime.getSpriteTargetByName(args.SPRITE);
       if (!target) return;
       const clones = target.sprite.clones;
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const branch = util.thread.ogTarget !== undefined ? util.thread.ogTarget.blocks.getBranch(util.thread.peekStack(), 1) :
+        util.target.blocks.getBranch(util.thread.peekStack(), 1);
       if (branch) {
         for (var i = 1; i < clones.length; i++) {
           if (clones[i]) {
@@ -841,8 +850,9 @@
             if (variable && Scratch.Cast.toString(variable.value) === value) {
               if (args.SPRITE === "_myself_") runtime._pushThread(branch, clones[i]);
               else {
-                const thread = runtime._pushThread(branch, util.target);
+                const thread = runtime._pushThread(branch, thisSprite);
                 thread.target = clones[i];
+                thread.ogTarget = thisSprite;
                 if (runtime.compilerOptions.enabled) thread.tryCompile();
               }
             }
@@ -892,7 +902,7 @@
     }
 
     deleteRun(args, util) {
-      const target =  util.target;
+      const target = util.target;
       if (target.isOriginal) return;
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
       runtime.disposeTarget(target);
