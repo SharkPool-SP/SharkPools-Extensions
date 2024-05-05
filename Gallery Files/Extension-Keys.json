@@ -364,6 +364,13 @@
       "status": "",
       "date": "Released: 04/08/2024"
     },
+    "DOM-Selector": {
+      "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/DOM-Selector.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 05/04/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
