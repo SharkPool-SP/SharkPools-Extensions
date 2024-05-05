@@ -3,7 +3,7 @@
 // Description: Read Elements and Create Events from the Website
 // By: SharkPool
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -150,13 +150,21 @@
         return items.length > 0 ? items : ["my-listener1"];
       }
 
+      querySelect(query) {
+        try {
+          return document.querySelector(query);
+        } catch {
+          return "";
+        }
+      }
+
       selectOne(args) {
-        const element = document.querySelector(args.CLASS);
+        const element = this.querySelect(args.CLASS);
         return element ? element.innerHTML : "";
       }
 
       selectAll(args) {
-        const elements = document.querySelectorAll(args.CLASS);
+        const elements = this.querySelect(args.CLASS);
         let newArray = [];
         if (elements.length > 0) {
           for (let element of elements) {
@@ -172,7 +180,7 @@
         let path = args.PATH;
         if (path.startsWith(".")) path = path.substring(1);
 
-        const element = document.querySelector(args.CLASS);
+        const element = this.querySelect(args.CLASS);
         if (element) {
           try {
             const pathParts = path.split(".");
@@ -194,7 +202,7 @@
       }
 
       typeElement(args) {
-        const element = document.querySelector(args.CLASS);
+        const element = this.querySelect(args.CLASS);
         if (element) {
           const num = Scratch.Cast.toNumber(args.NUM);
           if (args.TYPE === "parent") {
@@ -213,7 +221,7 @@
       }
 
       addID(args) {
-        const element = document.querySelector(args.CLASS);
+        const element = this.querySelect(args.CLASS);
         if (element) {
           const ID = xmlEscape(args.ID);
           const num = Scratch.Cast.toNumber(args.NUM);
@@ -235,7 +243,7 @@
       }
 
       attachListener(args) {
-        const element = document.querySelector(args.CLASS);
+        const element = this.querySelect(args.CLASS);
         const name = xmlEscape(args.NAME);
         const type = args.TYPE;
         if (name && element) {
