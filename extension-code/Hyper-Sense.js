@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 2.5.1
+// Version 2.5.2
 
 (function (Scratch) {
   "use strict";
@@ -425,7 +425,7 @@
           TARGETS2: { acceptReporters: true, items: this._getTargets(true, true) },
           TARGETS3: { acceptReporters: true, items: this._getTargets(false, true) },
           TARGETS4: { acceptReporters: true, items: this._getTargets(false, false) },
-          LISTS: { acceptReporters: true, items: this.getLists() },
+          LISTS: { acceptReporters: true, items: "getLists" },
           Asking: ["stage", "sprite"],
           shouldWait: ["wait", "continue"],
           SCROLL_EVENTS: ["up", "down"],
