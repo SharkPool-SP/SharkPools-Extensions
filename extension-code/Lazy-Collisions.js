@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.1.1.1
+// Version V.1.1.2
 
 (function (Scratch) {
   "use strict";
@@ -166,16 +166,16 @@
       if (!target) return false;
       const spriteAtt2 = this.getAttributes(target);
       const spriteAtt = this.getAttributes(target1);
-      offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
+      // offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
       switch (args.SIDE) {
         case "top":
-          return (Math.round(spriteAtt.bottom) - offset === Math.round(target1.y) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
+          return (Math.round(spriteAtt.top) - offset === Math.round(spriteAtt2.bottom) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
         case "bottom":
-          return (Math.round(spriteAtt.top) + offset === Math.round(target1.y) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
+          return (Math.round(spriteAtt.bottom) + offset === Math.round(spriteAtt2.top) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
         case "left side":
-          return (Math.round(spriteAtt.right) + offset === Math.round(target1.x) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
+          return (Math.round(spriteAtt.left) + offset === Math.round(spriteAtt2.right) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
         case "right side":
-          return (Math.round(spriteAtt.left) - offset === Math.round(target1.x) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
+          return (Math.round(spriteAtt.right) - offset === Math.round(spriteAtt2.left) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
         default: return false;
       }
     }
@@ -190,16 +190,16 @@
       if (!target) return false;
       const spriteAtt2 = this.getAttributes(target);
       const spriteAtt = this.getAttributes(target1);
-      offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
+      // offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
       switch (args.SIDE) {
         case "top":
-          return (Math.round(spriteAtt.bottom) - offset === Math.round(target1.y));
+          return (Math.round(spriteAtt.top) - offset === Math.round(spriteAtt2.bottom));
         case "bottom":
-          return (Math.round(spriteAtt.top) + offset === Math.round(target1.y));
+          return (Math.round(spriteAtt.bottom) + offset === Math.round(spriteAtt2.top));
         case "left side":
-          return (Math.round(spriteAtt.right) + offset === Math.round(target1.x));
+          return (Math.round(spriteAtt.left) + offset === Math.round(spriteAtt2.right));
         case "right side":
-          return (Math.round(spriteAtt.left) - offset === Math.round(target1.x));
+          return (Math.round(spriteAtt.right) - offset === Math.round(spriteAtt2.left));
         default: return false;
       }
     }
@@ -216,7 +216,7 @@
       switch (args.SIDE) {
         case "below": return spriteAtt2.top < spriteAtt.bottom;
         case "above": return spriteAtt2.bottom > spriteAtt.top;
-        case "beside right": spriteAtt2.left > spriteAtt.right;
+        case "beside right": return spriteAtt2.left > spriteAtt.right;
         case "beside left": return spriteAtt2.right < spriteAtt.left;
         default: return false;
       }
