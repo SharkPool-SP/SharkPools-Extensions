@@ -105,6 +105,13 @@
       "status": "",
       "date": "Last Updated: 03/03/2024"
     },
+    "Collision-Tags": {
+      "credits": "Give collision tags to sprites, and also special touching block. Made by LittleBlueGamer, inspired by one of Lily's ideas (also works with clones!)",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Collision-Tags.js",
+      "tags": ".all.utilities",
+      "status": "",
+      "date": "Last Updated: 03/07/2024"
+    },
     "Pixel-Utilities": {
       "credits": "Some Utility Blocks that Roltycore 2's Developer made for some reason. Made by LittleBlueGamer",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pixel-Utilities.js",
