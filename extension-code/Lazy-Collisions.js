@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.1.1.2
+// Version V.1.1.3
 
 (function (Scratch) {
   "use strict";
@@ -131,14 +131,11 @@
       } else { return target.getCostumeIndexByName(Scratch.Cast.toString(costume)) }
     }
 
-    getAttributes(sprite) {
-      const costumeNum = sprite.currentCostume + 1;
-      const costumeIndex = this.getCostumeInput(costumeNum, sprite);
-      const costume = sprite.sprite.costumes[costumeIndex];
+    getAABB(sprite) {
       const bounds = sprite.getBounds();
       const bottomLeft = this.translateForCamera(sprite, bounds.left, bounds.bottom);
       const topRight = this.translateForCamera(sprite, bounds.right, bounds.top);
-      return {"left":bottomLeft[0], "bottom":bottomLeft[1], "right":topRight[0], "top":topRight[1], "size":(Math.round(sprite.size) - 100) / 2.1};
+      return {"left":bottomLeft[0], "bottom":bottomLeft[1], "right":topRight[0], "top":topRight[1]};
     }
 
     findID(args, util) {
@@ -164,18 +161,17 @@
       let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target) target = runtime.getTargetById(args.SPRITE2);
       if (!target) return false;
-      const spriteAtt2 = this.getAttributes(target);
-      const spriteAtt = this.getAttributes(target1);
-      // offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
+      const aabb2 = this.getAABB(target);
+      const aabb = this.getAABB(target1);
       switch (args.SIDE) {
         case "top":
-          return (Math.round(spriteAtt.top) - offset === Math.round(spriteAtt2.bottom) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
+          return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom) && aabb.right > aabb2.left && aabb.left < aabb2.right);
         case "bottom":
-          return (Math.round(spriteAtt.bottom) + offset === Math.round(spriteAtt2.top) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
+          return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top) && aabb.right > aabb2.left && aabb.left < aabb2.right);
         case "left side":
-          return (Math.round(spriteAtt.left) + offset === Math.round(spriteAtt2.right) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
+          return (Math.round(aabb.left) + offset === Math.round(aabb2.right) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
         case "right side":
-          return (Math.round(spriteAtt.right) - offset === Math.round(spriteAtt2.left) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
+          return (Math.round(aabb.right) - offset === Math.round(aabb2.left) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
         default: return false;
       }
     }
@@ -188,18 +184,17 @@
       let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target) target = runtime.getTargetById(args.SPRITE2);
       if (!target) return false;
-      const spriteAtt2 = this.getAttributes(target);
-      const spriteAtt = this.getAttributes(target1);
-      // offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
+      const aabb2 = this.getAABB(target);
+      const aabb = this.getAABB(target1);
       switch (args.SIDE) {
         case "top":
-          return (Math.round(spriteAtt.top) - offset === Math.round(spriteAtt2.bottom));
+          return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom));
         case "bottom":
-          return (Math.round(spriteAtt.bottom) + offset === Math.round(spriteAtt2.top));
+          return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top));
         case "left side":
-          return (Math.round(spriteAtt.left) + offset === Math.round(spriteAtt2.right));
+          return (Math.round(aabb.left) + offset === Math.round(aabb2.right));
         case "right side":
-          return (Math.round(spriteAtt.right) - offset === Math.round(spriteAtt2.left));
+          return (Math.round(aabb.right) - offset === Math.round(aabb2.left));
         default: return false;
       }
     }
@@ -211,13 +206,13 @@
       let sprite2 = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!sprite2) sprite2 = runtime.getTargetById(args.SPRITE2);
       if (!sprite2) return false;
-      const spriteAtt2 = this.getAttributes(sprite2);
-      const spriteAtt = this.getAttributes(sprite1);
+      const aabb2 = this.getAABB(sprite2);
+      const aabb = this.getAABB(sprite1);
       switch (args.SIDE) {
-        case "below": return spriteAtt2.top < spriteAtt.bottom;
-        case "above": return spriteAtt2.bottom > spriteAtt.top;
-        case "beside right": return spriteAtt2.left > spriteAtt.right;
-        case "beside left": return spriteAtt2.right < spriteAtt.left;
+        case "below": return aabb2.top < aabb.bottom;
+        case "above": return aabb2.bottom > aabb.top;
+        case "beside right": return aabb2.left > aabb.right;
+        case "beside left": return aabb2.right < aabb.left;
         default: return false;
       }
     }
@@ -230,48 +225,48 @@
       let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target) target = runtime.getTargetById(args.SPRITE2);
       if (!target) return;
-      const spriteAtt2 = this.getAttributes(target);
-      const spriteAtt = this.getAttributes(target1)
+      const aabb2 = this.getAABB(target);
+      const aabb = this.getAABB(target1)
       let x; let y;
-      offset += Math.round(spriteAtt.size + spriteAtt2.size);
+      offset += Math.round(aabb.size + aabb2.size);
       switch (args.SIDE) {
         case "top":
           x = target1.x;
-          y = spriteAtt.top;
+          y = aabb.top;
           target.setXY(x, y + offset);
           break;
         case "bottom":
           x = target1.x;
-          y = spriteAtt.bottom;
+          y = aabb.bottom;
           target.setXY(x, y - offset);
           break;
         case "left side":
-          x = spriteAtt.left;
+          x = aabb.left;
           y = target1.y;
           target.setXY(x - offset, y);
           break;
         case "right side":
-          x = spriteAtt.right;
+          x = aabb.right;
           y = target1.y;
           target.setXY(x + offset, y);
           break;
         case "same top level":
           x = target.x;
-          y = spriteAtt.top;
+          y = aabb.top;
           target.setXY(x, y + offset);
           break;
         case "same bottom level":
           x = target.x;
-          y = spriteAtt.bottom;
+          y = aabb.bottom;
           target.setXY(x, y - offset);
           break;
         case "same left level":
-          x = spriteAtt.left;
+          x = aabb.left;
           y = target.y;
           target.setXY(x - offset, y);
           break;
         case "same right level":
-          x = spriteAtt.right;
+          x = aabb.right;
           y = target.y;
           target.setXY(x + offset, y);
           break;
