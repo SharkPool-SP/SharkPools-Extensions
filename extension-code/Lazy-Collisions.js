@@ -1,9 +1,9 @@
 // Name: Lazy Collisions
 // ID: LZcollisionsSP
 // Description: Easy and Simple To Use Collision System for Sprites
-// By: SharkPool
+// By: SharkPool, food
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -131,13 +131,14 @@
       } else { return target.getCostumeIndexByName(Scratch.Cast.toString(costume)) }
     }
 
-    getAttribute(sprite) {
+    getAttributes(sprite) {
       const costumeNum = sprite.currentCostume + 1;
       const costumeIndex = this.getCostumeInput(costumeNum, sprite);
       const costume = sprite.sprite.costumes[costumeIndex];
-      const width = Scratch.Cast.toNumber(costume.size[0]);
-      const height = Scratch.Cast.toNumber(costume.size[1]);
-      return [Math.ceil(width), Math.ceil(height), (Math.round(sprite.size) - 100) / 2.1];
+      const bounds = sprite.getBounds();
+      const bottomLeft = this.translateForCamera(sprite, bounds.left, bounds.bottom);
+      const topRight = this.translateForCamera(sprite, bounds.right, bounds.top);
+      return {"left":bottomLeft[0], "bottom":bottomLeft[1], "right":topRight[0], "top":topRight[1], "size":(Math.round(sprite.size) - 100) / 2.1};
     }
 
     findID(args, util) {
@@ -163,26 +164,18 @@
       let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target) target = runtime.getTargetById(args.SPRITE2);
       if (!target) return false;
-      const spriteAtt = this.getAttribute(target1);
-      let x = [target1.x - (spriteAtt[0] / 2), target1.x + (spriteAtt[0] / 2)];
-      let y = [target1.y - (spriteAtt[1] / 2), target1.y + (spriteAtt[1] / 2)];
-      const spriteAtt2 = this.getAttribute(target);
-      const myX = [target.x - (spriteAtt2[0] / 2), target.x + (spriteAtt2[0] / 2)];
-      const myY = [target.y - (spriteAtt2[1] / 2), target.y + (spriteAtt2[1] / 2)];
-      offset = offset + Math.round(spriteAtt[2] + spriteAtt2[2]);
+      const spriteAtt2 = this.getAttributes(target);
+      const spriteAtt = this.getAttributes(target1);
+      offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
       switch (args.SIDE) {
         case "top":
-          y = Math.round(myY[0] - spriteAtt[1] / 2);
-          return (y - offset === Math.round(target1.y) && myX[1] > x[0] && myX[0] < x[1]);
+          return (Math.round(spriteAtt.bottom) - offset === Math.round(target1.y) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
         case "bottom":
-          y = Math.round(myY[1] + spriteAtt[1] / 2);
-          return (y + offset === Math.round(target1.y) && myX[1] > x[0] && myX[0] < x[1]);
+          return (Math.round(spriteAtt.top) + offset === Math.round(target1.y) && spriteAtt.right > spriteAtt2.left && spriteAtt.left < spriteAtt2.right);
         case "left side":
-          x = Math.round(myX[1] + spriteAtt[1] / 2);
-          return (x + offset === Math.round(target1.x) && myY[1] > y[0] && myY[0] < y[1]);
+          return (Math.round(spriteAtt.right) + offset === Math.round(target1.x) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
         case "right side":
-          x = Math.round(myX[0] - spriteAtt[1] / 2);
-          return (x - offset === Math.round(target1.x) && myY[1] > y[0] && myY[0] < y[1]);
+          return (Math.round(spriteAtt.left) - offset === Math.round(target1.x) && spriteAtt.top > spriteAtt2.bottom && spriteAtt.bottom < spriteAtt2.top);
         default: return false;
       }
     }
@@ -195,26 +188,18 @@
       let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target) target = runtime.getTargetById(args.SPRITE2);
       if (!target) return false;
-      const spriteAtt = this.getAttribute(target1);
-      let x = [target1.x - (spriteAtt[0] / 2), target1.x + (spriteAtt[0] / 2)];
-      let y = [target1.y - (spriteAtt[1] / 2), target1.y + (spriteAtt[1] / 2)];
-      const spriteAtt2 = this.getAttribute(target);
-      const myX = [target.x - (spriteAtt2[0] / 2), target.x + (spriteAtt2[0] / 2)];
-      const myY = [target.y - (spriteAtt2[1] / 2), target.y + (spriteAtt2[1] / 2)];
-      offset = offset + Math.round(spriteAtt[2] + spriteAtt2[2]);
+      const spriteAtt2 = this.getAttributes(target);
+      const spriteAtt = this.getAttributes(target1);
+      offset = offset + Math.round(spriteAtt.size + spriteAtt2.size);
       switch (args.SIDE) {
         case "top":
-          y = Math.round(myY[0] - spriteAtt[1] / 2);
-          return (y - offset === Math.round(target1.y));
+          return (Math.round(spriteAtt.bottom) - offset === Math.round(target1.y));
         case "bottom":
-          y = Math.round(myY[1] + spriteAtt[1] / 2);
-          return (y + offset === Math.round(target1.y));
+          return (Math.round(spriteAtt.top) + offset === Math.round(target1.y));
         case "left side":
-          x = Math.round(myX[1] + spriteAtt[1] / 2);
-          return (x + offset === Math.round(target1.x));
+          return (Math.round(spriteAtt.right) + offset === Math.round(target1.x));
         case "right side":
-          x = Math.round(myX[0] - spriteAtt[1] / 2);
-          return (x - offset === Math.round(target1.x));
+          return (Math.round(spriteAtt.left) - offset === Math.round(target1.x));
         default: return false;
       }
     }
@@ -226,15 +211,13 @@
       let sprite2 = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!sprite2) sprite2 = runtime.getTargetById(args.SPRITE2);
       if (!sprite2) return false;
-      const attr1 = this.getAttribute(sprite1);
-      const attr2 = this.getAttribute(sprite2);
-      const target = [(attr1[1] / 2) * ((sprite2.size / 100) -1), (attr1[0] / 2) * ((sprite2.size / 100) -1)];
-      const target2 = [(attr2[1] / 2) * ((sprite1.size / 100) -1), (attr2[0] / 2) * ((sprite1.size / 100) -1)];
+      const spriteAtt2 = this.getAttributes(sprite2);
+      const spriteAtt = this.getAttributes(sprite1);
       switch (args.SIDE) {
-        case "below": return sprite2.y - target[0] < sprite1.y - target2[0];
-        case "above": return sprite2.y + target[0] > sprite1.y + target2[0];
-        case "beside right": return sprite2.x + target[0] > sprite1.x + target2[0];
-        case "beside left": return sprite2.x - target[0] < sprite1.x - target2[0];
+        case "below": return spriteAtt2.top < spriteAtt.bottom;
+        case "above": return spriteAtt2.bottom > spriteAtt.top;
+        case "beside right": spriteAtt2.left > spriteAtt.right;
+        case "beside left": return spriteAtt2.right < spriteAtt.left;
         default: return false;
       }
     }
@@ -247,56 +230,71 @@
       let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target) target = runtime.getTargetById(args.SPRITE2);
       if (!target) return;
-      const spriteAtt = this.getAttribute(target1);
-      const spriteAtt2 = this.getAttribute(target);
+      const spriteAtt2 = this.getAttributes(target);
+      const spriteAtt = this.getAttributes(target1)
       let x; let y;
-      const x2 = spriteAtt2[0] / 2;
-      const y2 = spriteAtt2[1] / 2;
-      offset = offset + Math.round(spriteAtt[2] + spriteAtt2[2]);
+      offset += Math.round(spriteAtt.size + spriteAtt2.size);
       switch (args.SIDE) {
         case "top":
           x = target1.x;
-          y = target1.y + (spriteAtt[1] / 2) + y2;
+          y = spriteAtt.top;
           target.setXY(x, y + offset);
           break;
         case "bottom":
           x = target1.x;
-          y = target1.y - (spriteAtt[1] / 2) - y2;
+          y = spriteAtt.bottom;
           target.setXY(x, y - offset);
           break;
         case "left side":
-          x = target1.x - (spriteAtt[0] / 2) - x2;
+          x = spriteAtt.left;
           y = target1.y;
           target.setXY(x - offset, y);
           break;
         case "right side":
-          x = target1.x + (spriteAtt[0] / 2) + x2;
+          x = spriteAtt.right;
           y = target1.y;
           target.setXY(x + offset, y);
           break;
         case "same top level":
           x = target.x;
-          y = target1.y + (spriteAtt[1] / 2) + y2;
+          y = spriteAtt.top;
           target.setXY(x, y + offset);
           break;
         case "same bottom level":
           x = target.x;
-          y = target1.y - (spriteAtt[1] / 2) - y2;
+          y = spriteAtt.bottom;
           target.setXY(x, y - offset);
           break;
         case "same left level":
-          x = target1.x - (spriteAtt[0] / 2) - x2;
+          x = spriteAtt.left;
           y = target.y;
           target.setXY(x - offset, y);
           break;
         case "same right level":
-          x = target1.x + (spriteAtt[0] / 2) + x2;
+          x = spriteAtt.right;
           y = target.y;
           target.setXY(x + offset, y);
           break;
         default: break;
       }
     }
+
+    translateForCamera(target, x, y) {
+      if (target.cameraBound == null) {
+        return [x, y];
+      }
+      const {pos, scale, dir} = runtime.getCamera(target.cameraBound);
+      const radians = (dir / 180) * Math.PI;
+      const sin = Math.sin(radians);
+      const cos = Math.cos(radians);
+      const offX = x - pos[0];
+      const offY = y - pos[1];
+      return [
+          scale * (offX * cos - offY * sin),
+          scale * (offX * sin + offY * cos)
+      ];
+  }
+  
   }
 
   Scratch.extensions.register(new LZcollisionsSP());
