@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.2.0.0
+// Version V.2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -50,11 +50,12 @@
           {
             opcode: "isSpriteLocation",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "is [SPRITE2] [SIDE] [SPRITE1]?",
+            text: "is [SPRITE2] [SIDE] [SPRITE1] offset [OFFSET]?",
             arguments: {
               SIDE: { type: Scratch.ArgumentType.STRING, menu: "POSITION3" },
               SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
+              SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              OFFSET: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           "---",
@@ -121,14 +122,6 @@
         if (target.isOriginal) spriteNames.push({ text: targetName, value: targetName });
       }
       return spriteNames.length > 0 ? spriteNames : [""];
-    }
-
-    getCostumeInput(costume, target) {
-      if (typeof costume === "number") {
-        costume = Math.round(costume - 1);
-        if (Scratch.Cast.toString(costume).includes("Infinity") || !costume) costume = 0;
-        return costume;
-      } else { return target.getCostumeIndexByName(Scratch.Cast.toString(costume)) }
     }
 
     getAABB(sprite) {
@@ -200,6 +193,7 @@
     }
 
     isSpriteLocation(args, util) {
+      let offset = Scratch.Cast.toNumber(args.OFFSET);
       let sprite1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
       if (!sprite1) sprite1 = runtime.getTargetById(args.SPRITE1);
       if (!sprite1) return false;
@@ -209,10 +203,10 @@
       const aabb2 = this.getAABB(sprite2);
       const aabb = this.getAABB(sprite1);
       switch (args.SIDE) {
-        case "below": return aabb2.top < aabb.bottom;
-        case "above": return aabb2.bottom > aabb.top;
-        case "beside right": return aabb2.left > aabb.right;
-        case "beside left": return aabb2.right < aabb.left;
+        case "below": return Math.round(aabb.bottom + offset) > Math.round(aabb2.top);
+        case "above": return Math.round(aabb.top - offset) < Math.round(aabb2.bottom);
+        case "beside right": return Math.round(aabb.right - offset) < Math.round(aabb2.left);
+        case "beside left": return Math.round(aabb.left + offset) > Math.round(aabb2.right);
         default: return false;
       }
     }
