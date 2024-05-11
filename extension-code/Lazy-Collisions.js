@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.1.1.3
+// Version V.2.0.0
 
 (function (Scratch) {
   "use strict";
