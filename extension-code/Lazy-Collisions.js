@@ -222,7 +222,6 @@
       const aabb2 = this.getAABB(target);
       const aabb = this.getAABB(target1)
       let x; let y;
-      offset += Math.round(aabb.size + aabb2.size);
       switch (args.SIDE) {
         case "top":
           x = target1.x;
