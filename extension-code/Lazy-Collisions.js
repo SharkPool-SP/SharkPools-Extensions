@@ -203,10 +203,10 @@
       const aabb2 = this.getAABB(sprite2);
       const aabb = this.getAABB(sprite1);
       switch (args.SIDE) {
-        case "below": return Math.round(aabb.bottom + offset) > Math.round(aabb2.top);
-        case "above": return Math.round(aabb.top - offset) < Math.round(aabb2.bottom);
-        case "beside right": return Math.round(aabb.right - offset) < Math.round(aabb2.left);
-        case "beside left": return Math.round(aabb.left + offset) > Math.round(aabb2.right);
+        case "below": return Math.round(aabb.bottom) + offset > Math.round(aabb2.top);
+        case "above": return Math.round(aabb.top) - offset < Math.round(aabb2.bottom);
+        case "beside right": return Math.round(aabb.right) - offset < Math.round(aabb2.left);
+        case "beside left": return Math.round(aabb.left) + offset > Math.round(aabb2.right);
         default: return false;
       }
     }
