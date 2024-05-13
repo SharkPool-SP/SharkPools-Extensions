@@ -841,6 +841,7 @@
     async getInSprite(args, util) {
       const container = util.thread.blockContainer;
       let branch = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
+      if (!branch) return "";
       branch = branch.inputs.THING;
       const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       if (branch !== undefined && newTarget) return await this.getTargetVal(newTarget, branch, util.target);
@@ -871,12 +872,12 @@
     }
 
     async getInClone(args, util) {
+      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       const container = util.thread.blockContainer;
       let branch = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
+      if (!branch || !target) return "";
       branch = branch.inputs.THING;
 
-      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
-      if (!target) return "";
       const clones = target.sprite.clones;
       let newTarget = [];
       for (let i = 1; i < clones.length; i++) {
@@ -988,7 +989,7 @@
       return value;
     }
   }
-  window.onerror = function() { issueTimes.push(Math.floor(Date.now() / 100) * 100) };
+  window.onerror = function() { issueTimes.push(Math.floor(Date.now() / 200) * 200) };
 
   Scratch.extensions.register(new SPadvControl());
 })(Scratch);
