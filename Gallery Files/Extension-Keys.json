@@ -242,8 +242,8 @@
       "credits": "Fetch Tracks, Artists, and Statistics from Soundcloud. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SoundCloud-API.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Released: 02/24/2024"
+      "status": "update",
+      "date": "Last Updated: 05/12/2024"
     },
     "Google-Spreadsheets": {
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
