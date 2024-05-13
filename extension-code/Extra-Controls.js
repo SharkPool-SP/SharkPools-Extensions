@@ -3,10 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.7
-/* TODO:
-  - Find Way to make Blocks using Branches know the OG target
-*/
+// Version V.1.4.8
 
 (function (Scratch) {
   "use strict";
@@ -21,13 +18,10 @@
 
   const breakIcon =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI2NS43OTU1MSIgaGVpZ2h0PSI2MC4wNzQ5MiIgdmlld0JveD0iMCwwLDY1Ljc5NTUxLDYwLjA3NDkyIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjA3LjEwMjI1LC0xNDkuOTYyNTQpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIyOS4xNzQzNSwxNTQuNDM0MjJjMCwxLjIgMC41LDIuNCAxLjEsMi42YzAuOSwwLjMgMC45LDEuNSAwLjMsNC4zYy0wLjcsMyAtMS42LDQuMSAtMy45LDQuOGMtMS43LDAuNSAtNC44LDIuMyAtNi45LDMuOGMtNC44LDMuNSAtNy4yLDMuNiAtMTAuMywwLjdjLTMuNywtMy41IC0zLjEsLTcuOCAyLC0xM2MyLjMsLTIuNCA1LjgsLTUuMSA3LjcsLTZjNi4xLC0zIDEwLC0xLjkgMTAsMi44ek0yMjAuNjc0MzUsMTU1LjczNDIyYy00LjgsMyAtOS44LDguOCAtOS4yLDEwLjVjMC45LDIuMyAzLjEsMiA4LjQsLTEuNGMyLjYsLTEuNyA1LjMsLTMgNiwtM2MwLjcsMCAxLjMsLTAuNSAxLjMsLTFjMCwtMC42IC0wLjYsLTEgLTEuNCwtMWMtMS45LDAgLTIuOSwtMyAtMS41LC00LjZjMS42LC0yIC0wLjEsLTEuNyAtMy42LDAuNXoiIGZpbGwtb3BhY2l0eT0iMC4xNTY4NiIgZmlsbD0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIyNC4zMDc2NSwxNTUuMTk2OTJjLTEuNCwxLjYgLTAuMzgzODUsNC42Mjk4NyAxLjUxNjE1LDQuNjI5ODdjMC44LDAgMS40MDA1NSwwLjQwNzYgMS40MDA1NSwxLjAwNzZjMCwwLjUgLTAuNjAwNiwxLjAwNzU1IC0xLjMwMDYsMS4wMDc1NWMtMC43LDAgLTMuNDQyMzQsMS4zNDE3OCAtNi4wNDIzNCwzLjA0MTc4Yy01LjMsMy40IC03LjU0ODE1LDMuNjc5IC04LjQ0ODE1LDEuMzc5Yy0wLjYsLTEuNyA0LjQ1NDE2LC03LjU3Njc1IDkuMjU0MTYsLTEwLjU3Njc1YzMuNSwtMi4yIDUuMjIwMjIsLTIuNDg5MDQgMy42MjAyMiwtMC40ODkwNHoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O25vSG92ZXImcXVvdDs6ZmFsc2UsJnF1b3Q7b3JpZ0l0ZW0mcXVvdDs6WyZxdW90O1BhdGgmcXVvdDsseyZxdW90O2FwcGx5TWF0cml4JnF1b3Q7OnRydWUsJnF1b3Q7c2VnbWVudHMmcXVvdDs6W1tbMjIwLjY3NDM0LDE1NS43MzQyMl0sWzMuNSwtMi4yXSxbLTQuOCwzXV0sW1syMTEuNDc0MzQsMTY2LjIzNDIyXSxbLTAuNiwtMS43XSxbMC45LDIuM11dLFtbMjE5Ljg3NDM0LDE2NC44MzQyMl0sWy01LjMsMy40XSxbMi42LC0xLjddXSxbWzIyNS44NzQzNCwxNjEuODM0MjJdLFstMC43LDBdLFswLjcsMF1dLFtbMjI3LjE3NDM0LDE2MC44MzQyMl0sWzAsMC41XSxbMCwtMC42XV0sW1syMjUuNzc0MzQsMTU5LjgzNDIyXSxbMC44LDBdLFstMS45LDBdXSxbWzIyNC4yNzQzNCwxNTUuMjM0MjJdLFstMS40LDEuNl0sWzEuNiwtMl1dXSwmcXVvdDtjbG9zZWQmcXVvdDs6dHJ1ZSwmcXVvdDtmaWxsQ29sb3ImcXVvdDs6WzAsMCwwXX1dfSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48cGF0aCBkPSJNMjQxLjQ3NDM1LDE1MC41MzQyMmw2LjEsMC42YzYuOSwwLjcgMTQsMi45IDE3LjQsNS41YzIuMSwxLjYgMi4yLDIuMiAxLjMsNi4yYy0xLjgsOC4yIC05LjYsMTIuOSAtMTUsOS4xYy0xLjYsLTEuMiAtMy40LC0yLjEgLTQsLTIuMWMtMS45LDAgLTEwLjEsLTguMiAtMTAuMSwtMTAuMWMwLC0xIDEsLTMuNCAyLjIsLTUuNXpNMjQyLjY3NDM1LDE1Ny4yMzQyMmMtMS41LDIuMiAtMS40LDIuNiAwLjgsNWMxLjMsMS40IDIuOCwyLjYgMy4yLDIuNmMwLjUsMCAyLjgsMC45IDUuMiwyLjFjNCwxLjkgNC41LDIgNi43LDAuNWMxLjQsLTAuOCAyLjcsLTMgMy4xLC00LjdjMC45LC00IC0wLjYsLTUuMyAtNy43LC02LjhjLTcuNCwtMS42IC05LjYsLTEuNCAtMTEuMywxLjN6IiBmaWxsLW9wYWNpdHk9IjAuMTU2ODYiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yNTMuOTkyMDksMTU1Ljg4NzQ3YzcuMSwxLjUgOC42MzE5OSwyLjg1MTk3IDcuNzMxOTksNi44NTE5N2MtMC40LDEuNyAtMS43MTE1NSwzLjkyNzA2IC0zLjExMTU1LDQuNzI3MDZjLTIuMiwxLjUgLTIuNzM3MzUsMS40MTc3MSAtNi43MzczNSwtMC40ODIyOWMtMi40LC0xLjIgLTQuNzQzNDQsLTIuMTIzODQgLTUuMjQzNDQsLTIuMTIzODRjLTAuNCwwIC0xLjkwNzI4LC0xLjIyMjkyIC0zLjIwNzI4LC0yLjYyMjkyYy0yLjIsLTIuNCAtMi4yOTUwMSwtMi44MjUyMiAtMC43OTUwMSwtNS4wMjUyMmMxLjcsLTIuNyAzLjk2MjY1LC0yLjkyNDc2IDExLjM2MjY1LC0xLjMyNDc2eiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7bm9Ib3ZlciZxdW90OzpmYWxzZSwmcXVvdDtvcmlnSXRlbSZxdW90OzpbJnF1b3Q7UGF0aCZxdW90Oyx7JnF1b3Q7YXBwbHlNYXRyaXgmcXVvdDs6dHJ1ZSwmcXVvdDtzZWdtZW50cyZxdW90OzpbW1syNDIuNjc0MzQsMTU3LjIzNDIyXSxbMS43LC0yLjddLFstMS41LDIuMl1dLFtbMjQzLjQ3NDM0LDE2Mi4yMzQyMl0sWy0yLjIsLTIuNF0sWzEuMywxLjRdXSxbWzI0Ni42NzQzNCwxNjQuODM0MjJdLFstMC40LDBdLFswLjUsMF1dLFtbMjUxLjg3NDM0LDE2Ni45MzQyMl0sWy0yLjQsLTEuMl0sWzQsMS45XV0sW1syNTguNTc0MzQsMTY3LjQzNDIyXSxbLTIuMiwxLjVdLFsxLjQsLTAuOF1dLFtbMjYxLjY3NDM0LDE2Mi43MzQyMl0sWy0wLjQsMS43XSxbMC45LC00XV0sW1syNTMuOTc0MzQsMTU1LjkzNDIyXSxbNy4xLDEuNV0sWy03LjQsLTEuNl1dXSwmcXVvdDtjbG9zZWQmcXVvdDs6dHJ1ZSwmcXVvdDtmaWxsQ29sb3ImcXVvdDs6WzAsMCwwXX1dfSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48cGF0aCBkPSJNMjQ3LjM3NDM1LDE3NC45MzQyMmw0LjQsMi4xYzQuMywyLjEgNC4zLDIuMSA3LjksMC4yYzUuMywtMi44IDcsLTEuMyA3LDYuNmMwLjEsNS43IDAuMyw2LjMgMi44LDcuNmMzLjQsMS44IDQuNCw1LjYgMi40LDguOGMtMS4yLDEuOCAtNC44LDMuNSAtMTQuMSw2LjZjLTE2LjYsNS41IC0xNi41LDUuNiAtMjIuNSwtMTMuNGMtMy4yLC05LjkgLTMuMiwtMTAgLTEuMywtMTIuNWMyLC0yLjcgNi42LC0zLjQgMTAuNCwtMS43YzEuMywwLjYgMS45LDAuMiAyLjQsLTEuOHpNMjUyLjI3NDM1LDE4MS44MzQyMmMtMS40LC0wLjcgLTIuMSwtMC40IC0zLjEsMS41bC0xLjMsMi4zbC00LjMsLTIuMWMtNywtMy4zIC03LjMsLTEuOCAtMi45LDExLjNjMi4xLDYuMSA0LjIsMTEuMyA0LjUsMTEuNWMxLDAuNiAyMC44LC02LjEgMjIuNiwtNy42YzIuMiwtMS44IDEuNywtMi44IC0zLC01LjFsLTQuNCwtMi4xbDEuNCwtMy4zYzAuOCwtMS44IDEuNCwtNC4zIDEuNCwtNS40YzAsLTIuMSAtMS40LC0yLjcgLTIuNSwtMWMtMC4zLDAuNSAtMiwxIC0zLjYsMWMtMS43LDAgLTMuOCwtMC40IC00LjgsLTF6IiBmaWxsLW9wYWNpdHk9IjAuMTU2ODYiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yNTcuMDkwNDksMTgyLjc4NjljMS42LDAgMy4zMTAxNCwtMC40OTUyMSAzLjYxMDE0LC0wLjk5NTIxYzEuMSwtMS43IDIuNTA3MzEsLTEuMDk0NSAyLjUwNzMxLDEuMDA1NWMwLDEuMSAtMC41OTE1MiwzLjYxMDAzIC0xLjM5MTUyLDUuNDEwMDNsLTEuMzk0MTYsMy4zMTI3NWw0LjQwMjA4LDIuMTE0MzZjNC43LDIuMyA1LjE5NzEsMy4zMTY2OCAyLjk5NzEsNS4xMTY2OGMtMS44LDEuNSAtMjEuNjc0MjQsOC4yMjUyMSAtMjIuNjc0MjQsNy42MjUyMWMtMC4zLC0wLjIgLTIuNDIyNjMsLTUuNDM3MiAtNC41MjI2MywtMTEuNTM3MmMtNC40LC0xMy4xIC00LjA4NTE0LC0xNC42NDA1OSAyLjkxNDg2LC0xMS4zNDA1OWw0LjMwNjQ0LDIuMDk0N2wxLjMwOTQ2LC0yLjMwNTE0YzEsLTEuOSAxLjcxNDI2LC0yLjIwMzUzIDMuMTE0MjYsLTEuNTAzNTNjMSwwLjYgMy4xMjA4OSwxLjAwMjQ1IDQuODIwODksMS4wMDI0NXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O25vSG92ZXImcXVvdDs6ZmFsc2UsJnF1b3Q7b3JpZ0l0ZW0mcXVvdDs6WyZxdW90O1BhdGgmcXVvdDsseyZxdW90O2FwcGx5TWF0cml4JnF1b3Q7OnRydWUsJnF1b3Q7c2VnbWVudHMmcXVvdDs6W1tbMjUyLjI3NDM0LDE4MS44MzQyMl0sWzEsMC42XSxbLTEuNCwtMC43XV0sW1syNDkuMTc0MzQsMTgzLjMzNDIyXSxbMSwtMS45XSxbMCwwXV0sWzI0Ny44NzQzNCwxODUuNjM0MjJdLFtbMjQzLjU3NDM0LDE4My41MzQyMl0sWzAsMF0sWy03LC0zLjNdXSxbWzI0MC42NzQzNCwxOTQuODM0MjJdLFstNC40LC0xMy4xXSxbMi4xLDYuMV1dLFtbMjQ1LjE3NDM0LDIwNi4zMzQyMl0sWy0wLjMsLTAuMl0sWzEsMC42XV0sW1syNjcuNzc0MzQsMTk4LjczNDIyXSxbLTEuOCwxLjVdLFsyLjIsLTEuOF1dLFtbMjY0Ljc3NDM0LDE5My42MzQyMl0sWzQuNywyLjNdLFswLDBdXSxbMjYwLjM3NDM0LDE5MS41MzQyMl0sW1syNjEuNzc0MzQsMTg4LjIzNDIyXSxbMCwwXSxbMC44LC0xLjhdXSxbWzI2My4xNzQzNCwxODIuODM0MjJdLFswLDEuMV0sWzAsLTIuMV1dLFtbMjYwLjY3NDM0LDE4MS44MzQyMl0sWzEuMSwtMS43XSxbLTAuMywwLjVdXSxbWzI1Ny4wNzQzNCwxODIuODM0MjJdLFsxLjYsMF0sWy0xLjcsMF1dXSwmcXVvdDtjbG9zZWQmcXVvdDs6dHJ1ZSwmcXVvdDtmaWxsQ29sb3ImcXVvdDs6WzAsMCwwXX1dfSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L2c+PC9nPjwvc3ZnPg==";
-
   const newThread =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIyMS4zMzMzMyIgaGVpZ2h0PSIyMS4zMzMzMyIgdmlld0JveD0iMCwwLDIxLjMzMzMzLDIxLjMzMzMzIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjI5LjMzMzMzLC0xNjkuMzMzMzMpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMjQ0LjM0NzY4LDE3Ni41OTA5OGgtMi4xMDY5NGwtMC4yODAyLDIuMTc0MTlsLTMuOTczMzUsMC4wMDYxMWwtMC4yNzQ5NSwtMi4xODAzaC0yLjA1Nzk3Yy0wLjU4NjQxLDAgLTAuODY5MjEsLTAuNzMyNjUgLTAuNDYzOTksLTEuMTU2ODJsNC4zNDQ4NywtNC41NzU4N2MwLjI1NzA5LC0wLjI1NzA3IDAuNjc0NTYsLTAuMjU3MDcgMC45MTgxOCwwbDQuMzU5NTYsNC41NzU4N2MwLjQwNDAxLDAuNDI0MTcgMC4xMTAxOSwxLjE1NjgyIC0wLjQ2NTIyLDEuMTU2ODIiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLW9wYWNpdHk9IjAuMiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0yNDQuMzQ3NjgsMTgzLjQwOTAzYzAuNTc1NCwwIDAuODY5MjIsMC43MzI2NSAwLjQ2NTIyLDEuMTU2ODJsLTQuMzU5NTYsNC41NzU4N2MtMC4yNDM2MywwLjI1NzA3IC0wLjY2MTA5LDAuMjU3MDcgLTAuOTE4MTgsMGwtNC4zNDQ4NywtNC41NzU4N2MtMC40MDUyMywtMC40MjQxNyAtMC4xMjI0MiwtMS4xNTY4MiAwLjQ2Mzk5LC0xLjE1NjgyaDIuMDU3OTdsMC4yNTI2LC0yLjE0ODZsMy45ODA2MiwwLjAyMzE2bDAuMjk1MjgsMi4xMjU0NGgyLjEwNjk0IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2Utb3BhY2l0eT0iMC4yIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHBhdGggZD0iTTI0NC4zNDc2OCwxNzYuNTkwOThoLTIuMTA2OTRsLTAuOTA0NzIsNi44MzgxYy0wLjA5Nzk0LDAuNzg0MDcgLTAuNzk1NzYsMS4zMzY3NyAtMS41NTQ4LDEuMjIxMDljLTAuNjEyMTIsLTAuMDg5OTggLTEuMDg5NTgsLTAuNjA0MTIgLTEuMTY0MjYsLTEuMjIxMDlsLTAuOTA0NzIsLTYuODM4MWgtMi4wNTc5N2MtMC41ODY0MSwwIC0wLjg2OTIxLC0wLjczMjY1IC0wLjQ2Mzk5LC0xLjE1NjgybDQuMzQ0ODcsLTQuNTc1ODdjMC4yNTcwOSwtMC4yNTcwNyAwLjY3NDU2LC0wLjI1NzA3IDAuOTE4MTgsMGw0LjM1OTU2LDQuNTc1ODdjMC40MDQwMSwwLjQyNDE3IDAuMTEwMTksMS4xNTY4MiAtMC40NjUyMiwxLjE1NjgyIiBmaWxsPSIjZmZmZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0NC4zNDc2OCwxODMuNDA5MDNjMC41NzU0LDAgMC44NjkyMiwwLjczMjY1IDAuNDY1MjIsMS4xNTY4MmwtNC4zNTk1Niw0LjU3NTg3Yy0wLjI0MzYzLDAuMjU3MDcgLTAuNjYxMDksMC4yNTcwNyAtMC45MTgxOCwwbC00LjM0NDg3LC00LjU3NTg3Yy0wLjQwNTIzLC0wLjQyNDE3IC0wLjEyMjQyLC0xLjE1NjgyIDAuNDYzOTksLTEuMTU2ODJoMi4wNTc5N2wwLjkwNDcyLC02LjgzODExYzAuMDc0NjgsLTAuNjE2OTcgMC41NTIxNCwtMS4xMzExMSAxLjE2NDI2LC0xLjIyMTA5YzAuNzU5MDQsLTAuMTE1NjggMS40NTY4NiwwLjQzNzAyIDEuNTU0OCwxLjIyMTA5bDAuOTA0NzIsNi44MzgxMWgyLjEwNjk0IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMjkuMzMzMzMsMTkwLjY2NjY3di0yMS4zMzMzM2gyMS4zMzMzM3YyMS4zMzMzM3oiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48L2c+PC9nPjwvc3ZnPg==";
-
   const timeIcon =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxOC40MTAyNSIgaGVpZ2h0PSIxOC40MTAyNSIgdmlld0JveD0iMCwwLDE4LjQxMDI1LDE4LjQxMDI1Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjMwLjc5NDg4LC0xNzAuNzk0OSkiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIzMi45MjMxLDE4MC42NzQyM2MwLC0yLjUzOTI3IDEuMzM3MzYsLTQuNzY2MTggMy4zNDYxNSwtNi4wMTQ4di0wLjY3ODM2YzAsLTAuOTU2NjQgMC43NzU1MSwtMS43MzIxNSAxLjczMjE1LC0xLjczMjE1aDMuOTk3MjVjMC45NTY2NCwwIDEuNzMyMTUsMC43NzU1MSAxLjczMjE1LDEuNzMyMTV2MC42NzgzNmMyLjAwODc5LDEuMjQ4NjMgMy4zNDYxNiwzLjQ3NTU0IDMuMzQ2MTYsNi4wMTQ4YzAsMy45MDg0OCAtMy4xNjg0NSw3LjA3NjkyIC03LjA3NjkzLDcuMDc2OTJjLTMuOTA4NDgsMCAtNy4wNzY5MiwtMy4xNjg0NCAtNy4wNzY5MiwtNy4wNzY5MnpNMjQxLjYyNTU4LDE3Ny44OTQ4N2MwLjIyMzM3LDAgMC4zMzc0MiwtMC4yODQ0MSAwLjE4MDU5LC0wLjQ0OTA3bC0xLjY5MjM1LC0xLjc3NjMzYy0wLjA5NDU3LC0wLjA5OTggLTAuMjU2NjMsLTAuMDk5OCAtMC4zNTY0MywwbC0xLjY4NjY1LDEuNzc2MzNjLTAuMTU3MzEsMC4xNjQ2NiAtMC4wNDc1MiwwLjQ0OTA3IDAuMTgwMTIsMC40NDkwN2gwLjc5ODg5bDAuMzQzOTIsMi41OTk0M2MtMC4yMSwwLjE1OTgzIC0wLjM0NTU3LDAuNDEyNDQgLTAuMzQ1NTcsMC42OTY3MmMwLDAuNDgzMjUgMC4zOTE3NSwwLjg3NSAwLjg3NSwwLjg3NWMwLjAxMTM1LDAgMC4wMjI2NiwtMC4wMDAyMSAwLjAzMzksLTAuMDAwNjRsMS44OTY0OSwxLjY5ODgybC0xLjAzODU4LDAuNzIyOGMtMC4xNjA5NywwLjE2MDk3IC0wLjAzNzQ5LDAuNDM5NzEgMC4xOTAxOCwwLjQ0NDlsMi40NDg3LDAuMDYzNDFjMC4xNDExMywwIDAuMjU1NzIsLTAuMTE0NiAwLjI1MjAzLC0wLjI1MjA0bC0wLjA1OTM4LC0yLjQ1MjczYy0wLjAwNTU0LC0wLjIyNzMzIC0wLjI4NzI5LC0wLjM0Nzc4IC0wLjQ0NTIzLC0wLjE4OTgzbC0wLjU3ODM0LDAuNTc4MzRsLTEuODI4OTcsLTEuNDAxNTdjMC4wMDI3OSwtMC4wMjg0NCAwLjAwNDIxLC0wLjA1NzI4IDAuMDA0MjEsLTAuMDg2NDZjMCwtMC4yNzk2NSAtMC4xMzExOSwtMC41Mjg2NiAtMC4zMzUzOCwtMC42ODg4NGwtMC4wMjM0NSwtMi44MTc4NHoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIwLjIiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjc1Ii8+PHBhdGggZD0iTTIzMC43OTQ4OSwxODkuMjA1MTZ2LTE4LjQxMDI1aDE4LjQxMDI1djE4LjQxMDI1eiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjMyLjkyMzEsMTgwLjY3NDIzYzAsLTIuNTM5MjcgMS4zMzczNiwtNC43NjYxOCAzLjM0NjE1LC02LjAxNDh2LTAuNjc4MzZjMCwtMC45NTY2NCAwLjc3NTUxLC0xLjczMjE1IDEuNzMyMTUsLTEuNzMyMTVoMy45OTcyNWMwLjk1NjY0LDAgMS43MzIxNSwwLjc3NTUxIDEuNzMyMTUsMS43MzIxNXYwLjY3ODM2YzIuMDA4NzksMS4yNDg2MyAzLjM0NjE1LDMuNDc1NTQgMy4zNDYxNSw2LjAxNDhjMCwzLjkwODQ4IC0zLjE2ODQ1LDcuMDc2OTIgLTcuMDc2OTIsNy4wNzY5MmMtMy45MDg0OCwwIC03LjA3NjkyLC0zLjE2ODQ0IC03LjA3NjkyLC03LjA3Njkyek0yNDEuNjI1NTgsMTc3Ljg5NDg3YzAuMjIzMzcsMCAwLjMzNzQzLC0wLjI4NDQxIDAuMTgwNiwtMC40NDkwN2wtMS42OTIzNSwtMS43NzYzMmMtMC4wOTQ1NywtMC4wOTk4IC0wLjI1NjYzLC0wLjA5OTggLTAuMzU2NDMsMGwtMS42ODY2NSwxLjc3NjMyYy0wLjE1NzMxLDAuMTY0NjYgLTAuMDQ3NTIsMC40NDkwNyAwLjE4MDEyLDAuNDQ5MDdoMC43OTg4OWwwLjM0MzkyLDIuNTk5NDNjLTAuMjEsMC4xNTk4MyAtMC4zNDU1NywwLjQxMjQ0IC0wLjM0NTU3LDAuNjk2NzFjMCwwLjQ4MzI1IDAuMzkxNzUsMC44NzUgMC44NzUsMC44NzVjMC4wMTEzNSwwIDAuMDIyNjUsLTAuMDAwMjEgMC4wMzM5LC0wLjAwMDY0bDEuNDIyODEsMS44NTY3MWwtMC41NjQ5LDAuNTY0OTFjLTAuMTYwOTcsMC4xNjA5NyAtMC4wMzc0OSwwLjQzOTcxIDAuMTkwMTcsMC40NDQ5bDIuNDQ4NywwLjA2MzQxYzAuMTQxMTMsMCAwLjI1NTczLC0wLjExNDYgMC4yNTIwNCwtMC4yNTIwNGwtMC4wNTkzOCwtMi40NTI3MmMtMC4wMDU1NCwtMC4yMjczMyAtMC4yODcyOSwtMC4zNDc3OCAtMC40NDUyMywtMC4xODk4NGwtMC41NzgzNCwwLjU3ODM0bC0xLjgyODk4LC0xLjQwMTU3YzAuMDAyNzksLTAuMDI4NDQgMC4wMDQyMiwtMC4wNTcyOCAwLjAwNDIyLC0wLjA4NjQ2YzAsLTAuMjc5NjUgLTAuMTMxMTksLTAuNTI4NjYgLTAuMzM1MzgsLTAuNjg4ODRsMC4zNDQ5NywtMi42MDczMXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjIiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwIi8+PC9nPjwvZz48L3N2Zz4=";
-
   const startFlag =
 "data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNi42MyAxNy41Ij48ZGVmcz48c3R5bGU+LmNscy0xLC5jbHMtMntmaWxsOiM0Y2JmNTY7c3Ryb2tlOiM0NTk5M2Q7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO30uY2xzLTJ7c3Ryb2tlLXdpZHRoOjEuNXB4O308L3N0eWxlPjwvZGVmcz48dGl0bGU+aWNvbi0tZ3JlZW4tZmxhZzwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNLjc1LDJBNi40NCw2LjQ0LDAsMCwxLDguNDQsMmgwYTYuNDQsNi40NCwwLDAsMCw3LjY5LDBWMTIuNGE2LjQ0LDYuNDQsMCwwLDEtNy42OSwwaDBhNi40NCw2LjQ0LDAsMCwwLTcuNjksMCIvPjxsaW5lIGNsYXNzPSJjbHMtMiIgeDE9IjAuNzUiIHkxPSIxNi43NSIgeDI9IjAuNzUiIHkyPSIwLjc1Ii8+PC9zdmc+";
 
@@ -445,6 +439,7 @@
       };
     }
 
+    // Helper Functions
     getTargets(myself, all) {
       const spriteNames = [];
       if (myself) spriteNames.push({ text: "myself", value: "_myself_" });
@@ -482,10 +477,47 @@
       return [...vanillaHats, ...filteredHats];
     }
 
+    addMissKeys(sourceObj, checkedObj) {
+      Object.keys(sourceObj).forEach(key => {
+        if (!(key in checkedObj)) checkedObj[key] = sourceObj[key];
+      });
+      Object.keys(sourceObj.stackFrames[0]).forEach(key => {
+        if (!(key in checkedObj.stackFrames[0])) checkedObj.stackFrames[0][key] = sourceObj.stackFrames[0][key];
+      });
+      return checkedObj;
+    }
+
+    async getTargetVal(newTarget, block, ogTarget) {
+      const oldVal = runtime.compilerOptions.enabled;
+      runtime.compilerOptions.enabled = false;
+      if (block.block === null) return "";
+      const thread = runtime._pushThread(block.block, ogTarget);
+      runtime.compilerOptions.enabled = oldVal;
+      thread.isCompiled = false;
+      thread.target = newTarget;
+      return new Promise(resolve => {
+        const interval = setInterval(() => {
+          const reported = Scratch.Cast.toString(thread.justReported);
+          if (reported !== "null") {
+            clearInterval(interval);
+            resolve(reported);
+          }
+        }, 0);
+      });
+    }
+
+    pushThreadTarget(id, newT, oldT) {
+      const thread = runtime._pushThread(id, oldT, { stackClick: false });
+      thread.target = newT
+      thread.ogTarget = oldT
+      if (runtime.compilerOptions.enabled) thread.tryCompile();
+      return thread;
+    }
+
+    //Block Functions
     forceHat(args) {
-      const type = args.TYPE === "restart";
       const thisHat = runtime._hats[args.HAT];
-      if (thisHat) thisHat.restartExistingThreads = type;
+      if (thisHat) thisHat.restartExistingThreads = args.TYPE === "restart";
     }
 
     resetHats(args) {
@@ -518,8 +550,7 @@
       const thisThread = util.thread.topBlock;
       runtime.emit("PROJECT_START_BEFORE_RESET");
       runtime.threads
-        .filter(thread => thread.topBlock !== thisThread)
-        .forEach(thread => thread.stopThisScript());
+        .filter(thread => thread.topBlock !== thisThread).forEach(thread => thread.stopThisScript());
       // green flag behaviour
       runtime.emit("PROJECT_START");
       runtime.updateCurrentMSecs();
@@ -571,18 +602,20 @@
     }
 
     simuRun(args, util) {
-      if (
-        util.thread.target.blocks.getBranch(util.thread.peekStack(), 1) &&
+      const branches = [
+        util.thread.target.blocks.getBranch(util.thread.peekStack(), 1),
         util.thread.target.blocks.getBranch(util.thread.peekStack(), 2)
-      ) {
-        let thread1 = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
-        const thread2 = util.thread.target.blocks.getBranch(util.thread.peekStack(), 2);
+      ];
+      if (branches[0] && branches[1]) {
         const target = util.target;
-        const newRuntime = util.sequencer.runtime;
+        const run = util.sequencer.runtime;
+        const ogThread = util.thread;
         //minimize push time
-        thread1 = newRuntime._pushThread(thread1, target);
+        const thread1 = run._pushThread(branches[0], target, { stackClick: false });
         thread1.status = 1;
-        newRuntime._pushThread(thread2, target);
+        this.addMissKeys(ogThread, thread1);
+        const thread2 = run._pushThread(branches[1], target, { stackClick: false });
+        this.addMissKeys(ogThread, thread2);
         thread1.status = 0;
       }
     }
@@ -645,8 +678,7 @@
       const threads2Wait = []; // used for "run and wait"
       for (const target of runtime.targets) {
         const blocks = target.blocks;
-        const blockKeys = Object.keys(blocks._blocks);
-        for (const key of blockKeys) {
+        for (const key of Object.keys(blocks._blocks)) {
           const block = blocks._blocks[key];
           if (block.opcode === "SPadvControl_onCall") {
             let input = blocks.getBlock(block.inputs.CALL.block)?.fields?.TEXT?.value;
@@ -654,12 +686,11 @@
             // If the user simply inputs "false" or "true", we should prevent that
             if (Scratch.Cast.toString(isText) === input) isText = true;
             if (input === undefined && !isText) {
-              promises.push(this.getOutput(block.inputs?.CALL?.block, target)
+              promises.push(this.getTargetVal(target, block.inputs?.CALL, target)
                 .then(output => {
                   input = output === callID;
                   if (block.opcode === "SPadvControl_onCall" && input) {
-                    const blockID = blocks._blocks[key].id;
-                    const branch = blocks.getBranch(blockID, 1);
+                    const branch = blocks.getBranch(blocks._blocks[key].id, 1);
                     if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
                   }
                 })
@@ -674,22 +705,6 @@
       }
       if (promises.length === 0) return threads2Wait;
       else return Promise.all(promises).then(() => threads2Wait);
-    }
-    async getOutput(blockID, target) {
-      const oldVal = runtime.compilerOptions.enabled;
-      runtime.compilerOptions.enabled = false;
-      const thread = runtime._pushThread(blockID, target);
-      runtime.compilerOptions.enabled = oldVal;
-      thread.isCompiled = false;
-      return new Promise(resolve => {
-        const interval = setInterval(() => {
-          const reported = Scratch.Cast.toString(thread.justReported);
-          if (reported !== "null") {
-            clearInterval(interval);
-            resolve(reported);
-          }
-        }, 1);
-      });
     }
 
     async runBranchWait(args, util) {
@@ -710,10 +725,11 @@
     async tryCatch(_, util) {
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
       if (branch) {
-        const thread = runtime._pushThread(branch, util.target);
+        const thread = runtime._pushThread(branch, util.target, { stackClick: false });
+        this.addMissKeys(util.thread, thread);
         await new Promise(resolve => {
           const checkThread = () => {
-            thread.pushTime = Math.floor(Date.now() / 100) * 100;
+            thread.pushTime = Math.floor(Date.now() / 200) * 200;
             if (!vm.runtime.isActiveThread(thread)) resolve();
             else if (issueTimes.indexOf(thread.pushTime) !== -1) {
               thread.stopThisScript();
@@ -738,6 +754,7 @@
           blockInfo.parent = null;
           blockInfo.next = null;
           var thread = runtime._pushThread(ID, target, {stackClick: true});
+          this.addMissKeys(util.thread, thread);
           thread.stack = [];
           thread.pushStack(ID);
           if (vm.runtime.compilerOptions.enabled) thread.tryCompile();
@@ -761,7 +778,10 @@
       const con = Scratch.Cast.toBoolean(args.CON);
       if (branch) {
         if (con) {
-          if (util.stackFrame.SPctrlThread === undefined) util.stackFrame.SPctrlThread = runtime._pushThread(branch, util.target);
+          if (util.stackFrame.SPctrlThread === undefined) {
+            util.stackFrame.SPctrlThread = runtime._pushThread(branch, util.target, { stackClick: false });
+            this.addMissKeys(util.thread, util.stackFrame.SPctrlThread);
+          }
           if (runtime.isActiveThread(util.stackFrame.SPctrlThread)) util.startBranch(2, true);
         } else if (util.stackFrame.SPctrlThread !== undefined) {
           const thread = util.stackFrame.SPctrlThread;
@@ -775,15 +795,12 @@
       conditionStorage[Scratch.Cast.toString(args.ID)] = con;
       if (con) util.startBranch(1, false);
     }
-
     elsePart(args, util) {
       const ID = Scratch.Cast.toString(args.ID);
       if (conditionStorage[ID] !== undefined && conditionStorage[ID] === false) util.startBranch(1, false);
     }
-
     ifElseVal(args) {
-      const ID = Scratch.Cast.toString(args.ID);
-      return Scratch.Cast.toBoolean(conditionStorage[ID]);
+      return Scratch.Cast.toBoolean(conditionStorage[Scratch.Cast.toString(args.ID)]);
     }
 
     async runInSprite(args, util) {
@@ -792,7 +809,6 @@
         util.target.blocks.getBranch(util.thread.peekStack(), 1);
       let newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       let targets = runtime.targets;
-      let thread;
       if (!branch) return;
       if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
         if (args.SPRITE.includes("2")) targets = targets.filter(target => target.isOriginal); // Main Sprites
@@ -800,17 +816,13 @@
         newTarget = targets[0];
       }
       if (newTarget) {
-        thread = runtime._pushThread(branch, thisSprite);
-        thread.target = newTarget;
-        thread.ogTarget = thisSprite;
-        if (runtime.compilerOptions.enabled) thread.tryCompile();
+        const thread = this.pushThreadTarget(branch, newTarget, thisSprite);
+        this.addMissKeys(util.thread, thread);
       }
       if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
         for (let i = 0; i < targets.length; i++) {
-          const newThread = runtime._pushThread(branch, thisSprite);
-          newThread.target = targets[i];
-          newThread.ogTarget = thisSprite;
-          if (runtime.compilerOptions.enabled) newThread.tryCompile();
+          const newThread = this.pushThreadTarget(branch, targets[i], thisSprite);
+          this.addMissKeys(util.thread, newThread);
         }
       }
       // Branch is the same, no need to wait for all threads to finish when they are the same
@@ -847,14 +859,11 @@
           if (clones[i]) {
             const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
             const value = Scratch.Cast.toString(args.VAL);
+            let thread;
             if (variable && Scratch.Cast.toString(variable.value) === value) {
-              if (args.SPRITE === "_myself_") runtime._pushThread(branch, clones[i]);
-              else {
-                const thread = runtime._pushThread(branch, thisSprite);
-                thread.target = clones[i];
-                thread.ogTarget = thisSprite;
-                if (runtime.compilerOptions.enabled) thread.tryCompile();
-              }
+              if (args.SPRITE === "_myself_") thread = runtime._pushThread(branch, clones[i]);
+              else thread = this.pushThreadTarget(branch, clones[i], thisSprite);
+              this.addMissKeys(util.thread, thread);
             }
           }
         }
@@ -882,38 +891,20 @@
       return "";
     }
 
-    async getTargetVal(newTarget, block, ogTarget) {
-      const oldVal = runtime.compilerOptions.enabled;
-      runtime.compilerOptions.enabled = false;
-      if (block.block === null) return "";
-      const thread = runtime._pushThread(block.block, ogTarget);
-      runtime.compilerOptions.enabled = oldVal;
-      thread.isCompiled = false;
-      thread.target = newTarget;
-      return new Promise(resolve => {
-        const interval = setInterval(() => {
-          const reported = Scratch.Cast.toString(thread.justReported);
-          if (reported !== "null") {
-            clearInterval(interval);
-            resolve(reported);
-          }
-        }, 1);
-      });
-    }
-
     deleteRun(args, util) {
       const target = util.target;
       if (target.isOriginal) return;
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
       runtime.disposeTarget(target);
       runtime.stopForTarget(target);
-      if (branch) runtime._pushThread(branch, target.sprite.clones[0]);
+      if (branch) this.addMissKeys(util.thread, runtime._pushThread(branch, target.sprite.clones[0]));
     }
 
     newThreadAdv(args, util) {
       const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 0);
       if (branch) {
         const thread = util.sequencer.runtime._pushThread(branch, util.target);
+        this.addMissKeys(util.thread, thread);
         const params = thread.SPadvCtrl;
         if (typeof params === "undefined") thread.stackFrames[0].SPadvCtrl = {};
         thread.stackFrames[0].SPadvCtrl.arg = Scratch.Cast.toString(args.ARGS);
@@ -966,7 +957,7 @@
         }
         newID = newID.next || this.getOuterNext(container, newID);
         util.stopThisScript();
-        if (newID) vm.runtime._pushThread(newID, util.target);
+        if (newID) this.addMissKeys(util.thread, runtime._pushThread(newID, util.target));
         resolve();
       });
     }
