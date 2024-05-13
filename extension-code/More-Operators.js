@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -15,7 +15,7 @@
   const vm = Scratch.vm;
   const regeneratedReporters = ["SPmoreOPs_getLetter"];
 
-  // Inspired by LilyMakesThings <3
+  // Thank you LilyMakesThings <3
   vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
   vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
 
@@ -485,15 +485,30 @@
         const variableName = this.getUnusedVar(node);
         if (variableName === undefined) return "No solution found";
         const solution = nerdamer.solve(`${node}=${variableName}`, variableName);
-        return solution ? solution.toString() : "No solution found";
+        return solution ? this.fixSolution(solution.toString()) : "No solution found";
       } catch { return "undefined" }
     }
     solveFor(args) {
       try {
         const node = args.STRING.replace(/\s+/g, "");
         const solution = nerdamer.solve(node, args.VAR);
-        return solution ? solution.toString() : "No solution found";
+        return solution ? this.fixSolution(solution.toString()) : "No solution found";
       } catch { return "undefined" }
+    }
+    fixSolution(sol) {
+      // Sometimes the Solution doesnt fully solve ex: returns 12/5
+      // we cant solve for variables, return them
+      const hasVars = /[a-zA-Z]/.test(sol);
+      const sols = [];
+      if (hasVars) return sol;
+      else {
+        sol = sol.replace("[", "[\"").replace("]", "\"]").replace(",", "\",\"");
+        sol = JSON.parse(sol);
+        for (let i = 0; i < sol.length; i++) {
+          sols.push(eval(sol[i]));
+        }
+        return JSON.stringify(sols)
+      }
     }
 
     root(args) { return Math.pow(Scratch.Cast.toNumber(args.NUM), 1 / Scratch.Cast.toNumber(args.N)) }
