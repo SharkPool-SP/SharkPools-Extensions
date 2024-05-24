@@ -36,11 +36,11 @@
       "date": "Last Updated: 11/29/2023"
     },
     "Tune-Shark": {
-      "credits": "Advanced Sound Engine for playing your sounds and more. Made by SharkPool, inspired by LilyMakesThings",
+      "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities.category",
-      "status": "",
-      "date": "Last Updated: 02/25/2024"
+      "status": "update",
+      "date": "Last Updated: 05/23/2024"
     },
     "Added-Motion": {
       "credits": "New Motion Blocks made by SharkPool",
