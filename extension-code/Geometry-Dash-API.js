@@ -3,7 +3,7 @@
 // Description: Fetch Geometry Dash statistics and information
 // By: SharkPool & GDColon (https://gdcolon.com)
 
-// Version V.1.5.1
+// Version V.1.5.2
 
 // Thank you RobTop for Geometry Dash
 
@@ -31,11 +31,92 @@
         blockIconURI,
         color1: "#004de8",
         blocks: [
+          { blockType: Scratch.BlockType.LABEL, text: "Search Levels by URL" },
+          {
+            opcode: "reportResults",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "fetch [menu] results of page [page] of levels from search [url]",
+            arguments: {
+              url: { type: Scratch.ArgumentType.STRING, defaultValue: "https://gdbrowser.com/search/test" },
+              page: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
+              menu: { type: Scratch.ArgumentType.STRING, menu: "searchFilter" }
+            }
+          },
+          "---",
+          {
+            opcode: "createSearchURL",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "create search URL with input [input]",
+            arguments: {
+              input: { type: Scratch.ArgumentType.STRING, defaultValue: "join-URL-strings-here" }
+            }
+          },
+          {
+            opcode: "buildURL",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "search content: [query]",
+            arguments: {
+              query: { type: Scratch.ArgumentType.STRING, defaultValue: "*" }
+            }
+          },
+          "---",
+          {
+            opcode: "levelLength",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "level length from [size1] to [size2]",
+            arguments: {
+              size1: { type: Scratch.ArgumentType.STRING, menu: "size" },
+              size2: { type: Scratch.ArgumentType.STRING, menu: "size" }
+            }
+          },
+          {
+            opcode: "levelDifficulty",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "level difficulty from [difficulty1] to [difficulty2]",
+            arguments: {
+              difficulty1: { type: Scratch.ArgumentType.STRING, menu: "difficulty" },
+              difficulty2: { type: Scratch.ArgumentType.STRING, menu: "difficulty" }
+            }
+          },
+          {
+            opcode: "demonDifficulty",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "demon difficulty: [demon] demon",
+            disableMonitor: true,
+            arguments: {
+              demon: { type: Scratch.ArgumentType.STRING, menu: "demonDifficulty" }
+            }
+          },
+          {
+            opcode: "rating",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "star rating: [rating]",
+            disableMonitor: true,
+            arguments: {
+              rating: { type: Scratch.ArgumentType.STRING, menu: "rating" }
+            }
+          },
+          {
+            opcode: "enableTag",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "enable [tag] tag",
+            arguments: {
+              tag: { type: Scratch.ArgumentType.STRING, menu: "tags" }
+            }
+          },
+          {
+            opcode: "enableTypeTag",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "enable [typeTag] type tag",
+            arguments: {
+              typeTag: { type: Scratch.ArgumentType.STRING, menu: "typeTags" }
+            }
+          },
           {
             opcode: "addSongFromID",
             blockType: Scratch.BlockType.REPORTER,
             text: "add [menu] song from Song ID: [id]",
-            arguments: { 
+            arguments: {
               menu: { type: Scratch.ArgumentType.STRING, menu: "songMenu" }, 
               id: { type: Scratch.ArgumentType.NUMBER, defaultValue: 396093 } 
             }
