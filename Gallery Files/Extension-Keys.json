@@ -35,6 +35,13 @@
       "status": "",
       "date": "Last Updated: 11/29/2023"
     },
+    "Tune-Shark-V3": {
+      "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
+      "tags": ".all.utilities.expanded.category",
+      "status": "new",
+      "date": "Last Updated: 05/24/2024"
+    },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
