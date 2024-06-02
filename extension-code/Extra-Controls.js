@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.8
+// Version V.1.4.81
 
 (function (Scratch) {
   "use strict";
@@ -809,6 +809,7 @@
         util.target.blocks.getBranch(util.thread.peekStack(), 1);
       let newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       let targets = runtime.targets;
+      let thread;
       if (!branch) return;
       if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
         if (args.SPRITE.includes("2")) targets = targets.filter(target => target.isOriginal); // Main Sprites
@@ -816,7 +817,7 @@
         newTarget = targets[0];
       }
       if (newTarget) {
-        const thread = this.pushThreadTarget(branch, newTarget, thisSprite);
+        thread = this.pushThreadTarget(branch, newTarget, thisSprite);
         this.addMissKeys(util.thread, thread);
       }
       if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
