@@ -250,7 +250,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SoundCloud-API.js",
       "tags": ".all.fetching",
       "status": "",
-      "date": "Last Updated: 05/12/2024"
+      "date": "Last Updated: 06/02/2024"
     },
     "Google-Spreadsheets": {
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
@@ -278,21 +278,21 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
       "status": "",
-      "date": "Last Updated: 12/28/2023"
+      "date": "Last Updated: 06/02/2024"
     },
     "QR-Codes": {
       "credits": "Create and Read QR Codes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
       "tags": ".all.fetching.utilities",
       "status": "",
-      "date": "Released: 12/20/2023"
+      "date": "Last Updated: 06/02/2024"
     },
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
       "tags": ".all.expanded.utilities.category",
       "status": "",
-      "date": "Last Updated: 02/25/2024"
+      "date": "Last Updated: 06/02/2024"
     },
     "Speech-Bubbles": {
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
@@ -313,7 +313,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Control.js",
       "tags": ".all.utilities",
       "status": "",
-      "date": "Last Updated: 03/04/2024"
+      "date": "Last Updated: 06/02/2024"
     },
     "Layer-Control": {
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
@@ -355,7 +355,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
       "status": "",
-      "date": "Last Updated: 05/12/2024"
+      "date": "Last Updated: 06/02/2024"
     },
     "Captchas": {
       "credits": "Simple Client-Based Captcha Extension, doesnt promise 100% security. Made by SharkPool",
