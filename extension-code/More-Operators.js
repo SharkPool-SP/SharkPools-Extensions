@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.0.1
+// Version V.1.0.11
 
 (function (Scratch) {
   "use strict";
@@ -498,11 +498,13 @@
     fixSolution(sol) {
       // Sometimes the Solution doesnt fully solve ex: returns 12/5
       // we cant solve for variables, return them
-      const hasVars = /[a-zA-Z]/.test(sol);
+      const tempSol = sol.replaceAll("sin", "").replaceAll("cos", "").replaceAll("tan", "");
+      const hasVars = /[a-zA-Z]/.test(tempSol);
+      sol = sol.replace("[", "[\"").replace("]", "\"]").replace(",", "\",\"");
       const sols = [];
       if (hasVars) return sol;
       else {
-        sol = sol.replace("[", "[\"").replace("]", "\"]").replace(",", "\",\"");
+        sol = sol.replaceAll("sin", "Math.sin").replaceAll("cos", "Math.cos").replaceAll("tan", "Math.tan");
         sol = JSON.parse(sol);
         for (let i = 0; i < sol.length; i++) {
           sols.push(eval(sol[i]));
