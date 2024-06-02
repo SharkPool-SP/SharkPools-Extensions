@@ -186,24 +186,26 @@
       </defs></svg>`;
     document.body.append(grad1, grad2);
   }
-  if (typeof scaffolding === "undefined") addLinearGradientToBody();
-
-  function documentChangedCallback(mutationsList, observer) {
-    var pathElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] path");
-    pathElements.forEach(function(pathElement) {
-      var currentFill = pathElement.getAttribute("fill");
-      pathElement.setAttribute("fill", currentFill.replace(/#7b9cbb/g, "url(#SPevents-GRAD1)"));
-    });
-    var rectElements = document.querySelectorAll("g[data-category=\"Runtime Events\"] rect.blocklyBlockBackground");
-    rectElements.forEach(function(rectElement) {
-      var currentFill = rectElement.getAttribute("fill");
-      rectElement.setAttribute("fill", currentFill.replace(/#7b9cbb/g, "url(#SPevents-GRAD2)"));
-    });
-  }
-  if (typeof scaffolding === "undefined") {
-    var observer = new MutationObserver(documentChangedCallback);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  if (Scratch.gui) Scratch.gui.getBlockly().then((ScratchBlocks) => {
+    addLinearGradientToBody();
+    // I made this :3, -Ashimee
+    if (!ScratchBlocks?.SPgradients?.patched) {
+      ScratchBlocks.SPgradients = {gradientUrls: {}, patched: false};
+      const BSP = ScratchBlocks.BlockSvg.prototype, BSPR = BSP.render;
+      BSP.render = function(...args) {
+        const res = BSPR.apply(this, args);
+        let category;
+        if (this?.svgPath_ && (category = this.type.slice(0, this.type.indexOf("_"))) && ScratchBlocks.SPgradients.gradientUrls[category]) {
+          const urls = ScratchBlocks.SPgradients.gradientUrls[category];
+          if (urls) this.svgPath_.setAttribute("fill", urls[0]);
+        }
+        return res;
+      }
+      ScratchBlocks.SPgradients.patched = true;
+    }
+    // For every extension using this just change the extension id and urls you put in and the patch code will handle the rest
+    ScratchBlocks.SPgradients.gradientUrls["SPevents"] = ["url(#SPevents-GRAD1)", "url(#SPevents-GRAD2)"];
+  });
 
   Scratch.extensions.register(new SPevents());
 })(Scratch);
