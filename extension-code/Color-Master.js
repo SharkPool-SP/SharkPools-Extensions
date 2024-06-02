@@ -3,7 +3,7 @@
 // Description: Color Utilities and Color Conversions
 // By: SharkPool
 
-//  Version 1.2.1
+//  Version 1.2.11
 
 (function (Scratch) {
   "use strict";
@@ -310,42 +310,38 @@
 
     maker3(args) { return `${args.COLOR} ${args.PERCENT - 90}deg${args.STRING ? `,${args.STRING}` : ""}` }
   }
+
+  function addLinearGradientToBody() {
+    var grad1 = document.createElement("div");
+    grad1.innerHTML = `<svg><defs>
+      <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPcolorMaster-GRAD1">
+      <stop offset="0" stop-color="#002eff"/><stop offset="0.5" stop-color="#b200ff"/></linearGradient>
+      </defs></svg>`;
+    var grad2 = document.createElement("div");
+    grad2.innerHTML = `<svg><defs>
+      <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPcolorMaster-GRAD2">
+      <stop offset="0" stop-color="#b200ff"/><stop offset="0.5" stop-color="#002eff"/></linearGradient>
+      </defs></svg>`;
+    document.body.append(grad1, grad2);
+  }
+  if (Scratch.gui) Scratch.gui.getBlockly().then((ScratchBlocks) => {
+    addLinearGradientToBody();
+    if (!ScratchBlocks?.SPgradients?.patched) { // New Gradient Patch by Ashimee <3
+      ScratchBlocks.SPgradients = {gradientUrls: {}, patched: false};
+      const BSP = ScratchBlocks.BlockSvg.prototype, BSPR = BSP.render;
+      BSP.render = function(...args) {
+        const res = BSPR.apply(this, args);
+        let category;
+        if (this?.svgPath_ && (category = this.type.slice(0, this.type.indexOf("_"))) && ScratchBlocks.SPgradients.gradientUrls[category]) {
+          const urls = ScratchBlocks.SPgradients.gradientUrls[category];
+          if (urls) this.svgPath_.setAttribute("fill", urls[0]);
+        }
+        return res;
+      }
+      ScratchBlocks.SPgradients.patched = true;
+    }
+    ScratchBlocks.SPgradients.gradientUrls["SPcolorMaster"] = ["url(#SPcolorMaster-GRAD1)", "url(#SPcolorMaster-GRAD2)"];
+  });
+
   Scratch.extensions.register(new SPcolorMaster);
 })(Scratch);
-
-function addLinearGradientToBody() {
-  var grad1 = document.createElement("div");
-  grad1.innerHTML = `<svg><defs>
-    <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPcolorMaster-GRAD1">
-    <stop offset="0" stop-color="#002eff"/><stop offset="0.5" stop-color="#b200ff"/></linearGradient>
-    </defs></svg>`;
-  var grad2 = document.createElement("div");
-  grad2.innerHTML = `<svg><defs>
-    <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPcolorMaster-GRAD2">
-    <stop offset="0" stop-color="#b200ff"/><stop offset="0.5" stop-color="#002eff"/></linearGradient>
-    </defs></svg>`;
-  document.body.appendChild(grad1);
-  document.body.appendChild(grad2);
-}
-if (typeof scaffolding === "undefined") addLinearGradientToBody();
-
-function documentChangedCallback(mutationsList, observer) {
-  var elements = document.querySelectorAll("g[data-category=\"Color Master\"] path");
-  var pathElements = document.querySelectorAll("g[data-category=\"Color Master\"] path");
-  pathElements.forEach(function(pathElement) {
-    var currentFill = pathElement.getAttribute("fill");
-    var newFill = currentFill.replace(/#025bf5/g, "url(#SPcolorMaster-GRAD1)");
-    pathElement.setAttribute("fill", newFill);
-  });
-  var rectElements = document.querySelectorAll("g[data-category=\"Color Master\"] rect.blocklyBlockBackground");
-  rectElements.forEach(function(rectElement) {
-    var currentFill = rectElement.getAttribute("fill");
-    var newFill = currentFill.replace(/#025bf5/g, "url(#SPcolorMaster-GRAD2)");
-    rectElement.setAttribute("fill", newFill);
-  });
-}
-if (typeof scaffolding === "undefined") {
-  var observer = new MutationObserver(documentChangedCallback);
-  var observerConfig = { childList: true, subtree: true };
-  observer.observe(document.documentElement, observerConfig);
-}

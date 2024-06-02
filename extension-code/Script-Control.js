@@ -3,7 +3,7 @@
 // Description: Control Scripts
 // By: SharkPool
 
-// Version V.1.4.01
+// Version V.1.4.1
 
 (function (Scratch) {
   "use strict";
@@ -404,18 +404,23 @@
       </defs></svg>`;
     document.body.append(grad1);
   }
-  if (typeof scaffolding === "undefined") addLinearGradientToBody();
-
-  function documentChangedCallback(mutationsList, observer) {
-    var pathElements = document.querySelectorAll("g[data-category=\"Script Control\"] path");
-    pathElements.forEach(function(pathElement) {
-      var currentFill = pathElement.getAttribute("fill");
-      pathElement.setAttribute("fill", currentFill.replace(/#3a6062/g, "url(#SPscripts-GRAD1)"));
-    });
-  }
-  if (typeof scaffolding === "undefined") {
-    var observer = new MutationObserver(documentChangedCallback);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  if (Scratch.gui) Scratch.gui.getBlockly().then((ScratchBlocks) => {
+    addLinearGradientToBody();
+    if (!ScratchBlocks?.SPgradients?.patched) { // New Gradient Patch by Ashimee <3
+      ScratchBlocks.SPgradients = {gradientUrls: {}, patched: false};
+      const BSP = ScratchBlocks.BlockSvg.prototype, BSPR = BSP.render;
+      BSP.render = function(...args) {
+        const res = BSPR.apply(this, args);
+        let category;
+        if (this?.svgPath_ && (category = this.type.slice(0, this.type.indexOf("_"))) && ScratchBlocks.SPgradients.gradientUrls[category]) {
+          const urls = ScratchBlocks.SPgradients.gradientUrls[category];
+          if (urls) this.svgPath_.setAttribute("fill", urls[0]);
+        }
+        return res;
+      }
+      ScratchBlocks.SPgradients.patched = true;
+    }
+    ScratchBlocks.SPgradients.gradientUrls["SPscripts"] = ["url(#SPscripts-GRAD1)"];
+  });
   Scratch.extensions.register(new SPscripts());
 })(Scratch);
