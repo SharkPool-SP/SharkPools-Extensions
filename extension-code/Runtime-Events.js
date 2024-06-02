@@ -3,7 +3,7 @@
 // Description: Events from the Runtime
 // By: SharkPool
 
-// Version V.1.1.11
+// Version V.1.1.2
 
 (function (Scratch) {
   "use strict";
@@ -188,8 +188,7 @@
   }
   if (Scratch.gui) Scratch.gui.getBlockly().then((ScratchBlocks) => {
     addLinearGradientToBody();
-    // I made this :3, -Ashimee
-    if (!ScratchBlocks?.SPgradients?.patched) {
+    if (!ScratchBlocks?.SPgradients?.patched) { // New Gradient Patch by Ashimee <3
       ScratchBlocks.SPgradients = {gradientUrls: {}, patched: false};
       const BSP = ScratchBlocks.BlockSvg.prototype, BSPR = BSP.render;
       BSP.render = function(...args) {
@@ -203,7 +202,6 @@
       }
       ScratchBlocks.SPgradients.patched = true;
     }
-    // For every extension using this just change the extension id and urls you put in and the patch code will handle the rest
     ScratchBlocks.SPgradients.gradientUrls["SPevents"] = ["url(#SPevents-GRAD1)", "url(#SPevents-GRAD2)"];
   });
 
