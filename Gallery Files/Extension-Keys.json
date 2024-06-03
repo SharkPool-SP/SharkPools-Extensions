@@ -39,14 +39,14 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "new",
-      "date": "Released: 05/24/2024"
+      "status": "update",
+      "date": "Last Updated: 06/02/2024"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark.js",
       "tags": ".all.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/23/2024"
     },
     "Added-Motion": {
@@ -200,7 +200,7 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/23/2024"
     },
     "Text-to-Speech": {
@@ -214,7 +214,7 @@
       "credits": "Powerful New Message Blocks that work with Vanilla Messages! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Messages-Plus.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/23/2024"
     },
     "Advanced-Messages": {
@@ -312,7 +312,7 @@
       "credits": "Monitor and Control Scripts in Your Project. Made by SharkPool, Inspired by Ashimee",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Control.js",
       "tags": ".all.utilities",
-      "status": "",
+      "status": "update",
       "date": "Last Updated: 06/02/2024"
     },
     "Layer-Control": {
@@ -347,14 +347,14 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
+      "status": "update",
       "date": "Last Updated: 06/01/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
+      "status": "update",
       "date": "Last Updated: 06/02/2024"
     },
     "Captchas": {
