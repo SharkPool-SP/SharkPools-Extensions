@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.0.11
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -35,6 +35,8 @@
   // Block requires a Library, Library is fetched once and saved to the project
   let isSolverAdded = false;
   let loadedLibrary = [];
+
+  let txtReplacers = {};
 
   class SPmoreOPs {
     getInfo() {
@@ -160,6 +162,16 @@
             arguments: {
               N: { type: Scratch.ArgumentType.NUMBER, defaultValue : 2 },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue : 5 }
+            }
+          },
+          {
+            opcode: "percent",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.REPORTER,
+            text: "[NUM1] % of [NUM2]",
+            arguments: {
+              NUM1: { type: Scratch.ArgumentType.NUMBER, defaultValue : 50 },
+              NUM2: { type: Scratch.ArgumentType.NUMBER, defaultValue : 50 }
             }
           },
           "---",
@@ -330,6 +342,32 @@
               ORDER: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ORDER2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
               REPLACE: { type: Scratch.ArgumentType.STRING, defaultValue: "orange" }
+            }
+          },
+          "---",
+          {
+            opcode: "setReplacer",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set text replacer [TEXT] to [VALUE]",
+            arguments: {
+              TEXT: { type: Scratch.ArgumentType.STRING, defaultValue: "${text}" },
+              VALUE: { type: Scratch.ArgumentType.STRING, defaultValue: "world!" }
+            }
+          },
+          {
+            opcode: "resetReplacers",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.COMMAND,
+            text: "reset text replacers"
+          },
+          {
+            opcode: "applyReplacers",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply text replace to [TEXT]",
+            arguments: {
+              TEXT: { type: Scratch.ArgumentType.STRING, defaultValue: "Hello ${text}" }
             }
           },
           "---",
@@ -517,6 +555,8 @@
 
     exponent(args) { return Math.pow(Scratch.Cast.toNumber(args.NUM), Scratch.Cast.toNumber(args.N)) }
 
+    percent(args) { return Scratch.Cast.toNumber(args.NUM2) * (Scratch.Cast.toNumber(args.NUM1) * 0.01) }
+
     simplifyFrac(args) {
       const numerator = Scratch.Cast.toNumber(args.NUM);
       const denominator = Scratch.Cast.toNumber(args.DENOM);
@@ -604,6 +644,19 @@
         index++;
         return index >= ord1 && index <= order2 ? args.REPLACE : match;
       });
+    }
+
+    setReplacer(args) { txtReplacers[Scratch.Cast.toString(args.TEXT)] = Scratch.Cast.toString(args.VALUE) }
+
+    resetReplacers() { txtReplacers = {} }
+
+    applyReplacers(args) {
+      let text = Scratch.Cast.toString(args.TEXT);
+      for (const replacer in txtReplacers) {
+        const replacerVal = txtReplacers[replacer];
+        text = text.replaceAll(replacer, replacerVal);
+      }
+      return text;
     }
 
     randomCharRange(args) { 
