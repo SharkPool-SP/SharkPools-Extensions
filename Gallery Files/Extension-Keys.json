@@ -40,7 +40,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 06/02/2024"
+      "date": "Last Updated: 06/04/2024"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
@@ -221,8 +221,8 @@
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
       "tags": ".all.utilities.category",
-      "status": "",
-      "date": "Last Updated: 12/20/2023"
+      "status": "update",
+      "date": "Last Updated: 06/04/2024"
     },
     "Fetch-Progress": {
       "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
