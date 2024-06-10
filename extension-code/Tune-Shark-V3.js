@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.1.21
+// Version V.3.1.22
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -808,7 +808,7 @@ a.Util.isInRange(e,0,1)&&(this.options.mix=e,this.dryGainNode.gain.value=s.Util.
         case "length": return this.modTime(src.buffer.duration, sound);
         case "current time": return !sound.context.playing ? 0 : 
           this.calcTime(
-            sound.context.loop ? sound.loopParm[1] : src.buffer.duration,
+            sound.context.loop && sound.loopParm[1] ? sound.loopParm[1] : src.buffer.duration,
             sound.context.lastTimePlayed, src.context.currentTime, sound
           );
         case "source": return sound.src;
