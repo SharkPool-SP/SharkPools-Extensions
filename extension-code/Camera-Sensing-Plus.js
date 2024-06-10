@@ -7,7 +7,7 @@
 
 (function(Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) throw new Error("Camera Sensing Plus must run unsandboxed");
+  if (!Scratch.extensions.unsandboxed) throw new Error("Camera Sensing+ must run unsandboxed");
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
@@ -20,7 +20,7 @@
 
   const canvasElement = document.createElement("canvas");
   let canUse = false;
-  async function hasFrontOrBackCamera() {
+  function hasFrontOrBackCamera() {
     const user = navigator.userAgent;
     canUse = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(user);
   }
@@ -299,6 +299,8 @@
       };
     }
 
+    // Helper Funcs
+
     enableLegacy() { legacyMode = false; vm.extensionManager.refreshBlocks() }
 
     getTargets() {
@@ -311,6 +313,25 @@
         if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
       }
       return spriteNames.length > 0 ? spriteNames : [""];
+    }
+
+    printCapture() {
+      if (this.videoElement) {
+        canvasElement.width = Math.abs(Scratch.Cast.toNumber(this.camSize[0]));
+        canvasElement.height = Math.abs(Scratch.Cast.toNumber(this.camSize[1]));
+        const context = canvasElement.getContext("2d");
+        if (this.camSize[0] < 0) {
+          context.translate(canvasElement.width, 0);
+          context.scale(-1, 1);
+        }
+        if (this.camSize[1] < 0) {
+          context.translate(0, canvasElement.height);
+          context.scale(1, -1);
+        }
+        context.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
+        return canvasElement.toDataURL("image/png");
+      }
+      return "";
     }
 
     // Compatible Blocks
@@ -347,7 +368,6 @@
       canvas.width = imageData.width;
       canvas.height = imageData.height;
       context.putImageData(imageData, 0, 0);
-      const dataURL = canvas.toDataURL();
       return canvas.toDataURL();
     }
 
@@ -368,7 +388,6 @@
             this.videoElement = document.createElement("video");
             this.videoElement.srcObject = this.mediaStream;
             this.videoElement.play();
-            this.printCapture();
             runtime.startHats("CameraSensingPlusSP_whenCamera", { ON_OFF : "on" });
           } catch (error) {
             console.error("Error accessing the camera:", error);
@@ -385,31 +404,13 @@
       }
     }
 
-    printCapture(callback) {
-      if (this.videoElement) {
-        canvasElement.width = Math.abs(Scratch.Cast.toNumber(this.camSize[0]));
-        canvasElement.height = Math.abs(Scratch.Cast.toNumber(this.camSize[1]));
-        const context = canvasElement.getContext("2d");
-        if (this.camSize[0] < 0) {
-          context.translate(canvasElement.width, 0);
-          context.scale(-1, 1);
-        }
-        if (this.camSize[1] < 0) {
-          context.translate(0, canvasElement.height);
-          context.scale(1, -1);
-        }
-        context.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
-        if (this.camStatus()) setTimeout(() => this.printCapture(callback), 0);
-      }
-    }
-
     async useCam(args) {
       if (canUse) {
         // Camera Reset
         await this.turnOnCamera({ ON_OFF : "off" });
         this.camStyle = args.TYPE;
         await this.turnOnCamera({ ON_OFF : "on" });
-      } else { console.log("Process Denied, Camera has no Front/Back") }
+      } else { console.warn("Process Denied, Camera has no Front/Back") }
     }
 
     setResolution(args) {
@@ -430,11 +431,8 @@
     hasBack() { return canUse }
 
     captureWebcamFootage() {
-      if (this.videoElement) return canvasElement.toDataURL("image/png");
-      else {
-        console.error("Camera is not turned on");
-        return "Camera is Off";
-      }
+      if (this.videoElement) return this.printCapture();
+      else return "Camera is Off";
     }
 
     // Legacy Blocks
