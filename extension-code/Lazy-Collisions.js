@@ -127,12 +127,9 @@
 
     getAABB(sprite) {
       let bounds = sprite.getBounds();
-      // TODO fix this
       return {
-        left : bounds.left -= bounds.width / 2,
-        right : bounds.right += bounds.width / 2,
-        bottom : bounds.bottom -= bounds.height / 2,
-        top : bounds.top += bounds.height / 2
+        left : bounds.left -= bounds.width / 2, right : bounds.right += bounds.width / 2,
+        bottom : bounds.bottom -= bounds.height / 2, top : bounds.top += bounds.height / 2
       }
     }
 
