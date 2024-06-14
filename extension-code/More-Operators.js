@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -18,6 +18,20 @@
   // Thank you LilyMakesThings <3
   vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
   vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
+  vm.runtime.on("PROJECT_LOADED", () => {
+    if (!Scratch.extensions.isPenguinMod) {
+      const storage = vm.runtime.extensionStorage["SPmoreOPs"];
+      if (storage === undefined) return;
+      for (let i = 0; i < storage.library.length; i++) {
+        const scriptElement = document.createElement("script");
+        scriptElement.textContent = storage.library[i];
+        document.body.appendChild(scriptElement);
+      }
+      isSolverAdded = true;
+      loadedLibrary = storage.library;
+      vm.extensionManager.refreshBlocks();
+    }
+  });
 
   tryUseScratchBlocks();
   function tryUseScratchBlocks() {
@@ -518,6 +532,7 @@
 
     // requires loading library first
     evalNum(args) {
+      console.log(isSolverAdded, loadedLibrary);
       try {
         const node = args.STRING.replace(/\s+/g, "");
         const variableName = this.getUnusedVar(node);
@@ -721,16 +736,4 @@
   }
 
   Scratch.extensions.register(new SPmoreOPs());
-  if (!Scratch.extensions.isPenguinMod) {
-    const storage = vm.runtime.extensionStorage["SPmoreOPs"];
-    if (storage === undefined) return;
-    for (let i = 0; i < storage.library.length; i++) {
-      const scriptElement = document.createElement("script");
-      scriptElement.textContent = storage.library[i];
-      document.body.appendChild(scriptElement);
-    }
-    isSolverAdded = true;
-    loadedLibrary = storage.library;
-    vm.extensionManager.refreshBlocks();
-  }
 })(Scratch);
