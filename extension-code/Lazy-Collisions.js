@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.2.0.1
+// Version V.1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -112,6 +112,7 @@
       };
     }
 
+    // Helpers
     _getTargets() {
       const spriteNames = [];
       spriteNames.push({ text: "myself", value: "_myself_" })
@@ -125,27 +126,17 @@
     }
 
     getAABB(sprite) {
-      const bounds = sprite.getBounds();
-      const bottomLeft = this.translateForCamera(sprite, bounds.left, bounds.bottom);
-      const topRight = this.translateForCamera(sprite, bounds.right, bounds.top);
-      return {"left":bottomLeft[0], "bottom":bottomLeft[1], "right":topRight[0], "top":topRight[1]};
-    }
-
-    findID(args, util) {
-      const target = args.TARGET === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.TARGET);
-      if (!target) return "";
-      const clones = target.sprite.clones;
-      let newTarget = [];
-      for (let i = 1; i < clones.length; i++) {
-        if (clones[i]) {
-          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
-          const value = Scratch.Cast.toString(args.VAL);
-          if (variable && Scratch.Cast.toString(variable.value) === value) newTarget.push(clones[i]);
-        }
+      let bounds = sprite.getBounds();
+      // TODO fix this
+      return {
+        left : bounds.left -= bounds.width / 2,
+        right : bounds.right += bounds.width / 2,
+        bottom : bounds.bottom -= bounds.height / 2,
+        top : bounds.top += bounds.height / 2
       }
-      return newTarget[Scratch.Cast.toNumber(args.INDEX) - 1]?.id ?? "";
     }
 
+    // Block Funcs
     isOnSprite(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
       let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
@@ -157,14 +148,10 @@
       const aabb2 = this.getAABB(target);
       const aabb = this.getAABB(target1);
       switch (args.SIDE) {
-        case "top":
-          return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom) && aabb.right > aabb2.left && aabb.left < aabb2.right);
-        case "bottom":
-          return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top) && aabb.right > aabb2.left && aabb.left < aabb2.right);
-        case "left side":
-          return (Math.round(aabb.left) + offset === Math.round(aabb2.right) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
-        case "right side":
-          return (Math.round(aabb.right) - offset === Math.round(aabb2.left) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
+        case "top": return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom) && aabb.right > aabb2.left && aabb.left < aabb2.right);
+        case "bottom": return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top) && aabb.right > aabb2.left && aabb.left < aabb2.right);
+        case "left side": return (Math.round(aabb.left) + offset === Math.round(aabb2.right) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
+        case "right side": return (Math.round(aabb.right) - offset === Math.round(aabb2.left) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
         default: return false;
       }
     }
@@ -180,14 +167,10 @@
       const aabb2 = this.getAABB(target);
       const aabb = this.getAABB(target1);
       switch (args.SIDE) {
-        case "top":
-          return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom));
-        case "bottom":
-          return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top));
-        case "left side":
-          return (Math.round(aabb.left) + offset === Math.round(aabb2.right));
-        case "right side":
-          return (Math.round(aabb.right) - offset === Math.round(aabb2.left));
+        case "top": return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom));
+        case "bottom": return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top));
+        case "left side": return (Math.round(aabb.left) + offset === Math.round(aabb2.right));
+        case "right side": return (Math.round(aabb.right) - offset === Math.round(aabb2.left));
         default: return false;
       }
     }
@@ -267,22 +250,20 @@
       }
     }
 
-    translateForCamera(target, x, y) {
-      if (target.cameraBound == null) {
-        return [x, y];
+    findID(args, util) {
+      const target = args.TARGET === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.TARGET);
+      if (!target) return "";
+      const clones = target.sprite.clones;
+      let newTarget = [];
+      for (let i = 1; i < clones.length; i++) {
+        if (clones[i]) {
+          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
+          const value = Scratch.Cast.toString(args.VAL);
+          if (variable && Scratch.Cast.toString(variable.value) === value) newTarget.push(clones[i]);
+        }
       }
-      const {pos, scale, dir} = runtime.getCamera(target.cameraBound);
-      const radians = (dir / 180) * Math.PI;
-      const sin = Math.sin(radians);
-      const cos = Math.cos(radians);
-      const offX = x - pos[0];
-      const offY = y - pos[1];
-      return [
-          scale * (offX * cos - offY * sin),
-          scale * (offX * sin + offY * cos)
-      ];
-  }
-  
+      return newTarget[Scratch.Cast.toNumber(args.INDEX) - 1]?.id ?? "";
+    }
   }
 
   Scratch.extensions.register(new LZcollisionsSP());
