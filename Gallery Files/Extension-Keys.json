@@ -40,7 +40,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 06/12/2024"
+      "date": "Last Updated: 06/23/2024"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
@@ -88,7 +88,7 @@
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/09/2024"
     },
     "Particle-Tools": {
@@ -221,7 +221,7 @@
       "credits": "New Message Broadcast Blocks for Advanced Purposes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Advanced-Messages.js",
       "tags": ".all.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/04/2024"
     },
     "Fetch-Progress": {
@@ -354,7 +354,7 @@
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/13/2024"
     },
     "Captchas": {
