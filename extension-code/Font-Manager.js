@@ -2,7 +2,7 @@
 // ID: SPASfontManager
 // Description: Add, Delete, and Manage Fonts
 // By: SharkPool
-// By: Ashimee <https://scratch.mit.edu/users/0znzw/>
+// By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 
 // Version V.1.1.0
 
@@ -198,8 +198,8 @@
     
     fontNames(fontsArray) { return structuredClone(fontsArray.map(font => font.family)) }
 
-    // ^ internal functions (Thank you <https://github.com/Ashimee> <3)
-    // Ashimee also made the event block
+    // ^ internal functions (Thank you <https://github.com/0znzw> <3)
+    // 0znzw also made the event block
 
     cast(args, func) {
       let obj = args;

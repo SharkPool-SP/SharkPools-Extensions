@@ -90,7 +90,7 @@
     }
 
     update() {
-      if (window.confirm('This version of "Script Manager" is out of date and should not be used.\n\nClicking ok will redirect to my extension gallery so you can get updates. -Ashime')) {
+      if (window.confirm('This version of "Script Manager" is out of date and should not be used.\n\nClicking ok will redirect to my extension gallery so you can get updates. -0znzw')) {
         window.open('https://surv.is-a.dev/survs-gallery/', '_blank');
       }
     }
