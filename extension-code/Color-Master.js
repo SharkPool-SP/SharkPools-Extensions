@@ -326,7 +326,7 @@
   }
   if (Scratch.gui) Scratch.gui.getBlockly().then((ScratchBlocks) => {
     addLinearGradientToBody();
-    if (!ScratchBlocks?.SPgradients?.patched) { // New Gradient Patch by Ashimee <3
+    if (!ScratchBlocks?.SPgradients?.patched) { // New Gradient Patch by 0znzw <3
       ScratchBlocks.SPgradients = {gradientUrls: {}, patched: false};
       const BSP = ScratchBlocks.BlockSvg.prototype, BSPR = BSP.render;
       BSP.render = function(...args) {
