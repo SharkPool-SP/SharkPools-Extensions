@@ -1,4 +1,4 @@
-// Name: Almejas utils.js
+// Name: Almejas utils
 // ID: almejasID
 // Description: Just some utilities that in some cases work and in others not
 // By: Alejo.2014
