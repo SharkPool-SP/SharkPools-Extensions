@@ -28,6 +28,13 @@
       "status": "",
       "date": "Last Updated: 04/05/2024"
     },
+    "Alejo.2014 utils": {
+      "credits": "Just some utilities that in some cases work and in others not, made by Alejo.2014",
+      "url": "https://raw.githubusercontent.com/Alejin2014/SharkPools-Extensions/main/extension-code/Almejas-utils.js",
+      "tags": ".all.utilities",
+      "status": "",
+      "date": "Released: 25/06/2024"
+    },
     "Seeds": {
       "credits": "Generate random seeded numbers, generated terrain, and more! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Seeds.js",
