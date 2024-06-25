@@ -142,8 +142,8 @@
                 "id": "almejasID",
                 "name": "Almejas utils",
                 "color1": "#8c8c8c",
-                "color2": "#8c8c8c",
-                "color3": "#8c8c8c",
+                "color2": "#303030",
+                "color3": "#303030",
                 "blocks": blocks,
                 "menus": menus
             }
