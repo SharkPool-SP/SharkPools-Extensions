@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.81
+// Version V.1.4.9
 
 (function (Scratch) {
   "use strict";
@@ -288,7 +288,7 @@
           {
             opcode: "newThreadAdv", blockType: Scratch.BlockType.LOOP,
             extensions: ["colours_control"],
-            text: "start new thread with [FRAME] set to [ARGS]",
+            text: "new thread with [FRAME] [ARGS]",
             hideFromPalette: true, branchIconURI: newThread,
             arguments: {
               ARGS: { type: Scratch.ArgumentType.STRING, defaultValue: "{ info : 1 }" },
@@ -487,14 +487,7 @@
       return checkedObj;
     }
 
-    async getTargetVal(newTarget, block, ogTarget) {
-      const oldVal = runtime.compilerOptions.enabled;
-      runtime.compilerOptions.enabled = false;
-      if (block.block === null) return "";
-      const thread = runtime._pushThread(block.block, ogTarget);
-      runtime.compilerOptions.enabled = oldVal;
-      thread.isCompiled = false;
-      thread.target = newTarget;
+    wait4Return(thread) {
       return new Promise(resolve => {
         const interval = setInterval(() => {
           const reported = Scratch.Cast.toString(thread.justReported);
@@ -505,13 +498,21 @@
         }, 0);
       });
     }
-
-    pushThreadTarget(id, newT, oldT) {
-      const thread = runtime._pushThread(id, oldT, { stackClick: false });
-      thread.target = newT
-      thread.ogTarget = oldT
+    pushThreadTarget(id, newT, oldT, stack) {
+      const thread = runtime._pushThread(id, oldT, { stackClick: stack });
+      thread.target = newT;
+      thread.ogTarget = oldT;
       if (runtime.compilerOptions.enabled) thread.tryCompile();
       return thread;
+    }
+
+    getThisBlock(util, branch, optBranch) {
+      if (branch) {
+        return util.thread.target.blocks.getBranch(util.thread.peekStack(), optBranch ? optBranch : 1);
+      } else {
+        const container = util.thread.blockContainer;
+        return container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
+      }
     }
 
     //Block Functions
@@ -549,9 +550,9 @@
     runFlag(_, util) {
       const thisThread = util.thread.topBlock;
       runtime.emit("PROJECT_START_BEFORE_RESET");
-      runtime.threads
-        .filter(thread => thread.topBlock !== thisThread).forEach(thread => thread.stopThisScript());
+      runtime.threads.filter(thread => thread.topBlock !== thisThread).forEach(thread => thread.stopThisScript());
       // green flag behaviour
+      runtime.ext_scratch3_sound.stopAllSounds();
       runtime.emit("PROJECT_START");
       runtime.updateCurrentMSecs();
       runtime.ioDevices.clock.resetProjectTimer();
@@ -582,9 +583,7 @@
         util.startStackTimer(args.NUM);
         Scratch.vm.runtime.requestRedraw();
         util.startBranch(1, true);
-      } else if (!util.stackTimerFinished() && !condition) {
-        util.startBranch(1, true);
-      }
+      } else if (!util.stackTimerFinished() && !condition) { util.startBranch(1, true) }
     }
 
     spayedCondition(args, util) {
@@ -602,10 +601,7 @@
     }
 
     simuRun(args, util) {
-      const branches = [
-        util.thread.target.blocks.getBranch(util.thread.peekStack(), 1),
-        util.thread.target.blocks.getBranch(util.thread.peekStack(), 2)
-      ];
+      const branches = [this.getThisBlock(util, true, 1), this.getThisBlock(util, true, 2)];
       if (branches[0] && branches[1]) {
         const target = util.target;
         const run = util.sequencer.runtime;
@@ -621,7 +617,7 @@
     }
 
     async runType(args, util) {
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const branch = this.getThisBlock(util, true, 1);
       if (branch) {
         if (args.TYPE === "forward") runtime._pushThread(branch, util.target);
         else if (args.TYPE === "reversed" || args.TYPE === "randomized") {
@@ -670,60 +666,43 @@
       }
     }
 
-    onCall() { /* ignore initially running */ }
+    onCall(args, util) {
+      if (util.thread.SPcallID === args.CALL && util.stackFrame.doneJob === undefined) {
+        util.stackFrame.doneJob = true;
+        util.startBranch(1, true);
+      } else { util.thread.stopThisScript() }
+    }
 
     runBranch(args, util) {
       const callID = Scratch.Cast.toString(args.ID);
-      const promises = [];
-      const threads2Wait = []; // used for "run and wait"
-      for (const target of runtime.targets) {
-        const blocks = target.blocks;
-        for (const key of Object.keys(blocks._blocks)) {
-          const block = blocks._blocks[key];
-          if (block.opcode === "SPadvControl_onCall") {
-            let input = blocks.getBlock(block.inputs.CALL.block)?.fields?.TEXT?.value;
-            let isText = Scratch.Cast.toBoolean(input);
-            // If the user simply inputs "false" or "true", we should prevent that
-            if (Scratch.Cast.toString(isText) === input) isText = true;
-            if (input === undefined && !isText) {
-              promises.push(this.getTargetVal(target, block.inputs?.CALL, target)
-                .then(output => {
-                  input = output === callID;
-                  if (block.opcode === "SPadvControl_onCall" && input) {
-                    const branch = blocks.getBranch(blocks._blocks[key].id, 1);
-                    if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
-                  }
-                })
-              );
-            } else if (isText && input === callID) {
-              const blockID = blocks._blocks[key].id;
-              const branch = blocks.getBranch(blockID, 1);
-              if (branch) threads2Wait.push(util.sequencer.runtime._pushThread(branch, target));
-            }
-          }
-        }
+      const allBlocks = [];
+      const newThreads = []; // used for "run and wait"
+      for (const thisT in runtime.targets) {
+        const target = runtime.targets[thisT];
+        const targetBlocks = target.blocks._blocks;
+        for (const block in targetBlocks) {
+          if (targetBlocks[block].opcode === "SPadvControl_onCall") allBlocks.push({ block, target});
+        };
       }
-      if (promises.length === 0) return threads2Wait;
-      else return Promise.all(promises).then(() => threads2Wait);
+      for (let i = 0; i < allBlocks.length; i++) {
+        const thread = runtime._pushThread(allBlocks[i].block, allBlocks[i].target);
+        thread.SPcallID = callID;
+        newThreads.push(thread);
+      }
+      return newThreads;
     }
 
-    async runBranchWait(args, util) {
-      let threads2Wait = await this.runBranch(args, util);
-      await new Promise(resolve => {
-        const interval = setInterval(() => {
-          for (let i = threads2Wait.length - 1; i >= 0; i--) {
-            if (!vm.runtime.isActiveThread(threads2Wait[i])) threads2Wait.splice(i, 1);
-          }
-          if (threads2Wait.length === 0) {
-            clearInterval(interval);
-            resolve();
-          }
-        }, 1);
-      });
+    runBranchWait(args, util) {
+      if (util.stackFrame.newThreads === undefined) util.stackFrame.newThreads = this.runBranch(args, util);
+      const waiting = util.stackFrame.newThreads.some((thread) => runtime.threads.indexOf(thread) !== -1);
+      if (waiting) {
+        if (util.stackFrame.newThreads.every((thread) => runtime.isWaitingThread(thread))) util.yieldTick();
+        else util.yield();
+      }
     }
 
     async tryCatch(_, util) {
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const branch = this.getThisBlock(util, true, 1);
       if (branch) {
         const thread = runtime._pushThread(branch, util.target, { stackClick: false });
         this.addMissKeys(util.thread, thread);
@@ -746,8 +725,8 @@
     async asyncCode(args, util) {
       const target = util.target;
       const container = target.blocks;
-      if (util.thread.target.blocks.getBranch(util.thread.peekStack(), 1)) {
-        let ID = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      let ID = this.getThisBlock(util, true, 1);
+      if (ID) {
         while (ID !== null) {
           var blockInfo = container.getBlock(ID);
           var oldInfo = [blockInfo.parent, blockInfo.next];
@@ -774,7 +753,7 @@
     }
 
     ifRunBlock(args, util) {
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const branch = this.getThisBlock(util, true, 1);
       const con = Scratch.Cast.toBoolean(args.CON);
       if (branch) {
         if (con) {
@@ -806,7 +785,7 @@
     async runInSprite(args, util) {
       const thisSprite = util.thread.ogTarget !== undefined ? util.thread.ogTarget : util.target;
       const branch = util.thread.ogTarget !== undefined ? util.thread.ogTarget.blocks.getBranch(util.thread.peekStack(), 1) :
-        util.target.blocks.getBranch(util.thread.peekStack(), 1);
+        this.getThisBlock(util, true, 1);
       let newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       let targets = runtime.targets;
       let thread;
@@ -817,12 +796,12 @@
         newTarget = targets[0];
       }
       if (newTarget) {
-        thread = this.pushThreadTarget(branch, newTarget, thisSprite);
+        thread = this.pushThreadTarget(branch, newTarget, thisSprite, false);
         this.addMissKeys(util.thread, thread);
       }
       if (Scratch.Cast.toString(args.SPRITE).startsWith("_all_")) {
         for (let i = 0; i < targets.length; i++) {
-          const newThread = this.pushThreadTarget(branch, targets[i], thisSprite);
+          const newThread = this.pushThreadTarget(branch, targets[i], thisSprite, false);
           this.addMissKeys(util.thread, newThread);
         }
       }
@@ -840,13 +819,16 @@
     }
 
     async getInSprite(args, util) {
-      const container = util.thread.blockContainer;
-      let branch = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
-      if (!branch) return "";
-      branch = branch.inputs.THING;
+      if (util.thread.SPfetchVal !== undefined) {
+        util.thread.justReported = args.THING;
+        return args.THING;
+      }
+      const block = this.getThisBlock(util, false);
       const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
-      if (branch !== undefined && newTarget) return await this.getTargetVal(newTarget, branch, util.target);
-      return "";
+      if (!newTarget || !block?.inputs.THING) return "";
+      const thread = this.pushThreadTarget(block.id, newTarget, util.target, true);
+      thread.SPfetchVal = true;
+      return this.wait4Return(thread);
     }
 
     asClone(args, util) {
@@ -855,7 +837,7 @@
       if (!target) return;
       const clones = target.sprite.clones;
       const branch = util.thread.ogTarget !== undefined ? util.thread.ogTarget.blocks.getBranch(util.thread.peekStack(), 1) :
-        util.target.blocks.getBranch(util.thread.peekStack(), 1);
+        this.getThisBlock(util, true, 1);
       if (branch) {
         for (var i = 1; i < clones.length; i++) {
           if (clones[i]) {
@@ -864,7 +846,7 @@
             let thread;
             if (variable && Scratch.Cast.toString(variable.value) === value) {
               if (args.SPRITE === "_myself_") thread = runtime._pushThread(branch, clones[i]);
-              else thread = this.pushThreadTarget(branch, clones[i], thisSprite);
+              else thread = this.pushThreadTarget(branch, clones[i], thisSprite, false);
               this.addMissKeys(util.thread, thread);
             }
           }
@@ -873,12 +855,13 @@
     }
 
     async getInClone(args, util) {
+      if (util.thread.SPfetchVal !== undefined) {
+        util.thread.justReported = args.THING;
+        return args.THING;
+      }
       const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
-      const container = util.thread.blockContainer;
-      let branch = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
-      if (!branch || !target) return "";
-      branch = branch.inputs.THING;
-
+      const block = this.getThisBlock(util, false);
+      if (!block || !target) return "";
       const clones = target.sprite.clones;
       let newTarget = [];
       for (let i = 1; i < clones.length; i++) {
@@ -889,8 +872,10 @@
         }
       }
       newTarget = newTarget[Scratch.Cast.toNumber(args.ID) - 1];
-      if (branch !== undefined && newTarget) return await this.getTargetVal(newTarget, branch, util.target);
-      return "";
+      if (!newTarget || !block?.inputs.THING) return "";
+      const thread = this.pushThreadTarget(block.id, newTarget, util.target, true);
+      thread.SPfetchVal = true;
+      return this.wait4Return(thread);
     }
 
     deleteRun(args, util) {
@@ -903,7 +888,7 @@
     }
 
     newThreadAdv(args, util) {
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 0);
+      const branch = this.getThisBlock(util, true, 1);
       if (branch) {
         const thread = util.sequencer.runtime._pushThread(branch, util.target);
         this.addMissKeys(util.thread, thread);
@@ -936,10 +921,7 @@
         if (!runtime.compilerOptions.enabled) {
           console.warn("For this 'Break Out Loop' block to work properly, please Enable the Compiler");
         }
-        if (!newID) {
-          resolve();
-          return;
-        }
+        if (!newID) return resolve();
         while (con) {
           if (newID.parent !== null) {
             newID = container.getBlock(newID.parent);
@@ -953,10 +935,7 @@
             break;
           }
         }
-        if (!newID) {
-          resolve();
-          return;
-        }
+        if (!newID) return resolve();
         newID = newID.next || this.getOuterNext(container, newID);
         util.stopThisScript();
         if (newID) this.addMissKeys(util.thread, runtime._pushThread(newID, util.target));
