@@ -4,6 +4,7 @@
 ***Step-By-Step Tutorial***
 
 **Step 1**: Make Your Extension
+  - Rule 1: Please Follow **Normal** Extension JS Format, extensions made with Turbobuilder or anything alike are **Not Allowed**
 
 **Step 2**: Make a Thumbnail for Your Extension
   - Rule 1: It **MUST** be 300x150px SVG (without Border)
@@ -11,7 +12,7 @@
 
 **Step 3**: Add your Extension Code and Thumbnail to the '[extension-code](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)' and '[extension-thumbs](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)' folders on Github
 
-**Step 4**: Edit and Add to the [Extension Keys JSON](https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension%20Keys.json)
+**Step 4**: Edit and Add to the [Extension Keys JSON](https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension-Keys.json)
   - Rule 1: Under the 'extensions' key, you need to add a new sub-key right before the 'example' extension
   - Rule 2: Format it like this, replace the [text] with your links/text:
     ```
@@ -26,8 +27,9 @@
   - Sub Rule 2: Tags **MUST** start with '.all'
   - Sub Rule 3: Tags **MUST** be split by '.' and MUST be from this list:
     - 'utilities' --> Utility Blocks
-	- 'expanded' --> Expansion of existing Custom/Vanilla Extension
-	- 'fetching' --> Extensions that use 'fetch' or anything related to it
+    - 'expanded' --> Expansion of an existing Custom/Vanilla Extension
+    - 'category' --> Expansion of an existing Main/Sub Category (Motion, Looks, Control, etc)
+    - 'fetching' --> Extensions that use 'fetch' or anything related to it
 
   **Note: Dont worry about the Extension Thumbnail as they are Automatically Loaded**
 
