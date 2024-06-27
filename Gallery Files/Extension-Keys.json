@@ -112,6 +112,13 @@
       "status": "",
       "date": "Last Updated: 05/14/2024"
     },
+    "Image-Editor": {
+      "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 06/26/2024"
+    },
     "Pixel-Utilities": {
       "credits": "Some Utility Blocks that Roltycore 2's Developer made for some reason. Made by LittleBlueGamer",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pixel-Utilities.js",
