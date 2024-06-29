@@ -78,10 +78,12 @@ function updateAll() {
         const target = item.target;
         const bounds = target.getBounds();
         const box = item.html;
+        const newX = bounds.left + (bounds.width / 2);
+        const newY = -bounds.top + (bounds.height / 2);
         box.style.width = bounds.width + "px";
         box.style.height = bounds.height + "px";
-        box.style.left = `${target.x + (runtime.stageWidth / 2)}px`;
-        box.style.top = `${(target.y * -1) + (runtime.stageHeight / 2)}px`;
+        box.style.left = `${newX + (runtime.stageWidth / 2)}px`;
+        box.style.top = `${newY + (runtime.stageHeight / 2)}px`;
         if (target.id === vm.editingTarget.id) {
           box.style.boxShadow = `0px 0px 5px ${box.style.borderColor}`;
           box.style.boxShadow += `, 0px 0px 5px ${box.style.borderColor} inset`;
