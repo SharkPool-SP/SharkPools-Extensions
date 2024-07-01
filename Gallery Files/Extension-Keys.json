@@ -374,9 +374,16 @@
     "Better-Comments": {
       "credits": "Better Comments with Color and Text Customization. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Comments.js",
-      "tags": ".all.expanded",
+      "tags": ".all.expanded.addon",
       "status": "",
       "date": "Released: 04/08/2024"
+    },
+    "Sprite-Panel": {
+      "credits": "Manage, View, and Apply Properties to Sprites and Clones. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Panel.js",
+      "tags": ".all.expanded.addon",
+      "status": "new",
+      "date": "Released: 07/01/2024"
     },
     "DOM-Selector": {
       "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
