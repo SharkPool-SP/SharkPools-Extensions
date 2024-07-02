@@ -39,7 +39,7 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/23/2024"
     },
     "Tune-Shark": {
@@ -81,8 +81,8 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 04/28/2024"
+      "status": "update",
+      "date": "Last Updated: 07/01/2024"
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
@@ -361,8 +361,8 @@
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 06/13/2024"
+      "status": "update",
+      "date": "Last Updated: 07/01/2024"
     },
     "Captchas": {
       "credits": "Simple Client-Based Captcha Extension, doesnt promise 100% security. Made by SharkPool",
@@ -389,8 +389,8 @@
       "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/DOM-Selector.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Released: 05/04/2024"
+      "status": "update",
+      "date": "Last Updated: 07/01/2024"
     },
     "Example": {
       "credits": "",
