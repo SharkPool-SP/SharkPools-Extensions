@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.1.1
+// Version V.1.1.11
 
 (function (Scratch) {
   "use strict";
@@ -532,38 +532,17 @@
 
     // requires loading library first
     evalNum(args) {
-      console.log(isSolverAdded, loadedLibrary);
       try {
-        const node = args.STRING.replace(/\s+/g, "");
-        const variableName = this.getUnusedVar(node);
-        if (variableName === undefined) return "No solution found";
-        const solution = nerdamer.solve(`${node}=${variableName}`, variableName);
-        return solution ? this.fixSolution(solution.toString()) : "No solution found";
+        const solution = nerdamer(args.STRING.replace(/\s+/g, "")).evaluate().text();
+        return solution ? `["${solution.toString()}"]` : "No solution found"; // Create an Array for Compatibility
       } catch { return "undefined" }
     }
     solveFor(args) {
       try {
-        const node = args.STRING.replace(/\s+/g, "");
-        const solution = nerdamer.solve(node, args.VAR);
-        return solution ? this.fixSolution(solution.toString()) : "No solution found";
+        const solution = nerdamer.solveEquations(args.STRING.replace(/\s+/g, ""), args.VAR);
+        const decimalSols = solution.map(sol => nerdamer(sol).evaluate().text());
+        return decimalSols.length > 0 ? JSON.stringify(decimalSols) : "No solution found";
       } catch { return "undefined" }
-    }
-    fixSolution(sol) {
-      // Sometimes the Solution doesnt fully solve ex: returns 12/5
-      // we cant solve for variables, return them
-      const tempSol = sol.replaceAll("sin", "").replaceAll("cos", "").replaceAll("tan", "");
-      const hasVars = /[a-zA-Z]/.test(tempSol);
-      sol = sol.replace("[", "[\"").replace("]", "\"]").replace(",", "\",\"");
-      const sols = [];
-      if (hasVars) return sol;
-      else {
-        sol = sol.replaceAll("sin", "Math.sin").replaceAll("cos", "Math.cos").replaceAll("tan", "Math.tan");
-        sol = JSON.parse(sol);
-        for (let i = 0; i < sol.length; i++) {
-          sols.push(eval(sol[i]));
-        }
-        return JSON.stringify(sols)
-      }
     }
 
     root(args) { return Math.pow(Scratch.Cast.toNumber(args.NUM), 1 / Scratch.Cast.toNumber(args.N)) }
