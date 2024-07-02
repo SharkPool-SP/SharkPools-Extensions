@@ -3,7 +3,7 @@
 // Description: Read Elements and Create Events from the Website
 // By: SharkPool
 
-// Version V.1.0.1
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -54,15 +54,6 @@
                 CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" }
               }
             },
-            {
-              opcode: "getFromHTML",
-              blockType: Scratch.BlockType.REPORTER,
-              text: "get [PATH] from [CLASS]",
-              arguments: {
-                PATH: { type: Scratch.ArgumentType.STRING, defaultValue: "style.path" },
-                CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" }
-              }
-            },
             "---",
             {
               opcode: "typeElement",
@@ -82,6 +73,35 @@
                 ID: { type: Scratch.ArgumentType.STRING, defaultValue: "custom-id" },
                 TYPE: { type: Scratch.ArgumentType.STRING, menu: "ELEMENT" },
                 NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
+                CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" }
+              }
+            },
+            { blockType: Scratch.BlockType.LABEL, text: "Element Properties" },
+            {
+              opcode: "setHTML",
+              blockType: Scratch.BlockType.COMMAND,
+              text: "set [PATH] in [CLASS] to [VALUE]",
+              arguments: {
+                PATH: { type: Scratch.ArgumentType.STRING, defaultValue: "style.borderRadius" },
+                CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" },
+                VALUE: { type: Scratch.ArgumentType.STRING, defaultValue: "15px" }
+              }
+            },
+            {
+              opcode: "getFromHTML",
+              blockType: Scratch.BlockType.REPORTER,
+              text: "get [PATH] from [CLASS]",
+              arguments: {
+                PATH: { type: Scratch.ArgumentType.STRING, defaultValue: "style.path" },
+                CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" }
+              }
+            },
+            "---",
+            {
+              opcode: "getBounds",
+              blockType: Scratch.BlockType.REPORTER,
+              text: "get bounding box of [CLASS]",
+              arguments: {
                 CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" }
               }
             },
@@ -118,6 +138,16 @@
                 LISTNR: { type: Scratch.ArgumentType.STRING, menu: "CUST_LISTEN" }
               }
             },
+            {
+              opcode: "emitListener",
+              blockType: Scratch.BlockType.COMMAND,
+              text: "call [TYPE] listener in [CLASS] with data [DATA]",
+              arguments: {
+                TYPE: { type: Scratch.ArgumentType.STRING, menu: "LISTEN_TYPES" },
+                CLASS: { type: Scratch.ArgumentType.STRING, defaultValue: "[class^=\"...\"]" },
+                DATA: { type: Scratch.ArgumentType.STRING, defaultValue: "100" }
+              }
+            }
           ],
           menus: {
             CUST_LISTEN: { acceptReporters: false, items: "getListeners" },
@@ -151,11 +181,8 @@
       }
 
       querySelect(query) {
-        try {
-          return document.querySelector(query);
-        } catch {
-          return "";
-        }
+        try { return document.querySelector(query) }
+        catch { return "" }
       }
 
       selectOne(args) {
@@ -173,32 +200,6 @@
           return JSON.stringify(newArray);
         }
         return "[]";
-      }
-
-      getFromHTML(args) {
-        // Cleanse argument
-        let path = args.PATH;
-        if (path.startsWith(".")) path = path.substring(1);
-
-        const element = this.querySelect(args.CLASS);
-        if (element) {
-          try {
-            const pathParts = path.split(".");
-            let curElement = element;
-            for (const part of pathParts) {
-              curElement = curElement[part];
-              if (curElement === undefined) return "";
-            }
-            const toString = value => {
-              if (
-                typeof value === "object" && value !== null
-              ) return JSON.stringify(value);
-              else return String(value);
-            };
-            return toString(curElement);
-          } catch { return "" }
-        }
-        return "";
       }
 
       typeElement(args) {
@@ -225,7 +226,6 @@
         if (element) {
           const ID = xmlEscape(args.ID);
           const num = Scratch.Cast.toNumber(args.NUM);
-
           // As a little secret feature, child/parent 0 is just the base element
           return element.id = ID;
 
@@ -235,11 +235,57 @@
               thisElement = thisElement.parentNode;
               if (!thisElement) break;
             }
-          } else {
-            thisElement = element.childNodes[num - 1];
-          }
+          } else { thisElement = element.childNodes[num - 1] }
           if (thisElement) thisElement.id = ID;
         }
+      }
+
+      setHTML(args) {
+        // Cleanse argument
+        let path = args.PATH;
+        if (path.startsWith(".")) path = path.substring(1);
+        if (!path.startsWith("style.") && path !== "textContent") return console.warn("This Path isnt Allowed");
+
+        const element = this.querySelect(args.CLASS);
+        if (element) {
+          try {
+            const pathParts = path.split(".");
+            let curElement = element;
+            for (let i = 0; i < pathParts.length - 1; i++) {
+              curElement = curElement[pathParts[i]];
+            }
+            curElement[pathParts[pathParts.length - 1]] = xmlEscape(args.VALUE);
+          } catch {}
+        }
+      }
+
+      getFromHTML(args) {
+        // Cleanse argument
+        let path = args.PATH;
+        if (path.startsWith(".")) path = path.substring(1);
+
+        const element = this.querySelect(args.CLASS);
+        if (element) {
+          try {
+            const pathParts = path.split(".");
+            let curElement = element;
+            for (const part of pathParts) {
+              curElement = curElement[part];
+              if (curElement === undefined) return "";
+            }
+            const toString = value => {
+              if (typeof value === "object" && value !== null) return JSON.stringify(value);
+              else return String(value);
+            };
+            return toString(curElement);
+          } catch { return "" }
+        }
+        return "";
+      }
+
+      getBounds(args) {
+        const element = this.querySelect(args.CLASS);
+        return element ? JSON.stringify(element.getBoundingClientRect()) : "{}";
       }
 
       attachListener(args) {
@@ -275,6 +321,35 @@
       }
 
       activeListeners() { return JSON.stringify(Object.keys(listeners)) }
+
+      emitListener(args) {
+        const element = this.querySelect(args.CLASS);
+        const type = args.TYPE;
+        if (element) {
+          switch (type) {
+            case "click":
+            case "dblclick":
+            case "mouseover":
+            case "mouseout":
+            case "mousedown":
+            case "mouseup":
+            case "focus":
+            case "unfocus":
+              element.dispatchEvent(new Event(type, { bubbles: true }));
+              break;
+            case "input":
+            case "change":
+              element.value = args.DATA;
+              element.checked = args.DATA;
+              element.dispatchEvent(new Event("change", { bubbles: true }));
+              break;
+            case "scroll":
+              element.scrollTop = Scratch.Cast.toNumber(args.DATA);
+              element.dispatchEvent(new Event("scroll", { bubbles: true }));
+              break;
+          }
+        }
+      }
     }
 
   Scratch.extensions.register(new SPdomSelect());
