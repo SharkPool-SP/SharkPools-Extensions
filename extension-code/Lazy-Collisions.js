@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.1.2.0
+// Version V.2.0.0
 
 (function (Scratch) {
   "use strict";
@@ -99,15 +99,9 @@
           },
           POSITION2: {
             acceptReporters: true,
-            items: [
-              "top", "bottom",
-              "left side", "right side"
-            ]
+            items: ["top", "bottom", "left side", "right side"]
           },
-          POSITION3: [
-            "above", "below",
-            "beside left", "beside right"
-          ]
+          POSITION3: ["above", "below", "beside left", "beside right"]
         }
       };
     }
@@ -125,124 +119,89 @@
       return spriteNames.length > 0 ? spriteNames : [""];
     }
 
-    getAABB(sprite) {
-      let bounds = sprite.getBounds();
-      return {
-        left : bounds.left -= bounds.width / 2, right : bounds.right += bounds.width / 2,
-        bottom : bounds.bottom -= bounds.height / 2, top : bounds.top += bounds.height / 2
-      }
+    getArgBounds(target1, target2, util) {
+      let thisTarget = target2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(target2);
+      let target = target1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(target1);
+      if (!thisTarget) thisTarget = runtime.getTargetById(target2);
+      if (!target) target = runtime.getTargetById(target1);
+      if (!target || !thisTarget) return undefined;
+      return { thisTarget, target, aabb : thisTarget.getBounds(), aabb2 : target.getBounds() };
     }
 
     // Block Funcs
     isOnSprite(args, util) {
-      let offset = Scratch.Cast.toNumber(args.OFFSET);
-      let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
-      if (!target1) target1 = runtime.getTargetById(args.SPRITE1);
-      if (!target1) return false;
-      let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
-      if (!target) target = runtime.getTargetById(args.SPRITE2);
-      if (!target) return false;
-      const aabb2 = this.getAABB(target);
-      const aabb = this.getAABB(target1);
+      const caller = this.getArgBounds(args.SPRITE1, args.SPRITE2, util);
+      if (caller === undefined) return false;
+      const thisTarget = caller.thisTarget; const target = caller.target;
+      const aabb = caller.aabb; let aabb2 = caller.aabb2;
+      aabb2 = {
+        top : aabb2.top + (aabb.height / 2), bottom : aabb2.bottom - (aabb.height / 2),
+        left : aabb2.left - (aabb.width / 2), right : aabb2.right + (aabb.width / 2)
+      };
+      const baseCheck = this.isOnSpriteSide(args, util);
       switch (args.SIDE) {
-        case "top": return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom) && aabb.right > aabb2.left && aabb.left < aabb2.right);
-        case "bottom": return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top) && aabb.right > aabb2.left && aabb.left < aabb2.right);
-        case "left side": return (Math.round(aabb.left) + offset === Math.round(aabb2.right) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
-        case "right side": return (Math.round(aabb.right) - offset === Math.round(aabb2.left) && aabb.top > aabb2.bottom && aabb.bottom < aabb2.top);
+        case "top":
+        case "bottom": return baseCheck && aabb2.left < thisTarget.x < aabb2.right;
+        case "left side":
+        case "right side": return baseCheck && aabb2.bottom < thisTarget.y < aabb2.top;
         default: return false;
       }
     }
 
     isOnSpriteSide(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
-      let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
-      if (!target1) target1 = runtime.getTargetById(args.SPRITE1);
-      if (!target1) return false;
-      let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
-      if (!target) target = runtime.getTargetById(args.SPRITE2);
-      if (!target) return false;
-      const aabb2 = this.getAABB(target);
-      const aabb = this.getAABB(target1);
+      const caller = this.getArgBounds(args.SPRITE1, args.SPRITE2, util);
+      if (caller === undefined) return false;
+      const thisTarget = caller.thisTarget; const target = caller.target;
+      const aabb = caller.aabb; let aabb2 = caller.aabb2;
+      aabb2 = {
+        top : aabb2.top + (aabb.height / 2), bottom : aabb2.bottom - (aabb.height / 2),
+        left : aabb2.left - (aabb.width / 2), right : aabb2.right + (aabb.width / 2)
+      };
       switch (args.SIDE) {
-        case "top": return (Math.round(aabb.top) - offset === Math.round(aabb2.bottom));
-        case "bottom": return (Math.round(aabb.bottom) + offset === Math.round(aabb2.top));
-        case "left side": return (Math.round(aabb.left) + offset === Math.round(aabb2.right));
-        case "right side": return (Math.round(aabb.right) - offset === Math.round(aabb2.left));
+        case "top": return Math.round(thisTarget.y + offset) === Math.round(aabb2.top);
+        case "bottom": return Math.round(thisTarget.y - offset) === Math.round(aabb2.bottom);
+        case "left side": return Math.round(thisTarget.x - offset) === Math.round(aabb2.left);
+        case "right side": return Math.round(thisTarget.x + offset) === Math.round(aabb2.right);
         default: return false;
       }
     }
 
     isSpriteLocation(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
-      let sprite1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
-      if (!sprite1) sprite1 = runtime.getTargetById(args.SPRITE1);
-      if (!sprite1) return false;
-      let sprite2 = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
-      if (!sprite2) sprite2 = runtime.getTargetById(args.SPRITE2);
-      if (!sprite2) return false;
-      const aabb2 = this.getAABB(sprite2);
-      const aabb = this.getAABB(sprite1);
+      const caller = this.getArgBounds(args.SPRITE2, args.SPRITE1, util);
+      if (caller === undefined) return false;
+      const aabb = caller.aabb;
+      const aabb2 = caller.aabb2;
       switch (args.SIDE) {
-        case "below": return Math.round(aabb.bottom) + offset > Math.round(aabb2.top);
-        case "above": return Math.round(aabb.top) - offset < Math.round(aabb2.bottom);
-        case "beside right": return Math.round(aabb.right) - offset < Math.round(aabb2.left);
-        case "beside left": return Math.round(aabb.left) + offset > Math.round(aabb2.right);
+        case "above": return aabb2.bottom + offset > aabb.top;
+        case "below": return aabb.bottom > aabb2.top - offset;
+        case "beside left": return aabb.left > aabb2.right - offset;
+        case "beside right": return aabb2.left + offset > aabb.right;
         default: return false;
       }
     }
 
     setOnSprite(args, util) {
       let offset = Scratch.Cast.toNumber(args.OFFSET);
-      let target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
-      if (!target1) target1 = runtime.getTargetById(args.SPRITE1);
-      if (!target1) return;
-      let target = args.SPRITE2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE2);
-      if (!target) target = runtime.getTargetById(args.SPRITE2);
-      if (!target) return;
-      const aabb2 = this.getAABB(target);
-      const aabb = this.getAABB(target1)
-      let x; let y;
+      const caller = this.getArgBounds(args.SPRITE1, args.SPRITE2, util);
+      if (caller === undefined) return;
+      const thisTarget = caller.thisTarget; const target = caller.target;
+      const aabb = caller.aabb; let aabb2 = caller.aabb2;
+      let x = aabb2.left + (aabb2.width / 2); let y = aabb2.top - (aabb2.height / 2);
+      aabb2 = {
+        top : aabb2.top + (aabb.height / 2), bottom : aabb2.bottom - (aabb.height / 2),
+        left : aabb2.left - (aabb.width / 2), right : aabb2.right + (aabb.width / 2)
+      };
       switch (args.SIDE) {
-        case "top":
-          x = target1.x;
-          y = aabb.top;
-          target.setXY(x, y + offset);
-          break;
-        case "bottom":
-          x = target1.x;
-          y = aabb.bottom;
-          target.setXY(x, y - offset);
-          break;
-        case "left side":
-          x = aabb.left;
-          y = target1.y;
-          target.setXY(x - offset, y);
-          break;
-        case "right side":
-          x = aabb.right;
-          y = target1.y;
-          target.setXY(x + offset, y);
-          break;
-        case "same top level":
-          x = target.x;
-          y = aabb.top;
-          target.setXY(x, y + offset);
-          break;
-        case "same bottom level":
-          x = target.x;
-          y = aabb.bottom;
-          target.setXY(x, y - offset);
-          break;
-        case "same left level":
-          x = aabb.left;
-          y = target.y;
-          target.setXY(x - offset, y);
-          break;
-        case "same right level":
-          x = aabb.right;
-          y = target.y;
-          target.setXY(x + offset, y);
-          break;
+        case "top": return thisTarget.setXY(x, aabb2.top + offset);
+        case "bottom": return thisTarget.setXY(x, aabb2.bottom - offset);
+        case "left side": return thisTarget.setXY(aabb2.left - offset, y);
+        case "right side": return thisTarget.setXY(aabb2.right + offset, y);
+        case "same top level": return thisTarget.setXY(thisTarget.x, aabb2.top + offset);
+        case "same bottom level": return thisTarget.setXY(thisTarget.x, aabb2.bottom - offset);
+        case "same left level": return thisTarget.setXY(aabb2.left - offset, thisTarget.y);
+        case "same right level": return thisTarget.setXY(aabb2.right + offset, thisTarget.y);
         default: break;
       }
     }
