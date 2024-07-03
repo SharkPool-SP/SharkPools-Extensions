@@ -141,9 +141,9 @@
       const baseCheck = this.isOnSpriteSide(args, util);
       switch (args.SIDE) {
         case "top":
-        case "bottom": return baseCheck && aabb2.left < thisTarget.x < aabb2.right;
+        case "bottom": return baseCheck && aabb2.left < thisTarget.x && thisTarget.x < aabb2.right;
         case "left side":
-        case "right side": return baseCheck && aabb2.bottom < thisTarget.y < aabb2.top;
+        case "right side": return baseCheck && aabb2.bottom < thisTarget.y && thisTarget.y < aabb2.top;
         default: return false;
       }
     }
