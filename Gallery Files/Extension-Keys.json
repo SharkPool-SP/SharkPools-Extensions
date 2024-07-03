@@ -134,11 +134,11 @@
       "date": "Last Updated: 02/29/2024"
     },
     "Lazy-Collisions": {
-      "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool",
+      "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool and Food",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
       "tags": ".all.utilities.category",
-      "status": "",
-      "date": "Last Updated: 03/15/2024"
+      "status": "update",
+      "date": "Last Updated: 07/02/2024"
     },
     "Files-Expanded": {
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and Ashimee",
