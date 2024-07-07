@@ -1,5 +1,5 @@
 // Name: Files Expanded
-// ID: files
+// ID: filesExpanded
 // Description: Read, upload, and download files.
 // By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
