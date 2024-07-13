@@ -81,7 +81,7 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/01/2024"
     },
     "Camera-Sensing-Plus": {
@@ -116,7 +116,7 @@
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 06/26/2024"
     },
     "Pixel-Utilities": {
@@ -151,7 +151,7 @@
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool and Food",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Lazy-Collisions.js",
       "tags": ".all.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/02/2024"
     },
     "Files-Expanded": {
@@ -257,7 +257,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SoundCloud-API.js",
       "tags": ".all.fetching",
       "status": "",
-      "date": "Last Updated: 06/02/2024"
+      "date": "Last Updated: 07/12/2024"
     },
     "Google-Spreadsheets": {
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
@@ -285,21 +285,21 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
       "status": "",
-      "date": "Last Updated: 06/02/2024"
+      "date": "Last Updated: 07/12/2024"
     },
     "QR-Codes": {
       "credits": "Create and Read QR Codes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
       "tags": ".all.fetching.utilities",
       "status": "",
-      "date": "Last Updated: 06/02/2024"
+      "date": "Last Updated: 07/12/2024"
     },
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
       "tags": ".all.expanded.utilities.category",
       "status": "",
-      "date": "Last Updated: 06/02/2024"
+      "date": "Last Updated: 07/12/2024"
     },
     "Speech-Bubbles": {
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
@@ -320,7 +320,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Control.js",
       "tags": ".all.utilities",
       "status": "",
-      "date": "Last Updated: 06/02/2024"
+      "date": "Last Updated: 07/12/2024"
     },
     "Layer-Control": {
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
@@ -354,14 +354,14 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/26/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/01/2024"
     },
     "Captchas": {
@@ -382,15 +382,22 @@
       "credits": "Manage, View, and Apply Properties to Sprites and Clones. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Panel.js",
       "tags": ".all.expanded.addon",
-      "status": "new",
+      "status": "",
       "date": "Released: 07/01/2024"
     },
     "DOM-Selector": {
       "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/DOM-Selector.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/01/2024"
+    },
+    "SVG-Spritesheets": {
+      "credits": "Create and Export SVG Spritesheets. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SVG-Spritesheets.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 07/12/2024"
     },
     "Example": {
       "credits": "",
