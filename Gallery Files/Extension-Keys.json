@@ -434,7 +434,7 @@
   },
   "site": {
     "is up": true,
-    "reset": true,
+    "reset": false,
     "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html"
   }
 }
