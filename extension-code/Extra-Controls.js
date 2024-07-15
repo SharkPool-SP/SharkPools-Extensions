@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.4.9
+// Version V.1.5.0
 
 (function (Scratch) {
   "use strict";
@@ -189,6 +189,13 @@
             text: "reset keybinds"
           },
           "---",
+          {
+            opcode: "loopInd",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.REPORTER,
+            disableMonitor: true,
+            text: "loop index"
+          },
           {
             opcode: "repeatForUntil",
             extensions: ["colours_control"],
@@ -507,12 +514,8 @@
     }
 
     getThisBlock(util, branch, optBranch) {
-      if (branch) {
-        return util.thread.target.blocks.getBranch(util.thread.peekStack(), optBranch ? optBranch : 1);
-      } else {
-        const container = util.thread.blockContainer;
-        return container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
-      }
+      if (branch) return util.thread.target.blocks.getBranch(util.thread.peekStack(), optBranch ? optBranch : 1);
+      else return util.thread.blockContainer.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
     }
 
     //Block Functions
@@ -566,6 +569,13 @@
         }
       }
       runtime.startHats("event_whenflagclicked");
+    }
+
+    loopInd(_, util) {
+      const ID = this.getThisBlock(util).id;
+      if (typeof util.thread.SPloopInd === "undefined" || util.thread.SPloopInd.ID !== ID) util.thread.SPloopInd = { ID, ind: 0 };
+      util.thread.SPloopInd.ind++;
+      return util.thread.SPloopInd.ind;
     }
 
     repeatForUntil(args, util) {
@@ -918,17 +928,13 @@
         const myID = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
         let newID = myID;
         let con = true;
-        if (!runtime.compilerOptions.enabled) {
-          console.warn("For this 'Break Out Loop' block to work properly, please Enable the Compiler");
-        }
+        if (!runtime.compilerOptions.enabled) console.warn("For this 'Break Out Loop' block to work properly, please Enable the Compiler");
         if (!newID) return resolve();
         while (con) {
           if (newID.parent !== null) {
             newID = container.getBlock(newID.parent);
             // check if block is IN or UNDER this Loop Block
-            if (container.getBranch(newID.id) !== null && this.isInLoop(container, myID.id, newID.id)) {
-              con = false;
-            }
+            if (container.getBranch(newID.id) !== null && this.isInLoop(container, myID.id, newID.id)) con = false;
           } else {
             newID = null;
             con = false;
