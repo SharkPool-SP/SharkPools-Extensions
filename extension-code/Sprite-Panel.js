@@ -4,7 +4,7 @@
 // Licence: MIT AND LGPLv3 License
 // By: SharkPool & FurryR
 
-// Version V.1.0.0
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -25,7 +25,8 @@
     drag : `<svg xmlns="http://www.w3.org/2000/svg" width="19.857" height="19.857" viewBox="0 0 19.857 19.857"><g stroke-miterlimit="10"><path d="M0 19.858V-.001h19.858v19.858z" fill="none"/><path d="M4.254 14.233a2.794 2.794 0 0 1-2.794-2.794V2.795A2.794 2.794 0 0 1 4.254 0h8.644a2.794 2.794 0 0 1 2.795 2.795v8.124c-1.451-1.324-2.553-2.158-3.177-2.733-2.478-2.264-3.382-.836-3.382 1.4v4.647z" fill="#fff"/><path d="M11.559 18.873c-.361.402-1.031.149-1.031-.39V9.425c0-.51.612-.776.99-.43l6.688 6.105c.396.361.139 1.016-.4 1.016h-2.718l1.076 2.397a.957.957 0 0 1-.47 1.26.94.94 0 0 1-1.246-.475l-1.088-2.423z" fill="#fff" fill-rule="evenodd"/></g></svg>`,
     stretch : `<svg xmlns="http://www.w3.org/2000/svg" width="19.857" height="19.857" viewBox="0 0 19.857 19.857"><g stroke-miterlimit="10" style="mix-blend-mode:normal"><path d="M0 19.858V-.001h19.858v19.858z" fill="none"/><path d="M6.998 9.929H1.932" fill="#fff" fill-rule="evenodd" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.641 12.719a.665.665 0 0 1-.939 0l-2.32-2.32a.664.664 0 0 1 0-.94l2.32-2.32a.666.666 0 0 1 .94 0s.6 1.663.6 2.769c0 1.105-.6 2.81-.6 2.81z" fill="#fff"/><path d="M6.207 1.108s1.857 5.24 1.857 8.794c0 3.553-1.857 8.848-1.857 8.848" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M17.926 9.929H12.86" fill="#fff" fill-rule="evenodd" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.217 12.719s-.601-1.706-.601-2.811c0-1.106.6-2.769.6-2.769a.666.666 0 0 1 .94 0l2.32 2.32c.26.26.26.68 0 .94l-2.32 2.32a.666.666 0 0 1-.94 0z" fill="#fff"/><path d="M13.651 18.75s-1.857-5.295-1.857-8.848 1.857-8.794 1.857-8.794" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g></svg>`,
     effect : `<svg xmlns="http://www.w3.org/2000/svg" width="19.857" height="19.857" viewBox="0 0 19.857 19.857"><g stroke-miterlimit="10" style="mix-blend-mode:normal"><path d="M0 19.858V-.001h19.858v19.858z" fill="none"/><path d="M11.352 13.792a1.86 1.86 0 0 0 1.312-1.311l.39-1.455c.187-.688 1.162-.688 1.347 0l.392 1.455c.172.64.672 1.14 1.31 1.311l1.455.391c.688.186.688 1.162 0 1.347l-1.454.391a1.86 1.86 0 0 0-1.31 1.31l-.393 1.456c-.185.687-1.16.687-1.346 0l-.391-1.455a1.86 1.86 0 0 0-1.312-1.31l-1.454-.392c-.688-.185-.688-1.161 0-1.347zM3.278 8.759c.487-.272.793-.782.802-1.339l.022-1.267c.011-.599.807-.798 1.098-.275l.617 1.107a1.56 1.56 0 0 0 1.337.802l1.267.022c.6.011.799.807.276 1.1l-1.107.616a1.56 1.56 0 0 0-.802 1.337l-.023 1.267c-.01.599-.806.798-1.098.275l-.616-1.107a1.56 1.56 0 0 0-1.338-.801l-1.267-.022c-.599-.011-.798-.807-.275-1.1zm8.161-6.164a1.21 1.21 0 0 0 .96-.734l.379-.906c.18-.429.81-.344.87.116l.128.974c.055.429.335.795.733.961l.906.379c.429.18.344.81-.116.87l-.974.127a1.21 1.21 0 0 0-.96.734l-.38.906c-.178.429-.809.344-.87-.116l-.127-.974a1.21 1.21 0 0 0-.734-.96l-.906-.38c-.429-.179-.344-.81.116-.87z" fill="#fff" fill-rule="evenodd"/></g></svg>`,
-    layer : `<svg xmlns="http://www.w3.org/2000/svg" width="19.857" height="19.857" viewBox="0 0 19.857 19.857"><g stroke-width="0" stroke-miterlimit="10" style="mix-blend-mode:normal" fill="#fff"><path d="M12.342 19.235c-1.333.83-3.493.83-4.826 0L1 15.174c-1.333-.83-1.333-2.177 0-3.008l6.516-4.06c1.333-.831 3.493-.831 4.826 0l6.516 4.06c1.333.83 1.333 2.177 0 3.008z" fill-opacity=".5"/><path d="M12.342 15.494c-1.333.83-3.493.83-4.826 0L1 11.433c-1.333-.83-1.333-2.177 0-3.008l6.516-4.06c1.333-.831 3.493-.831 4.826 0l6.516 4.06c1.333.83 1.333 2.177 0 3.008z" fill-opacity=".75"/><path d="M12.342 11.753c-1.333.83-3.493.83-4.826 0L1 7.692c-1.333-.83-1.333-2.177 0-3.008L7.516.624c1.333-.831 3.493-.831 4.826 0l6.516 4.06c1.333.83 1.333 2.177 0 3.008z"/></g></svg>`
+    layer : `<svg xmlns="http://www.w3.org/2000/svg" width="19.857" height="19.857" viewBox="0 0 19.857 19.857"><g stroke-width="0" stroke-miterlimit="10" style="mix-blend-mode:normal" fill="#fff"><path d="M12.342 19.235c-1.333.83-3.493.83-4.826 0L1 15.174c-1.333-.83-1.333-2.177 0-3.008l6.516-4.06c1.333-.831 3.493-.831 4.826 0l6.516 4.06c1.333.83 1.333 2.177 0 3.008z" fill-opacity=".5"/><path d="M12.342 15.494c-1.333.83-3.493.83-4.826 0L1 11.433c-1.333-.83-1.333-2.177 0-3.008l6.516-4.06c1.333-.831 3.493-.831 4.826 0l6.516 4.06c1.333.83 1.333 2.177 0 3.008z" fill-opacity=".75"/><path d="M12.342 11.753c-1.333.83-3.493.83-4.826 0L1 7.692c-1.333-.83-1.333-2.177 0-3.008L7.516.624c1.333-.831 3.493-.831 4.826 0l6.516 4.06c1.333.83 1.333 2.177 0 3.008z"/></g></svg>`,
+    costume : `<svg xmlns="http://www.w3.org/2000/svg" width="20.032" height="20.032" viewBox="0 0 20.032 20.032"><g stroke-miterlimit="10" style="mix-blend-mode:normal"><path d="M18.001 5.62c-.846 1.746-2.103 3.76-3.289 5.252-.992 1.256-1.789 1.994-2.55 2.353a.54.54 0 0 1-.513.018.63.63 0 0 1-.371-.34 3.15 3.15 0 0 0-.918-1.224 3.8 3.8 0 0 0-1.398-.666.63.63 0 0 1-.41-.305.72.72 0 0 1-.088-.502c.212-.827.761-1.797 1.716-3.002 1.878-2.41 5.63-5.986 7.45-6.186.496-.072.78.09.956.234.461.395.922 1.26-.584 4.368m-7.642 9.547c.106.899-.125 1.78-.676 2.481a3.36 3.36 0 0 1-1.908 1.24.4.4 0 0 1-.124.037l-.179.018c-.334.054-.653.09-.974.09-2.545 0-4.335-1.728-5.04-2.86-.268-.448-.673-1.276-.32-1.797.089-.126.336-.396.866-.288 1.681.36 2.283-.395 2.39-.538 1.133-1.493 3.24-1.763 4.688-.648.71.555 1.17 1.37 1.277 2.265" fill="#fff" fill-rule="evenodd"/><path d="M.001 20.033V.001h20.031v20.031z" fill="none"/></g></svg>`
   };
 
   const vm = Scratch.vm;
@@ -92,7 +93,8 @@
       stchY: y => stretchSet(null, y),
       drag: draggable => target.setDraggable(!!draggable),
       effect: ([effectName, value]) => target.setEffect(effectName, parseInt(value)),
-      layer: layer => target.goForwardLayers(layer - target.getLayerOrder())
+      layer: layer => target.goForwardLayers(layer - target.getLayerOrder()),
+      costume: ind => target.setCostume(ind - 1)
     };
     return setter[type](value);
   }
@@ -340,6 +342,7 @@
       "dir" : { newLine : true, img : true, type : "number", path : "direction", name : "direction" },
       "visible" : { newLine : false, img : true, type : "checkbox", path : "visible", name : "show" },
       "layer" : { newLine : true, img : true, type : "number", path : "lay", name : "layer" },
+      "costume" : { newLine : false, img : true, type : "number", path : "currentCostume", name : "costume" },
       "drag" : { newLine : true, img : true, type : "checkbox", path : "draggable", name : "draggable" },
       "effect" : { newLine : false, img : true, type : "number", path : "effects", name : "effect" },
     };
@@ -355,17 +358,23 @@
         } else return target[path];
       };
 
-      const input = makeInput(prop.type, getVal(prop.path), prop.type === "checkbox" ?
-        { width : "25px", translate : "translate(0%, -80%)" } : { width : "65px", align : "center" }
+      const input = makeInput(
+        prop.type, getVal(prop.path),
+        prop.type === "checkbox" ? { width : "15px", translate : "translate(0%, -80%)" } :
+        { width : key === "dir" || key === "costume" || key === "effect" ? "45px" : "65px", align : "center" }
       );
       if (key === "size") input.min = 0;
-      else if (key === "layer") {
+      else if (key === "layer" || key === "costume") {
         input.min = 1;
-        input.max = guiInfo.targetMenu.length;
+        if (key === "layer") input.max = guiInfo.targetMenu.length;
+        else {
+          input.max = target.sprite.costumes_.length;
+          input.value = Math.max(1, input.value);
+        }
       }
       if (prop.img) valsCon.appendChild(makeImg(changeColor(
         miniAssets[fixedKey], isDark ? "#fff" : "#808080"),
-        key, { width : "25", margin : "5px"}
+        key, { width : "25", margin : "5px 3px 5px 3px" }
       ));
 
       if (key === "effect") {
