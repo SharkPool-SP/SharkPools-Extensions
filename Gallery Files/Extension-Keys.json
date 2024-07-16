@@ -166,7 +166,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities.category",
       "status": "update",
-      "date": "Last Updated: 07/14/2024"
+      "date": "Last Updated: 07/16/2024"
     },
     "Sty-Lists": {
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
@@ -326,8 +326,8 @@
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 03/12/2024"
+      "status": "update",
+      "date": "Last Updated: 07/16/2024"
     },
     "Renderer-Control": {
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
