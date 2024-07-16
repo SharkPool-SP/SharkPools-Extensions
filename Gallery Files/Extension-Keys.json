@@ -312,8 +312,8 @@
       "credits": "Manage, Create, and Delete Fonts from Your Project. Made by SharkPool and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Font-Manager.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 04/28/2024"
+      "status": "update",
+      "date": "Last Updated: 07/16/2024"
     },
     "Script-Control": {
       "credits": "Monitor and Control Scripts in Your Project. Made by SharkPool, Inspired by 0znzw",
