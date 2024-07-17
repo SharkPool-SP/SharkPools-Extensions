@@ -3,7 +3,7 @@
 // Description: Expansion of Monitor Types and Variable Blocks.
 // By: SharkPool and DogeIsCut
 
-// Version 1.4.02
+// Version 1.4.02 (Duplicate)
 
 (function (Scratch) {
   "use strict";
