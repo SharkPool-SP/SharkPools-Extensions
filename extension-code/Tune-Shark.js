@@ -3,7 +3,7 @@
 // Description: Advanced Sound Engine, inspired by LilyMakesThings
 // By: SharkPool
 
-// Version V.2.6.0
+// Version V.2.6.1
 // Credit to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -19,7 +19,7 @@
   Object.defineProperty(runtime.ioDevices.clock, "_paused", {
     set: function(value) {
       this._pausedValue = value;
-      runtime.emit("SP_PROJECT_PAUSE", value);
+      runtime.emit("SP_TUNESHARK2_PROJECT_PAUSED", value);
       if (ogPauseFunc) ogPauseFunc.call(this, value);
     },
     get: function() { return this._pausedValue }
@@ -60,16 +60,16 @@
         const names = Object.keys(this.sounds);
         if (names.length > 0) {
           names.forEach(name => {
-            const curVol = this.overriddenVol[name].val !== undefined ? this.overriddenVol[name].val : 100;
-            const volume = Math.min(100, Math.max(0, curVol)) / 100;
-            const soundInstances = this.sounds[name];
-            if (soundInstances && soundInstances.length > 0) {
-              soundInstances.forEach((audio) => { audio.volume = volume * projectVal });
+            if (this.overriddenVol[name] !== undefined) { // This Shouldnt happen but just in case
+              const curVol = this.overriddenVol[name].val !== undefined ? this.overriddenVol[name].val : 100;
+              const volume = Math.min(100, Math.max(0, curVol)) / 100;
+              const soundInstances = this.sounds[name];
+              if (soundInstances && soundInstances.length > 0) soundInstances.forEach((audio) => { audio.volume = volume * projectVal });
             }
           });
         }
       });
-      runtime.on("SP_PROJECT_PAUSE", () => {
+      runtime.on("SP_TUNESHARK2_PROJECT_PAUSED", () => {
         if (runtime.ioDevices.clock._paused) {
           globalPauseBank = [];
           const names = Object.keys(this.sounds);
@@ -449,7 +449,7 @@
       ];
       if (confirm(popup.join("\n\n"))) {
         enableBlock = false;
-        Scratch.vm.extensionManager.refreshBlocks();
+        vm.extensionManager.refreshBlocks();
       }
     }
 
@@ -613,9 +613,8 @@
     }
 
     soundCheck(args) {
-      if (args.CONTROL === "exists?") {
-        return this.sounds.hasOwnProperty(args.NAME);
-      } else {
+      if (args.CONTROL === "exists?") return this.sounds.hasOwnProperty(args.NAME);
+      else {
         const soundInstances = this.sounds[args.NAME];
         if (soundInstances && soundInstances.length > 0) {
           const audio = soundInstances[0];
@@ -672,12 +671,14 @@
       this.controlAllSounds("stop");  
       this.sounds = {};
       this.overlappables = {};
+      this.overriddenVol = {};
     }
 
     deleteSound(args) {
       this.stopSound(args);
       delete this.sounds[args.NAME];
       delete this.overlappables[args.NAME];
+      delete this.overriddenVol[args.NAME];
     }
 
     enableControllers(args) { flagCon = args.ON_OFF === "on" }
@@ -686,9 +687,7 @@
       const namesArray = JSON.parse(args.NAMES);
       namesArray.forEach((name) => {
         const soundInstances = this.sounds[name];
-        if (soundInstances && soundInstances.length > 0) {
-          soundInstances.forEach((audio) => { audio.play() });
-        }
+        if (soundInstances && soundInstances.length > 0) soundInstances.forEach((audio) => { audio.play() });
       });
     }
 
@@ -786,8 +785,7 @@
             let loudnessValue = characterAtTime.charCodeAt(0);
             loudnessValue = (Math.PI / 180) * loudnessValue; 
             loudnessValue = (Math.sin(loudnessValue / 2) * 100) - 50;
-            loudnessValue = loudnessValue * ((loudnessValue < 0) ? -2 : 3);
-            return loudnessValue;
+            return loudnessValue * ((loudnessValue < 0) ? -2 : 3);
           }
         }
       }
@@ -836,9 +834,8 @@
           if (sourcePlayer.paused && curTime !== curLen) {
             audioOver.pause();
             const checkCon = () => {
-              if (sourcePlayer.paused) {
-                setTimeout(checkCon, 10);
-              } else { audioOver.play() }
+              if (sourcePlayer.paused) setTimeout(checkCon, 10);
+              else audioOver.play()
             };
             checkCon();
           }
