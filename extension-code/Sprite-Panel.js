@@ -4,7 +4,7 @@
 // Licence: MIT AND LGPLv3 License
 // By: SharkPool & FurryR
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -34,6 +34,17 @@
   const render = vm.renderer;
   const isPM = Scratch.extensions.isPenguinMod;
   let guiInfo = { incClones : false, ordLayer : false, ordAsc : false, fadeModal : false };
+
+  // Modify Editor Tab Row to Include our Addon
+  function addBarItem() {
+    const editorBars = document.querySelectorAll(`div[class^="menu-bar_menu-bar-item_"][class*="menu-bar_hoverable_"]`);
+    const lastChild = editorBars[editorBars.length - 1];
+    const clone = lastChild.cloneNode(true);
+    clone.textContent = "Sprite Panel";
+    clone.addEventListener("click", () => { initPanel() });
+    lastChild.parentNode.insertBefore(clone, lastChild.nextElementSibling);
+  }
+  addBarItem();
 
   // Internal Helper Funcs
   function getTargets(incClones) {
@@ -131,7 +142,7 @@
   }
 
   function targetFlash(target) {
-    const oldBox = document.querySelector(`[class="SP-Panel-flash-box"]`);
+    const oldBox = document.querySelector(`div[class="SP-Panel-flash-box"]`);
     const modal = guiInfo.modalBody.parentNode.parentNode.parentNode;
     if (oldBox) render.removeOverlay(oldBox);
     const box = document.createElement("div");
@@ -173,20 +184,20 @@
   }
 
   // Main GUI
-  function initMenuMaker() {
+  function initPanel() {
     ScratchBlocks.Procedures.createProcedureDefCallback_();
     const isDark = isPM ? document.body.getAttribute("theme") === "dark" : ReduxStore.getState().scratchGui.theme.theme.gui === "dark";
     // Clean Modal
-    const blockSpace = document.querySelector(`[class^="custom-procedures_workspace_"]`);
+    const blockSpace = document.querySelector(`div[class^="custom-procedures_workspace_"]`);
     blockSpace.remove();
-    const buttons = document.querySelector(`[class*="custom-procedures_body_"]`);
+    const buttons = document.querySelector(`div[class*="custom-procedures_body_"]`);
     const pmChilds = isPM ? 5 : 3;
 		for (var i = 0; i < pmChilds; i++) {
     	buttons.removeChild(buttons.firstChild);
 		}
     // Modify Closing Function
-    const closeBtn = document.querySelector(`[class^="close-button_close-button_"]`);
-    const bgScreen = document.querySelector(`[class^="ReactModal__Overlay ReactModal__Overlay--after-open modal_modal-overlay_"]`);
+    const closeBtn = document.querySelector(`div[class^="close-button_close-button_"]`);
+    const bgScreen = document.querySelector(`div[class^="ReactModal__Overlay ReactModal__Overlay--after-open modal_modal-overlay_"]`);
     closeBtn.addEventListener("click", () => { vm.refreshWorkspace() });
     bgScreen.addEventListener("click", () => { vm.refreshWorkspace() });
 
@@ -202,7 +213,7 @@
     ];
 
     // Title and Target List
-    const title = document.querySelector(`[class*="modal_header-item-title_"]`);
+    const title = document.querySelector(`div[class*="modal_header-item-title_"]`);
     title.textContent = "Sprite Panel";
     createMenuList(guiInfo.targetMenu, buttons);
     ghostInputRemove(`[class*="removableTextInput"]`);
@@ -324,7 +335,7 @@
   }
 
   function selectTarget(target) {
-    const valsCon = document.querySelector(`[class="items"]`);
+    const valsCon = document.querySelector(`div[class="items"]`);
     valsCon.innerHTML = ""; // cleanse existing items
     // confirm target exists
     const targetCheck = runtime.getTargetById(target?.id);
@@ -470,7 +481,7 @@
     input.style.cursor = "pointer";
     return input;
   }
-
+  
   class SPspritePanel {
     getInfo() {
       return {
@@ -488,7 +499,7 @@
       };
     }
 
-    openPanel() { initMenuMaker() }
+    openPanel() { initPanel() }
   }
   Scratch.extensions.register(new SPspritePanel());
 })(Scratch);
