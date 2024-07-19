@@ -380,7 +380,7 @@
         if (key === "layer") input.max = guiInfo.targetMenu.length;
         else {
           input.max = target.sprite.costumes_.length;
-          input.value = Math.max(1, input.value);
+          input.value = Math.max(1, parseInt(input.value) + 1);
         }
       }
       if (prop.img) valsCon.appendChild(makeImg(changeColor(
