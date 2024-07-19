@@ -473,7 +473,7 @@
       return new Promise((resolve) => {
         const color = hexToRgb(args.COLOR);
         const img = new Image();
-        img.onload = async () => {
+        img.onload = () => {
           const pixelData = this.printImg(img);
           const data = pixelData;
           for (let i = 0; i < data.length; i += 4) {
@@ -550,7 +550,6 @@
     applyChunkGlitch(imageData, amtIn) {
       const { data, width, height} = imageData;
       const newWidth = amtIn / 10;
-      const numLines = Math.floor(width * 1);
       for (let i = 0; i < Math.floor(width * 1); i++) {
         const linePos = Math.floor(Math.random() * height);
         const lineStart = linePos - Math.floor(newWidth / 2);
@@ -939,7 +938,6 @@
           maskImg.onload = () => {
             const scaleW = maskImg.width * (this.scale[0] / 50);
             const scaleH = maskImg.height * (this.scale[1] / 50);
-            const isMaskBigger = scaleW >= srcImg.width || scaleH >= srcImg.height;
             const cutX = this.cutPos[0] + (srcImg.width / 2) - (scaleW / 2);
             const cutY = this.cutPos[1] - (srcImg.height / 2) + (scaleH / 2);
             const { canvas, ctx } = this.createCanvasCtx(srcImg.width, srcImg.height);
@@ -1035,7 +1033,7 @@
         const img = new Image();
         img.src = this.confirmAsset(args.URI, "png");
         img.onload = () => {
-          const { canvas, ctx } = this.createCanvasCtx(img.width, img.height, img);
+          const ctx = this.createCanvasCtx(img.width, img.height, img).ctx;
           ctx.drawImage(img, 0, 0, img.width, img.height);
           const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
           svg.setAttribute("version", "1.1");
@@ -1101,7 +1099,7 @@
         const img = new Image();
         img.onload = () => {
           const pixelData = this.printImg(img);
-          const { canvas, ctx } = this.createCanvasCtx(img.width, img.height);
+          const ctx = this.createCanvasCtx(img.width, img.height).ctx;
           ctx.putImageData(new ImageData(new Uint8ClampedArray(pixelData), img.width, img.height), 0, 0);
           const factor = Scratch.Cast.toNumber(args.NUM) / 10;
           const weights = [0, -factor, 0, -factor, 1 + 4 * factor, -factor, 0, -factor, 0];
