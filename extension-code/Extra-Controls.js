@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.0
+// Version V.1.5.1
 
 (function (Scratch) {
   "use strict";
@@ -923,56 +923,42 @@
 
     // Will work like a normal Break Loop when compiler is on, otherwise will run this:
     breakLoop(_, util) {
-      return new Promise(resolve => {
-        const container = util.thread.blockContainer;
-        const myID = container.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
-        let newID = myID;
-        let con = true;
-        if (!runtime.compilerOptions.enabled) console.warn("For this 'Break Out Loop' block to work properly, please Enable the Compiler");
-        if (!newID) return resolve();
-        while (con) {
-          if (newID.parent !== null) {
-            newID = container.getBlock(newID.parent);
-            // check if block is IN or UNDER this Loop Block
-            if (container.getBranch(newID.id) !== null && this.isInLoop(container, myID.id, newID.id)) con = false;
-          } else {
-            newID = null;
-            con = false;
-            break;
-          }
-        }
-        if (!newID) return resolve();
-        newID = newID.next || this.getOuterNext(container, newID);
-        util.stopThisScript();
-        if (newID) this.addMissKeys(util.thread, runtime._pushThread(newID, util.target));
-        resolve();
-      });
-    }
-    isInLoop(container, myID, loopBlock) {
-      let value = false;
-      let ID = container.getBranch(loopBlock, 1);
-      if (ID) {
-        while (ID !== null) {
-          var blockInfo = container.getBlock(ID);
-          if (ID === myID) value = true;
-          ID = blockInfo.next;
-        }
+      let blockId = this.getThisBlock(util).id;
+      const thread = util.thread;
+      thread.isCompiled = false; // Failsafe
+      const cBlock = this.getFirstCBlock(thread, blockId);
+      if (!cBlock) return;
+      const nextBlock = cBlock.next;
+      while (blockId !== cBlock.id) {
+        const block = util.target.blocks.getBlock(blockId);
+        if ((typeof block !== "undefined" && block.opcode === "procedures_call") || thread.peekStackFrame().isWaitingReporter) break;
+        thread.popStack();
+        blockId = thread.peekStack();
+        if (!blockId) break;
       }
-      return value;
+      thread.popStack();
+      if (nextBlock) thread.pushStack(nextBlock);
     }
-    getOuterNext(container, block) {
-      let value = null;
-      let ID = block;
-      while (ID !== null) {
-        ID = container.getBlock(ID.parent);
-        if (ID) {
-          if (container.getBranch(ID.id) !== null && ID.next) {
-            value = ID.next;
-            ID = null;
-          }
-        } else { ID = null }
+    getFirstCBlock(thread, id) {
+      let block = thread.blockContainer.getBlock(id);
+      if (!block || !block.parent) return;
+      while (block.parent) {
+        block = thread.blockContainer.getBlock(block.parent);
+        if (!block) return;
+        if (!block.inputs.SUBSTACK) continue;
+        const loopBlock = block.inputs.SUBSTACK.block;
+        if (this.isInLoop(thread, loopBlock, id)) return block;
       }
-      return value;
+    }
+    isInLoop(thread, loopBlock, thisBlock) {
+      let curBlock = thread.blockContainer.getBlock(loopBlock);
+      if (!curBlock || !thisBlock) return false;
+      if (curBlock.id === thisBlock) return true;
+      while (curBlock.next !== null) {
+        if (curBlock.next === thisBlock) return true;
+        curBlock = thread.blockContainer.getBlock(curBlock.next);
+      }
+      return false;
     }
   }
   window.onerror = function() { issueTimes.push(Math.floor(Date.now() / 200) * 200) };
