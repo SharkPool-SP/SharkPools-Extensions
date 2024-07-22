@@ -284,8 +284,8 @@
       "credits": "Color Utilities and Color Conversions. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
-      "status": "",
-      "date": "Last Updated: 07/12/2024"
+      "status": "update",
+      "date": "Last Updated: 07/21/2024"
     },
     "QR-Codes": {
       "credits": "Create and Read QR Codes. Made by SharkPool",
@@ -355,7 +355,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 07/14/2024"
+      "date": "Last Updated: 07/21/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
