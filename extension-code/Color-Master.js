@@ -3,7 +3,7 @@
 // Description: Color Utilities and Color Conversions
 // By: SharkPool
 
-//  Version 1.2.12
+// Version 1.3.0
 
 (function (Scratch) {
   "use strict";
@@ -28,7 +28,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "hex [COLOR]",
             arguments: {
-              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000"},
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000"}
             }
           },
           {
@@ -36,7 +36,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "convert hex [COLOR] to pen-friendly",
             arguments: {
-              COLOR: { type: Scratch.ArgumentType.STRING, defaultValue: "#ff0000ff"},
+              COLOR: { type: Scratch.ArgumentType.STRING, defaultValue: "#ff0000ff"}
             }
           },
           {
@@ -52,7 +52,7 @@
           {
             opcode: "mergeHex",
             blockType: Scratch.BlockType.REPORTER,
-            text: "mix [COLOR] and [COLOR2] by [NUM]%",
+            text: "mix [COLOR] with [COLOR2] by [NUM]%",
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#0000ff" },
@@ -65,6 +65,16 @@
             text: "invert [COLOR]",
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
+            }
+          },
+          {
+            opcode: "sameColor",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "does [COLOR] match [COLOR2] with softness [NUM]%",
+            arguments: {
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
+              COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff6600" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 }
             }
           },
           {
@@ -162,10 +172,7 @@
           },
         ],
         menus: {
-          COLORS: {
-            acceptReporters: true,
-            items: ["hex", "rgb", "hsv"]
-          },
+          COLORS: { acceptReporters: true, items: ["hex", "rgb", "hsv"] },
           COLCONV : ["rgb", "hsv"],
           COLATTS : ["hue", "saturation", "brightness", "opacity"],
         }
@@ -191,16 +198,11 @@
       const { r, g, b, a } = this.hex2RGBA(hex);
       const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, s = max === 0 ? 0 : d / max, v = max / 255;
       let h;
-      if (d === 0) {
-        h = 0;
-      } else {
-        if (max === r) {
-          h = ((g - b) / d + (g < b ? 6 : 0)) % 6;
-        } else if (max === g) {
-          h = ((b - r) / d + 2) % 6;
-        } else {
-          h = ((r - g) / d + 4) % 6;
-        }
+      if (d === 0) h = 0;
+      else {
+        if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) % 6;
+        else if (max === g) h = ((b - r) / d + 2) % 6;
+        else h = ((r - g) / d + 4) % 6;
         h *= 60;
       }
       return { h: Math.round(h), s, v, a };
@@ -210,19 +212,12 @@
       const c = hsv.v * hsv.s;
       const x = c * (1 - Math.abs((hsv.h / 60) % 2 - 1));
       let rgb;
-      if (hsv.h >= 0 && hsv.h < 60) {
-        rgb = [c, x, 0];
-      } else if (hsv.h >= 60 && hsv.h < 120) {
-        rgb = [x, c, 0];
-      } else if (hsv.h >= 120 && hsv.h < 180) {
-        rgb = [0, c, x];
-      } else if (hsv.h >= 180 && hsv.h < 240) {
-        rgb = [0, x, c];
-      } else if (hsv.h >= 240 && hsv.h < 300) {
-        rgb = [x, 0, c];
-      } else {
-        rgb = [c, 0, x];
-      }
+      if (hsv.h >= 0 && hsv.h < 60) rgb = [c, x, 0];
+      else if (hsv.h >= 60 && hsv.h < 120) rgb = [x, c, 0];
+      else if (hsv.h >= 120 && hsv.h < 180) rgb = [0, c, x];
+      else if (hsv.h >= 180 && hsv.h < 240) rgb = [0, x, c];
+      else if (hsv.h >= 240 && hsv.h < 300) rgb = [x, 0, c];
+      else rgb = [c, 0, x];
       const [r, g, b] = rgb.map(val => Math.round((val + (hsv.v - c)) * 255));
       return this.RGBA2hex({ r, g, b });
     }
@@ -240,13 +235,13 @@
     RGB2hex(args) {
       try {
         return this.RGBA2hex(JSON.parse(args.COLOR));
-      } catch (error) { return "#000000" }
+      } catch { return "#000000" }
     }
 
     HSV2hex(args) {
       try {
         return this.hsv2hex(JSON.parse(args.COLOR));
-      } catch (error) { return "#000000" }
+      } catch { return "#000000" }
     }
 
     randomHex(args) {
@@ -266,8 +261,8 @@
         const rgbaColor = this.hex2RGBA(color);
         const hsvColor = this.hex2HSV(color);
         if (args.ATT === "hue") {
-            hsvColor.h = (hsvColor.h + changeAMT) % 360;
-            hsvColor.h = hsvColor.h < 0 ? 360 + hsvColor.h : hsvColor.h;
+          hsvColor.h = (hsvColor.h + changeAMT) % 360;
+          hsvColor.h = hsvColor.h < 0 ? 360 + hsvColor.h : hsvColor.h;
         } else if (args.ATT === "saturation") {
           hsvColor.s = Math.max(0, Math.min(1, hsvColor.s + (changeAMT - 100) / 100));
         } else if (args.ATT === "brightness") {
@@ -295,6 +290,14 @@
       rgb.g = 255 - rgb.g;
       rgb.b = 255 - rgb.b;
       return this.RGBA2hex(rgb);
+    }
+
+    sameColor(args) {
+      const srcRGB = this.hex2RGBA(args.COLOR);
+      const matRGB = this.hex2RGBA(args.COLOR2);
+      const soft = Scratch.Cast.toNumber(args.NUM) * 10;
+      const inRange = (val1, val2) => val1 >= val2 - soft && val1 <= val2 + soft;
+      return inRange(srcRGB.r, matRGB.r) && inRange(srcRGB.g, matRGB.g) && inRange(srcRGB.b, matRGB.b)
     }
 
     // Gradient blocks
