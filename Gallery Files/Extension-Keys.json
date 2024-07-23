@@ -288,10 +288,10 @@
       "date": "Last Updated: 07/21/2024"
     },
     "QR-Codes": {
-      "credits": "Create and Read QR Codes. Made by SharkPool",
+      "credits": "Create and Read QR Codes (Client-Side). Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
-      "tags": ".all.fetching.utilities",
-      "status": "",
+      "tags": ".all.utilities",
+      "status": "update",
       "date": "Last Updated: 07/23/2024"
     },
     "Runtime-Events": {
