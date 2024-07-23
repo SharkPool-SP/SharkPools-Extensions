@@ -291,8 +291,8 @@
       "credits": "Create and Read QR Codes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
       "tags": ".all.fetching.utilities",
-      "status": "update",
-      "date": "Last Updated: 07/22/2024"
+      "status": "",
+      "date": "Last Updated: 07/23/2024"
     },
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
@@ -312,7 +312,7 @@
       "credits": "Manage, Create, and Delete Fonts from Your Project. Made by SharkPool and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Font-Manager.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/16/2024"
     },
     "Script-Control": {
@@ -326,7 +326,7 @@
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Layer-Control.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/16/2024"
     },
     "Renderer-Control": {
@@ -383,7 +383,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Panel.js",
       "tags": ".all.expanded.addon",
       "status": "update",
-      "date": "Last Updated: 07/14/2024"
+      "date": "Last Updated: 07/22/2024"
     },
     "DOM-Selector": {
       "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
@@ -396,7 +396,7 @@
       "credits": "Create and Export SVG Spritesheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SVG-Spritesheets.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 07/12/2024"
     },
     "Example": {
