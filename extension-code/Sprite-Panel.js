@@ -4,7 +4,7 @@
 // Licence: MIT AND LGPLv3 License
 // By: SharkPool & FurryR
 
-// Version V.1.1.1
+// Version V.1.1.11
 
 (function (Scratch) {
   "use strict";
@@ -37,6 +37,7 @@
 
   // Modify Editor Tab Row to Include our Addon
   function addBarItem() {
+    if (typeof scaffolding !== "undefined") return;
     const editorBars = document.querySelectorAll(`div[class^="menu-bar_menu-bar-item_"][class*="menu-bar_hoverable_"]`);
     const lastChild = editorBars[editorBars.length - 1];
     const clone = lastChild.cloneNode(true);
