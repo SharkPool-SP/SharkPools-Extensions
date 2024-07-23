@@ -291,8 +291,8 @@
       "credits": "Create and Read QR Codes. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/QR-Codes.js",
       "tags": ".all.fetching.utilities",
-      "status": "",
-      "date": "Last Updated: 07/12/2024"
+      "status": "update",
+      "date": "Last Updated: 07/22/2024"
     },
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
@@ -305,8 +305,8 @@
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Speech-Bubbles.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "",
-      "date": "Last Updated: 01/09/2024"
+      "status": "update",
+      "date": "Last Updated: 07/22/2024"
     },
     "Font-Manager": {
       "credits": "Manage, Create, and Delete Fonts from Your Project. Made by SharkPool and 0znzw",
