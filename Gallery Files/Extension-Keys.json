@@ -333,8 +333,8 @@
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Renderer-Control.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 03/12/2024"
+      "status": "update",
+      "date": "Last Updated: 07/25/2024"
     },
     "Timezones": {
       "credits": "Convert and Get Time in Different Timezones. Made by ion/ammunimium",
