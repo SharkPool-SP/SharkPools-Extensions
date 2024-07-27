@@ -158,8 +158,8 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "",
-      "date": "Last Updated: 03/10/2024"
+      "status": "update",
+      "date": "Last Updated: 07/27/2024"
     },
     "Monitors-Plus": {
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
@@ -319,8 +319,8 @@
       "credits": "Monitor and Control Scripts in Your Project. Made by SharkPool, Inspired by 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Script-Control.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 07/12/2024"
+      "status": "update",
+      "date": "Last Updated: 07/26/2024"
     },
     "Layer-Control": {
       "credits": "Relayer Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
