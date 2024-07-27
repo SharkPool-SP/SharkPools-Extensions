@@ -3,15 +3,17 @@
 // Description: Read, upload, and download files.
 // By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
-// Version 1.4.0
+// Version 1.5.0
 
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Files Expanded must be run unsandboxed");
 
   const menuIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMzMuMTY0MzYiIGhlaWdodD0iMTMzLjE2NDM2IiB2aWV3Qm94PSIwLDAsMTMzLjE2NDM2LDEzMy4xNjQzNiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE3My40MTc4MiwtMTEzLjQxNzgyKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTc2LjQxNzgyLDE4MGMwLC0zNS4xMTU0NyAyOC40NjY3MSwtNjMuNTgyMTggNjMuNTgyMTgsLTYzLjU4MjE4YzM1LjExNTQ3LDAgNjMuNTgyMTgsMjguNDY2NzEgNjMuNTgyMTgsNjMuNTgyMThjMCwzNS4xMTU0NyAtMjguNDY2NzEsNjMuNTgyMTggLTYzLjU4MjE4LDYzLjU4MjE4Yy0zNS4xMTU0NywwIC02My41ODIxOCwtMjguNDY2NzEgLTYzLjU4MjE4LC02My41ODIxOHoiIGZpbGw9IiNmY2IxMDMiIHN0cm9rZT0iI2JmOGIxMSIgc3Ryb2tlLXdpZHRoPSI2Ii8+PHBhdGggZD0iTTI3My4zMDkzMywxNjMuMzQ1MzN2NDkuOTY0YzAsNC41ODAwNCAtMy43NDcyOSw4LjMyNzMzIC04LjMyNzMzLDguMzI3MzNoLTUwLjAwNTY0Yy00LjU4MDA0LDAgLTguMjg1NjksLTMuNzQ3MjkgLTguMjg1NjksLTguMzI3MzNsMC4wNDE2NCwtNjYuNjE4NjZjMCwtNC41ODAwMiAzLjcwNTY3LC04LjMyNzMzIDguMjg1NjksLTguMzI3MzNoMzMuMzA5MzR6IiBmaWxsPSJub25lIiBzdHJva2Utb3BhY2l0eT0iMC4xNDkwMiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEwIi8+PHBhdGggZD0iTTI3My4zMDkzMywxNjMuMzQ1MzN2NDkuOTY0YzAsNC41ODAwNCAtMy43NDcyOSw4LjMyNzMzIC04LjMyNzMzLDguMzI3MzNoLTUwLjAwNTY0Yy00LjU4MDA0LDAgLTguMjg1NjksLTMuNzQ3MjkgLTguMjg1NjksLTguMzI3MzNsMC4wNDE2NCwtNjYuNjE4NjZjMCwtNC41ODAwMiAzLjcwNTY3LC04LjMyNzMzIDguMjg1NjksLTguMzI3MzNoMzMuMzA5MzR6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yNDQuMTQwMTIsMTY3LjUzMjZ2LTIyLjk0NzI4bDIyLjk0NzI3LDIyLjk0NzI3eiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7bm9Ib3ZlciZxdW90OzpmYWxzZSwmcXVvdDtvcmlnSXRlbSZxdW90OzpbJnF1b3Q7UGF0aCZxdW90Oyx7JnF1b3Q7YXBwbHlNYXRyaXgmcXVvdDs6dHJ1ZSwmcXVvdDtzZWdtZW50cyZxdW90OzpbWzY4MS4yNDk5OCwyNjIuNV0sWzYxMi41LDE5My43NTAwMl0sWzYxMi41LDI2Mi41MDAwNF1dLCZxdW90O2Nsb3NlZCZxdW90Ozp0cnVlLCZxdW90O2ZpbGxDb2xvciZxdW90OzpbMCwwLDAsMV19XX0iIGZpbGw9IiNmY2IxMDMiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48cGF0aCBkPSJNMjU4LjA4NTc0LDE4My4zMzIxNWMtMC4wMjA1NywwLjA4NzQxIC0wLjAzNTk5LDAuMTc0ODIgLTAuMDYxNywwLjI2MjIzYy0wLjA3NzEyLDAuMzIzOTMgLTAuMjM2NTIsMS4wOTAwNCAtMC4zOTU5MiwyLjU4NjI4YzAsMC4wMjU3MSAwLDAuMDQ2MjggLTAuMDA1MTQsMC4wNjE3YzAuODc5MjMsMy41Mzc1IC0wLjYwMTU4LDUuNjkxODcgLTEuNTgzNjUsNi42NzM5NWMtMC4wNjE3LDAuMDY2ODQgLTAuMTI4NTQsMC4xMjg1NCAtMC4yMDA1MywwLjE5MDI0Yy0wLjk2MTUsMC44NzQwOSAtMi42NDI4NCwxLjkxNzg2IC01LjE1MiwxLjkxNzg2Yy0xLjI0OTQ0LDAgLTIuNDE2NiwtMC4yNzc2NSAtMy40MzQ2NywtMC43ODY2OGMwLjAyNTcxLDEuNDAzNjggMC4wNDExMywzLjMzNjk3IDAuMDQxMTMsNi4wMjA5NGMwLjkyNTUxLDAuMzIzOTMgMS43NzM4OSwwLjg0ODM4IDIuNDkzNzMsMS41MzczN2MxLjQyOTM5LDEuMzcyODQgMi4yMTA5NCwzLjIwODQyIDIuMjEwOTQsNS4xNjc0MmMwLDIuOTEwMjEgLTEuNjc2Miw1LjQzOTkzIC00LjM3NTYsNi41OTY4MWMtMC4wNjY4NCwwLjAzMDg2IC0wLjEzODgzLDAuMDYxNyAtMC4yMDU2NiwwLjA4NzQxYy0wLjkwNDk0LDAuMzQ0NSAtMS45MjMsMC41MTQxNyAtMy4xMTU4OCwwLjUxNDE3Yy0wLjQzMTkxLDAgLTAuODk0NjUsLTAuMDIwNTcgLTEuMzk4NTUsLTAuMDY2ODRjLTAuMzA4NTEsLTAuMDE1NDIgLTAuNzYwOTcsLTAuMDEwMjkgLTEuMjk1NzIsMC4wMDUxNGMtMC45NzE3OSwwLjEwNzk4IC0yLjMzOTQ4LDAuMjE1OTUgLTQuMTY5OTIsMC4zMTg3OGMtMC4wMzU5OSwwIC0wLjA3MTk5LDAuMDA1MTQgLTAuMTEzMTIsMC4wMDUxNGMtMC4yNDE2NiwwLjAxMDI5IC0wLjQ3MzA0LDAuMDE1NDIgLTAuNjk5MjcsMC4wMTU0MmMtMy4yNzUyNywwIC01LjY2NjE3LC0xLjAzODYzIC03LjExMDk4LC0zLjA3OTg4Yy0wLjAzMDg2LC0wLjA0MTEzIC0wLjA1NjU1LC0wLjA4MjI3IC0wLjA4MjI3LC0wLjEyMzRjLTEuNDcwNTIsLTIuMTk1NTIgLTEuNTExNjYsLTQuOTcyMDQgLTAuMTEzMTIsLTcuMjM5NTNjMC4wMTAyOSwtMC4wMjU3MSAwLjAyNTcxLC0wLjA0NjI4IDAuMDQxMTMsLTAuMDcxOTljMC44ODk1MSwtMS4zOTg1NSAyLjE5MDM3LC0yLjM5NjAzIDMuODc2ODUsLTIuOTgyMTljMC4wMjA1NywtMC45OTIzNSAwLjAxNTQyLC0yLjIzNjY1IC0wLjAxNTQyLC0zLjcxMjMyYy0wLjgzODEsMC4zNDk2NCAtMS44MDQ3NCwwLjU1NTMgLTIuODg5NjQsMC41NTUzYy0yLjg2MzkzLDAgLTUuMjI5MTIsLTEuNzAxOTEgLTYuMDUxOCwtNC4yODgxOWMtMC4xNjk2OCwtMC41MjQ0NiAtMC4zMjkwNywtMS4yOTA1NyAtMC42OTkyNywtMy4wMTgxOGMtMC4wMTU0MiwtMC4wNjE3IC0wLjAyNTcxLC0wLjEyMzQgLTAuMDM1OTksLTAuMTg1MWwtMC43NjA5NywtNC4yNTIyYy0wLjAyNTcxLC0wLjA5MjU1IC0wLjA2MTcsLTAuMjAwNTMgLTAuMTAyODMsLTAuMzIzOTNjLTAuMzk1OTIsLTEuMTI2MDMgLTAuNTgxMDEsLTIuMDgyNCAtMC41ODEwMSwtMy4wMDc5MWMwLC0xLjE0NjYgMC4zMzQyMSwtMi44NzkzNiAxLjkxNzg2LC00LjYwNjk3YzAuNzk2OTcsLTAuODc0MDkgMi4yNDY5MywtMi4wMDUyNiA0LjU4MTI2LC0yLjM3MDMyYzAuMjg3OTQsLTAuMDQ2MjggMC41ODEwMSwtMC4wNzE5OSAwLjg3NDA5LC0wLjA3MTk5aDUuNjg2NzRjMC4xMjg1NCwwIDAuMjU3MDksMC4wMDUxNCAwLjM4NTYzLDAuMDE1NDJjMi4xNjk4MSwwLjA3NzEyIDQuMTEzMzcsMC4wNzE5OSA1Ljc3OTI4LC0wLjAwNTE0YzIuMzI5MTksLTAuMTAyODMgNC42NTMyNSwtMC4zMDMzNiA2LjkzMTAzLC0wLjU5NjQ0YzAuMjU3MDksLTAuMDgyMjcgMC41MzQ3NCwtMC4xNjQ1MyAwLjgzMjk2LC0wLjIzNjUyYzAuMjgyOCwtMC4wNzE5OSAwLjU3MDczLC0wLjExODI1IDAuODU4NjcsLTAuMTQ5MTFjMi4xOTAzNywtMC4yMDA1MyA0LjIzMTYzLDAuNDMxOTEgNS44MjA0MSwxLjc4OTMyYzEuOTY5MjcsMS42OTE2MiAyLjgzODIzLDQuMjUyMiAyLjMxODkxLDYuODUzOXoiIGZpbGw9IiNiZjhiMTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI1Mi41Mzg4NywxODIuMjIzNjFjLTAuMjEwODEsMC44NDQ3OSAtMC4zOTE4LDEuOTg5ODQgLTAuNTQyNDUsMy40MzcyNGMtMC4wNjExOSwwLjcyMzk1IC0wLjAzMTM3LDEuMzExNjUgMC4wOTA0OSwxLjc2NDEyYzAuMjA5NzgsMC43NTQyOSAwLjE5NTksMS4yNTIwMSAtMC4wNDUyNSwxLjQ5MjY0Yy0wLjMzMjE2LDAuMzAxMyAtMC43ODQxMSwwLjQ1MTk2IC0xLjM1Njg5LDAuNDUxOTZjLTAuNjYzNzksMCAtMS4xMDE4NywtMC4xOTY5MyAtMS4zMTE2NSwtMC41OTE4MWMtMC4wMzEzNywtMS4yMTQ0NyAtMC4wMTU5NCwtMi4zNTM4NyAwLjA0NTI1LC0zLjQxNzE4YzAuMDU5MTMsLTEuMzA1OTkgMC4wOTA0OSwtMS45ODkzMyAwLjA5MDQ5LC0yLjA1Yy0wLjAzMTM3LDAgLTAuMDc2MSwtMC4wMzAzMyAtMC4xMzU3NCwtMC4wOTE1MmMtMi44MDQ4LDAuMTIxODYgLTUuNDQzMDEsMC4zMDI4NCAtNy45MTUxNSwwLjU0NDVjLTAuMDYwNjcsMC4zMDI4NCAtMC4wNjA2NywwLjc4NTY2IDAsMS40NDk5NmMwLjExOTgxLDAuOTM2ODIgMC4xODA5OCwxLjQ4MDgxIDAuMTgwOTgsMS42MzA5NWMtMC4xMjAzMiwwLjkzNjgyIC0wLjE4MDk4LDIuMzI2MTEgLTAuMTgwOTgsNC4xNjk0MWMwLjExOTgxLDAuNzg1NjYgMC4xODA5OCw0LjE1NDUgMC4xODA5OCwxMC4xMDYwM3YzLjMwODdjMCwwLjUxMzY2IDAuMDc0NTYsMC44NzYxNSAwLjIyNDE4LDEuMDg3NDdoMi43NzcwNGMwLjUwNzQ5LC0wLjA2MDE2IDAuOTE3NzksMC4wNjA2NyAxLjIzMTk2LDAuMzYxOThjMC4zMTMxMywwLjMwMTgyIDAuNDY5OTYsMC42NjMyOCAwLjQ2OTk2LDEuMDg0OWMwLDAuNjYyNzcgLTAuMzE2MjEsMS4xMzA2NiAtMC45NDk2NywxLjQwMjY2Yy0wLjM5MjMxLDAuMTUwMTQgLTEuMDg1NDIsMC4xODA5OCAtMi4wODAzMywwLjA5MDQ5Yy0wLjQ4MjMsLTAuMDMwODYgLTEuMTkxMzMsLTAuMDMwODYgLTIuMTI2MSwwYy0wLjg0NDI2LDAuMTA0ODkgLTIuMjAwNjUsMC4yMTAzIC00LjA3MDE3LDAuMzE2MjFjLTEuNjI4MzgsMC4wNjAxNiAtMi42MjMzLC0wLjE2NjA3IC0yLjk4NTI4LC0wLjY3ODE5Yy0wLjI0MTY2LC0wLjM2MTQ2IC0wLjI0MTY2LC0wLjczODg2IDAsLTEuMTMwNjZjMC40MjE2MiwtMC42NjI3NyAxLjUyMjQ2LC0wLjk5NDkzIDMuMzAyMDEsLTAuOTk0OTNjMC42MzI5NSwwIDEuMDI0MjMsLTAuMDUyNDQgMS4xNzU0LC0wLjE1Nzg0YzAuMTUwNjUsLTAuMTA1NCAwLjIyNjIzLC0wLjMwOTAyIDAuMjI2MjMsLTAuNjEwMzJjMCwtMC4yNzA0NiAwLC0wLjUyNiAwLC0wLjc2NzE0YzAsLTAuNDUwOTMgMCwtMS4xMTMxOCAwLC0xLjk4NTczYzAuMDkwNDksLTEuNTMzNzggMC4wOTA0OSwtMy44MjEzMSAwLC02Ljg2MDU4Yy0wLjEyMDgzLC00LjM2Mjc0IC0wLjA2MDY3LC04LjE5ODQ1IDAuMTgwOTgsLTExLjUwODY5Yy0wLjAzMDMzLC0wLjAyOTgyIC0wLjA3NTU4LC0wLjA3NTA3IC0wLjEzNjc3LC0wLjEzNTc0Yy0xLjA5MTU4LDAuMDYwNjcgLTIuODUwMDUsMC4wMzAzMyAtNS4yNzU0LC0wLjA5MTAxYy0wLjI3MzAzLDAgLTEuMTk4NTMsMC4wNjExOSAtMi43NzQ0NywwLjE4MTUxYzAuMzkxOCwyLjc0NDEzIDAuNjMyOTUsNC44MDk1NSAwLjcyMzQ0LDYuMTk2MjdjMCwwLjE4MDk4IC0wLjAzMDMzLDAuNTg4MjEgLTAuMDkwNDksMS4yMjExNmMtMC4wMzAzMywwLjQ1MTk2IC0wLjQwNzIzLDAuNjc4MTkgLTEuMTMwNjYsMC42NzgxOWMtMC4zOTIzMSwwIC0wLjYxODAzLC0wLjEzNDcyIC0wLjY3ODE5LC0wLjQwMzYyYy0wLjAzMDMzLC0wLjA1OTEzIC0wLjIxMTMzLC0wLjg2NzQgLTAuNTQyOTYsLTIuNDIyMjZjLTAuMTgwOTgsLTEuMDE2NTEgLTAuNDM3NTYsLTIuNDUyMDggLTAuNzY4NjgsLTQuMzA2MThjMCwtMC4xMTgyNSAtMC4xMDU5MSwtMC40OTIwNiAtMC4zMTYyMSwtMS4xMjA5Yy0wLjE3OTk3LC0wLjUwODUyIC0wLjI2OTkzLC0wLjg5NzIzIC0wLjI2OTkzLC0xLjE2NjE0YzAsLTAuMjA4NzYgMC4xNDI0MiwtMC40NzE1IDAuNDI5ODQsLTAuNzg0NjNjMC4yODYzOSwtMC4zMTM2NCAwLjcxNjI0LC0wLjUxNjIzIDEuMjg5MDMsLTAuNjA2MmMwLjA5MDQ5LDAgMC4yMzI5MiwwIDAuNDI5ODQsMGMwLjE5NTM5LDAgMC4zNTM3NSwwIDAuNDc0NTgsMGMzLjU4ODQsMCA1LjE1NjExLDAgNC43MDM2NCwwYzIuNDQyMzEsMC4wOTEwMSA0LjYxMzE1LDAuMDkxMDEgNi41MTI1LDBjMi43MTMyOCwtMC4xMTk4MSA1LjM5NjIyLC0wLjM2MTQ2IDguMDUwMzgsLTAuNzIzNDRjMC4xODA5OCwtMC4wOTA0OSAwLjQ1MTk2LC0wLjE4MDk4IDAuODEzNDIsLTAuMjcwOTdjMC42NjM3OSwtMC4wNjAxNiAxLjIwNjI0LDAuMDkwNDkgMS42Mjg4OSwwLjQ1MjQ3YzAuNDIxNjIsMC4zNjA5NSAwLjU3MjI3LDAuODQzNzUgMC40NTE5NiwxLjQ0Njg4eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48L2c+PC9nPjwvc3ZnPg==";
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzMuMTY0IiBoZWlnaHQ9IjEzMy4xNjQiIHZpZXdCb3g9IjAgMCAxMzMuMTY0IDEzMy4xNjQiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTMgNjYuNTgyQzMgMzEuNDY3IDMxLjQ2NyAzIDY2LjU4MiAzczYzLjU4MiAyOC40NjcgNjMuNTgyIDYzLjU4Mi0yOC40NjcgNjMuNTgyLTYzLjU4MiA2My41ODJTMyAxMDEuNjk3IDMgNjYuNTgyeiIgZmlsbD0iI2ZjYjEwMyIgc3Ryb2tlPSIjYmY4YjExIiBzdHJva2Utd2lkdGg9IjYiLz48cGF0aCBkPSJNOTkuODkyIDQ5LjkyN3Y0OS45NjRjMCA0LjU4LTMuNzQ4IDguMzI4LTguMzI4IDguMzI4SDQxLjU1OGMtNC41OCAwLTguMjg1LTMuNzQ4LTguMjg1LTguMzI4bC4wNDEtNjYuNjE4YzAtNC41OCAzLjcwNi04LjMyOCA4LjI4Ni04LjMyOGgzMy4zMXoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIuMTQ5IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMTAiLz48cGF0aCBkPSJNOTkuODkyIDQ5LjkyN3Y0OS45NjRjMCA0LjU4LTMuNzQ4IDguMzI4LTguMzI4IDguMzI4SDQxLjU1OGMtNC41OCAwLTguMjg1LTMuNzQ4LTguMjg1LTguMzI4bC4wNDEtNjYuNjE4YzAtNC41OCAzLjcwNi04LjMyOCA4LjI4Ni04LjMyOGgzMy4zMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNzAuNzIyIDU0LjExNVYzMS4xNjdsMjIuOTQ3IDIyLjk0OHoiIGZpbGw9IiNmY2IxMDMiLz48cGF0aCBkPSJNODQuNjY4IDY5LjkxNGMtLjAyLjA4OC0uMDM2LjE3NS0uMDYyLjI2Mi0uMDc3LjMyNC0uMjM2IDEuMDktLjM5NiAyLjU4N3EuMDAxLjAzOC0uMDA1LjA2MWMuODggMy41MzgtLjYwMiA1LjY5Mi0xLjU4NCA2LjY3NGEyIDIgMCAwIDEtLjIuMTljLS45NjIuODc1LTIuNjQzIDEuOTE4LTUuMTUyIDEuOTE4YTcuNjUgNy42NSAwIDAgMS0zLjQzNS0uNzg2Yy4wMjYgMS40MDMuMDQxIDMuMzM3LjA0MSA2LjAyYTYuOSA2LjkgMCAwIDEgMi40OTQgMS41MzggNy4xIDcuMSAwIDAgMSAyLjIxIDUuMTY3YzAgMi45MS0xLjY3NSA1LjQ0LTQuMzc1IDYuNTk3cS0uMTAzLjA0OC0uMjA1LjA4OGMtLjkwNS4zNDQtMS45MjMuNTE0LTMuMTE2LjUxNC0uNDMyIDAtLjg5NS0uMDItMS4zOTktLjA2N2ExOCAxOCAwIDAgMC0xLjI5NS4wMDVjLS45NzIuMTA4LTIuMzQuMjE2LTQuMTcuMzE5LS4wMzYgMC0uMDcyLjAwNS0uMTE0LjAwNXEtLjM2LjAxNS0uNjk5LjAxNWMtMy4yNzUgMC01LjY2Ni0xLjAzOC03LjExLTMuMDhxLS4wNDYtLjA2LS4wODMtLjEyM2MtMS40Ny0yLjE5NS0xLjUxMi00Ljk3Mi0uMTEzLTcuMjRxLjAxNy0uMDM1LjA0MS0uMDcxYy44OS0xLjM5OSAyLjE5LTIuMzk2IDMuODc3LTIuOTgzLjAyLS45OTIuMDE1LTIuMjM2LS4wMTYtMy43MTJhNy41IDcuNSAwIDAgMS0yLjg5LjU1NWMtMi44NjMgMC01LjIyOC0xLjcwMS02LjA1MS00LjI4OC0uMTctLjUyNC0uMzMtMS4yOS0uNy0zLjAxOGEyIDIgMCAwIDEtLjAzNS0uMTg1bC0uNzYxLTQuMjUyYTcgNyAwIDAgMC0uMTAzLS4zMjRjLS4zOTYtMS4xMjYtLjU4MS0yLjA4My0uNTgxLTMuMDA4IDAtMS4xNDcuMzM0LTIuODggMS45MTgtNC42MDcuNzk3LS44NzQgMi4yNDctMi4wMDUgNC41ODEtMi4zN3EuNDMzLS4wNzEuODc0LS4wNzJoNS42ODdxLjE5MiAwIC4zODUuMDE1YTcyIDcyIDAgMCAwIDUuNzgtLjAwNSA4MyA4MyAwIDAgMCA2LjkzLS41OTZjLjI1OC0uMDgzLjUzNi0uMTY1LjgzNC0uMjM3LjI4My0uMDcyLjU3LS4xMTguODU4LS4xNSAyLjE5LS4yIDQuMjMyLjQzMyA1LjgyIDEuNzkgMS45NyAxLjY5MiAyLjg0IDQuMjUyIDIuMzIgNi44NTQiIGZpbGw9IiNiZjhiMTEiLz48cGF0aCBkPSJNNzkuMTIxIDY4LjgwNnEtLjMxNiAxLjI2Ni0uNTQzIDMuNDM3LS4wOSAxLjA4Ni4wOSAxLjc2NC4zMTYgMS4xMzEtLjA0NCAxLjQ5My0uNDk5LjQ1MS0xLjM1Ny40NTItLjk5NiAwLTEuMzEyLS41OTJBNDEgNDEgMCAwIDEgNzYgNzEuOTQzcS4wOS0xLjk2LjA5LTIuMDUtLjA0NSAwLS4xMzUtLjA5Mi00LjIwNy4xODMtNy45MTUuNTQ1LS4wOS40NTMgMCAxLjQ1LjE4IDEuNDA0LjE4IDEuNjMtLjE4IDEuNDA2LS4xOCA0LjE3LjE4IDEuMTc5LjE4IDEwLjEwNnYzLjMwOXEwIC43Ny4yMjUgMS4wODdoMi43NzdxLjc2Mi0uMDkgMS4yMzIuMzYyLjQ3LjQ1My40NyAxLjA4NSAwIC45OTQtLjk1IDEuNDAzLS41ODguMjI1LTIuMDguMDktLjcyMy0uMDQ1LTIuMTI2IDAtMS4yNjUuMTU3LTQuMDcuMzE2LTIuNDQzLjA5LTIuOTg1LS42NzgtLjM2My0uNTQyIDAtMS4xMy42MzItLjk5NSAzLjMwMi0uOTk1Ljk0OCAwIDEuMTc1LS4xNTguMjI2LS4xNi4yMjYtLjYxVjg5LjAzcS4xMzUtMi4zMDIgMC02Ljg2MS0uMTgtNi41NDQuMTgxLTExLjUwOWwtLjEzNy0uMTM2cS0xLjYzNy4wOS01LjI3NS0uMDktLjQxIDAtMi43NzQuMTgxLjU4NyA0LjExNy43MjMgNi4xOTYgMCAuMjcyLS4wOSAxLjIyMS0uMDQ2LjY3OC0xLjEzMS42NzktLjU4OSAwLS42NzgtLjQwNC0uMDQ2LS4wOS0uNTQzLTIuNDIybC0uNzY5LTQuMzA2cTAtLjE3OS0uMzE2LTEuMTIxLS4yNy0uNzY0LS4yNy0xLjE2Ni0uMDAxLS4zMTUuNDMtLjc4NS40My0uNDcxIDEuMjg5LS42MDZoNS42MDhxMy42NjMuMTM1IDYuNTEyIDBhODggODggMCAwIDAgOC4wNS0uNzI0cS4yNzMtLjEzNS44MTQtLjI3Ljk5NS0uMDkgMS42MjkuNDUyLjYzMy41NC40NTIgMS40NDciIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+";
 
+  const vm = Scratch.vm;
+  const runtime = vm.runtime;
   let selectorOptions = {
     border: "#888", text: "#000000", outer: "#ffffff",
     sizeFont: 1.5, borderRadius: 16, borderType: "dashed",
@@ -20,84 +22,75 @@
   };
   const builtInFonts = [
     "Sans Serif", "Serif", "Handwriting",
-    "Marker", "Curly", "Pixel", "inherit"
+    "Marker", "Curly", "Pixel", "Scratch", "inherit"
   ];
-
-  const MODE_MODAL = "modal";
-  const MODE_IMMEDIATELY_SHOW_SELECTOR = "selector";
-  const MODE_ONLY_SELECTOR = "only-selector";
-  const ALL_MODES = [
-    MODE_MODAL, MODE_IMMEDIATELY_SHOW_SELECTOR,
-    MODE_ONLY_SELECTOR
-  ];
-  let openFileSelectorMode = MODE_MODAL;
-
-  let FileName = "";
-  let FileSize = "0kb";
-  let RawFileSize = "0";
-  let fileDate = "";
-  let enableVis = true;
-  let lastData = "";
-  let openModals = 0;
-
   const AS_TEXT = "text";
   const AS_DATA_URL = "url";
   const AS_HEX = "hex";
   const AS_BASE64 = "base64";
+  const AS_BUFFER = "arrayBuffer";
 
-  /**
-   * @param {HTMLInputElement} input
-   * @returns {boolean}
-   */
+  const MODE_MODAL = "modal";
+  const MODE_IMMEDIATELY_SHOW_SELECTOR = "selector";
+  const MODE_ONLY_SELECTOR = "only-selector";
+  const ALL_MODES = [MODE_MODAL, MODE_IMMEDIATELY_SHOW_SELECTOR, MODE_ONLY_SELECTOR];
+  let openFileSelectorMode = MODE_MODAL;
+
+  let storedFiles = {};
+  let FileName = "", FileSize = "0kb", RawFileSize = "0", fileDate = "", lastData = "";
+  let enableVis = true, openModals = 0;
+
   const isCancelEventSupported = (input) => {
-    // Chrome 113+, Safari 16.4+
     if ("oncancel" in input) return true;
-    // Firefox is weird. cancel is supported since Firefox 91, but oncancel doesn't exist.
-    // Firefox 91 is from August 2021. That's old enough to not care about previous versions.
     return navigator.userAgent.includes("Firefox");
   };
 
-  /**
-   * @param {string} accepts base64
-   * @param {string} the delimeter for the hex string
-   * @returns {string} the base64 representation in hex
-   */
+  const formatFileSize = (size) => {
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    let i = 0;
+    while (size >= 1024 && i < units.length - 1) {
+      size /= 1024;
+      i++;
+    }
+    return `${size.toFixed(2)} ${units[i]}`;
+  };
+
   function base64ToHex(str, delim) {
     const raw = atob(str);
     let result = "";
     for (let i = 0; i < raw.length; i++) {
       const hex = raw.charCodeAt(i).toString(16);
-      result += delim.toString()+(hex.length === 2 ? hex : "0" + hex);
+      result += delim.toString() + (hex.length === 2 ? hex : "0" + hex);
     }
     return result.toUpperCase();
   }
 
-  /**
-   * @param {string} accept See MODE_ constants above
-   * @param {string} as See AS_ constants above
-   * @returns {Promise<string>} format given by as parameter
-   */
+  function stringToArrayBuffer(string) {
+    var bytes = new Uint8Array(string.length);
+    for (var i = 0; i < string.length; i++) { bytes[i] = string.charCodeAt(i) }
+    return bytes.buffer;
+  }
+
   const showFilePrompt = (accept, as) =>
     new Promise((_resolve) => {
-      // We can't reliably show an <input> picker without "user interaction" in all environments,
-      // so we have to show our own UI anyways. We may as well use this to implement some nice features
-      // that native file pickers don't have:
-      //  - Easy drag+drop
-      //  - Reliable cancel button (input cancel event is still not perfect)
-      //    This is important so we can make this just a reporter instead of a command+hat block.
-      //    Without an interface, the script would be stalled if the prompt was cancelled.
-      /** @param {string} text */
       openModals++;
       const callback = (text) => {
+        let finalTxt = text;
+        if (as === AS_BUFFER) finalTxt = stringToArrayBuffer(finalTxt);
+        else if ([AS_HEX, AS_BASE64].includes(as)) {
+          let uri = finalTxt.split(",");
+          finalTxt = uri.splice(1, uri.length).join(",");
+          if (as === AS_HEX) finalTxt = base64ToHex(finalTxt, " ");
+        }
         openModals--;
-        _resolve(text);
-        Scratch.vm.renderer.removeOverlay(outer);
-        Scratch.vm.runtime.off("PROJECT_STOP_ALL", handleProjectStopped);
+        lastData = finalTxt;
+        _resolve(finalTxt);
+        vm.renderer.removeOverlay(outer);
+        runtime.off("PROJECT_STOP_ALL", handleProjectStopped);
         document.body.removeEventListener("keydown", handleKeyDown);
       };
       let isReadingFile = false;
 
-      /** @param {File} file */
       const readFile = (file) => {
         if (isReadingFile) return;
         isReadingFile = true;
@@ -108,39 +101,15 @@
           RawFileSize = file.size;
           const rawDate = new Date(file.lastModified);
           fileDate = rawDate.toLocaleString();
-          let result; // More Supported Stuff
-          if ([AS_HEX, AS_BASE64].includes(as/* binary support later */)) {
-            /* Getting the base64 (used for the hex also) */
-            let uri = reader.result.split(",");
-            result = uri.splice(1, uri.length).join(",");
-            switch(as) {
-              case AS_HEX: result = base64ToHex(result, " ");
-              default: result; // base64; update this when its out dated
-            }
-          } else result = reader.result;
-          lastData = result;
-          callback(/** @type {string} */ (result));
+          callback(reader.result);
         };
         reader.onerror = () => {
           console.error("Failed to read file as text", reader.error);
           callback("");
         };
-        switch(as) {
-          case AS_TEXT: reader.readAsText(file);
-          case AS_DATA_URL: reader.readAsDataURL(file);
-          default: reader.readAsDataURL(file);
-        }
+        if (as === AS_TEXT || as === AS_BUFFER) reader.readAsText(file);
+        else reader.readAsDataURL(file);
       };
-      const formatFileSize = (size) => {
-        const units = ["B", "KB", "MB", "GB", "TB"];
-        let i = 0;
-        while (size >= 1024 && i < units.length - 1) {
-          size /= 1024;
-          i++;
-        }
-        return `${size.toFixed(2)} ${units[i]}`;
-      };
-      /** @param {KeyboardEvent} e */
       const handleKeyDown = (e) => {
         if (e.key === "Escape") {
           e.stopPropagation();
@@ -148,9 +117,10 @@
           callback("");
         }
       };
+      document.body.removeEventListener("keydown", handleKeyDown);
       document.body.addEventListener("keydown", handleKeyDown, { capture: true });
       const handleProjectStopped = () => { callback("") };
-      Scratch.vm.runtime.on("PROJECT_STOP_ALL", handleProjectStopped);
+      runtime.on("PROJECT_STOP_ALL", handleProjectStopped);
 
       const INITIAL_BORDER_COLOR = selectorOptions.border;
       const DROPPING_BORDER_COLOR = "#03a9fc";
@@ -224,13 +194,11 @@
       subtitle.style.letterSpacing = `${selectorOptions.letterSpacing}px`;
       modal.appendChild(subtitle);
 
-      // To avoid the script getting stalled forever, if cancel isn't supported, we'll just forcibly
-      // show our modal.
       if (openFileSelectorMode === MODE_ONLY_SELECTOR && !isCancelEventSupported(input)) {
         openFileSelectorMode = MODE_IMMEDIATELY_SHOW_SELECTOR;
       }
       if (openFileSelectorMode !== MODE_ONLY_SELECTOR) {
-        const overlay = Scratch.vm.renderer.addOverlay(outer, "scale");
+        const overlay = vm.renderer.addOverlay(outer, "scale");
         overlay.container.style.zIndex = "100";
       }
       if (
@@ -239,16 +207,9 @@
       ) {
         input.click();
       }
-      if (openFileSelectorMode === MODE_ONLY_SELECTOR) {
-        // Note that browser support for cancel is currently quite bad
-        input.addEventListener("cancel", () => { callback("") });
-      }
+      if (openFileSelectorMode === MODE_ONLY_SELECTOR) input.addEventListener("cancel", () => { callback("") });
     });
 
-  /**
-   * @param {string} url a data:, blob:, or same-origin URL
-   * @param {string} file
-   */
   const downloadURL = (url, file) => {
     const link = document.createElement("a");
     link.href = url;
@@ -258,20 +219,12 @@
     link.remove();
   };
 
-  /**
-   * @param {Blob} blob Data to download
-   * @param {string} file Name of the file
-   */
   const downloadBlob = (blob, file) => {
     const url = URL.createObjectURL(blob);
     downloadURL(url, file);
     (requestIdleCallback ?? setTimeout)(() => URL.revokeObjectURL(url));
   };
 
-  /**
-   * @param {string} url
-   * @returns {boolean}
-   */
   const isDataURL = (url) => {
     try {
       const parsed = new URL(url);
@@ -279,23 +232,15 @@
     } catch (e) { return false }
   };
 
-  /**
-   * @param {string} url
-   * @param {string} file
-   */
   const downloadUntrustedURL = (url, file) => {
-    // Don't want to return a Promise here when not actually needed
     if (isDataURL(url)) downloadURL(url, file);
-    else {
-      return Scratch.fetch(url)
-        .then((res) => res.blob())
-        .then((blob) => {
-          downloadBlob(blob, file);
-        });
-    }
+    else return Scratch.fetch(url).then((res) => res.blob()).then((blob) => { downloadBlob(blob, file) });
   };
 
   class filesExpanded {
+    constructor() {
+      this._showUnsafeOptions = false;
+    }
     getInfo() {
       return {
         id: "filesExpanded",
@@ -325,10 +270,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "open a file as [as]",
             arguments: {
-              as: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "encoding"
-              }
+              as: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
             }
           },
           {
@@ -336,14 +278,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "open a [extension] file as [as]",
             arguments: {
-              extension: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: ".txt"
-              },
-              as: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "encoding"
-              }
+              extension: { type: Scratch.ArgumentType.STRING, defaultValue: ".txt" },
+              as: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
             }
           },
           "---",
@@ -352,10 +288,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "last opened file [FORMAT]",
             arguments: {
-              FORMAT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "FILE_INFO"
-              }
+              FORMAT: { type: Scratch.ArgumentType.STRING, menu: "FILE_INFO" }
             }
           },
           {
@@ -363,20 +296,23 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is modal open?"
           },
+          "---",
+          {
+            opcode: "setOpenMode",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set open file selector mode to [mode]",
+            arguments: {
+              mode: { type: Scratch.ArgumentType.STRING, menu: "automaticallyOpen" }
+            }
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Downloading" },
           {
             opcode: "download",
             blockType: Scratch.BlockType.COMMAND,
             text: "download [text] as [file]",
             arguments: {
-              text: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "Hello, world!"
-              },
-              file: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "save.txt"
-              }
+              text: { type: Scratch.ArgumentType.STRING, defaultValue: "Hello, world!" },
+              file: { type: Scratch.ArgumentType.STRING, defaultValue: "save.txt" }
             }
           },
           {
@@ -384,27 +320,49 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "download URL [url] as [file]",
             arguments: {
-              url: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "data:text/plain;base64,SGVsbG8sIHdvcmxkIQ=="
-              },
-              file: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "save.txt"
-              }
+              url: { type: Scratch.ArgumentType.STRING, defaultValue: "data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==" },
+              file: { type: Scratch.ArgumentType.STRING, defaultValue: "save.txt" }
             }
           },
-          "---",
+          { blockType: Scratch.BlockType.LABEL, text: "Writing" },
           {
-            opcode: "setOpenMode",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "set open file selector mode to [mode]",
+					  opcode: "checkFileAPI",
+					  blockType: Scratch.BlockType.BOOLEAN,
+					  text: "is file writing supported?"
+				  },
+				  {
+					  opcode: "setStoredFile",
+					  blockType: Scratch.BlockType.COMMAND,
+					  text: "open new stored file named [NAME] as [TYPE]",
+					  arguments: {
+			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" },
+			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
+			      }
+				  },
+				  {
+					  opcode: "deleteStoredFile",
+					  blockType: Scratch.BlockType.COMMAND,
+					  text: "delete stored file [NAME]",
+					  arguments: {
+			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" }
+			      }
+				  },
+				  {
+					  opcode: "updateFile",
+					  blockType: Scratch.BlockType.COMMAND,
+					  text: "write [TXT] to stored file [NAME]",
+					  arguments: {
+			        TXT: { type: Scratch.ArgumentType.STRING,	defaultValue: "new content" },
+			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" }
+			      }
+				  },
+				  {
+            opcode: "storedInfo",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "[FORMAT] in stored file [NAME]",
             arguments: {
-              mode: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: MODE_MODAL,
-                menu: "automaticallyOpen"
-              }
+              FORMAT: { type: Scratch.ArgumentType.STRING, menu: "FILE_INFO" },
+			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: "Visuals" },
@@ -426,10 +384,7 @@
             text: "set selector image to [IMG]",
             hideFromPalette: enableVis,
             arguments: {
-              IMG: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "https://extensions.turbowarp.org/dango.png"
-              }
+              IMG: { type: Scratch.ArgumentType.STRING, defaultValue: "https://extensions.turbowarp.org/dango.png" }
             }
           },
           {
@@ -438,10 +393,7 @@
             text: "scale selector image to [SCALE]%",
             hideFromPalette: enableVis,
             arguments: {
-              SCALE: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 100
-              }
+              SCALE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
           },
           "---",
@@ -451,14 +403,8 @@
             text: "set selector [OPTION] color to [COLOR]",
             hideFromPalette: enableVis,
             arguments: {
-              OPTION: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "visualColors"
-              },
-              COLOR: {
-                type: Scratch.ArgumentType.COLOR,
-                defaultValue: "#ff0000"
-              }
+              OPTION: { type: Scratch.ArgumentType.STRING, menu: "visualColors" },
+              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
             }
           },
           {
@@ -467,14 +413,8 @@
             text: "set selector [OPTION] to [AMT]",
             hideFromPalette: enableVis,
             arguments: {
-              OPTION: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "visualOptions"
-              },
-              AMT: {
-                type: Scratch.ArgumentType.NUMBER,
-                defaultValue: 15
-              }
+              OPTION: { type: Scratch.ArgumentType.STRING, menu: "visualOptions" },
+              AMT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 }
             }
           },
           {
@@ -483,10 +423,7 @@
             text: "set selector border type to [TYPE]",
             hideFromPalette: enableVis,
             arguments: {
-              TYPE: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "borderTypes"
-              }
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "borderTypes" }
             }
           },
           {
@@ -495,10 +432,7 @@
             text: "set selector font to [FONT]",
             hideFromPalette: enableVis,
             arguments: {
-              FONT: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "font"
-              }
+              FONT: { type: Scratch.ArgumentType.STRING, menu: "font" }
             }
           },
           {
@@ -507,10 +441,7 @@
             text: "set file selector text to [TEXT]",
             hideFromPalette: enableVis,
             arguments: {
-              TEXT: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "Insert File Here"
-              }
+              TEXT: { type: Scratch.ArgumentType.STRING, defaultValue: "Insert File Here" }
             }
           },
           {
@@ -519,35 +450,21 @@
             text: "current selector [THING]",
             hideFromPalette: enableVis,
             arguments: {
-              THING: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "all"
-              }
+              THING: { type: Scratch.ArgumentType.STRING, menu: "all" }
             }
           },
         ],
         menus: {
-          encoding: {
-            acceptReporters: true,
-            items: [/* ctrl f point: selector values*/
-              { text: "text", value: AS_TEXT },
-              { text: "data: URL", value: AS_DATA_URL },
-              { text: "base64", value: AS_BASE64 },
-              { text: "hex", value: AS_HEX }
-            ],
-          },
+          font: { acceptReporters: true, items: "getFonts" },
+          encoding: { acceptReporters: true, items: "getEncodings" },
           automaticallyOpen: {
             acceptReporters: true,
             items: [
               { text: "show modal", value: MODE_MODAL },
               { text: "open selector immediately", value: MODE_IMMEDIATELY_SHOW_SELECTOR },
-              {
-                // Will not work if the browser doesn't think we are responding to a click event.
-                text: "only show selector (unreliable)", value: MODE_ONLY_SELECTOR
-              }
+              { text: "only show selector (unreliable)", value: MODE_ONLY_SELECTOR }
             ],
           },
-          font: { acceptReporters: true, items: "getFonts" },
           all: {
             acceptReporters: true,
             items: [
@@ -588,55 +505,106 @@
       };
     }
 
+    // Helper Funcs
     getFonts() {
-      const customFonts = Scratch.vm.runtime.fontManager
-        ? Scratch.vm.runtime.fontManager.getFonts().map((i) => ({
-            text: i.name, value: i.family
-          }))
-        : [];
+      const customFonts = runtime.fontManager ? runtime.fontManager.getFonts().map((i) => ({ text: i.name, value: i.family })) : [];
       return [ ...builtInFonts, ...customFonts ];
     }
 
-    toggleVis() { enableVis = enableVis ? false : true, Scratch.vm.extensionManager.refreshBlocks() }
+    getEncodings() {
+      const types = [
+        { text: "text", value: AS_TEXT }, { text: "data: URL", value: AS_DATA_URL },
+        { text: "base64", value: AS_BASE64 }, { text: "hex", value: AS_HEX }
+      ];
+      if (this._showUnsafeOptions) types.push({ text: "arrayBuffer", value: AS_BUFFER });
+      return types;
+    }
+
+    toggleVis() { enableVis = enableVis ? false : true, vm.extensionManager.refreshBlocks() }
 
     showPicker() { return showFilePrompt("", AS_TEXT) }
 
     showPickerExtensions(args) { return showFilePrompt(args.extension, AS_TEXT) }
 
+    updateStore(name, data, metaData) {
+      const rawDate = new Date(metaData.lastModified);
+      storedFiles[name].data = {
+        size: metaData.size, sizeFormat: formatFileSize(metaData.size),
+        dateFormat: rawDate.toLocaleString(), data
+      };
+    }
+
+    encodeData(data, format, type) {
+      if (format === AS_TEXT) return data;
+      const base64 = btoa(unescape(encodeURIComponent(data)));
+      if (format === AS_BASE64) return base64;
+      else if (format === AS_DATA_URL) return `data:${type};charset=utf-8;base64,${base64}`;
+      else if (format === AS_HEX) return base64ToHex(base64, " ");
+      else if (format === AS_BUFFER) return stringToArrayBuffer(data);
+      return data;
+    }
+
+    // Block Funcs (Upload & Download)
     showPickerAs(args) { return showFilePrompt("", args.as) }
 
     showPickerExtensionsAs(args) { return showFilePrompt(args.extension, args.as) }
 
     download(args) {
-      downloadBlob(
-        new Blob([Scratch.Cast.toString(args.text)]),
-        Scratch.Cast.toString(args.file)
-      );
+      downloadBlob(new Blob([Scratch.Cast.toString(args.text)]), Scratch.Cast.toString(args.file));
     }
 
     downloadURL(args) {
-      return downloadUntrustedURL(
-        Scratch.Cast.toString(args.url),
-        Scratch.Cast.toString(args.file)
-      );
+      return downloadUntrustedURL(Scratch.Cast.toString(args.url), Scratch.Cast.toString(args.file));
     }
 
-    setOpenMode(args) {
-      if (ALL_MODES.includes(args.mode)) {
-        openFileSelectorMode = args.mode;
-      } else { console.warn(`unknown mode`, args.mode) }
-    }
+    setOpenMode(args) { if (ALL_MODES.includes(args.mode)) openFileSelectorMode = args.mode }
 
     fileInfo(args) {
       if (args.FORMAT === "size formatted") return FileSize;
       else if (args.FORMAT === "size unformatted") return RawFileSize;
       else if (args.FORMAT === "modified date") return fileDate;
       else if (args.FORMAT === "data") return lastData;
-      return FileName
+      return FileName;
     }
 
     modalOpen() { return openModals !== 0 }
 
+    checkFileAPI() { return "showOpenFilePicker" in window }
+
+	  async setStoredFile(args) {
+			if (!this.checkFileAPI()) return;
+			try {
+			  const picker = await window.showOpenFilePicker();
+        storedFiles[args.NAME] = { file: picker[0], data: {} };
+		    const metaData = await picker[0].getFile();
+		    const text = await metaData.text();
+		    this.updateStore(args.NAME, this.encodeData(text, args.TYPE, metaData.type), metaData);
+			} catch(e) { console.error(e) }
+		}
+
+    deleteStoredFile(args) { delete storedFiles[args.NAME] }
+
+	  async updateFile(args) {
+	    if (!this.checkFileAPI() || storedFiles[args.NAME] === undefined) return;
+			try {
+				const writable = await storedFiles[args.NAME].file.createWritable();
+				await writable.write(args.TXT);
+				await writable.close();
+		    this.updateStore(args.NAME, args.TXT, { lastModified: Date.now(), size: args.TXT.length });
+			} catch (e) {	console.error(e) }
+		}
+
+    storedInfo(args) {
+      const fileInfo = storedFiles[args.NAME];
+      if (fileInfo === undefined) return "";
+      else if (args.FORMAT === "size formatted") return fileInfo.data.sizeFormat;
+      else if (args.FORMAT === "size unformatted") return fileInfo.data.size;
+      else if (args.FORMAT === "modified date") return fileInfo.data.dateFormat;
+      else if (args.FORMAT === "data") return fileInfo.data.data;
+      return fileInfo.file.name;
+    }
+
+    // Visuals
     resetStyle() {
       selectorOptions = {
         border: "#888", text: "#000000", outer: "#ffffff",
@@ -683,12 +651,10 @@
     }
 
     imageSet(args) {
-      Scratch.canFetch(encodeURI(args.IMG))
-        .then(canFetch => {
-          if (canFetch) {
-            selectorOptions.image = `url(${encodeURI(args.IMG)})`;
-          } else { console.log("Cannot fetch content from the URL.") }
-        });
+      Scratch.canFetch(encodeURI(args.IMG)).then(canFetch => {
+        if (canFetch) selectorOptions.image = `url(${encodeURI(args.IMG)})`;
+        else console.log("Cannot fetch content from the URL.")
+      });
     }
 
     scaleImage(args) { selectorOptions.imageScale = args.SCALE }
@@ -696,5 +662,5 @@
     textSet(args) { selectorOptions.textV = args.TEXT }
   }
 
-  Scratch.extensions.register(new filesExpanded());
+  Scratch.extensions.register(runtime.ext_filesexpanded = new filesExpanded());
 })(Scratch);
