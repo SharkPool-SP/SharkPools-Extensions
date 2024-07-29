@@ -1,5 +1,5 @@
-This is where I store random Editor Addons/Tools I made (Too Lazy to Make a New Repository)
+This is where I store random Editor Addons/Tools I made...
+It Should be noted that these can be VERY poorly implemented/unstable.
 
-I dont exactly have plans to do anything with these, so use it for your own enjoyment
-
-Its recommended to paste these in the Console Tab for them to Work
+DO NOT create Issues for these files, I have no plans on maintaining them.
+Use it for your own enjoyment.
