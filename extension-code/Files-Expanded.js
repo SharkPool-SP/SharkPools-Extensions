@@ -3,7 +3,7 @@
 // Description: Read, upload, and download files.
 // By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
-// Version 1.5.0
+// Version 1.5.1
 
 (function (Scratch) {
   "use strict";
@@ -15,7 +15,7 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   let selectorOptions = {
-    border: "#888", text: "#000000", outer: "#ffffff",
+    border: "#888", text: "#000", outer: "#fff",
     sizeFont: 1.5, borderRadius: 16, borderType: "dashed",
     font: "inherit", shadow: 0.5, image: "", imageScale: 100,
     textV: "Select or drop file", fontWeight: 40, letterSpacing: "normal"
@@ -65,75 +65,97 @@
     return result.toUpperCase();
   }
 
-  function stringToArrayBuffer(string) {
-    var bytes = new Uint8Array(string.length);
-    for (var i = 0; i < string.length; i++) { bytes[i] = string.charCodeAt(i) }
-    return bytes.buffer;
+  function bufferToBase64(buffer) {
+    var binary = "";
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) { binary += String.fromCharCode( bytes[ i ] ) }
+    return btoa(binary);
   }
 
-  const showFilePrompt = (accept, as) =>
-    new Promise((_resolve) => {
-      openModals++;
-      const callback = (text) => {
-        let finalTxt = text;
-        if (as === AS_BUFFER) finalTxt = stringToArrayBuffer(finalTxt);
-        else if ([AS_HEX, AS_BASE64].includes(as)) {
+  const showFilePrompt = async (accept, as, override) => new Promise(async (_resolve) => {
+    openModals++;
+    const callback = (text) => {
+      let finalTxt = text;
+      if (override === undefined) {
+        if ([AS_HEX, AS_BASE64].includes(as)) {
           let uri = finalTxt.split(",");
           finalTxt = uri.splice(1, uri.length).join(",");
           if (as === AS_HEX) finalTxt = base64ToHex(finalTxt, " ");
         }
-        openModals--;
         lastData = finalTxt;
-        _resolve(finalTxt);
-        vm.renderer.removeOverlay(outer);
-        runtime.off("PROJECT_STOP_ALL", handleProjectStopped);
-        document.body.removeEventListener("keydown", handleKeyDown);
-      };
-      let isReadingFile = false;
-
-      const readFile = (file) => {
-        if (isReadingFile) return;
-        isReadingFile = true;
-        const reader = new FileReader();
-        reader.onload = () => {
-          FileName = file.name;
-          FileSize = formatFileSize(file.size);
-          RawFileSize = file.size;
-          const rawDate = new Date(file.lastModified);
-          fileDate = rawDate.toLocaleString();
-          callback(reader.result);
-        };
-        reader.onerror = () => {
-          console.error("Failed to read file as text", reader.error);
-          callback("");
-        };
-        if (as === AS_TEXT || as === AS_BUFFER) reader.readAsText(file);
-        else reader.readAsDataURL(file);
-      };
-      const handleKeyDown = (e) => {
-        if (e.key === "Escape") {
-          e.stopPropagation();
-          e.preventDefault();
-          callback("");
-        }
-      };
+      }
+      openModals--;
+      _resolve(finalTxt);
+      vm.renderer.removeOverlay(outer);
+      runtime.off("PROJECT_STOP_ALL", handleProjectStopped);
       document.body.removeEventListener("keydown", handleKeyDown);
-      document.body.addEventListener("keydown", handleKeyDown, { capture: true });
-      const handleProjectStopped = () => { callback("") };
-      runtime.on("PROJECT_STOP_ALL", handleProjectStopped);
+    };
+    let isReadingFile = false;
+    const readFile = (file) => {
+      if (isReadingFile) return;
+      isReadingFile = true;
+      const reader = new FileReader();
+      reader.onload = () => {
+        FileName = file.name;
+        FileSize = formatFileSize(file.size);
+        RawFileSize = file.size;
+        const rawDate = new Date(file.lastModified);
+        fileDate = rawDate.toLocaleString();
+        callback(reader.result);
+      };
+      reader.onerror = () => {
+        console.error("Failed to read file as text", reader.error);
+        callback("");
+      };
+      if (override !== undefined) callback(file);
+      else if (as === AS_TEXT) reader.readAsText(file);
+      else if (as === AS_BUFFER) reader.readAsArrayBuffer(file);
+      else reader.readAsDataURL(file);
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        e.preventDefault();
+        callback("");
+      }
+    };
+    document.body.removeEventListener("keydown", handleKeyDown);
+    document.body.addEventListener("keydown", handleKeyDown, { capture: true });
+    const handleProjectStopped = () => { callback("") };
+    runtime.on("PROJECT_STOP_ALL", handleProjectStopped);
+    const handleOverride = async () => {
+      let fileInfo;
+      if (override === undefined) input.click();
+      else {
+        try {
+          if (override === "folder") {
+            fileInfo = await window.showDirectoryPicker({
+              multiple: false, types: [{ accept: { "*/*" : [] }}]
+            });
+          } else {
+            fileInfo = await window.showOpenFilePicker({
+              multiple: false, types: [{ accept: { "*/*" : accept }}]
+            });
+          }
+          callback(fileInfo);
+        } catch {}
+      }
+    };
 
-      const INITIAL_BORDER_COLOR = selectorOptions.border;
-      const DROPPING_BORDER_COLOR = "#03a9fc";
-      const outer = document.createElement("div");
-      outer.style.pointerEvents = "auto";
-      outer.style.width = "100%";
-      outer.style.height = "100%";
-      outer.style.display = "flex";
-      outer.style.alignItems = "center";
-      outer.style.justifyContent = "center";
-      outer.style.background = `rgba(0, 0, 0, ${selectorOptions.shadow})`;
-      outer.style.color = selectorOptions.text;
-      outer.style.colorScheme = "light";
+    const INITIAL_BORDER_COLOR = selectorOptions.border;
+    const DROPPING_BORDER_COLOR = "#03a9fc";
+    const outer = document.createElement("div");
+    outer.style.pointerEvents = "auto";
+    outer.style.width = "100%";
+    outer.style.height = "100%";
+    outer.style.display = "flex";
+    outer.style.alignItems = "center";
+    outer.style.justifyContent = "center";
+    outer.style.background = `rgba(0, 0, 0, ${selectorOptions.shadow})`;
+    outer.style.color = selectorOptions.text;
+    outer.style.colorScheme = "light";
+    if (override === undefined) {
       outer.addEventListener("dragover", (e) => {
         if (e.dataTransfer.types.includes("Files")) {
           e.preventDefault();
@@ -149,66 +171,65 @@
           readFile(file);
         }
       });
-      outer.addEventListener("click", (e) => { if (e.target === outer) callback("") });
+    }
+    outer.addEventListener("click", (e) => { if (e.target === outer) callback("") });
 
-      const modal = document.createElement("button");
-      modal.style.boxShadow = "0 0 10px -5px currentColor";
-      modal.style.cursor = "pointer";
-      modal.style.font = selectorOptions.font;
-      modal.style.fontFamily = selectorOptions.font;
-      modal.style.background = selectorOptions.image ? selectorOptions.image : selectorOptions.outer;
-      modal.style.backgroundSize = selectorOptions.imageScale + "%";
-      modal.style.padding = "16px";
-      modal.style.borderRadius = `${selectorOptions.borderRadius}px`;
-      modal.style.border = `8px ${selectorOptions.borderType} ${INITIAL_BORDER_COLOR}`;
-      modal.style.position = "relative";
-      modal.style.textAlign = "center";
-      modal.addEventListener("click", () => { input.click() });
-      modal.focus();
-      outer.appendChild(modal);
+    const modal = document.createElement("button");
+    modal.style.boxShadow = "0 0 10px -5px currentColor";
+    modal.style.cursor = "pointer";
+    modal.style.font = selectorOptions.font;
+    modal.style.fontFamily = selectorOptions.font;
+    modal.style.background = selectorOptions.image ? selectorOptions.image : selectorOptions.outer;
+    modal.style.backgroundSize = selectorOptions.imageScale + "%";
+    modal.style.padding = "16px";
+    modal.style.borderRadius = `${selectorOptions.borderRadius}px`;
+    modal.style.border = `8px ${selectorOptions.borderType} ${INITIAL_BORDER_COLOR}`;
+    modal.style.position = "relative";
+    modal.style.textAlign = "center";
+    modal.addEventListener("click", async () => { await handleOverride() });
+    modal.focus();
+    outer.appendChild(modal);
 
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = accept;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = accept;
+    if (override === undefined) {
       input.addEventListener("change", (e) => {
-        // @ts-expect-error
         const file = e.target.files[0];
         if (file) readFile(file);
       });
+    }
 
-      const title = document.createElement("div");
-      title.textContent = selectorOptions.textV;
-      title.style.color = selectorOptions.text;
-      title.style.fontSize = `${selectorOptions.sizeFont}em`;
-      title.style.fontWeight =  selectorOptions.fontWeight * 9;
-      title.style.letterSpacing = `${selectorOptions.letterSpacing}px`;
-      title.style.marginBottom = "8px";
-      modal.appendChild(title);
+    const title = document.createElement("div");
+    title.textContent = selectorOptions.textV;
+    title.style.color = selectorOptions.text;
+    title.style.fontSize = `${selectorOptions.sizeFont}em`;
+    title.style.fontWeight =  selectorOptions.fontWeight * 9;
+    title.style.letterSpacing = `${selectorOptions.letterSpacing}px`;
+    title.style.marginBottom = "8px";
+    modal.appendChild(title);
 
-      const subtitle = document.createElement("div");
-      const formattedAccept = accept || "any";
-      subtitle.textContent = `Accepted Formats: ${formattedAccept}`;
-      subtitle.style.fontSize = `${selectorOptions.sizeFont - 0.5}em`;
-      subtitle.style.color = selectorOptions.text;
-      subtitle.style.fontWeight =  selectorOptions.fontWeight * 9;
-      subtitle.style.letterSpacing = `${selectorOptions.letterSpacing}px`;
-      modal.appendChild(subtitle);
-
-      if (openFileSelectorMode === MODE_ONLY_SELECTOR && !isCancelEventSupported(input)) {
-        openFileSelectorMode = MODE_IMMEDIATELY_SHOW_SELECTOR;
-      }
-      if (openFileSelectorMode !== MODE_ONLY_SELECTOR) {
-        const overlay = vm.renderer.addOverlay(outer, "scale");
-        overlay.container.style.zIndex = "100";
-      }
-      if (
-        openFileSelectorMode === MODE_IMMEDIATELY_SHOW_SELECTOR ||
-        openFileSelectorMode === MODE_ONLY_SELECTOR
-      ) {
-        input.click();
-      }
-      if (openFileSelectorMode === MODE_ONLY_SELECTOR) input.addEventListener("cancel", () => { callback("") });
-    });
+    const subtitle = document.createElement("div");
+    subtitle.textContent = `Accepted Formats: ${accept || "any"}`;
+    subtitle.style.fontSize = `${selectorOptions.sizeFont - 0.5}em`;
+    subtitle.style.color = selectorOptions.text;
+    subtitle.style.fontWeight =  selectorOptions.fontWeight * 9;
+    subtitle.style.letterSpacing = `${selectorOptions.letterSpacing}px`;
+    modal.appendChild(subtitle);
+    if (openFileSelectorMode === MODE_ONLY_SELECTOR && !isCancelEventSupported(input)) {
+      openFileSelectorMode = MODE_IMMEDIATELY_SHOW_SELECTOR;
+    }
+    if (openFileSelectorMode !== MODE_ONLY_SELECTOR) {
+      const overlay = vm.renderer.addOverlay(outer, "scale");
+      overlay.container.style.zIndex = "100";
+    }
+    if (
+      openFileSelectorMode === MODE_IMMEDIATELY_SHOW_SELECTOR || openFileSelectorMode === MODE_ONLY_SELECTOR
+    ) {
+      await handleOverride();
+    }
+    if (openFileSelectorMode === MODE_ONLY_SELECTOR) input.addEventListener("cancel", () => { callback("") });
+  });
 
   const downloadURL = (url, file) => {
     const link = document.createElement("a");
@@ -229,7 +250,7 @@
     try {
       const parsed = new URL(url);
       return parsed.protocol === "data:";
-    } catch (e) { return false }
+    } catch { return false }
   };
 
   const downloadUntrustedURL = (url, file) => {
@@ -324,36 +345,53 @@
               file: { type: Scratch.ArgumentType.STRING, defaultValue: "save.txt" }
             }
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Writing" },
+          { blockType: Scratch.BlockType.LABEL, text: "Stored Files" },
           {
 					  opcode: "checkFileAPI",
 					  blockType: Scratch.BlockType.BOOLEAN,
 					  text: "is file writing supported?"
 				  },
 				  {
+					  opcode: "allStored",
+					  blockType: Scratch.BlockType.REPORTER,
+					  text: "all stored files"
+				  },
+				  {
 					  opcode: "setStoredFile",
 					  blockType: Scratch.BlockType.COMMAND,
-					  text: "open new stored file named [NAME] as [TYPE]",
+					  text: "open new stored [FILE] file named [NAME] as [TYPE]",
 					  arguments: {
-			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" },
+			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" },
+			        FILE: { type: Scratch.ArgumentType.STRING, defaultValue: ".txt" },
 			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
+			      }
+				  },
+				  {
+					  opcode: "storedFolder",
+					  blockType: Scratch.BlockType.COMMAND,
+					  text: "open folder and store files as [TYPE] with name [NAME]",
+					  arguments: {
+			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" },
+			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-folder-1" }
 			      }
 				  },
 				  {
 					  opcode: "deleteStoredFile",
 					  blockType: Scratch.BlockType.COMMAND,
-					  text: "delete stored file [NAME]",
+					  text: "delete file [NAME] from [OPTION]",
 					  arguments: {
-			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" }
+			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" },
+			        OPTION: { type: Scratch.ArgumentType.STRING, menu: "DELETION" },
 			      }
 				  },
+				  "---",
 				  {
 					  opcode: "updateFile",
 					  blockType: Scratch.BlockType.COMMAND,
 					  text: "write [TXT] to stored file [NAME]",
 					  arguments: {
-			        TXT: { type: Scratch.ArgumentType.STRING,	defaultValue: "new content" },
-			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" }
+			        TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "new content" },
+			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" }
 			      }
 				  },
 				  {
@@ -362,9 +400,15 @@
             text: "[FORMAT] in stored file [NAME]",
             arguments: {
               FORMAT: { type: Scratch.ArgumentType.STRING, menu: "FILE_INFO" },
-			        NAME: { type: Scratch.ArgumentType.STRING,	defaultValue: "my-file-1" }
+			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" }
             }
           },
+          "---",
+				  {
+					  opcode: "moveStorage",
+					  blockType: Scratch.BlockType.COMMAND,
+					  text: "migrate files to CST's Zip Extension",
+				  },
           { blockType: Scratch.BlockType.LABEL, text: "Visuals" },
           {
             func: "toggleVis",
@@ -486,6 +530,10 @@
             acceptReporters: true,
             items: ["data", "name", "modified date", "size formatted", "size unformatted"],
           },
+          DELETION: {
+            acceptReporters: true,
+            items: ["storage", "this device", "both"],
+          },
           visualColors: {
             acceptReporters: true,
             items: ["border", "text", "background"],
@@ -534,14 +582,16 @@
       };
     }
 
-    encodeData(data, format, type) {
-      if (format === AS_TEXT) return data;
-      const base64 = btoa(unescape(encodeURIComponent(data)));
+    async encodeData(meta, format) {
+      const text = await meta.text();
+      const buffer = await meta.arrayBuffer();
+      if (format === AS_TEXT) return text;
+      else if (format === AS_BUFFER) return buffer;
+      const base64 = bufferToBase64(buffer);
       if (format === AS_BASE64) return base64;
-      else if (format === AS_DATA_URL) return `data:${type};charset=utf-8;base64,${base64}`;
+      else if (format === AS_DATA_URL) return `data:${meta.type};charset=utf-8;base64,${base64}`;
       else if (format === AS_HEX) return base64ToHex(base64, " ");
-      else if (format === AS_BUFFER) return stringToArrayBuffer(data);
-      return data;
+      return text;
     }
 
     // Block Funcs (Upload & Download)
@@ -569,20 +619,52 @@
 
     modalOpen() { return openModals !== 0 }
 
+    // File Writing & Folders
     checkFileAPI() { return "showOpenFilePicker" in window }
+
+    allStored() { return JSON.stringify(Object.keys(storedFiles)) }
 
 	  async setStoredFile(args) {
 			if (!this.checkFileAPI()) return;
+			let fileTypes = args.FILE ? args.FILE.split(" ") : [];
 			try {
-			  const picker = await window.showOpenFilePicker();
+			  const picker = await showFilePrompt(fileTypes, "", "window");
         storedFiles[args.NAME] = { file: picker[0], data: {} };
 		    const metaData = await picker[0].getFile();
-		    const text = await metaData.text();
-		    this.updateStore(args.NAME, this.encodeData(text, args.TYPE, metaData.type), metaData);
-			} catch(e) { console.error(e) }
+		    const encodedData = await this.encodeData(metaData, args.TYPE);
+		    this.updateStore(args.NAME, encodedData, metaData);
+			} catch(e) { console.warn(e) }
 		}
 
-    deleteStoredFile(args) { delete storedFiles[args.NAME] }
+	  async storedFolder(args) {
+			if (!this.checkFileAPI()) return;
+			try {
+			  const picker = await showFilePrompt("Folder", "", "folder");
+        const entries = picker.entries();
+        const folderN = args.NAME ? args.NAME : picker.name;
+        let thisFile = "";
+        while (thisFile !== undefined) {
+          const outerData = await entries.next();
+          thisFile = outerData.value;
+          if (thisFile !== undefined) {
+            const innerData = thisFile[1];
+            const name = `${folderN}/${innerData.name}`;
+            storedFiles[name] = { file: innerData, data: {} };
+		        const metaData = await innerData.getFile();
+		        const encodedData = await this.encodeData(metaData, args.TYPE);
+		        this.updateStore(name, encodedData, metaData);
+          }
+        }
+			} catch(e) { console.warn(e) }
+		}
+
+    deleteStoredFile(args) {
+      if (args.OPTION === "this device" || args.OPTION === "both") {
+        if (!this.checkFileAPI() || storedFiles[args.NAME] === undefined) return;
+        storedFiles[args.NAME].file.remove();
+      }
+      if (args.OPTION === "storage" || args.OPTION === "both") delete storedFiles[args.NAME]
+    }
 
 	  async updateFile(args) {
 	    if (!this.checkFileAPI() || storedFiles[args.NAME] === undefined) return;
@@ -591,7 +673,7 @@
 				await writable.write(args.TXT);
 				await writable.close();
 		    this.updateStore(args.NAME, args.TXT, { lastModified: Date.now(), size: args.TXT.length });
-			} catch (e) {	console.error(e) }
+			} catch (e) {	console.warn(e) }
 		}
 
     storedInfo(args) {
@@ -602,6 +684,15 @@
       else if (args.FORMAT === "modified date") return fileInfo.data.dateFormat;
       else if (args.FORMAT === "data") return fileInfo.data.data;
       return fileInfo.file.name;
+    }
+
+    moveStorage() {
+      const ext = runtime.ext_cst1229zip;
+      if (ext === undefined) return;
+      ext.createEmptyAs({ NAME: "filesExpanded_storedFiles" });
+      if (ext.zipError) return;
+      const zip = ext.zips["filesExpanded_storedFiles"];
+      for (const [name, file] of Object.entries(storedFiles)) { zip.file(name, file.data.data) }
     }
 
     // Visuals
@@ -653,7 +744,7 @@
     imageSet(args) {
       Scratch.canFetch(encodeURI(args.IMG)).then(canFetch => {
         if (canFetch) selectorOptions.image = `url(${encodeURI(args.IMG)})`;
-        else console.log("Cannot fetch content from the URL.")
+        else console.warn("Cannot fetch content from the URL.")
       });
     }
 
