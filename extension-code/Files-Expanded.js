@@ -3,7 +3,7 @@
 // Description: Read, upload, and download files.
 // By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
-// Version 1.5.1
+// Version 1.5.11
 
 (function (Scratch) {
   "use strict";
@@ -139,7 +139,7 @@
             });
           }
           callback(fileInfo);
-        } catch {}
+        } catch { callback("") }
       }
     };
 
@@ -629,6 +629,7 @@
 			let fileTypes = args.FILE ? args.FILE.split(" ") : [];
 			try {
 			  const picker = await showFilePrompt(fileTypes, "", "window");
+			  if (!picker) return;
         storedFiles[args.NAME] = { file: picker[0], data: {} };
 		    const metaData = await picker[0].getFile();
 		    const encodedData = await this.encodeData(metaData, args.TYPE);
@@ -640,6 +641,7 @@
 			if (!this.checkFileAPI()) return;
 			try {
 			  const picker = await showFilePrompt("Folder", "", "folder");
+        if (!picker) return;
         const entries = picker.entries();
         const folderN = args.NAME ? args.NAME : picker.name;
         let thisFile = "";
