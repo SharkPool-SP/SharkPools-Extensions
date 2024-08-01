@@ -4,16 +4,12 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.3.0
+// Version V.3.3.01
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Tune Shark V3 must be run unsandboxed");
-
-  const vm = Scratch.vm;
-  const runtime = vm.runtime;
-  const scratchAudio = runtime.audioEngine;
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDIuMTg1IiBoZWlnaHQ9IjEwMi4xODUiIHZpZXdCb3g9IjAgMCAxMDIuMTg1IDEwMi4xODUiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTAgNTEuMDkzQzAgMjIuODc1IDIyLjg3NSAwIDUxLjA5MyAwczUxLjA5MyAyMi44NzUgNTEuMDkzIDUxLjA5My0yMi44NzUgNTEuMDkzLTUxLjA5MyA1MS4wOTNTMCA3OS4zMTEgMCA1MS4wOTMiIGZpbGw9IiM0MDQwNDAiLz48cGF0aCBkPSJNNC44NiA1MS4wOTNjMC0yNS41MzQgMjAuNy00Ni4yMzMgNDYuMjMzLTQ2LjIzMyAyNS41MzQgMCA0Ni4yMzMgMjAuNyA0Ni4yMzMgNDYuMjMzIDAgMjUuNTM0LTIwLjcgNDYuMjMzLTQ2LjIzMyA0Ni4yMzMtMjUuNTM0IDAtNDYuMjMzLTIwLjctNDYuMjMzLTQ2LjIzMyIgZmlsbD0iIzY2NiIvPjxwYXRoIGQ9Ik03Mi44MzcgODYuNjQzdi0uMDAzYy0xLjI1NCAyLjUzNi00LjY2OCAzLjkzNS04LjI2NCAzLjE5Ny00LjExOC0uODQ0LTYuOTE1LTQuMTctNi4yNDYtNy40MjguNjY4LTMuMjYgNC41NDgtNS4yMTYgOC42NjYtNC4zNzEgMS44NzUuMzg0IDMuNDc0IDEuMjg0IDQuNiAyLjQ1N2w2LjY4My0xNC4xNzhjLTEwLjU2Ni00LjEzNS0xOS43Ni01LjA5Ni0xOS43Ni01LjA5NmwtOC45ODcgMTkuMDYxYy0uOTY2IDIuOTI3LTQuNjM2IDQuNjIyLTguNTIgMy44MjYtNC4xMTctLjg0NC02LjkxNC00LjE3LTYuMjQ2LTcuNDMuNjY5LTMuMjU4IDQuNTQ4LTUuMjE0IDguNjY3LTQuMzcgMS45MS4zOTEgMy41MzYgMS4zMTcgNC42NjQgMi41MjJsMTIuMDM1LTI1LjUwN3MxMy41MzIuMjM2IDI2Ljk0NyA3LjExNHoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJtMjguMzA5IDMwLjgzMSA0LjA0MyAyMy42ODQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIi8+PHBhdGggZD0iTTM0LjAzMyA1NS4yMTljMS4zOCAyLjYwNi0uNzcyIDYuMDQtNC44MDggNy42Ny00LjAzNyAxLjYzLTguNDI5LjgzNy05LjgxLTEuNzctMS4zOC0yLjYwNi43NzItNi4wNCA0LjgwOS03LjY3IDQuMDM2LTEuNjI5IDguNDI4LS44MzcgOS44MDkgMS43N20tNy45NS0yNy4wNjhzOS43MDUtMS43MDQgMTIuMzYzIDIuNzdjMi4zNzUgNCAuMDcxIDguNjk1LjIxMiAxMC4xMjguMTQgMS40MzMgMi4xNzUgMS4xMDkgMi4xNzUgMS4xMDlsLS4wMTQgMS42NzRzLTIuODY0LjY2OS0zLjQxMi0xLjMyYy0uNTQ3LTEuOTg4LS41Ni01Ljk3OC0yLjgyMy04LjIyNy0yLjI2NS0yLjI1LTcuNTM3LS43NTktNy41MzctLjc1OSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik02MC40MzYgMzUuMzcxYy0uMzMzIDIuMTE4LTIuMzUzIDMuMzA5LTQuMTg5IDQuMDAyLTEuNjUuNzI2LTMuNTUgMS4wMDgtNS4yNzYuMzctMS42MzEtLjM4MS0zLjE4OC0xLjgwNy0yLjk5NC0zLjU5OC4xNTQtMi4wODUgMS44OTYtMy44MjIgMy44NDItNC40MDUgMS45NC0uNzk5IDQuMjUzLS43MyA2LjEwNS4yNi45MTMuNDIxIDIuMTg5LTE0LjE0MiAzLjAzNS0yMC41ODMuMS0uNjQyIDIuNTg0LS40NyAyLjUxMy4xNTEgMCAwLTEuODU0IDE1LjUyMi0zLjAzNiAyMy44MDMiIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=";
@@ -38,17 +34,13 @@
   document.body.appendChild(scriptElement);
   /* global Pizzicato */
 
-  // Create an Event for when Pause Project is Activated
-  // Save original function if it exists
-  let ogPauseFunc = Object.getOwnPropertyDescriptor(runtime.ioDevices.clock, "_paused")?.set;
-  Object.defineProperty(runtime.ioDevices.clock, "_paused", {
-    set: function(value) {
-      this._pausedValue = value;
-      runtime.emit("SP_TUNE3_PROJECT_PAUSE", value);
-      if (ogPauseFunc) ogPauseFunc.call(this, value);
-    },
-    get: function() { return this._pausedValue }
-  });
+  const vm = Scratch.vm;
+  const runtime = vm.runtime;
+  const scratchAudio = runtime.audioEngine;
+  const allSingleEffects = [
+    "pitch", "detune", "speed", "pan",
+    "gain", "distortion", "attack", "release"
+  ];
 
   let soundBank = {};
   let settings = { flagCtrl : false, canSave : false };
@@ -66,6 +58,18 @@
     }
   };
   if (!Scratch.extensions.isPenguinMod) load(runtime.extensionStorage["SPtuneShark3"]);
+
+  // Create an Event for when Pause Project is Activated
+  // Save original function if it exists
+  let ogPauseFunc = Object.getOwnPropertyDescriptor(runtime.ioDevices.clock, "_paused")?.set;
+  Object.defineProperty(runtime.ioDevices.clock, "_paused", {
+    set: function(value) {
+      this._pausedValue = value;
+      runtime.emit("SP_TUNE3_PROJECT_PAUSE", value);
+      if (ogPauseFunc) ogPauseFunc.call(this, value);
+    },
+    get: function() { return this._pausedValue }
+  });
 
   class SPtuneShark3 {
     constructor() {
@@ -357,13 +361,18 @@
           },
           "---",
           {
-            opcode: "setThing",
+            opcode: "setThing", blockType: Scratch.BlockType.COMMAND, hideFromPalette: true, // deprecated
+            text: "set [TYPE] of sound [NAME] to [VALUE]", blockIconURI: nobIconURI,
+            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" }, TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffects" }, VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 } },
+          },
+          {
+            opcode: "setThingNew",
             blockType: Scratch.BlockType.COMMAND,
             text: "set [TYPE] of sound [NAME] to [VALUE]",
             blockIconURI: nobIconURI,
             arguments: {
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" },
-              TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffects" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffectNew" },
               VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
@@ -485,6 +494,7 @@
           }
         ],
         menus: {
+          singleEffects: allSingleEffects, // deprecated
           saveMenu: ["save", "dont save"],
           un_pauseMenu: ["pause", "unpause"],
           playMenu: ["start", "stop", "pause", "unpause"],
@@ -492,10 +502,7 @@
           bindMenu: ["bind", "unBind"],
           loudProps: ["loudness", "raw noise", "tone"],
           typePass: ["highpass", "lowpass"],
-          singleEffects: [
-            "pitch", "detune", "speed", "pan",
-            "gain", "distortion", "attack", "release"
-          ],
+          singleEffectNew: { acceptReporters: true, items: allSingleEffects },
           soundProps: {
             acceptReporters: true,
             items: [
@@ -969,7 +976,8 @@
       this.patchLinks(sound.context.sourceNode, sound);
     }
 
-    setThing(args) {
+    setThing(args) { this.setThingNew(args) }
+    setThingNew(args) {
       const sound = soundBank[args.NAME];
       if (sound === undefined) return;
       const value = Scratch.Cast.toNumber(args.VALUE) / 100;
@@ -982,7 +990,7 @@
       else if (args.TYPE === "pan") {
         const pan = new Pizzicato.Effects.StereoPanner({ pan: Math.max(-1, Math.min(1, value)) });
         return this.updateEffect(pan, sound, "PAN", args);
-      } else {
+      } else if (args.TYPE === "distortion") {
         const distort = new Pizzicato.Effects.Distortion({ gain: value });
         return this.updateEffect(distort, sound, "DISTORTION", args);
       }
