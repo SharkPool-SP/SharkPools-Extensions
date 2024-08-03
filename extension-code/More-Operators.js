@@ -14,10 +14,15 @@
 
   const vm = Scratch.vm;
   const regeneratedReporters = ["SPmoreOPs_getLetter"];
+  if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
+    const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
+    ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
+      const result = originalCheck(block);
+      if (result) return true;
+      return block.isShadow() && regeneratedReporters.includes(block.type);
+    };
+  });
 
-  // Thank you LilyMakesThings <3
-  vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
-  vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
   vm.runtime.on("PROJECT_LOADED", () => {
     if (!Scratch.extensions.isPenguinMod) {
       const storage = vm.runtime.extensionStorage["SPmoreOPs"];
@@ -32,19 +37,6 @@
       vm.extensionManager.refreshBlocks();
     }
   });
-
-  tryUseScratchBlocks();
-  function tryUseScratchBlocks() {
-    if (!window.ScratchBlocks) return;
-    vm.removeListener("EXTENSION_ADDED", tryUseScratchBlocks);
-    vm.removeListener("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
-    const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
-    ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-      const result = originalCheck(block);
-      if (result) return true;
-      return block.isShadow() && regeneratedReporters.includes(block.type);
-    };
-  }
 
   // Block requires a Library, Library is fetched once and saved to the project
   let isSolverAdded = false;
