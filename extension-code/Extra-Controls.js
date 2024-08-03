@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.2
+// Version V.1.5.21
 
 (function (Scratch) {
   "use strict";
@@ -71,20 +71,14 @@
   runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = {}; issueTimes = [] });
   runtime.on("PROJECT_START", () => { conditionStorage = {}; issueTimes = [] });
 
-  vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
-  vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
-  tryUseScratchBlocks();
-  function tryUseScratchBlocks() {
-    if (!window.ScratchBlocks) return;
-    vm.removeListener("EXTENSION_ADDED", tryUseScratchBlocks);
-    vm.removeListener("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
+  if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
     const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = originalCheck(block);
       if (result) return true;
       return block.isShadow() && regeneratedReporters.includes(block.type);
     };
-  }
+  });
 
   // Thank you so much to @FurryR for the help <3
   function getCompiler() {
