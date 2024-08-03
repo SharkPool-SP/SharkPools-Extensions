@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.4.0
+// Version V.3.4.01
 
 (function (Scratch) {
   "use strict";
@@ -68,23 +68,16 @@
     return hex.length === 1 ? "0" + hex : hex;
   }
 
-  // Inspired by LilyMakesThings <3
-  vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
-  vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
   vm.runtime.on("BEFORE_EXECUTE", () => { vm.runtime.startHats("SharkPoolSharktilities_whenChanged") });
 
-  tryUseScratchBlocks();
-  function tryUseScratchBlocks() {
-    if (!window.ScratchBlocks) return;
-    vm.removeListener("EXTENSION_ADDED", tryUseScratchBlocks);
-    vm.removeListener("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
+  if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
     const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = originalCheck(block);
       if (result) return true;
       return block.isShadow() && regeneratedReporters.includes(block.type);
     };
-  }
+  });
 
   class Sharktilities {
     getInfo() {
