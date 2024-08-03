@@ -3,7 +3,7 @@
 // Description: Create and Edit the Pixel Data of Images
 // By: SharkPool
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -17,20 +17,14 @@
   let imageBank = {};
 
   const regeneratedReporters = ["SPimgEditor_pixelHex", "SPimgEditor_pixelIndex", "SPimgEditor_setPixel"];
-  vm.on("EXTENSION_ADDED", tryUseScratchBlocks);
-  vm.on("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
-  tryUseScratchBlocks();
-  function tryUseScratchBlocks() {
-    if (!window.ScratchBlocks) return;
-    vm.removeListener("EXTENSION_ADDED", tryUseScratchBlocks);
-    vm.removeListener("BLOCKSINFO_UPDATE", tryUseScratchBlocks);
+  if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
     const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = originalCheck(block);
       if (result) return true;
       return block.isShadow() && regeneratedReporters.includes(block.type);
     };
-  }
+  });
 
   class SPimgEditor {
     getInfo() {
