@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.1.11
+// Version V.1.1.12
 
 (function (Scratch) {
   "use strict";
