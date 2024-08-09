@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.3
+// Version V.1.5.31
 
 (function (Scratch) {
   "use strict";
@@ -79,10 +79,12 @@
     };
   });
 
-  // Thank you so much to @FurryR for the help <3
+  // Thank you to @FurryR for the help
   function getCompiler() {
-    if (vm.exports.JSGenerator && vm.exports.ScriptTreeGenerator) return vm.exports;
-    else if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
+    if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
+    else if (vm.exports.JSGenerator && vm.exports.IRGenerator?.exports) return {
+      ...vm.exports, ScriptTreeGenerator: vm.exports.IRGenerator.exports.ScriptTreeGenerator
+    };
   }
   const compiler = getCompiler();
   if (compiler) {
@@ -529,8 +531,7 @@
         {text: "when broadcast received", value: "event_whenbroadcastreceived"}
       ];
       const startIndex = Object.keys(allHats).findIndex(key => key === "event_whenbroadcastreceived");
-      const filteredHats = Object.keys(allHats)
-        .filter((key, index) => index > startIndex).map(key => ({ text: key, value: key }));
+      const filteredHats = Object.keys(allHats).filter((key, index) => index > startIndex).map(key => ({ text: key, value: key }));
       return [...vanillaHats, ...filteredHats];
     }
 
@@ -1077,7 +1078,8 @@
       }
     }
   }
-  window.onerror = () => { issueTimes.push(Math.floor(Date.now() / 200) * 200) };
+
+  window.addEventListener("error", (e) => { issueTimes.push(Math.floor(Date.now() / 200) * 200) });
 
   Scratch.extensions.register(new SPadvControl());
 })(Scratch);
