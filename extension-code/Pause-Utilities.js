@@ -3,7 +3,7 @@
 // Description: Pause the Project and certain Scripts
 // By: SharkPool
 
-// Version V.1.7.02
+// Version V.1.7.03
 
 (function (Scratch) {
   "use strict";
@@ -58,6 +58,7 @@
 
   runtime.on("PROJECT_STOP_ALL", () => { storedScripts = {} });
   runtime.on("SP_PROJECT_UNPAUSED", () => {
+    paused = runtime.ioDevices.clock._paused;
     runtime.startHats("SPPause_whenProjectUnPaused");
     // Fix Paused Threads (Rare and Shouldnt Happen, but Failsafe)
     for (let i = 0; i < runtime.threads.length; i++) {
