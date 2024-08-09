@@ -298,8 +298,8 @@
       "credits": "Events from the Runtime. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Runtime-Events.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "",
-      "date": "Last Updated: 07/12/2024"
+      "status": "update",
+      "date": "Last Updated: 08/09/2024"
     },
     "Speech-Bubbles": {
       "credits": "Customizable Speech Bubbles. Made by SharkPool",
@@ -355,7 +355,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 08/03/2024"
+      "date": "Last Updated: 08/09/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
