@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/03/2024"
     },
     "YouTube-Operations": {
@@ -39,7 +39,7 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/31/2024"
     },
     "Tune-Shark": {
@@ -116,7 +116,7 @@
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/03/2024"
     },
     "Pixel-Utilities": {
@@ -158,7 +158,7 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/28/2024"
     },
     "Monitors-Plus": {
@@ -208,7 +208,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
       "status": "update",
-      "date": "Last Updated: 08/03/2024"
+      "date": "Last Updated: 08/08/2024"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
@@ -263,7 +263,7 @@
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/31/2024"
     },
     "Money-Utilities": {
@@ -361,7 +361,7 @@
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/03/2024"
     },
     "Captchas": {
@@ -375,7 +375,7 @@
       "credits": "Better Comments with Color and Text Customization. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Comments.js",
       "tags": ".all.expanded.addon",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 07/27/2024"
     },
     "Sprite-Panel": {
