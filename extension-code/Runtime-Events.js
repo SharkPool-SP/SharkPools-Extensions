@@ -3,7 +3,7 @@
 // Description: Events from the Runtime
 // By: SharkPool
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function (Scratch) {
   "use strict";
@@ -20,6 +20,14 @@
       if (object[key][name] === value) return key;
     }
     return "";
+  }
+
+  // modify "console.error" so we can make an event for it
+  const er = console.error;
+  console.error = function (...args) {
+    const threads = runtime.startHats("SPevents_onError");
+    for (let i = 0; i < threads.length; i++) { threads[i].SPError = args || "" }
+    return er.apply(this, args);
   }
 
   class SPevents {
