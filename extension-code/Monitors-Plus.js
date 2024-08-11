@@ -3,7 +3,7 @@
 // Description: Expansion of Monitor Types and Variable Blocks.
 // By: SharkPool and DogeIsCut
 
-// Version 1.4.04 (Duplicate)
+// Version 1.4.1 (Duplicate)
 
 (function (Scratch) {
   "use strict";
@@ -286,8 +286,8 @@
             acceptReporters: true,
             items: [
               "normal readout", "large readout", "slider",
-              "text", "number", "date", "checkbox", "color",
-              "button", "file", "image", "audio"
+              "text", "number", "date", "month", "time", 
+              "checkbox", "color", "button", "file", "image", "audio"
             ]
           },
           elementMenu: {
@@ -390,7 +390,7 @@
       };
       const custMonitors = [
         "text", "number", "checkbox", "color", "date",
-        "button", "file", "image", "audio"
+        "month", "time", "button", "file", "image", "audio"
       ];
       const isHexRegex = /^#([0-9A-F]{3}){1,2}$/i;
       const addVarListener = (id, inp, func) => { varUpdateListener[id] = { inp, func } }
