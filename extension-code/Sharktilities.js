@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.4.01
+// Version V.3.4.1
 
 (function (Scratch) {
   "use strict";
@@ -13,63 +13,15 @@
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAgMCAxMzUuMzYzIDEzNS4zNjMiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTAgNjcuNjgxQzAgMzAuMzAxIDMwLjMwMiAwIDY3LjY4MSAwYzM3LjM4IDAgNjcuNjgyIDMwLjMwMiA2Ny42ODIgNjcuNjgxIDAgMzcuMzgtMzAuMzAzIDY3LjY4Mi02Ny42ODIgNjcuNjgyUzAgMTA1LjA2IDAgNjcuNjgxIiBmaWxsPSIjMzNiNmZmIi8+PHBhdGggZD0iTTMyLjM0OCA5NC45ODRzMTIuNTU4IDYuNDEzIDE1LjM0OS04LjQ0N2M0LjA1NC0yMS41OTItMi41NzMtNDAuMzM0LTYuMzQ0LTQ4LjcwOC0xLjM0OS0yLjk5My0uMDAyLTQuMjU4IDMuNjUtMy40MDQgOS4yMyAyLjE1NyAyNi45MDcgNy4xOSAzNi44MTYgMTUuODYgMTUuMjEzIDEzLjMxMyAxNS41NDUgMzQuMDcgMTguNTEyIDM5Ljk2OCAyLjQyNyA0LjgyNCA5LjU5NCAyLjYyIDkuNTk0IDIuNjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI3LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L3N2Zz4=";
 
   const vm = Scratch.vm;
+  const runtime = vm.runtime;
   var lastValues = {};
   const regeneratedReporters = ["SharkPoolSharktilities_changeV"];
 
-  // This function was taken from Looks Plus by Lily
-  const packageTest = (blockName) => {
-    if (Scratch.vm.runtime.isPackaged) {
-      alert(`For SharkTilities to work, the creator of the packaged project must uncheck "Remove raw asset data after loading to save RAM" under advanced settings in the packager.`);
-      return true;
-    }
-    return false;
-  };
+  function rgbToHsl(e,n,t){e/=255,n/=255,t/=255;let r=Math.max(e,n,t),o=Math.min(e,n,t),l=r-o,u,$,_=(r+o)/2;if(0===l)u=$=0;else{switch($=_>.5?l/(2-r-o):l/(r+o),r){case e:u=(n-t)/l+(n<t?6:0);break;case n:u=(t-e)/l+2;break;case t:u=(e-n)/l+4}u/=6}return[u,$,_]}
+  function hslToRgb(e,n,t){let r,o,l;if(0===n)r=o=l=t;else{let u=(e,n,t)=>(t<0&&(t+=1),t>1&&(t-=1),t<1/6)?e+(n-e)*6*t:t<.5?n:t<2/3?e+(n-e)*(2/3-t)*6:e,$=t<.5?t*(1+n):t+n-t*n,_=2*t-$;r=u(_,$,e+1/3),o=u(_,$,e),l=u(_,$,e-1/3)}return[Math.round(255*r),Math.round(255*o),Math.round(255*l)]}
+  function componentToHex(e){let n=e.toString(16);return 1===n.length?"0"+n:n}
 
-  function rgbToHsl(r, g, b) {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const diff = max - min;
-    let h, s, l = (max + min) / 2;
-    if (diff === 0) h = s = 0;
-    else {
-      s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
-      switch (max) {
-        case r: h = (g - b) / diff + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / diff + 2; break;
-        case b: h = (r - g) / diff + 4; break;
-      }
-      h /= 6;
-    }
-    return [h, s, l];
-  }
-  function hslToRgb(h, s, l) {
-    let r, g, b;
-    if (s === 0) r = g = b = l;
-    else {
-      const hue2rgb = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      };
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-    }
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  }
-  function componentToHex(c) {
-    const hex = c.toString(16);
-    return hex.length === 1 ? "0" + hex : hex;
-  }
-
-  vm.runtime.on("BEFORE_EXECUTE", () => { vm.runtime.startHats("SharkPoolSharktilities_whenChanged") });
-
+  runtime.on("BEFORE_EXECUTE", () => { runtime.startHats("SharkPoolSharktilities_whenChanged") });
   if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
     const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
@@ -78,6 +30,15 @@
       return block.isShadow() && regeneratedReporters.includes(block.type);
     };
   });
+
+  // This function was taken from Looks+ by LilyMakesThings
+  const packageTest = (blockName) => {
+    if (runtime.isPackaged) {
+      alert(`For SharkTilities to work, the creator of the packaged project must uncheck "Remove raw asset data after loading to save RAM" under advanced settings in the packager.`);
+      return true;
+    }
+    return false;
+  };
 
   class Sharktilities {
     getInfo() {
@@ -416,16 +377,16 @@
           cosInfo: {
             acceptReporters: true,
             items: [
-              "name", "width", "height", "type",
-              "rotation center x", "rotation center y",
-              "content", "data.uri"
+              "name", "width", "height", "type", "rotation center x",
+              "rotation center y", "content", "data.uri"
             ]
           },
           shuffleOption: {
             acceptReporters: true,
             items: [
               "random", "ascending", "descending",
-              "ascending by length", "descending by length"
+              "ascending by length", "descending by length",
+              "most common", "least common"
             ]
           }
         },
@@ -433,10 +394,9 @@
     }
 
     _getTargets(ind) {
-      const spriteNames = [];
-      spriteNames.push({ text: "myself", value: "_myself_" });
+      const spriteNames = [{ text: "myself", value: "_myself_" }];
       if (ind) spriteNames.push({ text: "Stage", value: "_stage_" });
-      const targets = Scratch.vm.runtime.targets;
+      const targets = runtime.targets;
       for (let index = 1; index < targets.length; index++) {
         const target = targets[index];
         if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
@@ -479,7 +439,7 @@
 
     setSpriteEffect(args, util) {
       let target = args.SPRITE;
-      target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
+      target = target === "_myself_" ? util.target : target === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(target);
       if (!target) return;
       target.setEffect(args.EFFECT, Scratch.Cast.toNumber(args.VALUE));
     }
@@ -490,11 +450,21 @@
         words = JSON.parse(words);
       } catch { return "Invalid Array" }
       if (!Array.isArray(words)) return "Invalid Array";
+      const sortFreq = (array, mostComm) => {
+        const freqMap = {};
+        array.forEach(i => { freqMap[i] = (freqMap[i] || 0) + 1 });
+        return array.sort((a, b) => {
+          if (mostComm) return freqMap[b] - freqMap[a] || array.indexOf(a) - array.indexOf(b);
+          else return freqMap[a] - freqMap[b] || array.indexOf(a) - array.indexOf(b);
+        });
+      }
       switch (args.SHUFFLE_OPTION) {
         case "ascending": return JSON.stringify(words.sort((a, b) => a - b));
         case "descending": return JSON.stringify(words.sort((a, b) => b - a).reverse());
         case "descending by length": return JSON.stringify(words.sort((a, b) => b.length - a.length));
         case "ascending by length": return JSON.stringify(words.sort((a, b) => a.length - b.length));
+        case "most common": return JSON.stringify(sortFreq(words, true));
+        case "least common": return JSON.stringify(sortFreq(words, false));
         default:
           for (let i = words.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -522,12 +492,12 @@
 
     refresh() { vm.extensionManager.refreshBlocks() }
     async request(args) {
-      if (args.THING === "redraw") Scratch.vm.runtime.requestRedraw();
-      else if (args.THING === "block refresh") Scratch.vm.extensionManager.refreshBlocks();
-      else if (args.THING === "project step") await this.ignoreError(vm.runtime._step());
-      else Scratch.vm.runtime.requestToolboxExtensionsUpdate();
+      if (args.THING === "redraw") runtime.requestRedraw();
+      else if (args.THING === "block refresh") vm.extensionManager.refreshBlocks();
+      else if (args.THING === "project step") await this.ignoreError(runtime._step());
+      else runtime.requestToolboxExtensionsUpdate();
     }
-    async stepInter() { await this.ignoreError(vm.runtime.frameLoop.stepCallback()) }
+    async stepInter() { await this.ignoreError(runtime.frameLoop.stepCallback()) }
     ignoreError(call) {
       return new Promise(async (resolve, reject) => {
         try {
@@ -541,7 +511,7 @@
     costumeCnt(args) { return this.costumeInfo({ SPRITE : args.SPRITE, OVERRIDE : true}) }
     costumeInfo(args, util) {
       let target = args.SPRITE;
-      target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
+      target = target === "_myself_" ? util.target : target === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(target);
       if (!target) return "";
       const targetInfo = target.getCostumes();
       if (args.OVERRIDE !== undefined) return target.sprite.costumes.length;
@@ -563,7 +533,7 @@
     }
 
     getText(args, util) {
-      const target = args.SPRITE === "_myself_" ? util.target : vm.runtime.getSpriteTargetByName(args.SPRITE);
+      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       if (!target || !target._customState["Scratch.looks"]) return "";
       return target._customState["Scratch.looks"].text;
     }
@@ -580,19 +550,19 @@
     }
 
     setTargetCostume(args, util) {
-      if (args.SPRITE === "_stage_") vm.runtime.ext_scratch3_looks._setBackdrop(vm.runtime.getTargetForStage(), args.NUM);
+      if (args.SPRITE === "_stage_") runtime.ext_scratch3_looks._setBackdrop(runtime.getTargetForStage(), args.NUM);
       else {
-        const target = args.SPRITE === "_myself_" ? util.target : vm.runtime.getSpriteTargetByName(args.SPRITE);
-        if (target) vm.runtime.ext_scratch3_looks._setCostume(target, args.NUM);
+        const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+        if (target) runtime.ext_scratch3_looks._setCostume(target, args.NUM);
       }
     }
 
     removeThorns(args) { return args.SVG.replaceAll("linejoin=\"miter\"", "linejoin=\"round\"") }
 
     penLayer() {
-      const penID = vm.runtime.ext_pen?._penDrawableId;
+      const penID = runtime.ext_pen?._penDrawableId;
       if (!penID) return "";
-      const imageData = vm.runtime.renderer.extractDrawableScreenSpace(penID).imageData;
+      const imageData = runtime.renderer.extractDrawableScreenSpace(penID).imageData;
       var canvas = document.createElement("canvas");
       canvas.width = imageData.width;
       canvas.height = imageData.height;
@@ -601,16 +571,16 @@
     }
 
     broadcastRun(args, util) {
-      if (!util.stackFrame.broadcastVar) util.stackFrame.broadcastVar = vm.runtime.getTargetForStage().lookupBroadcastByInputValue(args.MSG)
+      if (!util.stackFrame.broadcastVar) util.stackFrame.broadcastVar = runtime.getTargetForStage().lookupBroadcastByInputValue(args.MSG)
       if (util.stackFrame.broadcastVar) {
         const opt = util.stackFrame.broadcastVar.name;
         if (!util.stackFrame.startedThreads) {
           util.stackFrame.startedThreads = util.startHats("event_whenbroadcastreceived", { BROADCAST_OPTION: opt });
           if (util.stackFrame.startedThreads.length === 0) return;
         }
-        const waiting = util.stackFrame.startedThreads.some(thread => vm.runtime.threads.indexOf(thread) !== -1);
+        const waiting = util.stackFrame.startedThreads.some(thread => runtime.threads.indexOf(thread) !== -1);
         if (waiting) {
-          if (util.stackFrame.startedThreads.every(thread => vm.runtime.isWaitingThread(thread))) util.yieldTick();
+          if (util.stackFrame.startedThreads.every(thread => runtime.isWaitingThread(thread))) util.yieldTick();
           else util.startBranch(1, true);
         }
       }
@@ -634,8 +604,7 @@
           img.onload = () => {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
-            canvas.width = img.width;
-            canvas.height = img.height;
+            canvas.width = img.width; canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
             resolve(canvas.toDataURL());
           };
@@ -646,99 +615,47 @@
 
     unboundSound(args, util) {
       let target = args.SPRITE;
-      target = target === "_myself_" ? util.target : target === "_stage_" ? vm.runtime.getTargetForStage() : vm.runtime.getSpriteTargetByName(target);
+      target = target === "_myself_" ? util.target : target === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(target);
       if (!target) return;
       if (args.EFFECT === "volume") return this._updateVolume(Scratch.Cast.toNumber(args.VALUE), target);
       else return this._updateEffect(args, target);
     }
     _updateEffect(args, target) {
       const effect = args.EFFECT.toLowerCase();
-      const soundState = vm.runtime.ext_scratch3_sound._getSoundState(target);
+      const soundState = runtime.ext_scratch3_sound._getSoundState(target);
       if (!Object.prototype.hasOwnProperty.call(soundState.effects, effect)) return;
       soundState.effects[effect] = args.VALUE;
-      vm.runtime.ext_scratch3_sound._syncEffectsForTarget(target);
-      if (vm.runtime.runtimeOptions.miscLimits) return Promise.resolve();
-      vm.runtime.requestRedraw();
+      runtime.ext_scratch3_sound._syncEffectsForTarget(target);
+      if (runtime.runtimeOptions.miscLimits) return Promise.resolve();
+      runtime.requestRedraw();
     }
     _updateVolume(volume, target) {
       target.volume = volume;
-      vm.runtime.ext_scratch3_sound._syncEffectsForTarget(target);
-      if (vm.runtime.runtimeOptions.miscLimits) return Promise.resolve();
-      vm.runtime.requestRedraw();
+      runtime.ext_scratch3_sound._syncEffectsForTarget(target);
+      if (runtime.runtimeOptions.miscLimits) return Promise.resolve();
+      runtime.requestRedraw();
     }
 
     // Deprecated Blocks
     // Found in More Operators
-    replaceKey(args) {
-      const regex = new RegExp(args.KEY, "g");
-      let index = 0;
-      return Scratch.Cast.toString(args.STRING).replace(regex, (match) => {
-        index++; return index === Scratch.Cast.toNumber(args.ORDER) ? args.REPLACE : match;
-      });
-    }
-    replaceKeys(args) {
-      const regex = new RegExp(args.KEY, "g");
-      let index = 0;
-      const ord1 = Scratch.Cast.toNumber(args.ORDER); const ord2 = Scratch.Cast.toNumber(args.ORDER2);
-      const order2 = ord1 > ord2 ? ord1 : ord2;
-      return Scratch.Cast.toString(args.STRING).replace(regex, (match) => {
-        index++; return index >= ord1 && index <= order2 ? args.REPLACE : match;
-      });
-    }
-    randomCharRange(args) { 
-      let ONE = args.ONE.charCodeAt(0); let TWO = args.TWO.charCodeAt(0);
-      return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
-    }
-    noContain(args) { return !vm.runtime.ext_scratch3_operators.contains(args) }
-    tripleJoin({ STRING1, STRING2, STRING3 }) { return `${STRING1}${STRING2}${STRING3}` }
-    quadrupleJoin({ STRING1, STRING2, STRING3, STRING4 }) { return `${STRING1}${STRING2}${STRING3}${STRING4}` }
-    fiveJoin({ STRING1, STRING2, STRING3, STRING4, STRING5 }) { return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}` }
-    tripleOperator(args) {
-      const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2), Scratch.Cast.toNumber(args.NUM3)];
-      return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`);
-    }
-    quadrupleOperator(args) {
-      const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2), Scratch.Cast.toNumber(args.NUM3), Scratch.Cast.toNumber(args.NUM4)];
-      return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
-    }
-    simplifyFrac(args) {
-      const numerator = Scratch.Cast.toNumber(args.NUM); const denominator = Scratch.Cast.toNumber(args.DENOM);
-      const gcd = (a, b) => (b ? gcd(b, a % b) : a);
-      const gcdValue = gcd(numerator, denominator);
-      const result = JSON.stringify([numerator / gcdValue, denominator / gcdValue]);
-      return result.includes("null") ? "[undefined]" : result;
-    }
-    negaAbs({ NUMBER }) { return -Math.abs(Scratch.Cast.toNumber(NUMBER)) }
-    roundToNearest({ NUMBER, ROUND_TYPE }) {
-      const precision = {"whole number": 0, "tenths": 1, "hundredths": 2, "thousandths": 3}[ROUND_TYPE] || Math.max(0, Math.round(Scratch.Cast.toNumber(ROUND_TYPE)));
-      const multiplier = Math.pow(10, precision);
-      return Math.round(NUMBER * multiplier) / multiplier;
-    }
-    randomLetter({ LETTER_TYPE }) {
-      let letters = "abcdefghijklmnopqrstuvwxyz";
-      if (LETTER_TYPE === "uppercase") letters = letters.toUpperCase();
-      return letters.charAt(Math.floor(Math.random() * letters.length));
-    }
-    rndString(args) { return Math.random() > args.CHANCE / 100 ? args.STRING2 : args.STRING1 }
-    typeString(args) {
-      if (args.TYPE === "||") return args.STRING1 || args.STRING2;
-      else return args.STRING1 === "undefined" || args.STRING1 === "null" ? args.STRING2 : args.STRING1;
-    }
-
+    replaceKey(r){let t=RegExp(r.KEY,"g"),e=0;return Scratch.Cast.toString(r.STRING).replace(t,t=>++e===Scratch.Cast.toNumber(r.ORDER)?r.REPLACE:t)}
+    replaceKeys(r){let t=RegExp(r.KEY,"g"),e=0,n=Scratch.Cast.toNumber(r.ORDER),a=Scratch.Cast.toNumber(r.ORDER2),o=n>a?n:a;return Scratch.Cast.toString(r.STRING).replace(t,t=>++e>=n&&e<=o?r.REPLACE:t)}
+    randomCharRange(r){let t=r.ONE.charCodeAt(0);return String.fromCharCode(Math.floor(Math.random()*(r.TWO.charCodeAt(0)-t+1)+t))}
+    noContain(r){return!runtime.ext_scratch3_operators.contains(r)}
+    tripleJoin({STRING1:r,STRING2:t,STRING3:e}){return`${r}${t}${e}`}
+    quadrupleJoin({STRING1:r,STRING2:t,STRING3:e,STRING4:n}){return`${r}${t}${e}${n}`}
+    fiveJoin({STRING1:r,STRING2:t,STRING3:e,STRING4:n,STRING5:a}){return`${r}${t}${e}${n}${a}`}
+    tripleOperator(args){let nums=[Scratch.Cast.toNumber(args.NUM1),Scratch.Cast.toNumber(args.NUM2),Scratch.Cast.toNumber(args.NUM3)];return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`)}
+    quadrupleOperator(args){let nums=[Scratch.Cast.toNumber(args.NUM1),Scratch.Cast.toNumber(args.NUM2),Scratch.Cast.toNumber(args.NUM3),Scratch.Cast.toNumber(args.NUM4)];return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`)}
+    simplifyFrac(r){let t=Scratch.Cast.toNumber(r.NUM),e=Scratch.Cast.toNumber(r.DENOM),n=(r,t)=>t?n(t,r%t):r,a=n(t,e),o=JSON.stringify([t/a,e/a]);return o.includes("null")?"[undefined]":o}
+    negaAbs({NUMBER:r}){return-Math.abs(Scratch.Cast.toNumber(r))}
+    roundToNearest({NUMBER:r,ROUND_TYPE:t}){let e={"whole number":0,tenths:1,hundredths:2,thousandths:3}[t]||Math.max(0,Math.round(Scratch.Cast.toNumber(t))),n=Math.pow(10,e);return Math.round(r*n)/n}
+    randomLetter({LETTER_TYPE:r}){let t="abcdefghijklmnopqrstuvwxyz";return"uppercase"===r&&(t=t.toUpperCase()),t.charAt(Math.floor(Math.random()*t.length))}
+    rndString(r){return Math.random()>r.CHANCE/100?r.STRING2:r.STRING1}
+    typeString(r){return"||"===r.TYPE?r.STRING1||r.STRING2:"undefined"===r.STRING1||"null"===r.STRING1?r.STRING2:r.STRING1}
     // Found in Extra Control
-    repeatForUntil(args, util) {
-      if (typeof util.stackFrame.loopCounter === "undefined") util.stackFrame.loopCounter = Math.round(Scratch.Cast.toNumber(args.NUM));
-      util.stackFrame.loopCounter--;
-      if (!Scratch.Cast.toBoolean(args.CON) && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
-    }
-    spayedCondition(args, util) {
-      if (typeof util.stackFrame.index === "undefined") util.stackFrame.index = true;
-      if (!Scratch.Cast.toBoolean(args.CON1) && util.stackFrame.index) return;
-      else {
-        if (!Scratch.Cast.toBoolean(args.CON2)) { util.stackFrame.index = false; util.startBranch(1, true) }
-        else { util.stackFrame.index = true; return }
-      }
-    }
+    repeatForUntil(a,t){void 0===t.stackFrame.loopCounter&&(t.stackFrame.loopCounter=Math.round(Scratch.Cast.toNumber(a.NUM))),t.stackFrame.loopCounter--,!Scratch.Cast.toBoolean(a.CON)&&t.stackFrame.loopCounter>=0&&t.startBranch(1,!0)}
+    spayedCondition(a,t){if(void 0===t.stackFrame.index&&(t.stackFrame.index=!0),Scratch.Cast.toBoolean(a.CON1)||!t.stackFrame.index){if(Scratch.Cast.toBoolean(a.CON2)){t.stackFrame.index=!0;return}t.stackFrame.index=!1,t.startBranch(1,!0)}}
   }
 
   Scratch.extensions.register(new Sharktilities());
