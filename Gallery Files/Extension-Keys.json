@@ -399,6 +399,13 @@
       "status": "",
       "date": "Released: 07/12/2024"
     },
+    "Community-Spotlight": {
+      "credits": "Display and Promote Projects for Free. Made by SharkPool and the Community Spotlight Team",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Community-Spotlight.js",
+      "tags": ".all.fetching",
+      "status": "new",
+      "date": "Released: 08/14/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
