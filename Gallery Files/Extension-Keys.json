@@ -207,7 +207,7 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/08/2024"
     },
     "Text-to-Speech": {
@@ -277,7 +277,7 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/07/2024"
     },
     "Color-Master": {
@@ -354,15 +354,15 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/09/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 08/03/2024"
+      "status": "update",
+      "date": "Last Updated: 08/15/2024"
     },
     "Captchas": {
       "credits": "Simple Client-Based Captcha Extension, doesnt promise 100% security. Made by SharkPool",
