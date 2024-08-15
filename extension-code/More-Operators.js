@@ -13,7 +13,7 @@
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3Ny4yMjIiIGhlaWdodD0iNzcuMjIyIiB2aWV3Qm94PSIwIDAgNzcuMjIyIDc3LjIyMiI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMiAzOC42MTFDMiAxOC4zOTEgMTguMzkxIDIgMzguNjExIDJzMzYuNjExIDE2LjM5MSAzNi42MTEgMzYuNjExLTE2LjM5MSAzNi42MTEtMzYuNjExIDM2LjYxMVMyIDU4LjgzMSAyIDM4LjYxMXoiIGZpbGw9IiM1OWMwNTkiIHN0cm9rZT0iIzQ3OWE0NyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHBhdGggZD0iTTEgMWg3NC4yMjJ2NzQuMjIySDF6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTQ0LjM1NiAxNS40NDVjLTMuMjkxLS4yOTktNi4xOTQgMi4xMjUtNi40OTMgNS40NDZsLS43NDggOC42NDhoOC40Mzh2NS45ODRoLTguOTc3bC0xLjMxNiAxNS4xN2ExMS45MjcgMTEuOTI3IDAgMCAxLTEyLjk1NyAxMC44NjMgMTEuOTkgMTEuOTkgMCAwIDEtOS4xNTYtNS41OTZsNC40ODgtNC40ODhjLjcxOCAyLjIxNCAyLjY5MyAzLjkyIDUuMTc3IDQuMTI5IDMuMjkxLjMgNi4xOTQtMi4xMjQgNi40OTMtNS40NDZsMS4yODctMTQuNjMyaC04Ljk3N3YtNS45ODRIMzEuMWwuODA4LTkuMTg3Yy41NjktNi41ODIgNi4zNzQtMTEuNDYgMTIuOTU3LTEwLjg2MSAzLjkyLjMyOSA3LjIxMSAyLjUxMyA5LjE1NiA1LjU5NWwtNC40ODggNC40ODljLS43MTktMi4yMTUtMi42OTMtMy45Mi01LjE3Ny00LjEzbTguMDg5IDQ1Ljg2MWEyLjY0IDIuNjQgMCAwIDEtMi42NC0yLjY0di01LjM2MmgtNS4zNjJhMi42NCAyLjY0IDAgMCAxLTIuNjM5LTIuNjM5di0yLjQyN2EyLjY0IDIuNjQgMCAwIDEgMi42NC0yLjY0aDUuMzYydi01LjM2MWEyLjY0IDIuNjQgMCAwIDEgMi42MzktMi42NGgyLjQyN2EyLjY0IDIuNjQgMCAwIDEgMi42MzkgMi42NHY1LjM2Mmg1LjM2MmEyLjY0IDIuNjQgMCAwIDEgMi42NCAyLjY0djIuNDI2YTIuNjQgMi42NCAwIDAgMS0yLjY0IDIuNjRoLTUuMzYydjUuMzYyYTIuNjQgMi42NCAwIDAgMS0yLjY0IDIuNjM5eiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=";
 
   const vm = Scratch.vm;
-  const regeneratedReporters = ["SPmoreOPs_getLetter"];
+  const regeneratedReporters = ["SPmoreOPs_getLetter", "SPmoreOPs_getIndex"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
     const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
     ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
@@ -421,6 +421,9 @@
               <value name="LETTER">
                 <shadow type="SPmoreOPs_getLetter"></shadow>
               </value>
+              <value name = "INDEX">
+                <shadow type="SPmoreOPs_getIndex"></shadow>
+              </value>
               <value name="STRING">
                 <shadow type="text"><field name="TEXT">banana</field></shadow>
               </value>
@@ -429,19 +432,23 @@
           {
             opcode: "forLetter",
             extensions: ["colours_operators"], blockType: Scratch.BlockType.LOOP,
-            text: "for each [LETTER] in [STRING]", hideFromPalette: true,
+            text: "for each [LETTER] [INDEX] in [STRING]", hideFromPalette: true,
             arguments: { LETTER: {}, STRING: { type: Scratch.ArgumentType.STRING, defaultValue: "banana"} }
           },
           {
             opcode: "getLetter", extensions: ["colours_operators"],
             blockType: Scratch.BlockType.REPORTER, hideFromPalette: true, text: "letter"
           },
+          {
+            opcode: "getIndex", extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.REPORTER, hideFromPalette: true, text: "index"
+          },
         ],
         menus: {
           LOGIC: ["and", "nand", "or", "nor", "xor"],
-          WITHS: ["starts", "ends"],
+          WITHS: ["starts", "ends", "encloses"],
           EVEN_ODD: ["even", "odd"],
-          PADS: ["start", "end"],
+          PADS: ["start", "end", "both"],
           LETTER_TYPE_MENU: { acceptReporters: true, items: ["lowercase", "uppercase"] },
           OPERATOR_MENU: ["+", "-", "*", "/"],
           STRING: { acceptReporters: true, items: ["||", "??"] },
@@ -494,8 +501,10 @@
     }
 
     with(args) {
+      args.STRING1 = Scratch.Cast.toString(args.STRING1)
       if (args.TYPE === "starts") return args.STRING1.startsWith(args.STRING2);
-      else return args.STRING1.endsWith(args.STRING2);
+      if (args.TYPE === "ends") return args.STRING1.endsWith(args.STRING2);
+      return args.STRING1.startsWith(args.STRING2) && args.STRING1.endsWith(args.STRING2);
     }
 
     noContain(args) { return !vm.runtime.ext_scratch3_operators.contains(args) }
@@ -591,9 +600,11 @@
     trim(args) { return Scratch.Cast.toString(args.STRING).trim() }
 
     padding(args) {
-      const length = Scratch.Cast.toNumber(args.NUM);
-      if (args.TYPE === "start") return args.STRING1.padStart(length, args.STRING2);
-      else return args.STRING1.padEnd(length, args.STRING2);
+      const length = Scratch.Cast.toNumber(args.NUM),
+            string = Scratch.Cast.toString(args.STRING1);
+      if (args.TYPE === "start") return string.padStart(length, args.STRING2);
+      if (args.TYPE === "end") return string.padEnd(length, args.STRING2);
+      return args.STRING1.padStart(string.length + ((length - string.length) / 2), args.STRING2).padEnd(length, args.STRING2);
     }
 
     insertString(args) {
@@ -608,7 +619,7 @@
     randomLetter(args) {
       let letters = "abcdefghijklmnopqrstuvwxyz";
       if (args.LETTER_TYPE === "uppercase") letters = letters.toUpperCase();
-      return letters.charAt(Math.floor(Math.random() * letters.length));
+      return letters.charAt(Math.floor(Math.random() * 26));
     }
 
     replaceKey(args) {
@@ -646,8 +657,8 @@
     }
 
     randomCharRange(args) { 
-      let ONE = args.ONE.charCodeAt(0);
-      let TWO = args.TWO.charCodeAt(0);
+      let ONE = Scratch.Cast.toString(args.ONE).charCodeAt(0);
+      let TWO = Scratch.Cast.toString(args.TWO).charCodeAt(0);
       return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
     }
 
@@ -664,14 +675,15 @@
       if (util.stackFrame.index < string.length) {
         util.thread.stackFrames[0].SPletter = string[util.stackFrame.index];
         util.stackFrame.index++;
+        util.thread.stackFrames[0].SPindex = util.stackFrame.index;
         util.startBranch(1, true);
       }
     }
     getLetter(args, util) {
-      const stack = util.thread.stackFrames;
-      if (stack === undefined) return "";
-      const params = stack[0].SPletter;
-      return params !== undefined ? params : "";
+      return util.thread.stackFrames[0].SPletter ?? "";
+    }
+    getIndex(args, util) {
+      return util.thread.stackFrames[0].SPindex ?? 0
     }
 
     // Helper Functions
