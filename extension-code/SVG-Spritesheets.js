@@ -3,14 +3,14 @@
 // Description: Create and Export SVG Spritesheets
 // By: SharkPool
 
-// Version 1.0.0
+// Version 1.1.0
 
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("SVG Spritesheets must be run unsandboxed");
 
   const menuIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI5My45Mjc2NCIgaGVpZ2h0PSI5My45Mjc2NCIgdmlld0JveD0iMCwwLDkzLjkyNzY0LDkzLjkyNzY0Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTkzLjAzNjE5LC0xMzMuMDM2MTkpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE5My4wMzYxOSwxODAuMDAwMDFjMCwtMjUuOTM3NCAyMS4wMjY0MiwtNDYuOTYzODIgNDYuOTYzODIsLTQ2Ljk2MzgyYzI1LjkzNzQsMCA0Ni45NjM4MiwyMS4wMjY0MiA0Ni45NjM4Miw0Ni45NjM4MmMwLDI1LjkzNzQgLTIxLjAyNjQyLDQ2Ljk2MzgyIC00Ni45NjM4Miw0Ni45NjM4MmMtMjUuOTM3NCwwIC00Ni45NjM4MiwtMjEuMDI2NDIgLTQ2Ljk2MzgyLC00Ni45NjM4MnoiIGZpbGw9IiM5OTFmMWYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0xOTguODQ3NzgsMTc5Ljk5OTk5YzAsLTIyLjc3ODM2IDE4LjQ2NTUxLC00MS4yNDM4NyA0MS4yNDM4NywtNDEuMjQzODdjMjIuNzc4MzYsMCA0MS4yNDM4NywxOC40NjU1MSA0MS4yNDM4Nyw0MS4yNDM4N2MwLDIyLjc3ODM2IC0xOC40NjU1MSw0MS4yNDM4NyAtNDEuMjQzODcsNDEuMjQzODdjLTIyLjc3ODM2LDAgLTQxLjI0Mzg3LC0xOC40NjU1MSAtNDEuMjQzODcsLTQxLjI0Mzg3eiIgZmlsbD0iI2ZmMzMzMyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTIzNy4wMTE2MiwxNzcuMzk1MTh2LTQuNDgyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTIzNy4wMTE2MiwxNjcuMDA2NDh2LTQuNDgyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTIzNy4wMTE2MiwxNTYuNjE3Nzl2LTQuNDgyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTIzMi41MTk1MywxNzcuNDA0ODZoNC40ODI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMjIyLjEzMDg0LDE3Ny40MDQ4Nmg0LjQ4MjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMTEuNzQyMTQsMTc3LjQwNDg2aDQuNDgyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTI0MS40MTE2OSwxODUuNTMyMTZ2LTM2LjE0NzE1YzAsMCA3LjEyMDA0LDMuNzgwOTUgNy45MzA5Myw4LjE0MjA0YzAuODEwODksNC4zNjEwOSAtMS4yMDk4LDI4LjAwNTExIC0xLjIwOTgsMjguMDA1MTF6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMjQ1LjM5OTY1LDE4OC42Njg1OWMwLDAgLTIzLjY0NDAyLDIuMDIwNyAtMjguMDA1MTEsMS4yMDk4Yy00LjM2MTA5LC0wLjgxMDg5IC04LjE0MjA0LC03LjkzMDkzIC04LjE0MjA0LC03LjkzMDkzaDM2LjE0NzE1eiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDAuNTI2ODMsMTg1Ljg0ODU2YzAsLTIuOTY5NTggMi40MDczMiwtNS4zNzY5IDUuMzc2OSwtNS4zNzY5YzIuOTY5NTgsMCA1LjM3NjksMi40MDczMiA1LjM3NjksNS4zNzY5YzAsMi45Njk1OCAtMi40MDczMiw1LjM3NjkgLTUuMzc2OSw1LjM3NjljLTIuOTY5NTgsMCAtNS4zNzY5LC0yLjQwNzMyIC01LjM3NjksLTUuMzc2OXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNzAuNzQ3NDQsMTg0LjE2ODI4YzAsNC4zMDU0OCAtNS42NTY3Niw3Ljc5NTc2IC0xMi42MzQ3Myw3Ljc5NTc2Yy02Ljk3Nzk3LDAgLTEyLjYzNDc0LC0zLjQ5MDI4IC0xMi42MzQ3NCwtNy43OTU3NmMwLC00LjMwNTQ4IDUuNjU2NzcsLTcuNzk1NzYgMTIuNjM0NzQsLTcuNzk1NzZjNi45Nzc5NywwIDEyLjYzNDczLDMuNDkwMjggMTIuNjM0NzMsNy43OTU3NnpNMjU4LjExMjcxLDE3OS43MjAyN2MtNC40NTM4MywwIC04LjA2NDM3LDEuOTkxNDQgLTguMDY0MzcsNC40NDgwMWMwLDIuNDU2NTcgMy42MTA1NCw0LjQ0OCA4LjA2NDM3LDQuNDQ4YzQuNDUzODMsMCA4LjA2NDM3LC0xLjk5MTQzIDguMDY0MzcsLTQuNDQ4YzAsLTIuNDU2NTcgLTMuNjEwNTQsLTQuNDQ4MDEgLTguMDY0MzcsLTQuNDQ4MDF6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMjQ0LjcyNzU0LDE4NS4zNDU0NmM0LjMwNTQ4LDAgNy43OTU3Niw1LjY1Njc3IDcuNzk1NzYsMTIuNjM0NzRjMCw2Ljk3Nzk3IC0zLjQ5MDI4LDEyLjYzNDc0IC03Ljc5NTc2LDEyLjYzNDc0Yy00LjMwNTQ4LDAgLTcuNzk1NzYsLTUuNjU2NzcgLTcuNzk1NzYsLTEyLjYzNDc0YzAsLTYuOTc3OTcgMy40OTAyOCwtMTIuNjM0NzQgNy43OTU3NiwtMTIuNjM0NzR6TTI0MC4yNzk1NCwxOTcuOTgwMmMwLDQuNDUzODMgMS45OTE0NCw4LjA2NDM3IDQuNDQ4LDguMDY0MzdjMi40NTY1NywwIDQuNDQ4LC0zLjYxMDU0IDQuNDQ4LC04LjA2NDM3YzAsLTQuNDUzODMgLTEuOTkxNDMsLTguMDY0MzcgLTQuNDQ4LC04LjA2NDM3Yy0yLjQ1NjU3LDAgLTQuNDQ4LDMuNjEwNTQgLTQuNDQ4LDguMDY0Mzd6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48L2c+PC9nPjwvc3ZnPg==";
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5My45MjgiIGhlaWdodD0iOTMuOTI4IiB2aWV3Qm94PSIwIDAgOTMuOTI4IDkzLjkyOCI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMCA0Ni45NjRDMCAyMS4wMjcgMjEuMDI3IDAgNDYuOTY0IDBzNDYuOTY0IDIxLjAyNyA0Ni45NjQgNDYuOTY0LTIxLjAyNyA0Ni45NjQtNDYuOTY0IDQ2Ljk2NFMwIDcyLjkwMSAwIDQ2Ljk2NCIgZmlsbD0iIzk5MWYxZiIvPjxwYXRoIGQ9Ik01LjgxMiA0Ni45NjRjMC0yMi43NzggMTguNDY1LTQxLjI0NCA0MS4yNDQtNDEuMjQ0QzY5LjgzNCA1LjcyIDg4LjMgMjQuMTg2IDg4LjMgNDYuOTY0UzY5LjgzNCA4OC4yMDggNDcuMDU2IDg4LjIwOGMtMjIuNzc5IDAtNDEuMjQ0LTE4LjQ2Ni00MS4yNDQtNDEuMjQ0IiBmaWxsPSIjZjMzIi8+PHBhdGggZD0iTTQzLjk3NiA0NC4zNTl2LTQuNDgybTAtNS45MDd2LTQuNDgybTAtNS45MDZ2LTQuNDgzbS00LjQ5MiAyNS4yN2g0LjQ4Mm0tMTQuODcyIDBoNC40ODNtLTE0Ljg3MSAwaDQuNDgzIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNNDguMzc2IDUyLjQ5NlYxNi4zNDlzNy4xMiAzLjc4MSA3LjkzIDguMTQyYy44MTIgNC4zNjEtMS4yMSAyOC4wMDUtMS4yMSAyOC4wMDV6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTUyLjM2NCA1NS42MzNzLTIzLjY0NCAyLjAyLTI4LjAwNSAxLjIxYy00LjM2Mi0uODExLTguMTQzLTcuOTMyLTguMTQzLTcuOTMyaDM2LjE0OHoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNDcuNDkxIDUyLjgxM2E1LjM3NyA1LjM3NyAwIDEgMSAxMC43NTQgMCA1LjM3NyA1LjM3NyAwIDAgMS0xMC43NTQgMCIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik03Ny43MTEgNTEuMTMyYzAgNC4zMDYtNS42NTYgNy43OTYtMTIuNjM0IDcuNzk2cy0xMi42MzUtMy40OS0xMi42MzUtNy43OTZjMC00LjMwNSA1LjY1Ny03Ljc5NSAxMi42MzUtNy43OTVzMTIuNjM0IDMuNDkgMTIuNjM0IDcuNzk1bS0xMi42MzQtNC40NDhjLTQuNDU0IDAtOC4wNjUgMS45OTItOC4wNjUgNC40NDhzMy42MSA0LjQ0OCA4LjA2NSA0LjQ0OGM0LjQ1NCAwIDguMDY0LTEuOTkxIDguMDY0LTQuNDQ4IDAtMi40NTYtMy42MS00LjQ0OC04LjA2NC00LjQ0OCIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik01MS42OTIgNTIuMzA5YzQuMzA1IDAgNy43OTUgNS42NTcgNy43OTUgMTIuNjM1cy0zLjQ5IDEyLjYzNS03Ljc5NSAxMi42MzVjLTQuMzA2IDAtNy43OTYtNS42NTctNy43OTYtMTIuNjM1czMuNDktMTIuNjM1IDcuNzk2LTEyLjYzNW0tNC40NDggMTIuNjM1YzAgNC40NTQgMS45OTEgOC4wNjUgNC40NDggOC4wNjUgMi40NTYgMCA0LjQ0OC0zLjYxMSA0LjQ0OC04LjA2NXMtMS45OTItOC4wNjQtNC40NDgtOC4wNjQtNC40NDggMy42MS00LjQ0OCA4LjA2NCIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=";
 
   let svgConstruct = {};
 
@@ -55,7 +55,6 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "remove all SVGs from sheet"
           },
-          "---",
           {
             opcode: "outputSheet",
             blockType: Scratch.BlockType.REPORTER,
@@ -65,6 +64,7 @@
               OUTPUT: { type: Scratch.ArgumentType.STRING, menu: "OUTPUTS" }
             }
           },
+          "---",
           {
             opcode: "getID",
             blockType: Scratch.BlockType.REPORTER,
@@ -73,6 +73,33 @@
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "svg-1" },
               SHEET: { type: Scratch.ArgumentType.STRING, defaultValue: "sheet-content-here" },
               OUTPUT: { type: Scratch.ArgumentType.STRING, menu: "OUTPUTS" }
+            }
+          },
+          {
+            opcode: "allIDs",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "IDs from sheet [SHEET]",
+            arguments: {
+              SHEET: { type: Scratch.ArgumentType.STRING, defaultValue: "sheet-content-here" }
+            }
+          },
+          { blockType: Scratch.BlockType.LABEL, text: "SVG Grouping" },
+          {
+            opcode: "getGroup",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get group [NUM] from svg [SVG] as [OUTPUT]",
+            arguments: {
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" },
+              OUTPUT: { type: Scratch.ArgumentType.STRING, menu: "OUTPUTS" }
+            }
+          },
+          {
+            opcode: "groupCnt",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "# of groups in svg [SVG]",
+            arguments: {
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" }
             }
           }
         ],
@@ -100,11 +127,12 @@
 
     // Block Funcs
     compressSVG(args) {
-      let svg = Scratch.Cast.toString(args.SVG)
+      return Scratch.Cast.toString(args.SVG)
         .replace(/data-paper-data="[^"]*" /g, "").replace(/<!--[\s\S]*?-->/g, "")
         .replace(/<title>[\s\S]*?<\/title>/g, "").replace(/<desc>[\s\S]*?<\/desc>/g, "")
-        .replace(/>\s+</g, "><").trim();
-      return svg
+        .replaceAll("#000000", "#000").replaceAll("#ffffff", "#fff").replaceAll("#00000000", "none")
+        .replace("svg version=\"1.1\" ", "")
+        .replace(/>\s+</g, "><").replace(/\s+$/g, "").trim();
     }
 
     addSVG(args) {
@@ -139,6 +167,40 @@
       svg = svg.replaceAll("[~", "<!--").replaceAll("~]", "-->");
       if (args.OUTPUT === "dataURI") return `data:image/svg+xml;base64,${btoa(svg)}`;
       else return svg;
+    }
+
+    allIDs(args) {
+      const matches = Scratch.Cast.toString(args.SHEET).match(/<!--SP-ID\[(.*?)\]/g);
+      const ids = matches ? matches.map(match => match.match(/<!--SP-ID\[(.*?)\]/)[1]) : [];
+      return JSON.stringify(ids);
+    }
+
+    getGroup(args) {
+      const inpSvg = Scratch.Cast.toString(args.SVG);
+      const num = Scratch.Cast.toNumber(args.NUM);
+      let svg = "";
+      try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(inpSvg, "image/svg+xml");
+        const groups = xmlDoc.getElementsByTagName("g");
+        if (num >= 0 && num < groups.length && num !== 0) {
+          const selectedGroup = groups[num];
+          const transform = groups[0].getAttribute("transform") || "";
+          svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="${transform}">${selectedGroup.outerHTML}</svg>`;
+        }
+      } catch { return "" }
+      if (args.OUTPUT === "dataURI") return `data:image/svg+xml;base64,${btoa(svg)}`;
+      else return svg;
+    }
+
+    groupCnt(args) {
+      let svg = Scratch.Cast.toString(args.SVG);
+      try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(svg, "image/svg+xml");
+        const groups = xmlDoc.getElementsByTagName("g");
+        return Math.max(0, groups.length - 1);
+      } catch { return 0 }
     }
   }
 
