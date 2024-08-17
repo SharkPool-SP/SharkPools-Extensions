@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.31
+// Version V.1.5.32
 
 (function (Scratch) {
   "use strict";
@@ -27,8 +27,7 @@
   const runtime = vm.runtime;
   const regeneratedReporters = ["SPadvControl_threadArgs"];
   const keysMenu = [
-    { text: "space", value: "space" },
-    { text: "up arrow", value: "up arrow" }, { text: "down arrow", value: "down arrow" },
+    { text: "space", value: "space" }, { text: "up arrow", value: "up arrow" }, { text: "down arrow", value: "down arrow" },
     { text: "right arrow", value: "right arrow" }, { text: "left arrow", value: "left arrow" },
     { text: "a", value: "a" }, { text: "b", value: "b" }, { text: "c", value: "c" },
     { text: "d", value: "d" }, { text: "e", value: "e" }, { text: "f", value: "f" },
@@ -925,8 +924,15 @@
     ifRunBlock(args, util) {
       const con = Scratch.Cast.toBoolean(args.CON);
       if (util.stackFrame.SPifThread) {
-        if (con && runtime.isActiveThread(util.stackFrame.SPifThread)) util.startBranch(2, true);
-        else util.stackFrame.SPifThread.stopThisScript();
+        const thread = util.stackFrame.SPifThread;
+        if (con && runtime.isActiveThread(thread)) util.startBranch(2, true);
+        else {
+          if (thread.procedures !== null && Object.keys(thread.procedures).length > 0) {
+            try { thread.generator.return() } catch {} // Force Stop Custom Blocks
+            thread.status = 4;
+          }
+          thread.stopThisScript();
+        }
       } else {
         const branch = this.getThisBlock(util, true, 1);
         if (branch && con) {
@@ -1078,7 +1084,6 @@
       }
     }
   }
-
   window.addEventListener("error", (e) => { issueTimes.push(Math.floor(Date.now() / 200) * 200) });
 
   Scratch.extensions.register(new SPadvControl());
