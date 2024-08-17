@@ -43,7 +43,7 @@
   class BetterInputSP {
     constructor() {
       this.activeOverlays = []; this.askBoxPromises = [];
-      this.isWaitingForInput = false; this.isDropdownOpen = false;
+      this.isDropdownOpen = false;
       this.userInput = " "; this.defaultValue = "";
       this.textBoxX = 0; this.textBoxY = 0;
       this.askBoxInfo = [0, 1]; this.appendTarget = ["window", false];
@@ -1022,7 +1022,6 @@
         const question = args.question;
         let hasDecreased = false; // for the box counter
         const index = this.askBoxInfo[0];
-        this.isWaitingForInput = true;
         this.lastPressBtn = "";
         this.askBoxInfo[0]++;
         let selectOpts = [];
@@ -1245,7 +1244,6 @@
       }
     }
     closeOverlay(overlay, doneBefore) {
-      if (this.askBoxInfo[0] < 2) this.isWaitingForInput = false;
       this.isDropdownOpen = false;
       if (!doneBefore) {
         this.askBoxInfo[0]--;
@@ -1288,7 +1286,7 @@
 
     lastButton() { return this.lastPressBtn }
 
-    isWaitingInput() { return this.isWaitingForInput }
+    isWaitingInput() { return this.activeOverlays.length > 0 }
 
     isDropdown() { return this.isDropdownOpen }
 
