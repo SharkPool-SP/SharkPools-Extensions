@@ -229,7 +229,6 @@
     callEditor(data) {
       let newThreads = [];
       runtime.allScriptsByOpcodeDo("SPimgEditor_onEditCall", (script, target) => {
-        const topBlockId = script.blockId;
         const thread = runtime._pushThread(script.blockId, target);
         thread.SPimgData = data;
         newThreads.push(thread);
