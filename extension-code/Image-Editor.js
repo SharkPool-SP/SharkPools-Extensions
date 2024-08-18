@@ -3,7 +3,7 @@
 // Description: Create and Edit the Pixel Data of Images
 // By: SharkPool
 
-// Version V.1.0.1
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -51,6 +51,19 @@
               W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               COLOR: { type: Scratch.ArgumentType.COLOR }
+            },
+          },
+          {
+            opcode: "makeImgImg",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "make image named [NAME] from [IMAGE] width [W] height [H] x [x] y [y]",
+            arguments: {
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" },
+              IMAGE: { type: Scratch.ArgumentType.STRING, defaultValue: "https://extensions.turbowarp.org/dango.png" },
+              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           },
           {
@@ -203,9 +216,14 @@
 
     // Helper Funcs
     rectExts() {
-      alert(
-        `This Extension works best with the Additional Extensions:\n"Image Effects" and "Color Master"\nThey can be Found at "https://sharkpools-extensions.vercel.app/"`
-      );
+      alert(`This Extension works best with the Additional Extensions:\n"Image Effects" and "Color Master"\nThey can be Found at "https://sharkpools-extensions.vercel.app/"`);
+    }
+
+    createCanvasCtx(w, h) {
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      return { canvas, ctx };
     }
 
     callEditor(data) {
@@ -220,9 +238,8 @@
     }
 
     getPixelData(storedImg) {
-      const width = storedImg.canvas.width;
-      const height = storedImg.canvas.height;
-      const imageData = storedImg.context.getImageData(0, 0, width, height).data;
+      const { width, height } = storedImg.canvas;
+      const imageData = storedImg.ctx.getImageData(0, 0, width, height).data;
       const pixelData = [];
       for (let i = 0; i < imageData.length; i += 4) {
         const r = imageData[i];
@@ -236,13 +253,9 @@
     }
 
     pixels2Img(storedImg) {
-      const width = storedImg.canvas.width;
-      const height = storedImg.canvas.height;
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext("2d");
-      const imageData = context.createImageData(width, height);
+      const { width, height } = storedImg.canvas;
+      const { canvas, ctx } = this.createCanvasCtx(width, height);
+      const imageData = ctx.createImageData(width, height);
       for (let i = 0; i < storedImg.pixels.length; i++) {
         const hex = storedImg.pixels[i];
         imageData.data[i * 4 + 0] = parseInt(hex.substring(1, 3), 16);
@@ -250,7 +263,7 @@
         imageData.data[i * 4 + 2] = parseInt(hex.substring(5, 7), 16);
         imageData.data[i * 4 + 3] = hex.length === 9 ?  parseInt(hex.substring(7, 9), 16) : 255;
       }
-      context.putImageData(imageData, 0, 0);
+      ctx.putImageData(imageData, 0, 0);
       return canvas.toDataURL();
     }
 
@@ -258,13 +271,38 @@
     makeImg(args) {
       const width = Scratch.Cast.toNumber(args.W);
       const height = Scratch.Cast.toNumber(args.H);
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext("2d");
-      context.fillStyle = args.COLOR;
-      context.fillRect(0, 0, width, height);
-      imageBank[args.NAME] = { data : canvas.toDataURL(), canvas, context, pixels : [] }
+      const { canvas, ctx } = this.createCanvasCtx(width, height);
+      ctx.fillStyle = args.COLOR;
+      ctx.fillRect(0, 0, width, height);
+      imageBank[args.NAME] = { data : canvas.toDataURL(), canvas, ctx, pixels : [] }
+    }
+
+    makeImgImg(args) {
+      return new Promise((resolve) => {
+        if (!args.IMAGE) return resolve();
+        const width = Scratch.Cast.toNumber(args.W);
+        const height = Scratch.Cast.toNumber(args.H);
+        const { canvas, ctx } = this.createCanvasCtx(Math.abs(width), Math.abs(height));
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+          try {
+            ctx.save();
+            ctx.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
+            const x = Scratch.Cast.toNumber(args.x) - (width < 0 ? Math.abs(width) : 0);
+            const y = (Scratch.Cast.toNumber(args.y) * -1) - (height < 0 ? Math.abs(height) : 0);
+            ctx.drawImage(img, x, y, Math.abs(width), Math.abs(height));
+            ctx.restore();
+            imageBank[args.NAME] = { data : canvas.toDataURL(), canvas, ctx, pixels : [] };
+            resolve();
+          } catch (e) {
+            console.error(e);
+            resolve();
+          }
+        };
+        img.onerror = (e) => { console.error(e); resolve() };
+        img.src = args.IMAGE;
+      });
     }
 
     modifyImg(args) {
@@ -273,19 +311,16 @@
         const width = Scratch.Cast.toNumber(args.W);
         const height = Scratch.Cast.toNumber(args.H);
         const storedImg = imageBank[args.NAME];
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const context = canvas.getContext("2d");
-        if (args.TYPE === "stretch") context.drawImage(storedImg.canvas, 0, 0, width, height);
+        const { canvas, ctx } = this.createCanvasCtx(width, height);
+        if (args.TYPE === "stretch") ctx.drawImage(storedImg.canvas, 0, 0, width, height);
         else {
-          context.fillStyle = args.COLOR;
-          context.fillRect(0, 0, width, height);
+          ctx.fillStyle = args.COLOR;
+          ctx.fillRect(0, 0, width, height);
           const xOffset = (width - storedImg.canvas.width) / 2;
           const yOffset = (height - storedImg.canvas.height) / 2;
-          context.drawImage(storedImg.canvas, xOffset, yOffset);
+          ctx.drawImage(storedImg.canvas, xOffset, yOffset);
         }
-        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, context, pixels : [] };
+        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels : [] };
       }
     }
 
@@ -382,23 +417,21 @@
       if (imageBank[args.NAME] === undefined) this.makeImg(args);
       else {
         const storedImg = imageBank[args.NAME];
-        const canvas = storedImg.canvas;
-        const context = storedImg.context;
-        const tempCanvas = document.createElement("canvas");
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tempContext = tempCanvas.getContext("2d");
-        tempContext.drawImage(canvas, 0, 0);
+        const { canvas, ctx } = storedImg;
+        const { width, height } = canvas;
+        const tempData = this.createCanvasCtx(width, height);
+        const tempCanvas = tempData.canvas;
+        tempData.ctx.drawImage(canvas, 0, 0);
 
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = args.COLOR;
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        context.save();
-        context.translate(canvas.width / 2, canvas.height / 2);
-        context.rotate(Scratch.Cast.toNumber(args.DIR) * (Math.PI / 180));
-        context.drawImage(tempCanvas, -tempCanvas.width / 2, -tempCanvas.height / 2);
-        context.restore();
-        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, context, pixels: [] };
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = args.COLOR;
+        ctx.fillRect(0, 0, width, height);
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(Scratch.Cast.toNumber(args.DIR) * (Math.PI / 180));
+        ctx.drawImage(tempCanvas, -tempCanvas.width / 2, -tempCanvas.height / 2);
+        ctx.restore();
+        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [] };
       }
     }
 
@@ -411,8 +444,8 @@
         img.onload = () => {
           try {
             const xOffset = (storedImg.canvas.width - img.width) / 2;
-            const yOffset = (storedImg.canvas.height -img.height) / 2;
-            storedImg.context.drawImage(
+            const yOffset = (storedImg.canvas.height - img.height) / 2;
+            storedImg.ctx.drawImage(
               img, Scratch.Cast.toNumber(args.x) + xOffset,
               (Scratch.Cast.toNumber(args.y) * -1) + yOffset
             );
@@ -420,10 +453,10 @@
             resolve();
           } catch (e) {
             console.error(e);
-            resolve(new Error("Failed to apply texture. Image may be tainted"));
+            resolve();
           }
         };
-        img.onerror = (e) => { console.error(e) };
+        img.onerror = (e) => { console.error(e); resolve() };
         img.src = args.IMAGE;
       });
     }
