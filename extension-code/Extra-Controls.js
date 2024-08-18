@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.32
+// Version V.1.5.33
 
 (function (Scratch) {
   "use strict";
@@ -927,11 +927,13 @@
         const thread = util.stackFrame.SPifThread;
         if (con && runtime.isActiveThread(thread)) util.startBranch(2, true);
         else {
-          if (thread.procedures !== null && Object.keys(thread.procedures).length > 0) {
-            try { thread.generator.return() } catch {} // Force Stop Custom Blocks
-            thread.status = 4;
+          if (thread.isCompiled) {
+            if (thread.procedures !== null && Object.keys(thread.procedures).length > 0) {
+              try { thread.generator.return() } catch {} // Force Stop Custom Blocks
+            }
           }
-          thread.stopThisScript();
+          // we need to use this for Custom Blocks, its better than stopThisScript()
+          thread.status = 4;
         }
       } else {
         const branch = this.getThisBlock(util, true, 1);
