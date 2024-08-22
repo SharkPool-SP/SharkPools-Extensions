@@ -3,7 +3,7 @@
 // Description: Read, upload, and download files.
 // By: SharkPool, GarboMuffin, Drago Cuven, 0znzw, and FurryR
 
-// Version 1.5.11
+// Version 1.6.0
 
 (function (Scratch) {
   "use strict";
@@ -24,11 +24,8 @@
     "Sans Serif", "Serif", "Handwriting",
     "Marker", "Curly", "Pixel", "Scratch", "inherit"
   ];
-  const AS_TEXT = "text";
-  const AS_DATA_URL = "url";
-  const AS_HEX = "hex";
-  const AS_BASE64 = "base64";
-  const AS_BUFFER = "arrayBuffer";
+  const AS_TEXT = "text", AS_DATA_URL = "url", AS_HEX = "hex";
+  const AS_BASE64 = "base64", AS_BUFFER = "arrayBuffer";
 
   const MODE_MODAL = "modal";
   const MODE_IMMEDIATELY_SHOW_SELECTOR = "selector";
@@ -273,13 +270,11 @@
         blocks: [
           { blockType: Scratch.BlockType.LABEL, text: "Uploading" },
           {
-            opcode: "showPicker",
-            blockType: Scratch.BlockType.REPORTER,
+            opcode: "showPicker", blockType: Scratch.BlockType.REPORTER,
             text: "open a file", hideFromPalette: true
           },
           {
-            opcode: "showPickerExtensions",
-            blockType: Scratch.BlockType.REPORTER,
+            opcode: "showPickerExtensions", blockType: Scratch.BlockType.REPORTER,
             text: "open a [extension] file", hideFromPalette: true,
             arguments: {
               extension: { type: Scratch.ArgumentType.STRING, defaultValue: ".txt" }
@@ -303,29 +298,6 @@
               as: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
             }
           },
-          "---",
-          {
-            opcode: "fileInfo",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "last opened file [FORMAT]",
-            arguments: {
-              FORMAT: { type: Scratch.ArgumentType.STRING, menu: "FILE_INFO" }
-            }
-          },
-          {
-            opcode: "modalOpen",
-            blockType: Scratch.BlockType.BOOLEAN,
-            text: "is modal open?"
-          },
-          "---",
-          {
-            opcode: "setOpenMode",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "set open file selector mode to [mode]",
-            arguments: {
-              mode: { type: Scratch.ArgumentType.STRING, menu: "automaticallyOpen" }
-            }
-          },
           { blockType: Scratch.BlockType.LABEL, text: "Downloading" },
           {
             opcode: "download",
@@ -345,7 +317,39 @@
               file: { type: Scratch.ArgumentType.STRING, defaultValue: "save.txt" }
             }
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Stored Files" },
+          { blockType: Scratch.BlockType.LABEL, text: "Extra" },
+          {
+            opcode: "setOpenMode",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set open file selector mode to [mode]",
+            arguments: {
+              mode: { type: Scratch.ArgumentType.STRING, menu: "automaticallyOpen" }
+            }
+          },
+          {
+            opcode: "fileInfo",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "last opened file [FORMAT]",
+            arguments: {
+              FORMAT: { type: Scratch.ArgumentType.STRING, menu: "FILE_INFO" }
+            }
+          },
+          "---",
+          {
+            opcode: "modalOpen",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is modal open?"
+          },
+          {
+					  opcode: "findFileSize",
+					  blockType: Scratch.BlockType.REPORTER,
+					  text: "[TYPE] file size of [FILE]",
+					  arguments: {
+			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "FILE_SIZES" },
+			        FILE: { type: Scratch.ArgumentType.STRING, defaultValue: "Hello, world!" }
+			      }
+				  },
+				  { blockType: Scratch.BlockType.LABEL, text: "Stored Files" },
           {
 					  opcode: "checkFileAPI",
 					  blockType: Scratch.BlockType.BOOLEAN,
@@ -409,7 +413,7 @@
 					  blockType: Scratch.BlockType.COMMAND,
 					  text: "migrate files to CST's Zip Extension",
 				  },
-          { blockType: Scratch.BlockType.LABEL, text: "Visuals" },
+				  { blockType: Scratch.BlockType.LABEL, text: "Visuals" },
           {
             func: "toggleVis",
             blockType: Scratch.BlockType.BUTTON,
@@ -526,6 +530,10 @@
               { text: "text", value: "textV" }
             ],
           },
+          FILE_SIZES: {
+            acceptReporters: true,
+            items: ["formatted", "unformatted"],
+          },
           FILE_INFO: {
             acceptReporters: true,
             items: ["data", "name", "modified date", "size formatted", "size unformatted"],
@@ -559,7 +567,7 @@
       return [ ...builtInFonts, ...customFonts ];
     }
 
-    getEncodings() {
+    getEncodings(onlySafe) {
       const types = [
         { text: "text", value: AS_TEXT }, { text: "data: URL", value: AS_DATA_URL },
         { text: "base64", value: AS_BASE64 }, { text: "hex", value: AS_HEX }
@@ -695,6 +703,13 @@
       if (ext.zipError) return;
       const zip = ext.zips["filesExpanded_storedFiles"];
       for (const [name, file] of Object.entries(storedFiles)) { zip.file(name, file.data.data) }
+    }
+
+    // Extra
+    findFileSize(args) {
+      const size = args.FILE.length; // bytes
+      if (args.TYPE === "formatted") return formatFileSize(size);
+      return size;
     }
 
     // Visuals
