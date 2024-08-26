@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.4
+// Version V.1.5.41
 
 (function (Scratch) {
   "use strict";
@@ -78,8 +78,8 @@
     }
     // Check if we exist in the thread, then stop the script
     if (thread.isCompiled) {
-      const t = thread.compatibilityStackFrame.SPifThread;
-      if (t !== undefined) forceStop(t, true);
+      const e = thread.compatibilityStackFrame;
+      if (e !== null && e.SPifThread !== undefined) forceStop(e.SPifThread, true);
     } else {
       for (let i = 0; i < thread.stackFrames.length; i++) {
         const e = thread.stackFrames[i].executionContext;
