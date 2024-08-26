@@ -81,7 +81,7 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/17/2024"
     },
     "Camera-Sensing-Plus": {
@@ -116,7 +116,7 @@
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/18/2024"
     },
     "Pixel-Utilities": {
@@ -354,8 +354,8 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 08/17/2024"
+      "status": "update",
+      "date": "Last Updated: 08/26/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
@@ -396,14 +396,14 @@
       "credits": "Create and Export SVG Spritesheets. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/SVG-Spritesheets.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/15/2024"
     },
     "Community-Spotlight": {
       "credits": "Display and Promote Projects for Free. Made by SharkPool and the Community Spotlight Team",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Community-Spotlight.js",
       "tags": ".all.fetching",
-      "status": "new",
+      "status": "",
       "date": "Last Updated: 08/17/2024"
     },
     "Example": {
