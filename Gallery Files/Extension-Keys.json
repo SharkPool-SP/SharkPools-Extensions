@@ -406,6 +406,13 @@
       "status": "",
       "date": "Last Updated: 08/17/2024"
     },
+    "GIF-Manager": {
+      "credits": "Create and Split GIF Files. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/GIF-Manager.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 08/29/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
