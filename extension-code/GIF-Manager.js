@@ -134,7 +134,7 @@
           {
             opcode: "numFrames",
             blockType: Scratch.BlockType.REPORTER,
-            text: "# of frames in GIF [GIF]",
+            text: "# of frames in GIF url [GIF]",
             arguments: {
               GIF: { type: Scratch.ArgumentType.STRING, defaultValue: "url or data.uri" }
             },
@@ -142,7 +142,7 @@
           {
             opcode: "getAllFrames",
             blockType: Scratch.BlockType.REPORTER,
-            text: "get all frames from GIF [GIF]",
+            text: "get all frames from GIF url [GIF]",
             arguments: {
               GIF: { type: Scratch.ArgumentType.STRING, defaultValue: "url or data.uri" }
             },
@@ -150,7 +150,7 @@
           {
             opcode: "getFrame",
             blockType: Scratch.BlockType.REPORTER,
-            text: "get frame #[NUM] from GIF [GIF]",
+            text: "get frame #[NUM] from GIF url [GIF]",
             arguments: {
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               GIF: { type: Scratch.ArgumentType.STRING, defaultValue: "url or data.uri" }
