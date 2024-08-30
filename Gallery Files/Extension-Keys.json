@@ -39,7 +39,7 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/23/2024"
     },
     "Tune-Shark": {
@@ -102,7 +102,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/21/2024"
     },
     "Image-Effects": {
@@ -158,7 +158,7 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/21/2024"
     },
     "Monitors-Plus": {
