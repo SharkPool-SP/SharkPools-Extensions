@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.4.1
+// Version V.3.4.11
 
 (function (Scratch) {
   "use strict";
@@ -110,7 +110,7 @@
           {
             opcode: "isChanged",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "when [INPUT] is changed",
+            text: "[INPUT] changed",
             arguments: {
               INPUT: { type: null }
             }
