@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.42
+// Version V.1.5.43
 
 (function (Scratch) {
   "use strict";
@@ -984,7 +984,7 @@
     async getInSprite(args, util) {
       if (util.thread.SPfetchVal !== undefined) {
         util.thread.justReported = args.THING;
-        return args.THING;
+        return;
       }
       const block = this.getThisBlock(util, false);
       const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
@@ -1019,7 +1019,7 @@
     async getInClone(args, util) {
       if (util.thread.SPfetchVal !== undefined) {
         util.thread.justReported = args.THING;
-        return args.THING;
+        return;
       }
       const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       const block = this.getThisBlock(util, false);
