@@ -5,7 +5,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
       "status": "",
-      "date": "Last Updated: 08/13/2024"
+      "date": "Last Updated: 09/01/2024"
     },
     "YouTube-Operations": {
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
@@ -74,8 +74,8 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 07/24/2024"
+      "status": "update",
+      "date": "Last Updated: 09/01/2024"
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
@@ -355,7 +355,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 08/26/2024"
+      "date": "Last Updated: 09/01/2024"
     },
     "More-Operators": {
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
