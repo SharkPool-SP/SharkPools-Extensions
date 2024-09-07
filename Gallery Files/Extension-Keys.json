@@ -172,8 +172,8 @@
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "",
-      "date": "Last Updated: 07/21/2024"
+      "status": "update",
+      "date": "Last Updated: 10/06/2024"
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by DNin01 and Meehdrescher",
@@ -354,7 +354,7 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 09/01/2024"
     },
     "More-Operators": {
@@ -410,7 +410,7 @@
       "credits": "Create and Split GIF Files. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/GIF-Manager.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 08/29/2024"
     },
     "Example": {
