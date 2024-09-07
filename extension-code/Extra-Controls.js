@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.43
+// Version V.1.5.5
 
 (function (Scratch) {
   "use strict";
@@ -292,6 +292,16 @@
             blockType: Scratch.BlockType.CONDITIONAL,
             text: "simultaneously run",
             branchCount: 2
+          },
+          {
+            opcode: "doThenWhile",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.LOOP,
+            text: ["if [CON] then", "while running", "then"],
+            branchCount: 3,
+            arguments: {
+              CON: { type: Scratch.ArgumentType.BOOLEAN }
+            }
           },
           {
             opcode: "runType",
@@ -712,14 +722,29 @@
       const branches = [this.getThisBlock(util, true, 1), this.getThisBlock(util, true, 2)];
       if (branches[0] && branches[1]) {
         const { target, thread } = util;
-        const run = util.sequencer.runtime;
-        //minimize push time
-        const thread1 = run._pushThread(branches[0], target, { stackClick: false });
-        thread1.status = 1;
+        const thread1 = runtime._pushThread(branches[0], target, { stackClick: false });
+        thread1.status = 5;
         this.addMissKeys(thread, thread1);
-        const thread2 = run._pushThread(branches[1], target, { stackClick: false });
+        const thread2 = runtime._pushThread(branches[1], target, { stackClick: false });
         this.addMissKeys(thread, thread2);
         thread1.status = 0;
+      }
+    }
+
+    doThenWhile(args, util) {
+      if (util.stackFrame.whileThread === undefined) {
+        if (Cast.toBoolean(args.CON)) {
+          const branch = this.getThisBlock(util, true, 0);
+          if (branch) {
+            let thread = runtime._pushThread(branch, util.target);
+            this.addMissKeys(util.thread, thread);
+            util.stackFrame.whileThread = thread;
+            util.startBranch(2, true);
+          }
+        }
+      } else {
+        if (runtime.isActiveThread(util.stackFrame.whileThread)) util.startBranch(2, true);
+        else util.startBranch(3, false);
       }
     }
 
@@ -772,7 +797,7 @@
     newThreadAdv(args, util) {
       const branch = this.getThisBlock(util, true, 1);
       if (branch) {
-        const thread = util.sequencer.runtime._pushThread(branch, util.target);
+        const thread = runtime._pushThread(branch, util.target);
         this.addMissKeys(util.thread, thread);
         if (thread.SPadvCtrl === undefined) thread.stackFrames[0].SPadvCtrl = Cast.toString(args.ARGS);
       }
@@ -838,7 +863,7 @@
       } else {
         const func = util.thread[`SPfunction-${args.NAME}`];
         if (func !== undefined) {
-          const thread = util.sequencer.runtime._pushThread(func, util.target);
+          const thread = runtime._pushThread(func, util.target);
           this.addMissKeys(util.thread, thread);
           if (thread.SPadvCtrl === undefined) thread.stackFrames[0].SPadvCtrl = Cast.toString(args.ARG);
           util.stackFrame.SPran = thread;
@@ -855,7 +880,7 @@
         const func = util.thread[`SPfunction-${args.NAME}`];
         if (func === undefined) return "";
         else {
-          const thread = util.sequencer.runtime._pushThread(func, util.target);
+          const thread = runtime._pushThread(func, util.target);
           this.addMissKeys(util.thread, thread);
           if (thread.SPadvCtrl === undefined) thread.stackFrames[0].SPadvCtrl = Cast.toString(args.ARG);
           util.stackFrame.SPran = thread;
