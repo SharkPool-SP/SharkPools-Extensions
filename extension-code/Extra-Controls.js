@@ -341,8 +341,8 @@
             }
           },
           {
-            opcode: "threadArgs", blockType: Scratch.BlockType.REPORTER,
-            extensions: ["colours_control"], hideFromPalette: true, text: "data"
+            opcode: "threadArgs", blockType: Scratch.BlockType.REPORTER, extensions: ["colours_control"],
+            hideFromPalette: true, text: "data", allowDropAnywhere: true,
           },
           "---",
           {
@@ -448,6 +448,7 @@
             extensions: ["colours_control"],
             blockType: Scratch.BlockType.REPORTER,
             text: "run func [NAME] with data [ARG]",
+            allowDropAnywhere: true,
             arguments: {
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-function" },
               ARG: { type: Scratch.ArgumentType.STRING, defaultValue: "{ data: 123 }" }
@@ -469,6 +470,7 @@
             extensions: ["colours_control"],
             blockType: Scratch.BlockType.REPORTER,
             text: "get [THING] from [SPRITE]",
+            allowDropAnywhere: true,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets" },
               THING: {}
@@ -491,6 +493,7 @@
             extensions: ["colours_control"],
             blockType: Scratch.BlockType.REPORTER,
             text: "get [THING] from clone [ID] of [SPRITE] with [VAR] set to [VAL]",
+            allowDropAnywhere: true,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "targets2" },
               THING: {},
