@@ -112,7 +112,7 @@
             text: "import sound from URL/URI [URL] named [NAME]",
             blockIconURI: settingsIconURI,
             arguments: { 
-              URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://tinyurl.com/Resonance-Home" }, 
+              URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://sharkpools-extensions.vercel.app/extension-utils/TS/Resonance-Home.mp3" }, 
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" } 
             }
           },
