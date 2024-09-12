@@ -341,79 +341,79 @@
             text: "is modal open?"
           },
           {
-					  opcode: "findFileSize",
-					  blockType: Scratch.BlockType.REPORTER,
-					  text: "[TYPE] file size of [FILE]",
-					  arguments: {
-			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "FILE_SIZES" },
-			        FILE: { type: Scratch.ArgumentType.STRING, defaultValue: "Hello, world!" }
-			      }
-				  },
-				  { blockType: Scratch.BlockType.LABEL, text: "Stored Files" },
+	    opcode: "findFileSize",
+	    blockType: Scratch.BlockType.REPORTER,
+	    text: "[TYPE] file size of [FILE]",
+	    arguments: {
+	      TYPE: { type: Scratch.ArgumentType.STRING, menu: "FILE_SIZES" },
+	      FILE: { type: Scratch.ArgumentType.STRING, defaultValue: "Hello, world!" }
+	    }
+	  },
+	  { blockType: Scratch.BlockType.LABEL, text: "Stored Files" },
           {
-					  opcode: "checkFileAPI",
-					  blockType: Scratch.BlockType.BOOLEAN,
-					  text: "is file writing supported?"
-				  },
-				  {
-					  opcode: "allStored",
-					  blockType: Scratch.BlockType.REPORTER,
-					  text: "all stored files"
-				  },
-				  {
-					  opcode: "setStoredFile",
-					  blockType: Scratch.BlockType.COMMAND,
-					  text: "open new stored [FILE] file named [NAME] as [TYPE]",
-					  arguments: {
-			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" },
-			        FILE: { type: Scratch.ArgumentType.STRING, defaultValue: ".txt" },
-			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
-			      }
-				  },
-				  {
-					  opcode: "storedFolder",
-					  blockType: Scratch.BlockType.COMMAND,
-					  text: "open folder and store files as [TYPE] with name [NAME]",
-					  arguments: {
-			        TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" },
-			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-folder-1" }
-			      }
-				  },
-				  {
-					  opcode: "deleteStoredFile",
-					  blockType: Scratch.BlockType.COMMAND,
-					  text: "delete file [NAME] from [OPTION]",
-					  arguments: {
-			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" },
-			        OPTION: { type: Scratch.ArgumentType.STRING, menu: "DELETION" },
-			      }
-				  },
-				  "---",
-				  {
-					  opcode: "updateFile",
-					  blockType: Scratch.BlockType.COMMAND,
-					  text: "write [TXT] to stored file [NAME]",
-					  arguments: {
-			        TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "new content" },
-			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" }
-			      }
-				  },
-				  {
+	    opcode: "checkFileAPI",
+	    blockType: Scratch.BlockType.BOOLEAN,
+	    text: "is file writing supported?"
+	  },
+	  {
+	    opcode: "allStored",
+	    blockType: Scratch.BlockType.REPORTER,
+	    text: "all stored files"
+	  },
+	  {
+	    opcode: "setStoredFile",
+	    blockType: Scratch.BlockType.COMMAND,
+	    text: "open new stored [FILE] file named [NAME] as [TYPE]",
+	    arguments: {
+	      NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" },
+	      FILE: { type: Scratch.ArgumentType.STRING, defaultValue: ".txt" },
+	      TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" }
+	    }
+	  },
+	  {
+	    opcode: "storedFolder",
+	    blockType: Scratch.BlockType.COMMAND,
+	    text: "open folder and store files as [TYPE] with name [NAME]",
+	    arguments: {
+	      TYPE: { type: Scratch.ArgumentType.STRING, menu: "encoding" },
+	      NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-folder-1" }
+	    }
+	  },
+	  {
+	    opcode: "deleteStoredFile",
+	    blockType: Scratch.BlockType.COMMAND,
+	    text: "delete file [NAME] from [OPTION]",
+	    arguments: {
+	      NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" },
+	      OPTION: { type: Scratch.ArgumentType.STRING, menu: "DELETION" },
+	    }
+	  },
+	  "---",
+	  {
+	    opcode: "updateFile",
+	    blockType: Scratch.BlockType.COMMAND,
+	    text: "write [TXT] to stored file [NAME]",
+	    arguments: {
+	      TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "new content" },
+	      NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" }
+	    }
+	  },
+	  {
             opcode: "storedInfo",
             blockType: Scratch.BlockType.REPORTER,
             text: "[FORMAT] in stored file [NAME]",
             arguments: {
               FORMAT: { type: Scratch.ArgumentType.STRING, menu: "FILE_INFO" },
-			        NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" }
+	      NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-file-1" }
             }
           },
           "---",
-				  {
-					  opcode: "moveStorage",
-					  blockType: Scratch.BlockType.COMMAND,
-					  text: "migrate files to CST's Zip Extension",
-				  },
-				  { blockType: Scratch.BlockType.LABEL, text: "Visuals" },
+	  {
+	    opcode: "moveStorage",
+	    blockType: Scratch.BlockType.COMMAND,
+	    text: "migrate files to CST's Zip Extension",
+	  },
+	  { blockType: Scratch.BlockType.LABEL, text: "Visuals" },
           {
             func: "toggleVis",
             blockType: Scratch.BlockType.BUTTON,
@@ -632,23 +632,23 @@
 
     allStored() { return JSON.stringify(Object.keys(storedFiles)) }
 
-	  async setStoredFile(args) {
-			if (!this.checkFileAPI()) return;
-			let fileTypes = args.FILE ? args.FILE.split(" ") : [];
-			try {
-			  const picker = await showFilePrompt(fileTypes, "", "window");
-			  if (!picker) return;
+    async setStoredFile(args) {
+      if (!this.checkFileAPI()) return;
+      let fileTypes = args.FILE ? args.FILE.split(" ") : [];
+      try {
+	const picker = await showFilePrompt(fileTypes, "", "window");
+	if (!picker) return;
         storedFiles[args.NAME] = { file: picker[0], data: {} };
-		    const metaData = await picker[0].getFile();
-		    const encodedData = await this.encodeData(metaData, args.TYPE);
-		    this.updateStore(args.NAME, encodedData, metaData);
-			} catch(e) { console.warn(e) }
-		}
+	const metaData = await picker[0].getFile();
+	const encodedData = await this.encodeData(metaData, args.TYPE);
+	this.updateStore(args.NAME, encodedData, metaData);
+      } catch(e) { console.warn(e) }
+    }
 
-	  async storedFolder(args) {
-			if (!this.checkFileAPI()) return;
-			try {
-			  const picker = await showFilePrompt("Folder", "", "folder");
+    async storedFolder(args) {
+      if (!this.checkFileAPI()) return;
+      try {
+	const picker = await showFilePrompt("Folder", "", "folder");
         if (!picker) return;
         const entries = picker.entries();
         const folderN = args.NAME ? args.NAME : picker.name;
@@ -660,13 +660,13 @@
             const innerData = thisFile[1];
             const name = `${folderN}/${innerData.name}`;
             storedFiles[name] = { file: innerData, data: {} };
-		        const metaData = await innerData.getFile();
-		        const encodedData = await this.encodeData(metaData, args.TYPE);
-		        this.updateStore(name, encodedData, metaData);
+	    const metaData = await innerData.getFile();
+	    const encodedData = await this.encodeData(metaData, args.TYPE);
+	    this.updateStore(name, encodedData, metaData);
           }
         }
-			} catch(e) { console.warn(e) }
-		}
+      } catch(e) { console.warn(e) }
+    }
 
     deleteStoredFile(args) {
       if (args.OPTION === "this device" || args.OPTION === "both") {
@@ -676,15 +676,15 @@
       if (args.OPTION === "storage" || args.OPTION === "both") delete storedFiles[args.NAME]
     }
 
-	  async updateFile(args) {
-	    if (!this.checkFileAPI() || storedFiles[args.NAME] === undefined) return;
-			try {
-				const writable = await storedFiles[args.NAME].file.createWritable();
-				await writable.write(args.TXT);
-				await writable.close();
-		    this.updateStore(args.NAME, args.TXT, { lastModified: Date.now(), size: args.TXT.length });
-			} catch (e) {	console.warn(e) }
-		}
+    async updateFile(args) {
+      if (!this.checkFileAPI() || storedFiles[args.NAME] === undefined) return;
+      try {
+	const writable = await storedFiles[args.NAME].file.createWritable();
+	await writable.write(args.TXT);
+	await writable.close();
+	this.updateStore(args.NAME, args.TXT, { lastModified: Date.now(), size: args.TXT.length });
+      } catch (e) {	console.warn(e) }
+    }
 
     storedInfo(args) {
       const fileInfo = storedFiles[args.NAME];
