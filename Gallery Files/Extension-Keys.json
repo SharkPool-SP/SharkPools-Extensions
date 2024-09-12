@@ -39,8 +39,8 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
-      "date": "Last Updated: 10/07/2024"
+      "status": "",
+      "date": "Last Updated: 09/07/2024"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
@@ -74,7 +74,7 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 09/01/2024"
     },
     "Better-Input": {
@@ -172,8 +172,8 @@
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
-      "date": "Last Updated: 10/06/2024"
+      "status": "",
+      "date": "Last Updated: 09/06/2024"
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by DNin01 and Meehdrescher",
@@ -221,7 +221,7 @@
       "credits": "Powerful New Message Blocks that work with Vanilla Messages! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Messages-Plus.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/30/2024"
     },
     "Advanced-Messages": {
@@ -232,14 +232,14 @@
       "date": "Last Updated: 06/04/2024"
     },
     "Fetch-Progress": {
-      "credits": "Fetch Content from URLs and get the Progress of the Fetch process. Made by SharkPool",
+      "credits": "Fetch and Encode Content from URLs while viewing the Progress and Status of the Fetch. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Fetch-Progress.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Last Updated: 01/18/2024"
+      "status": "update",
+      "date": "Last Updated: 09/12/2024"
     },
     "Geolocation": {
-      "credits": "Fetch User's Location and Calculate Real-World Distances. Made by SharkPool",
+      "credits": "Get Users' Location and Calculate Real-World Distances. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Geolocation.js",
       "tags": ".all.fetching",
       "status": "",
@@ -277,7 +277,7 @@
       "credits": "Display Advanced Text in Your Projects! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Display-Text.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 08/30/2024"
     },
     "Color-Master": {
