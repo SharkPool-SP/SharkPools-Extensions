@@ -1,9 +1,9 @@
 // Name: Fetch+
 // ID: SPprogress
-// Description: Get the Loading Progress of Fetch Requests!
+// Description: Fetch the content and progress of URLs in different encoded formats.
 // By: SharkPool
 
-// Version V.2.0.0
+// Version V.2.0.01
 
 (function (Scratch) {
   "use strict";
@@ -41,12 +41,20 @@
             },
           },
           {
-            opcode: "fetchThis",
+            opcode: "fetchThis2",
             blockType: Scratch.BlockType.COMMAND,
-            text: "fetch [URL] with size [SIZE] bytes as [TYPE]",
+            text: "fetch [URL] as [TYPE]",
             arguments: {
               URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://extensions.turbowarp.org/hello.txt" },
-              SIZE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 13 },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "ENCODING" }
+            },
+          },
+          {
+            opcode: "fetchThis", blockType: Scratch.BlockType.COMMAND,
+            text: "fetch [URL] as [TYPE] with size [SIZE] bytes as [TYPE]", hideFromPalette: true, // deprecated
+            arguments: {
+              URL: { type: Scratch.ArgumentType.STRING },
+              SIZE: { type: Scratch.ArgumentType.NUMBER },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "ENCODING" }
             },
           },
@@ -71,12 +79,12 @@
           {
             opcode: "getStatus",
             blockType: Scratch.BlockType.REPORTER,
-            text: "fetch status"
+            text: "status of fetch"
           },
           {
             opcode: "getSize",
             blockType: Scratch.BlockType.REPORTER,
-            text: "fetch byte size"
+            text: "file size of fetch"
           },
           {
             opcode: "getResponse",
@@ -125,60 +133,77 @@
     }
 
     // Block Funcs
-    get(args) {
+    async get(args) {
+      const url = args.URL;
+      if (!url.includes("http")) return "";
       fetchInfo.progress = 0;
-      fetchQueue++
-      return Scratch.fetch(args.URL)
-        .then((r) => {
-          fetchInfo.status = r.status;
-          return r.blob();
-        })
-        .then((blob) => {
-          fetchInfo.fileSize = blob.size;
-          const result = this.blob2Data(blob, args.TYPE);
-          fetchInfo.response = result;
-          fetchInfo.progress = 100;
-          this.removeQueue();
-          return result;
-        })
-        .catch(() => {
-          fetchInfo = { response: "", status: "Fetch Failed, check Console", fileSize: 0, progress: -1 };
-          this.removeQueue();
-          return "";
-        });
+      fetchQueue++;
+      try {
+        const headResponse = await Scratch.fetch(url, { method: "HEAD" });
+        if (!headResponse.ok) throw new Error("Failed to get HEAD response");
+        const contentLength = headResponse.headers.get("Content-Length");
+        const fileSize = contentLength ? parseInt(contentLength, 10) : 0;
+
+        const response = await Scratch.fetch(url);
+        fetchInfo.status = response.status;
+        if (!response.ok) throw new Error("Failed to get content");
+        const blob = await response.blob();
+        fetchInfo.fileSize = fileSize || blob.size;
+        const result = this.blob2Data(blob, args.TYPE);
+        fetchInfo.response = result;
+        fetchInfo.progress = 100;
+        this.removeQueue();
+        return result;
+      } catch {
+        fetchInfo = { response: "", status: "Fetch Failed, check Console", fileSize: 0, progress: -1 };
+        this.removeQueue();
+        return "";
+      }
     }
 
+    async fetchThis2(args) { return await this.fetchThis(args) }
     async fetchThis(args) {
       let url = args.URL;
       url = `${url}${(url.includes("?") && url.lastIndexOf("/") <= url.lastIndexOf("?")) ? "&" : "?"}cache=${Math.random()}`;
       if (!url.includes("http")) return;
+  
       const approxSize = Scratch.Cast.toNumber(args.SIZE);
       fetchInfo.progress = 0;
       fetchQueue++;
-
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = "blob";
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          fetchInfo = {
-            response: this.blob2Data(xhr.response, args.TYPE), status: xhr.status,
-            fileSize: xhr.response.size, progress: 100
-          };
-        } else {
+      try {
+        const headResponse = await Scratch.fetch(url, { method: "HEAD" });
+        if (!headResponse.ok) throw new Error("Failed to get HEAD response");
+        const contentLength = headResponse.headers.get("Content-Length");
+        const fileSize = contentLength ? parseInt(contentLength, 10) : Scratch.Cast.toNumber(args.SIZE);
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            fetchInfo = {
+              response: this.blob2Data(xhr.response, args.TYPE),
+              status: xhr.status,
+              fileSize: xhr.response.size,
+              progress: 100
+            };
+          } else {
+            fetchInfo = { response: "", status: "Fetch Failed, check Console", fileSize: 0, progress: -1 };
+          }
+          this.removeQueue();
+        };
+        xhr.onerror = () => {
           fetchInfo = { response: "", status: "Fetch Failed, check Console", fileSize: 0, progress: -1 };
-        }
-        this.removeQueue();
-      };
-      xhr.onerror = () => {
+          this.removeQueue();
+        };
+        xhr.onprogress = (event) => {
+          const total = event.total === 0 ? fileSize : event.total;
+          fetchInfo.progress = Math.round((event.loaded / total) * 100);
+        };
+        xhr.open("GET", url, true);
+        xhr.send();
+      } catch {
         fetchInfo = { response: "", status: "Fetch Failed, check Console", fileSize: 0, progress: -1 };
         this.removeQueue();
-      };
-      xhr.onprogress = () => {
-        const total = event.total === 0 ? approxSize : event.total;
-        fetchInfo.progress = Math.round((event.loaded / total) * 100);
-      };
-      xhr.open("GET", url, true);
-      xhr.send();
+      }
     }
 
     getStatus() { return fetchInfo.status }
