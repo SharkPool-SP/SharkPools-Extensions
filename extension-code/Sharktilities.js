@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.4.11
+// Version V.3.4.12
 
 (function (Scratch) {
   "use strict";
@@ -460,7 +460,7 @@
       }
       switch (args.SHUFFLE_OPTION) {
         case "ascending": return JSON.stringify(words.sort((a, b) => a - b));
-        case "descending": return JSON.stringify(words.sort((a, b) => b - a).reverse());
+        case "descending": return JSON.stringify(words.sort((a, b) => b - a));
         case "descending by length": return JSON.stringify(words.sort((a, b) => b.length - a.length));
         case "ascending by length": return JSON.stringify(words.sort((a, b) => a.length - b.length));
         case "most common": return JSON.stringify(sortFreq(words, true));
