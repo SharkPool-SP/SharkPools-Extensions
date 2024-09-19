@@ -82,7 +82,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
       "status": "",
-      "date": "Last Updated: 08/17/2024"
+      "date": "Last Updated: 09/18/2024"
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
@@ -412,6 +412,13 @@
       "tags": ".all.utilities",
       "status": "",
       "date": "Released: 08/29/2024"
+    },
+    "JSON-Array": {
+      "credits": "The Fastest JSON and Array Extension. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/JSON-Array.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 09/19/2024"
     },
     "Example": {
       "credits": "",
