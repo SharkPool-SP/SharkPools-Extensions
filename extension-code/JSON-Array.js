@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -60,7 +60,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is JSON [OBJ] valid?",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` },
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
             },
           },
           {
@@ -69,7 +69,7 @@
             text: "{ [KEY] : [VAL] }",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value" }
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true }
             },
           },
           "---",
@@ -79,7 +79,7 @@
             text: "get [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
             },
           },
           {
@@ -87,8 +87,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "get path [PATH] from [OBJ]",
             arguments: {
-              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key", "value1"]` },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":{"value1":1, "value2":2}}` }
+              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key", "value1"]`, exemptFromNormalization: true },
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":{"value1":1, "value2":2}}`, exemptFromNormalization: true }
             },
           },
           {
@@ -97,8 +97,8 @@
             text: "set [KEY] to [VAL] in [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: "{}" }
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true },
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: "{}", exemptFromNormalization: true }
             },
           },
           {
@@ -106,9 +106,9 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "set path [PATH] to [VAL] in [OBJ]",
             arguments: {
-              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key1", "key2"]` },
+              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key1", "key2"]`, exemptFromNormalization: true },
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key1":{}}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key1":{}}`, exemptFromNormalization: true }
             },
           },
           {
@@ -117,7 +117,7 @@
             text: "delete [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
             },
           },
           {
@@ -125,7 +125,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "size of [OBJ]",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
             },
           },
           "---",
@@ -136,7 +136,7 @@
             allowDropAnywhere: true,
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
             },
           },
           {
@@ -145,7 +145,7 @@
             text: "get [KEY] entry from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
             },
           },
           {
@@ -154,7 +154,7 @@
             text: "all [TYPE] from [OBJ]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "OBJ_EXTRACT" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value","key2":"value2"}` }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value","key2":"value2"}`, exemptFromNormalization: true }
             },
           },
           {
@@ -162,8 +162,8 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "merge [OBJ1] and [OBJ2]",
             arguments: {
-              OBJ1: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}` },
-              OBJ2: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key2":"value2"}` }
+              OBJ1: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
+              OBJ2: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key2":"value2"}`, exemptFromNormalization: true }
             },
           },
           { blockType: Scratch.BlockType.LABEL, text: "Arrays" },
@@ -172,7 +172,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is array [ARR] valid?",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]` },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true },
             },
           },
           {
@@ -181,7 +181,7 @@
             text: "［ [VAL] ］",
             outputShape: 3,
             arguments: {
-              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value" }
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true }
             },
           },
           "---",
@@ -191,8 +191,8 @@
             text: "add [ITEM] to [ARR]",
             outputShape: 3,
             arguments: {
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "thing" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: "[]" }
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "thing", exemptFromNormalization: true },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: "[]", exemptFromNormalization: true }
             },
           },
           {
@@ -201,9 +201,9 @@
             text: "insert [ITEM] at [IND] in [ARR]",
             outputShape: 3,
             arguments: {
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b" },
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true },
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "c"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "c"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -213,8 +213,8 @@
             outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["z", "b", "c"]` }
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a", exemptFromNormalization: true },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["z", "b", "c"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -224,7 +224,7 @@
             outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -234,7 +234,7 @@
             outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -245,7 +245,7 @@
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
               IND2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -254,7 +254,7 @@
             text: "length of [ARR]",
             outputShape: 3,
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
             },
           },
           "---",
@@ -263,7 +263,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "[ARR] contains [ITEM] ?",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]` },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b" }
             },
           },
@@ -274,7 +274,7 @@
             outputShape: 3,
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -285,7 +285,7 @@
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]` }
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -294,8 +294,8 @@
             text: "merge array [ARR1] and [ARR2]",
             outputShape: 3,
             arguments: {
-              ARR1: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]` },
-              ARR2: { type: Scratch.ArgumentType.STRING, defaultValue: `["c", "d"]` }
+              ARR1: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
+              ARR2: { type: Scratch.ArgumentType.STRING, defaultValue: `["c", "d"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -304,7 +304,7 @@
             text: "order [ARR] by [ORDERER]",
             outputShape: 3,
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["2", "item1", "1", "item12", "1"]` },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["2", "item1", "1", "item12", "1"]`, exemptFromNormalization: true },
               ORDERER: { type: Scratch.ArgumentType.STRING, menu: "ORDERING" }
             }
           },
@@ -314,7 +314,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "[OBJ] to [TYPE]",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: "{}" },
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: "{}", exemptFromNormalization: true },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CONVERTS" }
             },
           },
@@ -324,7 +324,7 @@
             text: "[TXT] split by [SPLIT] to [TYPE]",
             outputShape: 3,
             arguments: {
-              TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "a,b,c" },
+              TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "a,b,c", exemptFromNormalization: true },
               SPLIT: { type: Scratch.ArgumentType.STRING, defaultValue: "," },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CONVERTS2" }
             },
@@ -343,7 +343,7 @@
             text: "in thread [TYPE] [OBJ] by [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CUST_ORDER" },
-              OBJ: { type: Scratch.ArgumentType.STRING },
+              OBJ: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
               IND: {}, VAL: {}, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
             },
@@ -356,7 +356,8 @@
             opcode: "forEach", blockType: Scratch.BlockType.LOOP,
             text: "for each [IND] [VAL] in [OBJ]", hideFromPalette: true,
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING }, IND: {}, VAL: {}
+              IND: {}, VAL: {},
+              OBJ: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true }
             },
           },
           {
