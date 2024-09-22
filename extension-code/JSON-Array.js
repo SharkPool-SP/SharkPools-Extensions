@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.11
+// Version V.1.0.12
 
 (function (Scratch) {
   "use strict";
@@ -726,7 +726,7 @@
     convert(args) {
       switch (args.TYPE) {
         case "array": return Object.entries(this.tryParse(args.OBJ, 0));
-        case "JSON": return Object.assign({}, this.tryParse(args.OBJ, 1));
+        case "JSON": return Object.assign({}, this.tryParse(args.OBJ, 0));
         default: return JSON.stringify(this.tryParse(args.OBJ));
       }
     }
