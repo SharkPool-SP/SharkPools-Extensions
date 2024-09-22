@@ -1,10 +1,10 @@
 // Name: JSON and Array
 // ID: SPjson
-// Description: Incredibly Fast JSON and Array Extension
+// Description: Super Fast JSON and Array Extension
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.01
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -46,7 +46,70 @@
 
   const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
+  // See Line -- 72
+  // TODO: Find a way to use this on monitor displays if possible?
+  function stringifyVariables() {
+    for (let i = 0; i < runtime.targets.length; i++) {
+      const target = runtime.targets[i];
+      const vars = Object.values(target.variables);
+      for (let j = 0; j < vars.length; j++) {
+        const data = vars[j];
+        if (data.type !== "broadcast_msg") {
+          const val = data.value;
+          if (data.type === "list") {
+            // Iterate through each list item
+            for (var k = 0; k < val.length; k++) {
+              if (typeof val[k] === "object") val[k] = JSON.stringify(val[k]);
+            }
+          } else {
+            if (typeof val === "object") data.value = JSON.stringify(val);
+          }
+        }
+      }
+    }
+  }
+
+  // Patch Saving Pure Objects to Variables
+  // We must stringify them for it to work
+  const beforeSave = () =>
+    new Promise((resolve) => {
+      stringifyVariables();
+      resolve();
+    });
+  const ogSaveProjectSb3 = vm.saveProjectSb3;
+  vm.saveProjectSb3 = async function (...args) {
+    await beforeSave();
+    return await ogSaveProjectSb3.apply(this, args);
+  };
+  const ogSaveProjSb3Stream = vm.saveProjectSb3Stream;
+  vm.saveProjectSb3Stream = function (...args) {
+    let realStream = null;
+    const queuedCalls = [];
+    const whenStreamReady = (methodName, args) => {
+      if (realStream) return realStream[methodName].apply(realStream, args);
+      else return new Promise((resolve) => { queuedCalls.push({ resolve, methodName, args }) });
+    };
+    const streamWrapper = {
+      on: (...args) => void whenStreamReady("on", args), pause: (...args) => void whenStreamReady("pause", args),
+      resume: (...args) => void whenStreamReady("resume", args), accumulate: (...args) => whenStreamReady("accumulate", args)
+    };
+    beforeSave().then(() => {
+      realStream = ogSaveProjSb3Stream.apply(this, args);
+      for (const queued of queuedCalls) queued.resolve(realStream[queued.methodName].apply(realStream, queued.args));
+      queuedCalls.length = 0;
+    });
+    return streamWrapper;
+  };
+
   class SPjson {
+    constructor() {
+      this.settings = [
+        { text: "always cast values", value: "alwaysCast" },
+        { text: "always parse text objects", value: "alwaysParse" },
+        { text: "dont edit source objects", value: "useNewObj" }
+      ];
+      this.alwaysCast = true; this.alwaysParse = true; this.useNewObj = true;
+    }
     getInfo() {
       return {
         id: "SPjson",
@@ -54,6 +117,11 @@
         color1: "#748bee",
         menuIconURI,
         blocks: [
+          {
+            func: "warn",
+            blockType: Scratch.BlockType.BUTTON,
+            text: "Usage Warning"
+          },
           { blockType: Scratch.BlockType.LABEL, text: "JSON" },
           {
             opcode: "jsonValid",
@@ -377,12 +445,37 @@
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
               </block>`
           },
+          { blockType: Scratch.BlockType.LABEL, text: "Safety Settings" },
+          {
+            func: "optimizeWarn",
+            blockType: Scratch.BlockType.BUTTON,
+            text: "Optimization Warning"
+          },
+          {
+            opcode: "isSettingOn",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is [THING] enabled?",
+            arguments: {
+              THING: { type: Scratch.ArgumentType.STRING, menu: "SETTINGS" }
+            },
+          },
+          {
+            opcode: "toggleSetting",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set [THING] to [TYPE]",
+            arguments: {
+              THING: { type: Scratch.ArgumentType.STRING, menu: "SETTINGS" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "TOGGLER" }
+            },
+          }
         ],
         menus: {
+          TOGGLER: ["enabled", "disabled"],
           CUST_ORDER: ["filter", "order"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values"] },
           CONVERTS: { acceptReporters: true, items: ["string", "array", "JSON"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
+          SETTINGS: { acceptReporters: true, items: this.settings },
           ORDERING: {
             acceptReporters: true,
             items: [
@@ -397,11 +490,16 @@
 
     // Helper Funcs
     tryParse(obj, optType) {
-      if (optType === 1 && Array.isArray(obj)) return obj;
-      if (optType === 0 && typeof obj === "object") return obj;
-      const defaultV = optType !== undefined ? optType === 0 ? {} : [] : obj;
+      if (optType === 1 && Array.isArray(obj)) return this.useNewObj ? [ ...obj ] : obj;
+      if (optType === 0 && typeof obj === "object") return this.useNewObj ? { ...obj } : obj;
+      const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
       try {
-        return JSON.parse(obj) || defaultV;
+        if (this.alwaysParse) {
+          const firstChar = obj[0];
+          const lastChar = obj[obj.length - 1];
+          if ((firstChar === "[" && lastChar === "]") || (firstChar === "{" && lastChar === "}")) return JSON.parse(obj) || defaultV;
+        }
+        return defaultV;
       } catch {
         return defaultV;
       }
@@ -409,33 +507,58 @@
 
     toArrInd(num) { return Scratch.Cast.toNumber(num) - 1 }
 
+    toSafe(val) {
+      if (this.alwaysCast) {
+        if (typeof val === "object") return val;
+        if (isNaN(val) || val === Infinity || val === -Infinity) return Scratch.Cast.toString(val);
+      }
+      return val;
+    }
+
+    // Buttons and Settings
+    warn() {
+      window.alert([
+        "This extension is fast because it works with raw objects instead of repeatedly parsing them.",
+        "However, this may lead to confusion or incorrect assumptions that certain behaviors are bugs.",
+        "For example, it's intentional that monitors and text-based components may not display or may crash when handling raw objects.",
+        "To resolve this, simply use the (({}) to (string v)) block to convert the object to a string."
+      ].join("\n\n"));
+    }
+
+    optimizeWarn() {
+      window.alert("Disabling these Settings can improve performance, but may lead to unexpected bugs or issues");
+    }
+
+    toggleSetting(args) {
+      const opt = this.settings.find(item => item.value === args.THING)?.value;
+      if (opt) this[opt] = args.TYPE === "enabled";
+    }
+
+    isSettingOn(args) {
+      const opt = this.settings.find(item => item.value === args.THING)?.value;
+      return opt ? this[opt] : false;
+    }
+
     // JSON Funcs
     jsonValid(args) {
-      // Ripped from TW JSON
-      let obj = args.OBJ;
+      const obj = args.OBJ;
       const type = typeof obj;
       if (type === "object") return true;
       if (type != "string") return false;
-      obj = obj.trim();
-      if (
-        (obj.slice(0, 1) != "[" || obj.slice(-1) != "]") && (obj.slice(0, 1) != "{" || obj.slice(-1) != "}")
-      ) return false;
-      else {
-        try {
-          JSON.parse(obj);
-          return true;
-        } catch {
-          return false;
-        }
+      try {
+        JSON.parse(obj);
+        return true;
+      } catch {
+        return false;
       }
     }
 
-    jsonBuilder(args) { return { [args.KEY] : args.VAL } }
+    jsonBuilder(args) { return { [args.KEY] : this.toSafe(args.VAL) } }
 
     getKey(args) {
       const obj = this.tryParse(args.OBJ, 0);
       const key = Scratch.Cast.toString(args.KEY);
-      if (hasOwn(obj, key)) return obj[key] || "";
+      if (hasOwn(obj, key)) return obj[key] ?? "";
       return "";
     }
 
@@ -451,12 +574,12 @@
           break;
         }
       }
-      return val || "";
+      return val ?? "";
     }
 
     setKey(args) {
       const obj = this.tryParse(args.OBJ, 0);
-      obj[Scratch.Cast.toString(args.KEY)] = args.VAL;
+      obj[Scratch.Cast.toString(args.KEY)] = this.toSafe(args.VAL);
       return obj;
     }
 
@@ -464,7 +587,7 @@
       const path = this.tryParse(args.PATH, 1);
       let obj = this.tryParse(args.OBJ, 0);
       path.reduce((acc, part, i) => {
-        if (i === path.length - 1) acc[part] = args.VAL;
+        if (i === path.length - 1) acc[part] = this.toSafe(args.VAL);
         else acc[part] = acc[part] || {};
         return acc[part];
       }, obj);
@@ -479,7 +602,10 @@
 
     jsonSize(args) { return Object.keys(this.tryParse(args.OBJ, 0)).length }
 
-    keyIndex(args) { return Object.keys(this.tryParse(args.OBJ, 0)).indexOf(args.KEY) + 1 }
+    keyIndex(args) {
+      return Object.keys(this.tryParse(args.OBJ, 0))
+        .indexOf(Scratch.Cast.toString(args.KEY)) + 1;
+    }
 
     getEntry(args) {
       const obj = this.tryParse(args.OBJ, 0);
@@ -501,26 +627,26 @@
     // Array Funcs
     arrValid(args) { return Array.isArray(this.tryParse(args.ARR)) }
 
-    arrBuilder(args) { return [args.VAL] }
+    arrBuilder(args) { return [this.toSafe(args.VAL)] }
 
     arrAdd(args) {
       const arr = this.tryParse(args.ARR, 1);
-      arr.push(args.ITEM);
+      arr.push(this.toSafe(args.ITEM));
       return arr;
     }
 
     arrInsert(args) {
       const arr = this.tryParse(args.ARR, 1);
       const ind = Math.max(0, this.toArrInd(args.IND));
-      if (ind) arr.splice(ind, 0, args.ITEM);
-      else arr.unshift(args.ITEM);
+      if (ind) arr.splice(ind, 0, this.toSafe(args.ITEM));
+      else arr.unshift(this.toSafe(args.ITEM));
       return arr;
     }
 
     arrReplace(args) {
       const arr = this.tryParse(args.ARR, 1);
       const ind = this.toArrInd(args.IND);
-      if (arr.length > ind) arr[ind] = args.ITEM;
+      if (arr.length > ind) arr[ind] = this.toSafe(args.ITEM);
       return arr;
     }
 
@@ -531,7 +657,7 @@
     }
 
     arrGet(args) {
-      return this.tryParse(args.ARR, 1)[this.toArrInd(args.IND)] || "";
+      return this.tryParse(args.ARR, 1)[this.toArrInd(args.IND)] ?? "";
     }
 
     arrSlice(args) {
@@ -542,21 +668,22 @@
 
     arrLength(args) { return this.tryParse(args.ARR, 1).length }
 
-    itemExists(args) { return this.tryParse(args.ARR, 1).indexOf(args.ITEM) > -1 }
+    itemExists(args) { return this.tryParse(args.ARR, 1).indexOf(this.toSafe(args.ITEM)) > -1 }
 
     arrMatches(args) {
       const arr = this.tryParse(args.ARR, 1);
-      return arr.filter((item) => item == args.ITEM).length;
+      return arr.filter((item) => item == this.toSafe(args.ITEM)).length;
     }
 
     itemIndex(args) {
       const arr = this.tryParse(args.ARR, 1);
       const ind = Scratch.Cast.toNumber(args.IND);
-      if (ind === 0) return arr.indexOf(args.ITEM) + 1; // Secret Behaviour
+      const safe = this.toSafe(args.ITEM)
+      if (ind === 0) return arr.indexOf(safe) + 1; // Secret Behaviour
       else {
         let indexes = [];
         for (let i = 0; i < arr.length; i++) {
-          if (arr[i] == args.ITEM) indexes.push(i);
+          if (arr[i] == safe) indexes.push(i);
         }
         const val = indexes[ind - 1] + 1;
         return isNaN(val) ? 0 : val;
