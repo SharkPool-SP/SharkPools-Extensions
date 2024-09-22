@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.12
+// Version V.1.0.13
 
 (function (Scratch) {
   "use strict";
@@ -495,9 +495,8 @@
       const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
       try {
         if (this.alwaysParse) {
-          const firstChar = obj[0];
-          const lastChar = obj[obj.length - 1];
-          if ((firstChar === "[" && lastChar === "]") || (firstChar === "{" && lastChar === "}")) return JSON.parse(obj) || defaultV;
+          const parsed = JSON.parse(obj);
+          return typeof parsed === "object" ? parsed : defaultV;
         }
         return defaultV;
       } catch {
