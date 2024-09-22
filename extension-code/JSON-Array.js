@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.1
+// Version V.1.0.11
 
 (function (Scratch) {
   "use strict";
@@ -490,8 +490,8 @@
 
     // Helper Funcs
     tryParse(obj, optType) {
-      if (optType === 1 && Array.isArray(obj)) return this.useNewObj ? [ ...obj ] : obj;
-      if (optType === 0 && typeof obj === "object") return this.useNewObj ? { ...obj } : obj;
+      if ((optType === 1 && Array.isArray(obj)) || (optType === 0 && typeof obj === "object"))
+        return this.useNewObj ? structuredClone(obj) : obj;
       const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
       try {
         if (this.alwaysParse) {
