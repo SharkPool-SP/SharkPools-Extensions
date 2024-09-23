@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.13
+// Version V.1.0.14
 
 (function (Scratch) {
   "use strict";
@@ -378,6 +378,14 @@
           },
           { blockType: Scratch.BlockType.LABEL, text: "Utilities" },
           {
+            opcode: "parse",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "parse [OBJ]",
+            arguments: {
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key": "value"}`, exemptFromNormalization: true }
+            },
+          },
+          {
             opcode: "convert",
             blockType: Scratch.BlockType.REPORTER,
             text: "[OBJ] to [TYPE]",
@@ -722,6 +730,14 @@
     }
 
     // Util Funcs
+    parse(args) {
+      try {
+        return JSON.parse(args.OBJ);
+      } catch {
+        return "";
+      }
+    }
+
     convert(args) {
       switch (args.TYPE) {
         case "array": return Object.entries(this.tryParse(args.OBJ, 0));
