@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.14
+// Version V.1.0.15
 
 (function (Scratch) {
   "use strict";
@@ -99,6 +99,13 @@
       queuedCalls.length = 0;
     });
     return streamWrapper;
+  };
+
+  // Also do this for Restore Points
+  const ogSaveProjectNonZIP = vm.saveProjectSb3DontZip;
+  vm.saveProjectSb3DontZip = function (...args) {
+    stringifyVariables();
+    return ogSaveProjectNonZIP.apply(this, args);
   };
 
   class SPjson {
