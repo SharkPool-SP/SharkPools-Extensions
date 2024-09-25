@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.15
+// Version V.1.0.16
 
 (function (Scratch) {
   "use strict";
@@ -182,7 +182,7 @@
             text: "set path [PATH] to [VAL] in [OBJ]",
             arguments: {
               PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key1", "key2"]`, exemptFromNormalization: true },
-              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value" },
+              VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true },
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key1":{}}`, exemptFromNormalization: true }
             },
           },
