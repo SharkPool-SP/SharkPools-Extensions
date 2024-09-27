@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.16
+// Version V.1.0.17
 
 (function (Scratch) {
   "use strict";
@@ -558,13 +558,16 @@
       const obj = args.OBJ;
       const type = typeof obj;
       if (type === "object") return true;
-      if (type != "string") return false;
-      try {
-        JSON.parse(obj);
-        return true;
-      } catch {
-        return false;
+      if (this.alwaysParse) {
+        if (type != "string") return false;
+        try {
+          JSON.parse(obj);
+          return true;
+        } catch {
+          return false;
+        }
       }
+      return false;
     }
 
     jsonBuilder(args) { return { [args.KEY] : this.toSafe(args.VAL) } }
@@ -738,8 +741,10 @@
 
     // Util Funcs
     parse(args) {
+      const obj = args.OBJ;
+      if (typeof obj === "object") return obj;
       try {
-        return JSON.parse(args.OBJ);
+        return JSON.parse(obj);
       } catch {
         return "";
       }
