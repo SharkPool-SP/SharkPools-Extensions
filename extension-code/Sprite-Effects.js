@@ -3,7 +3,7 @@
 // Description: Apply New Non-Vanilla Effects to Sprites and the Canvas!
 // By: SharkPool
 
-// Version V.1.7.02
+// Version V.1.7.03
 
 (function (Scratch) {
   "use strict";
@@ -31,7 +31,7 @@
     // if it isnt, we DOMPurify the filter before returning
     const input = container.getBlock(blockID).inputs.FILTER;
     const filterInput = container.getBlock(input.block).opcode;
-    string = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SP-canvas-${id}"><filter id="${id}">${string}</filter></svg>`;
+    string = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><filter id="${id}">${string}</filter></svg>`;
     if (filterInput.startsWith("SPspriteEffects_") && !filterInput.includes("applyCustom")) {
       // applyCustom is the only block that has user inputted filter support
       return string;
@@ -81,6 +81,16 @@
       return false;
     }
     return true;
+  };
+
+  const xmlEscape = function (unsafe) {
+    // when this is used, most unsafe characters are safe in filter IDs
+    return cast.toString(unsafe).replace(/[" ]/g, c => {
+      switch (c) {
+        case "\"": return "-'";
+        case " ": return "_";
+      }
+    });
   };
 
   class SPspriteEffects {
@@ -1437,37 +1447,41 @@
       const container = util.thread.blockContainer;
       let filter = args.FILTER;
       const match = filter.match(/<filter(?:\s[^>]*)?>((?:.|\n)*?)<\/filter>/i);
-      if (match && match[1]) {
+      if (match && match[1]) {xmlEscape
         filter = match[1].replace(/\s+$/, "");
-        const filterID = cast.toString(args.NAME).replaceAll(" ", "_");
-        const oldFilter = document.querySelector(`svg[id^="SP-canvas-${filterID}"]`);
-        if (oldFilter) return oldFilter.parentNode.innerHTML = tryPure(filter, filterID, thisBlock, container);
+        const name = xmlEscape(args.NAME);
+        const oldFilter = document.querySelector(`div[id^="SP-canvas-${name}"]`);
+        if (oldFilter) {
+          oldFilter.innerHTML = tryPure(filter, name, thisBlock, container);
+          oldFilter.id = `SP-canvas-${name}`; // the DOM will un-xmlEscape the ID
+          return;
+        }
         const svg = document.createElement("div");
-        svg.innerHTML = tryPure(filter, filterID, thisBlock, container);
+        svg.innerHTML = tryPure(filter, name, thisBlock, container);
+        svg.id = `SP-canvas-${name}`; // the DOM will un-xmlEscape the ID
         document.body.appendChild(svg);
-        allFilters.push(filterID);
+        allFilters.push(name);
         const curFilter = canvas.style.filter;
-        if (!curFilter.includes(`url(#${filterID})`)) canvas.style.filter = curFilter ? `${curFilter} url(#${filterID})` : `url(#${filterID})`;
+        if (!curFilter.includes(`url(#${name})`)) canvas.style.filter = curFilter ? `${curFilter} url(#${name})` : `url(#${name})`;
       } else { console.warn("Invalid Filter, Cancelled Application") }
     }
 
     removeCanvasFilter(args) {
-      const name = cast.toString(args.NAME).replaceAll(" ", "_");
-      if (canvas.style.filter.includes(`url("#${name}")`)) {
-        canvas.style.filter = canvas.style.filter.replace(`url(#${name})`, "").trim();
-        const array = canvas.style.filter.split(" ");
-        if (array.length === 1 && canvas.style.filter.includes(name)) canvas.style.filter = "";
-        const filterSel = document.querySelector(`svg[id^="SP-canvas-${name}"]`);
+      const curFilter = canvas.style.filter;
+      const name = xmlEscape(args.NAME);
+      if (curFilter.includes(`url("#${name}")`)) {
+        canvas.style.filter = curFilter.replaceAll(`url("#${name}")`, "").trim();
+        const filterSel = document.querySelector(`div[id^="SP-canvas-${name}"]`);
         if (filterSel) {
-          document.body.removeChild(filterSel.parentNode);
+          filterSel.remove();
           allFilters.splice(allFilters.indexOf(name), 1);
         }
       } else { console.warn("Filter not found, Cancelled Deletion") }
     }
 
     removeAllFilters(args) {
-      const filters = document.querySelectorAll(`svg[id^="SP-canvas-"]`);
-      if (filters.length > 0) for (let i = 0; i < filters.length; i++) document.body.removeChild(filters[i].parentNode);
+      const filters = document.querySelectorAll(`div[id^="SP-canvas-"]`);
+      if (filters.length > 0) for (let i = 0; i < filters.length; i++) filters[i].remove();
       canvas.style.filter = "";
       allFilters = [];
     }
