@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function (Scratch) {
   "use strict";
@@ -13,13 +13,13 @@
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3Ny4yMjIiIGhlaWdodD0iNzcuMjIyIiB2aWV3Qm94PSIwIDAgNzcuMjIyIDc3LjIyMiI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMiAzOC42MTFDMiAxOC4zOTEgMTguMzkxIDIgMzguNjExIDJzMzYuNjExIDE2LjM5MSAzNi42MTEgMzYuNjExLTE2LjM5MSAzNi42MTEtMzYuNjExIDM2LjYxMVMyIDU4LjgzMSAyIDM4LjYxMXoiIGZpbGw9IiM1OWMwNTkiIHN0cm9rZT0iIzQ3OWE0NyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHBhdGggZD0iTTEgMWg3NC4yMjJ2NzQuMjIySDF6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTQ0LjM1NiAxNS40NDVjLTMuMjkxLS4yOTktNi4xOTQgMi4xMjUtNi40OTMgNS40NDZsLS43NDggOC42NDhoOC40Mzh2NS45ODRoLTguOTc3bC0xLjMxNiAxNS4xN2ExMS45MjcgMTEuOTI3IDAgMCAxLTEyLjk1NyAxMC44NjMgMTEuOTkgMTEuOTkgMCAwIDEtOS4xNTYtNS41OTZsNC40ODgtNC40ODhjLjcxOCAyLjIxNCAyLjY5MyAzLjkyIDUuMTc3IDQuMTI5IDMuMjkxLjMgNi4xOTQtMi4xMjQgNi40OTMtNS40NDZsMS4yODctMTQuNjMyaC04Ljk3N3YtNS45ODRIMzEuMWwuODA4LTkuMTg3Yy41NjktNi41ODIgNi4zNzQtMTEuNDYgMTIuOTU3LTEwLjg2MSAzLjkyLjMyOSA3LjIxMSAyLjUxMyA5LjE1NiA1LjU5NWwtNC40ODggNC40ODljLS43MTktMi4yMTUtMi42OTMtMy45Mi01LjE3Ny00LjEzbTguMDg5IDQ1Ljg2MWEyLjY0IDIuNjQgMCAwIDEtMi42NC0yLjY0di01LjM2MmgtNS4zNjJhMi42NCAyLjY0IDAgMCAxLTIuNjM5LTIuNjM5di0yLjQyN2EyLjY0IDIuNjQgMCAwIDEgMi42NC0yLjY0aDUuMzYydi01LjM2MWEyLjY0IDIuNjQgMCAwIDEgMi42MzktMi42NGgyLjQyN2EyLjY0IDIuNjQgMCAwIDEgMi42MzkgMi42NHY1LjM2Mmg1LjM2MmEyLjY0IDIuNjQgMCAwIDEgMi42NCAyLjY0djIuNDI2YTIuNjQgMi42NCAwIDAgMS0yLjY0IDIuNjRoLTUuMzYydjUuMzYyYTIuNjQgMi42NCAwIDAgMS0yLjY0IDIuNjM5eiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=";
 
   const vm = Scratch.vm;
-  const regeneratedReporters = ["SPmoreOPs_getLetter", "SPmoreOPs_getIndex"];
-  if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
-    const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
-    ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
+  const regenReporters = ["SPmoreOPs_getLetter", "SPmoreOPs_getIndex"];
+  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+    const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = originalCheck(block);
       if (result) return true;
-      return block.isShadow() && regeneratedReporters.includes(block.type);
+      return block.isShadow() && regenReporters.includes(block.type);
     };
   });
 
@@ -418,15 +418,9 @@
             blockType: Scratch.BlockType.XML,
             xml: `
             <block type="SPmoreOPs_forLetter">
-              <value name="LETTER">
-                <shadow type="SPmoreOPs_getLetter"></shadow>
-              </value>
-              <value name = "INDEX">
-                <shadow type="SPmoreOPs_getIndex"></shadow>
-              </value>
-              <value name="STRING">
-                <shadow type="text"><field name="TEXT">banana</field></shadow>
-              </value>
+              <value name="LETTER"><shadow type="SPmoreOPs_getLetter"></shadow></value>
+              <value name = "INDEX"><shadow type="SPmoreOPs_getIndex"></shadow></value>
+              <value name="STRING"><shadow type="text"><field name="TEXT">banana</field></shadow></value>
             </block>`
           },
           {
@@ -464,20 +458,16 @@
       if (navigator.onLine) {
         try {
           window.alert("These Blocks require a Math Library to work. Dont worry, this Library is loaded Once (editor) and is Saved to the Project");
-          const links = [
-            "https://cdn.jsdelivr.net/npm/nerdamer@latest/nerdamer.core.js",
-            "https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js",
-            "https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js",
-            "https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js"
-          ];
+          const baseURL = "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/refs/heads/main/extension-utils/MO/math-";
+          const links = ["core.js", "algebra.js", "calculus.js", "solve.js"];
           const texts = [];
           for (let i = 0; i < links.length; i++) {
-            const response = await Scratch.fetch(links[i]);
+            const response = await Scratch.fetch(baseURL + links[i]);
             if (!response.ok) throw new Error("Fetch failed");
-            const scriptText = await response.text();
+            const txt = await response.text();
             const scriptElement = document.createElement("script");
-            scriptElement.textContent = scriptText;
-            texts.push(scriptText);
+            scriptElement.textContent = txt;
+            texts.push(txt);
             document.body.appendChild(scriptElement);
           }
           isSolverAdded = true;
