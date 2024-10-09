@@ -102,14 +102,14 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/03/2024"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/01/2024"
     },
     "Image-Editor": {
@@ -417,8 +417,8 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/JSON-Array.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 09/26/2024"
+      "status": "update",
+      "date": "Last Updated: 10/09/2024"
     },
     "Example": {
       "credits": "",
