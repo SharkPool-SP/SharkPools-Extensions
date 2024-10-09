@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.17
+// Version V.1.0.2
 
 (function (Scratch) {
   "use strict";
@@ -393,6 +393,14 @@
             },
           },
           {
+            opcode: "clone",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "copy [OBJ] to new",
+            arguments: {
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key": "value"}`, exemptFromNormalization: true }
+            },
+          },
+          {
             opcode: "convert",
             blockType: Scratch.BlockType.REPORTER,
             text: "[OBJ] to [TYPE]",
@@ -743,6 +751,16 @@
     parse(args) {
       const obj = args.OBJ;
       if (typeof obj === "object") return obj;
+      try {
+        return JSON.parse(obj);
+      } catch {
+        return "";
+      }
+    }
+
+    clone(args) {
+      const obj = args.OBJ;
+      if (typeof obj === "object") return structuredClone(obj);
       try {
         return JSON.parse(obj);
       } catch {
