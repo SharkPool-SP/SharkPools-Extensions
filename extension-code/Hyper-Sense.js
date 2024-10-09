@@ -3,7 +3,7 @@
 // Description: Cool New Sensing Blocks
 // By: SharkPool
 
-// Version 3.0.01
+// Version 3.0.1
 
 (function (Scratch) {
   "use strict";
@@ -17,7 +17,7 @@
   const render = vm.renderer;
 
   let curPressKey = null, pressedKeys = {};
-  let mousePos = [0, 0], scrollDist = 0, oldScroll = [0, 0, 0];
+  let mousePos = [0, 0, 0, 0], scrollDist = 0, oldScroll = [0, 0, 0];
   let publicVars = {}, askAs = "sprite", loudnessArray = [];
 
   class HyperSenseSP {
@@ -25,16 +25,22 @@
       runtime.on("BEFORE_EXECUTE", () => {
         runtime.startHats("HyperSenseSP_whenKeyPressed");
         oldScroll[2] += (0 - oldScroll[2]) / 4;
+        mousePos[2] += (0 - mousePos[2]) / 3;
+        mousePos[3] += (0 - mousePos[3]) / 3;
         Object.keys(pressedKeys).forEach(key => { pressedKeys[key] += 0.1 });
       });
       document.addEventListener("wheel", this.handleScroll);
-      document.addEventListener("mousemove", (event) => { mousePos = [event.clientX, event.clientY] });
-      document.addEventListener("keydown", (event) => {
+      document.addEventListener("mousemove", (e) => {
+        mousePos = [
+          e.clientX, e.clientY, runtime.ioDevices.mouse.getScratchX(), runtime.ioDevices.mouse.getScratchY()
+        ]
+      });
+      window.addEventListener("keydown", (event) => {
         const name = event.key.toUpperCase();
         if (pressedKeys[name] === undefined) pressedKeys[name] = 0;
         curPressKey = name;
       });
-      document.addEventListener("keyup", (event) => {
+      window.addEventListener("keyup", (event) => {
         delete pressedKeys[event.key.toUpperCase()];
         curPressKey = Object.keys(pressedKeys).pop() || null;
       });
@@ -117,6 +123,17 @@
             opcode: "realY",
             blockType: Scratch.BlockType.REPORTER,
             text: "real mouse y"
+          },
+          "---",
+          {
+            opcode: "velX",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "mouse velocity x"
+          },
+          {
+            opcode: "velY",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "mouse velocity y"
           },
           { blockType: Scratch.BlockType.LABEL, text: "Key Detection" },
           {
@@ -512,6 +529,8 @@
     mouseClick(args, util) { return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)]) }
     realX() { return mousePos[0] }
     realY() { return mousePos[1] }
+    velX() { return mousePos[2] }
+    velY() { return mousePos[3] }
 
     isKeyHit(args) { return this.keyHandler(Scratch.Cast.toString(args.KEY).replace(" ", ""), false) }
     whenKeyHit(args) { return this.keyHandler(Scratch.Cast.toString(args.KEY).replace(" ", ""), false) }
