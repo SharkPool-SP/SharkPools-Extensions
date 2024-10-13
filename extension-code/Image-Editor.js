@@ -3,7 +3,7 @@
 // Description: Create and Edit the Pixel Data of Images
 // By: SharkPool
 
-// Version V.1.1.0
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -16,13 +16,13 @@
   const runtime = vm.runtime;
   let imageBank = {};
 
-  const regeneratedReporters = ["SPimgEditor_pixelHex", "SPimgEditor_pixelIndex", "SPimgEditor_setPixel"];
-  if (Scratch.gui) Scratch.gui.getBlockly().then(ScratchBlocks => {
-    const originalCheck = ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter;
-    ScratchBlocks.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
+  const regenReporters = ["SPimgEditor_pixelHex", "SPimgEditor_pixelIndex", "SPimgEditor_setPixel"];
+  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+    const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = originalCheck(block);
       if (result) return true;
-      return block.isShadow() && regeneratedReporters.includes(block.type);
+      return block.isShadow() && regenReporters.includes(block.type);
     };
   });
 
@@ -273,7 +273,7 @@
       const { canvas, ctx } = this.createCanvasCtx(width, height);
       ctx.fillStyle = args.COLOR;
       ctx.fillRect(0, 0, width, height);
-      imageBank[args.NAME] = { data : canvas.toDataURL(), canvas, ctx, pixels : [] }
+      imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false }
     }
 
     makeImgImg(args) {
@@ -292,7 +292,7 @@
             const y = (Scratch.Cast.toNumber(args.y) * -1) - (height < 0 ? Math.abs(height) : 0);
             ctx.drawImage(img, x, y, Math.abs(width), Math.abs(height));
             ctx.restore();
-            imageBank[args.NAME] = { data : canvas.toDataURL(), canvas, ctx, pixels : [] };
+            imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
             resolve();
           } catch (e) {
             console.error(e);
@@ -319,7 +319,7 @@
           const yOffset = (height - storedImg.canvas.height) / 2;
           ctx.drawImage(storedImg.canvas, xOffset, yOffset);
         }
-        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels : [] };
+        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
       }
     }
 
@@ -331,16 +331,20 @@
         case "width": return canvas.width;
         case "height": return canvas.height;
         case "pixel count": return canvas.width * canvas.height;
-        default: return storedImg.data;
+        default: {
+          if (storedImg.needsRefresh) {
+            storedImg.data = this.pixels2Img(storedImg);
+            storedImg.needsRefresh = false;
+          }
+          return storedImg.data;
+        }
       }
     }
 
     imgExists(args) { return imageBank[args.NAME] !== undefined }
-
     allImgs() { return JSON.stringify(Object.keys(imageBank)) }
 
     deleteImg(args) { delete imageBank[args.NAME] }
-
     deleteAllImgs() { imageBank = {} }
 
     // Block Funcs (Editing)
@@ -369,7 +373,7 @@
     editLoop(args, util) {
       const storedImg = imageBank[args.NAME];
       if (storedImg === undefined) return "";
-      if (typeof util.stackFrame.loopCounter === "undefined") {
+      if (util.stackFrame.loopCounter === undefined) {
         storedImg.pixels = this.getPixelData(storedImg);
         util.stackFrame.loopCounter = storedImg.pixels.length;
       }
@@ -386,9 +390,7 @@
     onEditCall(args, util) { return util.thread.SPimgData?.name === args.NAME }
 
     pixelHex(args, util) { return util.thread.SPimgData?.hex || "" }
-
     pixelIndex(args, util) { return util.thread.SPimgData?.index + 1 || "" }
-
     setPixel(args, util) {
       const data = util.thread.SPimgData;
       if (data !== undefined) {
@@ -396,15 +398,13 @@
         util.thread.stopThisScript();
       }
     }
-
     setHex(args) {
       const storedImg = imageBank[args.NAME];
-      if (storedImg === undefined) return "";
+      if (storedImg === undefined) return;
       if (storedImg.pixels.length === 0) storedImg.pixels = this.getPixelData(storedImg);
       storedImg.pixels[Scratch.Cast.toNumber(args.INDEX) - 1] = args.COLOR;
-      if (args.REFRESH === undefined) storedImg.data = this.pixels2Img(storedImg);
+      if (args.REFRESH === undefined) storedImg.needsRefresh = true;
     }
-
     getHex(args) {
       const storedImg = imageBank[args.NAME];
       if (storedImg === undefined) return "";
@@ -430,7 +430,7 @@
         ctx.rotate(Scratch.Cast.toNumber(args.DIR) * (Math.PI / 180));
         ctx.drawImage(tempCanvas, -tempCanvas.width / 2, -tempCanvas.height / 2);
         ctx.restore();
-        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [] };
+        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
       }
     }
 
