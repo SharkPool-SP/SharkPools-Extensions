@@ -256,7 +256,7 @@
       const { canvas, ctx } = this.createCanvasCtx(width, height);
       const imageData = ctx.createImageData(width, height);
       for (let i = 0; i < storedImg.pixels.length; i++) {
-        const hex = storedImg.pixels[i];
+        const hex = storedImg.pixels[i] ?? "#000000";
         imageData.data[i * 4 + 0] = parseInt(hex.substring(1, 3), 16);
         imageData.data[i * 4 + 1] = parseInt(hex.substring(3, 5), 16);
         imageData.data[i * 4 + 2] = parseInt(hex.substring(5, 7), 16);
