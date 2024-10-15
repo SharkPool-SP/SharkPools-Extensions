@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.5
+// Version V.1.5.51
 
 (function (Scratch) {
   "use strict";
@@ -45,6 +45,9 @@
 
   let conditionStorage = {}, keybinds = {}, issueTimes = [], hats = { ...runtime._hats };
 
+  // capture all types of Errors
+  window.addEventListener("error", () => { issueTimes.push(Math.floor(Date.now() / 200) * 200) });
+
   runtime.on("PROJECT_STOP_ALL", () => { conditionStorage = {}; issueTimes = [] });
   runtime.on("PROJECT_START", () => { conditionStorage = {}; issueTimes = [] });
   runtime.on("KEY_PRESSED", key => {
@@ -66,8 +69,13 @@
     runtime.ioDevices.keyboard.postData({ key, isDown: down });
   }
 
-  // capture all types of Errors
-  window.addEventListener("error", () => { issueTimes.push(Math.floor(Date.now() / 200) * 200) });
+  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+    const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
+      if (originalCheck(block)) return true;
+      return block.isShadow() && regeneratedReporters.includes(block.type);
+    };
+  });
 
   // Override needed for "ifRunBlock"
   const ogRestartThread = runtime._restartThread;
@@ -92,14 +100,6 @@
     return ogRestartThread.call(this, thread);
   };
 
-  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-    const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
-    SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-      if (originalCheck(block)) return true;
-      return block.isShadow() && regeneratedReporters.includes(block.type);
-    };
-  });
-
   // Thank you to @FurryR for the help
   function getCompiler() {
     if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
@@ -112,36 +112,20 @@
     const { JSGenerator, ScriptTreeGenerator } = compiler;
     const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
     ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
-      if (block.opcode === "SPadvControl_breakLoop") {
-        if (check4CBlock(block.id, this.blocks)) return { kind: "SPadvControl.break" };
-        else return _ogIRdescendStack.call(this, block);
-      } else if (block.opcode === "SPadvControl_continueLoop") {
-        if (check4CBlock(block.id, this.blocks)) return { kind: "SPadvControl.continue" };
-        else return _ogIRdescendStack.call(this, block);
-      } else return _ogIRdescendStack.call(this, block);
+      if (block.opcode === "SPadvControl_breakLoop") return { kind: "SPadvControl.break" };
+      else if (block.opcode === "SPadvControl_continueLoop") return { kind: "SPadvControl.continue" };
+      else return _ogIRdescendStack.call(this, block);
     };
     const _ogJSdescendStack = JSGenerator.prototype.descendStackedBlock;
     JSGenerator.prototype.descendStackedBlock = function (node) {
-      if (node.kind === "SPadvControl.break") this.source += "break;\n";
-      else if (node.kind === "SPadvControl.continue") this.source += "continue;\n";
-      else return _ogJSdescendStack.call(this, node);
+      if (node.kind === "SPadvControl.break") {
+        if (!this.frames.find(frame => frame.isLoop)?.isLoop) return null;
+        this.source += "break;\n";
+      } else if (node.kind === "SPadvControl.continue") {
+        if (!this.frames.find(frame => frame.isLoop)?.isLoop) return null;
+        this.source += "continue;\n";
+      } else return _ogJSdescendStack.call(this, node);
     };
-  }
-  function check4CBlock(id, container) {
-    let newID = container.getBlock(id), con = true;
-    if (!newID) return false;
-    while (con) {
-      if (newID.parent !== null) {
-        newID = container.getBlock(newID.parent);
-        if (container.getBranch(newID.id) !== null) {
-          newID = true; con = false;
-        }
-      } else {
-        newID = false; con = false;
-        break;
-      }
-    }
-    return newID;
   }
 
   class SPadvControl {
@@ -596,39 +580,18 @@
       else return util.thread.blockContainer.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
     }
 
-    getLoopBlock(thread, id) {
-      let block = thread.blockContainer.getBlock(id);
-      if (!block || !block.parent) return;
-      while (block.parent) {
-        block = thread.blockContainer.getBlock(block.parent);
-        if (!block) return;
-        if (!block.inputs.SUBSTACK) continue;
-        const loopBlock = block.inputs.SUBSTACK.block;
-        if (this.isInLoop(thread, loopBlock, id)) {
-          if (thread.stackFrames.some(frame => frame.op.id === block.id && frame.isLoop)) return block;
-        }
+    getLoopBlock(thread) {
+      const stackFrames = thread.stackFrames, frameCount = stackFrames.length;
+      let loopBlock = null, stackIndex = -1;
+      for (let i = frameCount - 1; i >= 0; i--) {
+        if (i < 0) break;
+        if (!stackFrames[i].isLoop) continue;
+        loopBlock = stackFrames[i].op.id;
+        stackIndex = i;
+        break;
       }
-    }
-    isInLoop(thread, loopBlock, thisBlock) {
-      let curBlock = thread.blockContainer.getBlock(loopBlock);
-      if (!curBlock || !thisBlock) return false;
-      if (curBlock.id === thisBlock) return true;
-      while (curBlock.next !== null) {
-        if (curBlock.next === thisBlock) return true;
-        if (curBlock.inputs.SUBSTACK !== undefined) {
-          for (const [inp, obj] of Object.entries(curBlock.inputs)) {
-            if (inp.startsWith("SUBSTACK")) {
-              let innerBlock = thread.blockContainer.getBlock(obj.block);
-              while (innerBlock.next !== null) {
-                if (innerBlock.next === thisBlock) return true;
-                innerBlock = thread.blockContainer.getBlock(innerBlock.next);
-              }
-            }
-          }
-        }
-        curBlock = thread.blockContainer.getBlock(curBlock.next);
-      }
-      return false;
+      if (!loopBlock) return false;
+      return { block: loopBlock, index: stackIndex };
     }
 
     // Block Functions
@@ -1080,22 +1043,19 @@
     continueLoop(_, util) { this.blockLoop("continue", util) }
     breakLoop(_, util) { this.blockLoop("break", util) }
     blockLoop(b, util) {
-      let blockId = this.getThisBlock(util)?.id;
       const thread = util.thread;
       thread.isCompiled = false; // Failsafe
-      const cBlock = this.getLoopBlock(thread, blockId);
-      if (!cBlock) return;
-      const nextBlock = cBlock.next;
-      while (blockId !== cBlock.id) {
-        const block = util.target.blocks.getBlock(blockId);
-        if ((typeof block !== "undefined" && block.opcode === "procedures_call") || thread.peekStackFrame().isWaitingReporter) break;
-        thread.popStack();
-        blockId = thread.peekStack();
-        if (!blockId) break;
-      }
+      const frameData = this.getLoopBlock(thread);
+      if (!frameData) return;
+      const block = frameData.block;
+      const afterLoop = thread.blockContainer.getBlock(frameData.block).next;
       if (b === "break") {
+        while(thread.stack.at(-1) !== frameData.block) thread.popStack();
         thread.popStack();
-        if (nextBlock) thread.pushStack(nextBlock);
+        if (afterLoop) thread.pushStack(afterLoop);
+      } else {
+        while (thread.stack[0] && thread.stack.at(-1) !== block) thread.popStack();
+        thread.status = thread.constructor.STATUS_YIELD;
       }
     }
   }
