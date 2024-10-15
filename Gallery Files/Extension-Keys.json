@@ -91,6 +91,13 @@
       "status": "",
       "date": "Last Updated: 06/09/2024"
     },
+    "Particle-Engine": {
+      "credits": "Create Highly Customizable Particle Engines with No Clones. Made by SharkPool",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Engine.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new",
+      "date": "Last Updated: 10/15/2024"
+    },
     "Particle-Tools": {
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Tools.js",
