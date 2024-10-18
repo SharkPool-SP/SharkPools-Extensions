@@ -427,6 +427,13 @@
       "status": "update",
       "date": "Last Updated: 10/09/2024"
     },
+    "Unit-Convert": {
+      "credits": "Convert units of temperature, distance and others using this extension!",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/3494c09ddd85c624af2aedb4548e16e2e16a7e6d/extension-code/Unit-Converter.js",
+      "tags": ".all.utilities",
+      "status": "",
+      "date": "Released: 10/18/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
