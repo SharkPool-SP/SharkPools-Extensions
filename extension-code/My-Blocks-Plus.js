@@ -3,10 +3,10 @@
 // Description: Create Better Custom Blocks
 // By: SharkPool
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
-// By: 0znzw
+// By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 /* Update Plans
 - custom menu maker
@@ -115,7 +115,7 @@
     tempStore = structuredClone(storeGet(curProc)) || {}; // Reset
     blockEditor.SPmbpCST_store = tempStore;
 
-    attachInputBtns(row, blockEditor, isDark);
+    attachInputBtns(row, blockEditor, isDark, workspace);
     attachColors(row, isDark, blockEditor);
     attachCheckboxes(modal, blockEditor);
 
@@ -137,13 +137,13 @@
     });
   }
 
-  function attachInputBtns(row, editor, isDark) {
+  function attachInputBtns(row, editor, isDark, workspace) {
     // dropdown btn
     const dropBtn = row.childNodes[1].cloneNode(true);
     dropBtn.childNodes[0].src = dropdwnURI;
     dropBtn.childNodes[2].textContent = "dropdown";
     row.insertBefore(dropBtn, row.childNodes[2]);
-    dropBtn.addEventListener("click", () => openMenuSelector(editor, isDark));
+    dropBtn.addEventListener("click", () => openMenuSelector(editor, isDark, workspace));
 
     // dynamic btn
     const paths = { "number or text": "norm", "number": "num", "color": "col" };
@@ -297,7 +297,8 @@
   }
 
   // Menu Modal
-  function openMenuSelector(editor, isDark) {
+  function openMenuSelector(editor, isDark, ogWorkspace) {
+    const arrowIcon = isPM ? "static/blocks-media/dropdown-arrow" : "/static/blocks-media/default/dropdown-arrow";
     const workspace = ScratchBlocks.mainWorkspace;
     ScratchBlocks.Variables.createVariable(workspace, null, "list");
     let modal = document.querySelectorAll(`div[class="ReactModalPortal"]`);
@@ -323,9 +324,25 @@
 
     for (let i = 0; i < allBlocks.length; i++) {
       const dropItem = document.createElement("div");
-      dropItem.textContent = allBlocks[i]; dropItem.style.cursor = "pointer";
-      dropItem.style.width = "100%"; dropItem.style.height = "30px";
-      dropItem.style.padding = "8px";
+      const text = document.createElement("div");
+      const prev = document.createElement("div");
+      dropItem.append(prev, text);
+
+      dropItem.style.cursor = "pointer"; dropItem.style.padding = "8px";
+      dropItem.style.width = "100%"; dropItem.style.height = "max-content";
+      dropItem.style.display = "flex"; dropItem.style.flexDirection = "column";
+      dropItem.style.alignItems = "center"; dropItem.style.justifyContent = "center"; 
+      text.textContent = allBlocks[i];
+
+      const block = ogWorkspace.getBlockById(allBlocks[i]);
+      let prevTxt = block ? block.inputList[0].fieldRow[0].text_.substring(0, 17) : "";
+      if (prevTxt.length === 17) prevTxt += "...";
+      prev.outerHTML =  `
+        <div style="background: ${block ? block.colour_ : "#505050"}; border-radius: ${block ? 50 : 5}px; width: max-content; text-align: center; margin-bottom: 5px; padding: 5px 10px 5px 10px; font-weight: 500; border: solid 1px rgba(0,0,0,0.3)">
+          <span>${block ? prevTxt : "???"}</span><img style="margin-left: 5px;" src="${arrowIcon}.svg">
+        </div>
+      `;
+
       const bgColor = i % 2 === 0 ? "#aaa3" : "transparent";
       dropItem.style.backgroundColor = `var(--selected-color, ${bgColor})`;
       if (i === 0) dropItem.style.setProperty("--selected-color", "#aaaa");
@@ -334,7 +351,7 @@
       dropItem.addEventListener("click", () => {
         Array.from(dropDiv.children).forEach(c => { c.style.removeProperty("--selected-color"); });
         dropItem.style.setProperty("--selected-color", "#aaaa");
-        selectedMenu = dropItem.textContent;
+        selectedMenu = text.textContent;
       });
     }
     body.insertBefore(dropDiv, body.lastChild);
@@ -500,7 +517,8 @@
         // ScratchBlocks ways of getting the next block won't work while the blocks are being created
         const actualNextBlock = this.getNextBlock() || vm?.editingTarget?.blocks?.getBlock(this.id)?.next || (domToBlockXml && domToBlockXml.querySelector("next"));
         const isReturner = isPM ? this.output_ : this.return_;
-        if (!store.isTerminal !== undefined && !isReturner && !actualNextBlock) this.setNextStatement(!store.isTerminal);
+        if (!store.isTerminal !== undefined && !isReturner && !actualNextBlock)
+          this.setNextStatement(!store.isTerminal, this.type === "procedures_prototype" ? true : undefined);
       } else {
         // The insertion marker should copy the terminal-ness of the source block,
         // otherwise Blockly will throw an error
@@ -846,6 +864,7 @@
       return {
         id: "SPmbpCST",
         name: "My Blocks+",
+        color1: "#FF6680",
         menuIconURI,
         blocks: [
           {
