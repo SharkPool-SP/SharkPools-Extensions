@@ -39,8 +39,8 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 09/07/2024"
+      "status": "update",
+      "date": "Last Updated: 10/26/2024"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
@@ -426,6 +426,13 @@
       "tags": ".all.utilities",
       "status": "",
       "date": "Last Updated: 10/09/2024"
+    },
+    "My-Blocks-Plus": {
+      "credits": "Create Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/My-Blocks-Plus.js",
+      "tags": ".all.utilities.expanded.category",
+      "status": "",
+      "date": "Released: 10/26/2024"
     },
     "Example": {
       "credits": "",
