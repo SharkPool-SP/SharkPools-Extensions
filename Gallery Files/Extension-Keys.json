@@ -95,8 +95,8 @@
       "credits": "Create Highly Customizable Particle Engines with No Clones. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 10/15/2024"
+      "status": "update",
+      "date": "Last Updated: 10/30/2024"
     },
     "Particle-Tools": {
       "credits": "Tools that make creating particle systems easy! Made by SharkPool",
@@ -208,7 +208,7 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
       "status": "update",
-      "date": "Last Updated: 10/29/2024"
+      "date": "Last Updated: 10/30/2024"
     },
     "Pause-Utilities": {
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
@@ -469,7 +469,7 @@
   },
   "site": {
     "is up": true,
-    "reset": false,
+    "reset": true,
     "down url": "https://sharkpool-sp.github.io/SharkPools-Extensions/pages/down.html"
   }
 }
