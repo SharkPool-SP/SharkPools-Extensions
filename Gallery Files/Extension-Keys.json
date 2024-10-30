@@ -95,7 +95,7 @@
       "credits": "Create Highly Customizable Particle Engines with No Clones. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
-      "status": "new",
+      "status": "",
       "date": "Last Updated: 10/15/2024"
     },
     "Particle-Tools": {
@@ -179,7 +179,7 @@
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/19/2024"
     },
     "Gamepad-Expanded": {
@@ -207,8 +207,8 @@
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 02/02/2024"
+      "status": "update",
+      "date": "Last Updated: 10/29/2024"
     },
     "Pause-Utilities": {
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
@@ -291,7 +291,7 @@
       "credits": "Color Utilities and Color Conversions. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Color-Master.js",
       "tags": ".all.expanded.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/19/2024"
     },
     "QR-Codes": {
