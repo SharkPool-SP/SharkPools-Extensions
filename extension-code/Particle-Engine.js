@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.1
+// Version V.1.0.11
 
 (function (Scratch) {
   "use strict";
@@ -225,7 +225,7 @@
       const { texture, pos, opts } = emitter;
       emitter.frameCnt++;
       if (!texture) continue;
-      const delta = interpolate ? deltaTime * fps : 1;
+      const delta = interpolate ? deltaTime * fps: 1;
       const maxP = Math.round(rng(opts.maxP.val, opts.maxP.inf));
       const emit = (maxP + 1) - Math.round(rng(opts.emission.val, opts.emission.inf));
       const rPos = [pos[0] - (texture.width / 4), pos[1] + (texture.height / 4)];
@@ -326,7 +326,7 @@
   });
   runtime.on("AFTER_EXECUTE", () => {
     if (tabBlured || runtime.ioDevices.clock._paused) return;
-    const fps = runtime.frameLoop.framerate;
+    const fps = +(1 / deltaTime).toFixed(2);
     const frameTime = 1000 / fps;
     const engines = Object.values(allEngines);
     for (let i = 0; i < engines.length; i++) {
@@ -341,7 +341,7 @@
         }
         if (remainingTime > 0) updateEngine(engine, fps);
       } else {
-        updateEngine(engine, fps);
+        updateEngine(engine, 1);
       }
       engine.skin.setContent(engine.canvas);
     }
