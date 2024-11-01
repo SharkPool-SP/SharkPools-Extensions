@@ -3,7 +3,7 @@
 // Description: Create and Edit the Pixel Data of Images
 // By: SharkPool
 
-// Version V.1.1.1
+// Version V.1.1.2
 
 (function (Scratch) {
   "use strict";
@@ -279,14 +279,18 @@
     makeImgImg(args) {
       return new Promise((resolve) => {
         if (!args.IMAGE) return resolve();
-        const width = Scratch.Cast.toNumber(args.W);
-        const height = Scratch.Cast.toNumber(args.H);
+        let width = Scratch.Cast.toNumber(args.W);
+        let height = Scratch.Cast.toNumber(args.H);
         const { canvas, ctx } = this.createCanvasCtx(Math.abs(width), Math.abs(height));
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
           try {
             ctx.save();
+            if (width === 0 || height === 0) {
+              width = img.width; height = img.height;
+              canvas.width = width; canvas.height = height;
+            }
             ctx.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
             const x = Scratch.Cast.toNumber(args.x) - (width < 0 ? Math.abs(width) : 0);
             const y = (Scratch.Cast.toNumber(args.y) * -1) - (height < 0 ? Math.abs(height) : 0);
@@ -295,11 +299,11 @@
             imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
             resolve();
           } catch (e) {
-            console.error(e);
+            console.warn(e);
             resolve();
           }
         };
-        img.onerror = (e) => { console.error(e); resolve() };
+        img.onerror = (e) => { console.warn(e); resolve() };
         img.src = args.IMAGE;
       });
     }
@@ -451,11 +455,11 @@
             storedImg.data = storedImg.canvas.toDataURL();
             resolve();
           } catch (e) {
-            console.error(e);
+            console.warn(e);
             resolve();
           }
         };
-        img.onerror = (e) => { console.error(e); resolve() };
+        img.onerror = (e) => { console.warn(e); resolve() };
         img.src = args.IMAGE;
       });
     }
