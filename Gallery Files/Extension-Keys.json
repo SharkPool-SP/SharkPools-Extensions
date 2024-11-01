@@ -116,8 +116,8 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 10/01/2024"
+      "status": "update",
+      "date": "Last Updated: 11/01/2024"
     },
     "Image-Editor": {
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
