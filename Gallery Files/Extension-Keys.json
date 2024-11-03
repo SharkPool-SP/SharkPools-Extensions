@@ -81,8 +81,8 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 10/13/2024"
+      "status": "update",
+      "date": "Last Updated: 11/02/2024"
     },
     "Camera-Sensing-Plus": {
       "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
