@@ -396,8 +396,8 @@
       "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/DOM-Selector.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 07/01/2024"
+      "status": "update",
+      "date": "Last Updated: 11/02/2024"
     },
     "SVG-Spritesheets": {
       "credits": "Create and Export SVG Spritesheets. Made by SharkPool",
