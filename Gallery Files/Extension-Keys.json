@@ -434,6 +434,13 @@
       "status": "new",
       "date": "Released: 10/26/2024"
     },
+    "Turbo-Skins": {
+      "credits": "Improved Skins Extension. Made by SharkPool, inspired by Lily",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Turbo-Skins.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new",
+      "date": "Released: 11/02/2024"
+    },
     "Example": {
       "credits": "",
       "url": "",
