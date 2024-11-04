@@ -5,7 +5,7 @@
 // Licence: MIT
 // Inspired by Lily's Skins Extension!
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -141,6 +141,11 @@
             arguments: {
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "skin-1" },
             },
+          },
+          {
+            opcode: "allSkinNames",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "all skins"
           },
           "---",
           {
@@ -278,6 +283,10 @@
       if (skin === undefined) return false;
       if (skin[skinTag].type === "svg") return skin._svgImageLoaded;
       else return true;
+    }
+
+    allSkinNames() {
+      return JSON.stringify(Object.keys(allSkins));
     }
 
     setSkin(args, util) {
