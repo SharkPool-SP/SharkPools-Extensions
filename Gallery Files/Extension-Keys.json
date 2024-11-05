@@ -39,7 +39,7 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/26/2024"
     },
     "Tune-Shark": {
@@ -117,14 +117,14 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 11/01/2024"
+      "date": "Last Updated: 11/05/2024"
     },
     "Image-Editor": {
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js",
       "tags": ".all.utilities",
       "status": "update",
-      "date": "Last Updated: 11/01/2024"
+      "date": "Last Updated: 11/05/2024"
     },
     "Pixel-Utilities": {
       "credits": "Some Utility Blocks that Roltycore 2's Developer made for some reason. Made by LittleBlueGamer",
@@ -228,7 +228,7 @@
       "credits": "Powerful New Message Blocks that work with Vanilla Messages! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Messages-Plus.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/29/2024"
     },
     "Advanced-Messages": {
