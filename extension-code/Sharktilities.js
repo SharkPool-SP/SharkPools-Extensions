@@ -3,7 +3,7 @@
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
 
-// Version V.3.4.12
+// Version V.3.4.13
 
 (function (Scratch) {
   "use strict";
@@ -14,8 +14,8 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  var lastValues = {};
   const regeneratedReporters = ["SharkPoolSharktilities_changeV"];
+  var lastValues = {};
 
   function rgbToHsl(e,n,t){e/=255,n/=255,t/=255;let r=Math.max(e,n,t),o=Math.min(e,n,t),l=r-o,u,$,_=(r+o)/2;if(0===l)u=$=0;else{switch($=_>.5?l/(2-r-o):l/(r+o),r){case e:u=(n-t)/l+(n<t?6:0);break;case n:u=(t-e)/l+2;break;case t:u=(e-n)/l+4}u/=6}return[u,$,_]}
   function hslToRgb(e,n,t){let r,o,l;if(0===n)r=o=l=t;else{let u=(e,n,t)=>(t<0&&(t+=1),t>1&&(t-=1),t<1/6)?e+(n-e)*6*t:t<.5?n:t<2/3?e+(n-e)*(2/3-t)*6:e,$=t<.5?t*(1+n):t+n-t*n,_=2*t-$;r=u(_,$,e+1/3),o=u(_,$,e),l=u(_,$,e-1/3)}return[Math.round(255*r),Math.round(255*o),Math.round(255*l)]}
@@ -407,7 +407,7 @@
     whenChanged(args, util) {
       if (typeof util.thread.sharktilsPars === "undefined") util.thread.stackFrames[0].sharktilsPars = {};
       const blockId = util.thread.peekStack();
-      const input = Scratch.Cast.toString(args.INPUT);
+      const input = args.INPUT;
       if (!lastValues[blockId]) lastValues[blockId] = input;
       if (lastValues[blockId] !== input) {
         util.thread.stackFrames[0].sharktilsPars.diff = lastValues[blockId];
@@ -425,14 +425,10 @@
     }
 
     isChanged(args, util) {
-      const blockId = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
-      const input = Scratch.Cast.toString(args.INPUT);
-      if (!lastValues[blockId]) lastValues[blockId] = input;
-      if (lastValues[blockId] !== input) {
-        lastValues[blockId] = input;
-        return true;
-      }
-      return false;
+      const input = args.INPUT;
+      const con = util.thread.stackFrames[0].oldVal !== input;
+      util.thread.stackFrames[0].oldVal = input;
+      return con;
     }
 
     randomSingleInteger() { return Math.random() < 0.5 ? -1 : 1 }
