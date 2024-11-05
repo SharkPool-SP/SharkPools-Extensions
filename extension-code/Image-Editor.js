@@ -2,8 +2,9 @@
 // ID: SPimgEditor
 // Description: Create and Edit the Pixel Data of Images
 // By: SharkPool
+// License: MIT
 
-// Version V.1.1.2
+// Version V.1.1.21
 
 (function (Scratch) {
   "use strict";
@@ -314,9 +315,13 @@
         const width = Scratch.Cast.toNumber(args.W);
         const height = Scratch.Cast.toNumber(args.H);
         const storedImg = imageBank[args.NAME];
-        const { canvas, ctx } = this.createCanvasCtx(width, height);
-        if (args.TYPE === "stretch") ctx.drawImage(storedImg.canvas, 0, 0, width, height);
-        else {
+        const { canvas, ctx } = this.createCanvasCtx(Math.abs(width), Math.abs(height));
+        if (args.TYPE === "stretch") {
+          ctx.save();
+          ctx.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
+          ctx.drawImage(storedImg.canvas, width < 0 ? -Math.abs(width) : 0, height < 0 ? -Math.abs(height) : 0, Math.abs(width), Math.abs(height));
+          ctx.restore();
+        } else {
           ctx.fillStyle = args.COLOR;
           ctx.fillRect(0, 0, width, height);
           const xOffset = (width - storedImg.canvas.width) / 2;
