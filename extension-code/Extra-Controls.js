@@ -3,7 +3,7 @@
 // Description: New Advanced Control Blocks
 // By: SharkPool
 
-// Version V.1.5.51
+// Version V.1.6.0
 
 (function (Scratch) {
   "use strict";
@@ -43,7 +43,8 @@
     { text: "7", value: "7" }, { text: "8", value: "8" }, { text: "9", value: "9" }
   ];
 
-  let conditionStorage = {}, keybinds = {}, issueTimes = [], hats = { ...runtime._hats };
+  let conditionStorage = {}, keybinds = {}, issueTimes = [];
+  let registerdCalls = {}, hats = { ...runtime._hats };
 
   // capture all types of Errors
   window.addEventListener("error", () => { issueTimes.push(Math.floor(Date.now() / 200) * 200) });
@@ -98,6 +99,17 @@
       }
     }
     return ogRestartThread.call(this, thread);
+  };
+
+  // override needed for "get from sprite" blocks
+  const ogVisReport = runtime.visualReport;
+  runtime.visualReport = function (blockId, value) {
+    if (registerdCalls[blockId]) {
+      registerdCalls[blockId](value);
+      delete registerdCalls[blockId];
+      return;
+    }
+    return ogVisReport.call(this, blockId, value);
   };
 
   // Thank you to @FurryR for the help
@@ -556,27 +568,75 @@
       return checkedObj;
     }
 
-    wait4Return(thread) {
-      return new Promise(resolve => {
-        const interval = setInterval(() => {
-          const reported = Cast.toString(thread.justReported);
-          if (reported !== "null") {
-            clearInterval(interval);
-            resolve(reported);
-          }
-        }, 0);
-      });
-    }
-
     pushThreadTarget(id, newT, oldT, stack) {
       const thread = runtime._pushThread(id, oldT, { stackClick: stack });
       thread.target = newT; thread.ogTarget = oldT;
       if (runtime.compilerOptions.enabled) thread.tryCompile();
+      else {
+        // patch this function for the thread
+        thread.goToNextBlock = () => {
+          thread.reuseStackForNextBlock(oldT.blocks.getNextBlock(thread.peekStack()));
+        }
+      }
       return thread;
     }
 
+    pushThread(id, util, opts) {
+      const ogTarget = util.thread.ogTarget;
+      const target = ogTarget ? ogTarget : util.target;
+      const thread = runtime._pushThread(id, target, opts);
+      if (ogTarget) {
+        thread.target = util.target;
+        thread.ogTarget = target;
+      }
+      if (runtime.compilerOptions.enabled) thread.tryCompile();
+      else {
+        // patch this function for the thread
+        thread.goToNextBlock = () => {
+          thread.reuseStackForNextBlock(target.blocks.getNextBlock(thread.peekStack()));
+        }
+      }
+      return thread;
+    }
+
+    async genFakeCode(block, util, newTarget) {
+      const container = util.thread.blockContainer;
+      const op = block?.opcode;
+      const code = runtime.getOpcodeFunction(op);
+      // TODO try to fix bad functions with penguinmod blocks that are compiler-only
+      if (op === "procedures_call" || !code) {
+        if (op) {
+          this.pushThreadTarget(block.id, newTarget, util.ogTarget ?? util.target, true);
+          return new Promise((resolve) => {
+            registerdCalls[block.id] = (value) => { resolve(value) };
+          });
+        }
+        return "";
+      }
+      const args = {};
+      args.mutation = block?.mutation;
+      const fields = Object.entries(block.fields);
+      for (var i = 0; i < fields.length; i++) {
+        const field = fields[i];
+        args[field[0]] = field[1].value;
+      }
+      const inputs = Object.entries(block.inputs);
+      for (var i = 0; i < inputs.length; i++) {
+        const input = inputs[i];
+        const item = input[1];
+        let value = "";
+        if (item.block !== item.shadow) value = await this.genFakeCode(container.getBlock(item.block), util, util.target);
+        else {
+          const shadowFields = container.getBlock(item.shadow)?.fields;
+          if (shadowFields) value = Object.values(shadowFields)[0].value;
+        }
+        args[input[0]] = value;
+      }
+      return await code(args, { ...util, target: newTarget }, {});
+    }
+
     getThisBlock(util, branch, optBranch) {
-      if (branch) return util.thread.target.blocks.getBranch(util.thread.peekStack(), optBranch ? optBranch : 1);
+      if (branch) return util.thread.blockContainer.getBranch(util.thread.peekStack(), optBranch ? optBranch : 1);
       else return util.thread.blockContainer.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id);
     }
 
@@ -628,7 +688,7 @@
       const thisThread = util.thread.topBlock;
       runtime.emit("PROJECT_START_BEFORE_RESET");
       runtime.threads.filter(thread => thread.topBlock !== thisThread).forEach(thread => thread.stopThisScript());
-      // green flag behaviour
+
       runtime.ext_scratch3_sound.stopAllSounds();
       runtime.emit("PROJECT_START");
       runtime.updateCurrentMSecs();
@@ -646,28 +706,27 @@
     }
 
     loopInd(_, util) {
-      const ID = this.getThisBlock(util).id;
+      const ID = this.getThisBlock(util)?.id;
       if (typeof util.thread.SPloopInd === "undefined" || util.thread.SPloopInd.ID !== ID) util.thread.SPloopInd = { ID, ind: 0 };
       util.thread.SPloopInd.ind++;
       return util.thread.SPloopInd.ind;
     }
 
     repeatForUntil(args, util) {
-      const condition = Cast.toBoolean(args.CON);
       if (typeof util.stackFrame.loopCounter === "undefined") util.stackFrame.loopCounter = Math.round(Cast.toNumber(args.NUM));
       util.stackFrame.loopCounter--;
-      if (!condition && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
+      if (!Cast.toBoolean(args.CON) && util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
     }
 
     repeatSecUntil(args, util) {
-      const condition = Cast.toBoolean(args.CON);
-      if (condition) return; // Dont run once
+      const con = Cast.toBoolean(args.CON);
+      if (con) return; // Dont run once
       if (util.stackTimerNeedsInit()) {
         args.NUM = Math.max(0, 1000 * args.NUM);
         util.startStackTimer(args.NUM);
         runtime.requestRedraw();
         util.startBranch(1, true);
-      } else if (!util.stackTimerFinished() && !condition) { util.startBranch(1, true) }
+      } else if (!util.stackTimerFinished() && !con) { util.startBranch(1, true) }
     }
 
     spayedCondition(args, util) {
@@ -688,10 +747,10 @@
       const branches = [this.getThisBlock(util, true, 1), this.getThisBlock(util, true, 2)];
       if (branches[0] && branches[1]) {
         const { target, thread } = util;
-        const thread1 = runtime._pushThread(branches[0], target, { stackClick: false });
+        const thread1 = this.pushThread(branches[0], util, { stackClick: false });
         thread1.status = 5;
         this.addMissKeys(thread, thread1);
-        const thread2 = runtime._pushThread(branches[1], target, { stackClick: false });
+        const thread2 = this.pushThread(branches[1], util, { stackClick: false });
         this.addMissKeys(thread, thread2);
         thread1.status = 0;
       }
@@ -702,7 +761,7 @@
         if (Cast.toBoolean(args.CON)) {
           const branch = this.getThisBlock(util, true, 0);
           if (branch) {
-            let thread = runtime._pushThread(branch, util.target);
+            let thread = this.pushThread(branch, util, { stackClick: false });
             this.addMissKeys(util.thread, thread);
             util.stackFrame.whileThread = thread;
             util.startBranch(2, true);
@@ -714,48 +773,54 @@
       }
     }
 
+    spayedCondition(args, util) {
+      if (typeof util.stackFrame.index === "undefined") util.stackFrame.index = true;
+      if (!Cast.toBoolean(args.CON1) && util.stackFrame.index) return;
+      else {
+        if (!Cast.toBoolean(args.CON2)) {
+          util.stackFrame.index = false;
+          util.startBranch(1, true);
+        } else {
+          util.stackFrame.index = true;
+          return;
+        }
+      }
+    }
+
     async runType(args, util) {
+      if (args.TYPE === "forward") {
+        util.startBranch(1, false);
+        return;
+      }
       const branch = this.getThisBlock(util, true, 1);
       if (branch) {
-        if (args.TYPE === "forward") runtime._pushThread(branch, util.target);
-        else if (args.TYPE === "reversed" || args.TYPE === "randomized") {
-          const container = util.target.blocks;
-          let blockOrder = [], ID = branch;
-          while (ID !== null) {
-            blockOrder.push(ID);
-            ID = container.getBlock(ID).next;
-          }
-          if (args.TYPE === "reversed") blockOrder = blockOrder.reverse();
-          else blockOrder = blockOrder.sort(() => Math.random() - 0.5);
-          for (let i = 0; i < blockOrder.length; i++) {
-            ID = blockOrder[i];
-            let blockInfo = container.getBlock(ID);
-            let oldInfo = [blockInfo.parent, blockInfo.next];
-            blockInfo.parent = null; blockInfo.next = null;
-            let thread = runtime._pushThread(ID, util.target, {stackClick: true});
-            thread.stack = [];
-            thread.pushStack(ID);
-            if (runtime.compilerOptions.enabled) thread.tryCompile();
-            await new Promise(resolve => {
-              const interval = setInterval(() => {
-                if (!runtime.isActiveThread(thread)) {
-                  clearInterval(interval);
-                  resolve();
-                }
-              }, 1);
-            });
-            blockInfo.parent = oldInfo[0]; blockInfo.next = oldInfo[1];
-          }
-        } else {
-          const thread = runtime._pushThread(branch, util.target);
+        const container = util.thread.blockContainer;
+        let stack = [], block = branch;
+        while (block !== null) {
+          stack.push(block);
+          block = container.getBlock(block).next;
+        }
+        if (args.TYPE === "reversed") stack = stack.reverse();
+        else if (args.TYPE === "randomized") stack = stack.sort(() => Math.random() - 0.5);
+        else stack = [...stack, ...stack.reverse()];
+        for (let i = 0; i < stack.length; i++) {
+          block = stack[i];
+          let blockInfo = container.getBlock(block);
+          let oldInfo = [blockInfo.parent, blockInfo.next];
+          blockInfo.parent = null; blockInfo.next = null;
+          let thread = this.pushThread(block, util, { stackClick: false });
+          thread.stack = [];
+          thread.pushStack(block);
+          if (runtime.compilerOptions.enabled) thread.tryCompile();
           await new Promise(resolve => {
-            const checkThread = () => {
-              if (!runtime.isActiveThread(thread)) resolve();
-              else setTimeout(checkThread, 1);
-            };
-            checkThread();
+            const interval = setInterval(() => {
+              if (!runtime.isActiveThread(thread)) {
+                clearInterval(interval);
+                resolve();
+              }
+            }, 0);
           });
-          await this.runType({ ...args, TYPE: "reversed" }, util);
+          blockInfo.parent = oldInfo[0]; blockInfo.next = oldInfo[1];
         }
       }
     }
@@ -763,7 +828,7 @@
     newThreadAdv(args, util) {
       const branch = this.getThisBlock(util, true, 1);
       if (branch) {
-        const thread = runtime._pushThread(branch, util.target);
+        const thread = this.pushThread(branch, util, { stackClick: false });
         this.addMissKeys(util.thread, thread);
         if (thread.SPadvCtrl === undefined) thread.stackFrames[0].SPadvCtrl = Cast.toString(args.ARGS);
       }
@@ -829,7 +894,7 @@
       } else {
         const func = util.thread[`SPfunction-${args.NAME}`];
         if (func !== undefined) {
-          const thread = runtime._pushThread(func, util.target);
+          const thread = this.pushThread(func, util, { stackClick: false });
           this.addMissKeys(util.thread, thread);
           if (thread.SPadvCtrl === undefined) thread.stackFrames[0].SPadvCtrl = Cast.toString(args.ARG);
           util.stackFrame.SPran = thread;
@@ -846,7 +911,7 @@
         const func = util.thread[`SPfunction-${args.NAME}`];
         if (func === undefined) return "";
         else {
-          const thread = runtime._pushThread(func, util.target);
+          const thread = this.pushThread(func, util, { stackClick: false });
           this.addMissKeys(util.thread, thread);
           if (thread.SPadvCtrl === undefined) thread.stackFrames[0].SPadvCtrl = Cast.toString(args.ARG);
           util.stackFrame.SPran = thread;
@@ -858,7 +923,7 @@
     async tryCatch(_, util) {
       const branch = this.getThisBlock(util, true, 1);
       if (branch) {
-        const thread = runtime._pushThread(branch, util.target, { stackClick: false });
+        const thread = this.pushThread(branch, util, { stackClick: false });
         this.addMissKeys(util.thread, thread);
         await new Promise(resolve => {
           const checkThread = () => {
@@ -877,15 +942,14 @@
     }
 
     async asyncCode(args, util) {
-      const target = util.target;
-      const contain = target.blocks;
+      const container = util.thread.blockContainer;
       let ID = this.getThisBlock(util, true, 1);
       if (ID) {
         while (ID !== null) {
-          let blockInfo = contain.getBlock(ID);
+          let blockInfo = container.getBlock(ID);
           let oldInfo = [blockInfo.parent, blockInfo.next];
           blockInfo.parent = null; blockInfo.next = null;
-          let thread = runtime._pushThread(ID, target, {stackClick: true});
+          let thread = this.pushThread(ID, util, { stackClick: true });
           this.addMissKeys(util.thread, thread);
           thread.stack = [];
           thread.pushStack(ID);
@@ -900,6 +964,7 @@
           });
           blockInfo.parent = oldInfo[0]; blockInfo.next = oldInfo[1];
           ID = blockInfo.next;
+          runtime.requestRedraw();
         }
       }
     }
@@ -914,13 +979,12 @@
             // Force Stop Custom Compiled Blocks
             if (thread.procedures !== null && Object.keys(thread.procedures).length > 0) try { thread.generator.return() } catch {}
           }
-          // Works better than stopThisScript() for Custom Blocks
-          thread.status = 4;
+          thread.status = 4; // Works better than stopThisScript() for Custom Blocks
         }
       } else {
         const branch = this.getThisBlock(util, true, 1);
         if (branch && con) {
-          util.stackFrame.SPifThread = runtime._pushThread(branch, util.target, { stackClick: false });
+          util.stackFrame.SPifThread = this.pushThread(branch, util, { stackClick: false });
           this.addMissKeys(util.thread, util.stackFrame.SPifThread);
           util.startBranch(2, true);
         }
@@ -973,16 +1037,11 @@
     }
 
     async getInSprite(args, util) {
-      if (util.thread.SPfetchVal !== undefined) {
-        util.thread.justReported = args.THING;
-        return;
-      }
       const block = this.getThisBlock(util, false);
       const newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
       if (!newTarget || !block?.inputs.THING) return "";
-      const thread = this.pushThreadTarget(block.id, newTarget, util.target, true);
-      thread.SPfetchVal = true;
-      return this.wait4Return(thread);
+      const thing = util.thread.blockContainer.getBlock(block.inputs.THING.block);
+      return await this.genFakeCode(thing, util, newTarget) ?? "";
     }
 
     asClone(args, util) {
@@ -990,8 +1049,7 @@
       const target = args.SPRITE === "_myself_" ? thisSprite : runtime.getSpriteTargetByName(args.SPRITE);
       if (!target) return;
       const clones = target.sprite.clones;
-      const branch = util.thread.ogTarget !== undefined ? util.thread.ogTarget.blocks.getBranch(util.thread.peekStack(), 1) :
-        this.getThisBlock(util, true, 1);
+      const branch = this.getThisBlock(util, true, 1);
       if (branch) {
         for (var i = 1; i < clones.length; i++) {
           if (clones[i]) {
@@ -1008,10 +1066,6 @@
     }
 
     async getInClone(args, util) {
-      if (util.thread.SPfetchVal !== undefined) {
-        util.thread.justReported = args.THING;
-        return;
-      }
       const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       const block = this.getThisBlock(util, false);
       if (!block || !target) return "";
@@ -1025,18 +1079,17 @@
       }
       newTarget = newTarget[Cast.toNumber(args.ID) - 1];
       if (!newTarget || !block?.inputs.THING) return "";
-      const thread = this.pushThreadTarget(block.id, newTarget, util.target, true);
-      thread.SPfetchVal = true;
-      return this.wait4Return(thread);
+      const thing = util.thread.blockContainer.getBlock(block.inputs.THING.block);
+      return await this.genFakeCode(thing, util, newTarget) ?? "";
     }
 
     deleteRun(args, util) {
       const target = util.target;
       if (target.isOriginal) return;
-      const branch = util.thread.target.blocks.getBranch(util.thread.peekStack(), 1);
+      const branch = this.getThisBlock(util, true, 1);
       runtime.disposeTarget(target);
       runtime.stopForTarget(target);
-      if (branch) this.addMissKeys(util.thread, runtime._pushThread(branch, target.sprite.clones[0]));
+      if (branch) this.addMissKeys(util.thread, this.pushThread(branch, { ...util, target: target.sprite.clones[0] }, { stackClick: false }));
     }
 
     // These blocks have compiled & interpreter versions:
