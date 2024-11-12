@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.2
+// Version V.1.0.3
 
 (function (Scratch) {
   "use strict";
@@ -409,6 +409,17 @@
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CONVERTS" }
             },
           },
+          "---",
+          {
+            opcode: "jsonMake",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "[TXT] split by [SPLIT] with delimiter [DELIM] to JSON",
+            arguments: {
+              TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "a:1,b:2,c:3" },
+              SPLIT: { type: Scratch.ArgumentType.STRING, defaultValue: "," },
+              DELIM: { type: Scratch.ArgumentType.STRING, defaultValue: ":" }
+            },
+          },
           {
             opcode: "arrMake",
             blockType: Scratch.BlockType.REPORTER,
@@ -774,6 +785,16 @@
         case "JSON": return Object.assign({}, this.tryParse(args.OBJ, 0));
         default: return JSON.stringify(this.tryParse(args.OBJ));
       }
+    }
+
+    jsonMake(args) {
+      const arr = Scratch.Cast.toString(args.TXT).split(args.SPLIT);
+      const obj = {};
+      arr.forEach((item) => {
+        const value = item.split(args.DELIM);
+        obj[value[0]] = value[1] ?? "";
+      });
+      return obj;
     }
 
     arrMake(args) {
