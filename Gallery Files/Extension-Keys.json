@@ -4,7 +4,7 @@
       "credits": "Various utility blocks for various operations made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sharktilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/04/2024"
     },
     "YouTube-Operations": {
@@ -81,7 +81,7 @@
       "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/02/2024"
     },
     "Camera-Sensing-Plus": {
@@ -109,7 +109,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/31/2024"
     },
     "Image-Effects": {
@@ -123,7 +123,7 @@
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Editor.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/05/2024"
     },
     "Pixel-Utilities": {
@@ -207,7 +207,7 @@
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/30/2024"
     },
     "Pause-Utilities": {
@@ -396,7 +396,7 @@
       "credits": "Read Elements and Create Events from the Website. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/DOM-Selector.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/02/2024"
     },
     "SVG-Spritesheets": {
@@ -424,21 +424,21 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/JSON-Array.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 10/09/2024"
+      "status": "update",
+      "date": "Last Updated: 11/11/2024"
     },
     "My-Blocks-Plus": {
       "credits": "Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/My-Blocks-Plus.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "new",
+      "status": "",
       "date": "Released: 10/26/2024"
     },
     "Turbo-Skins": {
       "credits": "Improved Skins Extension. Made by SharkPool, inspired by LilyMakesThings",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Turbo-Skins.js",
       "tags": ".all.utilities.expanded",
-      "status": "new",
+      "status": "",
       "date": "Released: 11/02/2024"
     },
     "Example": {
