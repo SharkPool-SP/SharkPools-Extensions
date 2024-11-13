@@ -29,29 +29,24 @@
   let commentStore = {};
 
   // utils
-  function colorDarken(hex, amt) {
-    const rgb2Hex = ([r, g, b]) => {
-      return ("#" + [r, g, b].map((part) => {
-        const hex = part.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      }).join(""));
-    };
-    const hex2Rgb = (h) => {
-      h = h.replace("#", "");
-      if (h.length === 3) h = h.split("").map(char => char + char).join("");
-      let bigint = parseInt(h, 16);
-      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-    };
-    return rgb2Hex(hex2Rgb(hex).map((part) => Math.round(part * (1 - amt))));
-  }
+  const xmlEscape = function (unsafe) {
+    return Scratch.Cast.toString(unsafe).replace(/[&'"]/g, c => {
+      switch (c) {
+        case "&": return "&amp;";
+        case "'": return "&apos;";
+        case "\"": return "&quot;";
+      }
+    });
+  };
 
   function txt2md(txt) {
     const mdCache = [];
     let md = "";
-    txt = Scratch.Cast.toString(txt).replace(/\n/g, "<br>");
+    txt = xmlEscape(Scratch.Cast.toString(txt));
     for (let i = 0; i < txt.length; i++) {
-      const code = `${txt[i]}${txt[i + 1]}`;
-      if (!markdownConsts[code]) md += txt[i];
+      const lett = txt[i];
+      const code = `${lett}${txt[i + 1]}`;
+      if (!markdownConsts[code]) md += lett === "<" ? "&lt;" : lett === ">" ? "&gt;" : lett;
       else {
         const form = markdownConsts[code];
         const cacheInd = mdCache.indexOf(form);
@@ -59,7 +54,7 @@
           if (form === "img" || form === "audio" || form === "video") {
             const testString = txt.substring(i + 2, txt.length);
             const ind = testString.indexOf(`${form[0]}>`);
-            if (ind === -1) md += `<${form[0]}`;
+            if (ind === -1) md += `&lt;${form[0]}`;
             else {
               md += `<${form} width="auto" height="auto" ${form !== "img" ? "controls" : ""} crossorigin="Anonymous" src="${testString.substring(0, ind)}">`;
               if (form !== "img") md += `</${form}>`;
@@ -85,7 +80,23 @@
         md = md.substring(0, lastInd) + oldForm + md.substring(lastInd + item.length, md.length); 
       }
     }
-    return md;
+    return md.replace(/\n/g, "<br>");
+  }
+
+  function colorDarken(hex, amt) {
+    const rgb2Hex = ([r, g, b]) => {
+      return ("#" + [r, g, b].map((part) => {
+        const hex = part.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      }).join(""));
+    };
+    const hex2Rgb = (h) => {
+      h = h.replace("#", "");
+      if (h.length === 3) h = h.split("").map(char => char + char).join("");
+      let bigint = parseInt(h, 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    };
+    return rgb2Hex(hex2Rgb(hex).map((part) => Math.round(part * (1 - amt))));
   }
 
   function createInputLabel(id, labelText, includeMargins, optStyles) {
