@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.0
+// Version V.2.0.01
 
 (function (Scratch) {
   "use strict";
@@ -478,7 +478,7 @@
         fixStorage(mainWorkspace); // Comment IDs are different upon project load
         updateAllComments();
       });
-	  });
+    });
   }
 
   function startListenerWorker() {
@@ -493,7 +493,7 @@
       }
     });
   }
-  startListenerWorker();
+  if (typeof scaffolding === 'undefined') startListenerWorker();
 
   class SPcomments {
     getInfo() {
