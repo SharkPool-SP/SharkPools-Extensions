@@ -95,7 +95,7 @@
       "credits": "Create Highly Customizable Particle Engines with No Clones. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 10/30/2024"
     },
     "Particle-Tools": {
@@ -116,7 +116,7 @@
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/05/2024"
     },
     "Image-Editor": {
@@ -179,8 +179,8 @@
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "",
-      "date": "Last Updated: 10/19/2024"
+      "status": "update",
+      "date": "Last Updated: 11/16/2024"
     },
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by DNin01 and Meehdrescher",
@@ -361,7 +361,7 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/06/2024"
     },
     "More-Operators": {
