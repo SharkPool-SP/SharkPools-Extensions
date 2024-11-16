@@ -256,8 +256,8 @@
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Last Updated: 12/20/2023"
+      "status": "update",
+      "date": "Last Updated: 11/16/2024"
     },
     "SoundCloud-API": {
       "credits": "Fetch Tracks, Artists, and Statistics from Soundcloud. Made by SharkPool",
