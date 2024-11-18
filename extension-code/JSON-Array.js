@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.3
+// Version V.1.0.31
 
 (function (Scratch) {
   "use strict";
@@ -693,7 +693,9 @@
     }
 
     arrGet(args) {
-      return this.tryParse(args.ARR, 1)[this.toArrInd(args.IND)] ?? "";
+      const arr = this.tryParse(args.ARR, 1);
+      const ind = this.toArrInd(args.IND);
+      return arr[ind > -1 ? ind : ind < 0 ? arr.length + ind + 1 : -1] ?? "";
     }
 
     arrSlice(args) {
