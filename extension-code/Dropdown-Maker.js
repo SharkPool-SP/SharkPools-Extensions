@@ -29,7 +29,7 @@
   let extRevmovable = false, extensionInstance; // created when the extension is "registered"
   let menusXML = `<label text="Try creating some menus!" />`;
   let customMenus = {
-    "new-menu-1": { items: [{ text: "foo", value: "bar" }], acceptReporters: true }
+    "new-menu-1": { items: [{ text: "foo", value: "bar" }], acceptReporters: false }
   };
 
   // Helper Funcs
@@ -214,7 +214,7 @@
     const add = makeButton(addSVG, "add");
     add.addEventListener("click", () => {
       const newN = patchName(`new-menu-${namesArray.length + 1}`, namesArray);
-      customMenus[newN] = { items: [{ text: "foo", value: "bar" }], acceptReporters: true };
+      customMenus[newN] = { items: [{ text: "foo", value: "bar" }], acceptReporters: false };
       namesArray.push(newN);
       listCon.insertBefore(makeMenuNameRow(newN, namesArray, isDark, listCon), add);
       patchDivColor(listCon, isDark);
@@ -459,7 +459,7 @@
             for (const innerKey in innerObject) {
               if (hasOwn(innerObject, innerKey) && innerKey !== "items") delete innerObject[innerKey];
             }
-            menus[key].acceptReporters = true;
+            menus[key].acceptReporters = false;
             const items = innerObject.items;
             if (!Array.isArray(items)) return alert(`"items" key in ${key} Menu Must be an Array`);
             if (items.length === 0) return alert(`"items" key in ${key} Menu Must have at Least 1 Item`);
