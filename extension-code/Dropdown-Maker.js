@@ -22,9 +22,11 @@
     "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYuNDE5IiBoZWlnaHQ9IjEwNi40MTkiIHZpZXdCb3g9IjAgMCAxMDYuNDE5IDEwNi40MTkiPjxwYXRoIGQ9Ik0yLjUgNTMuMjFDMi41IDI1LjIwNCAyNS4yMDQgMi41IDUzLjIxIDIuNXM1MC43MSAyMi43MDQgNTAuNzEgNTAuNzEtMjIuNzA0IDUwLjcxLTUwLjcxIDUwLjcxUzIuNSA4MS4yMTYgMi41IDUzLjIxeiIgZmlsbD0iIzBmYmQ4YyIgc3Ryb2tlPSIjMGE4MDVlIiBzdHJva2Utd2lkdGg9IjUiLz48cGF0aCBkPSJNMTkuOTIgNTMuMjFjMC0xOC4zODYgMTQuOTA0LTMzLjI5IDMzLjI5LTMzLjI5Uzg2LjUgMzQuODI0IDg2LjUgNTMuMjEgNzEuNTk2IDg2LjUgNTMuMjEgODYuNSAxOS45MiA3MS41OTYgMTkuOTIgNTMuMjF6IiBmaWxsPSIjMGM5OTcxIiBzdHJva2U9IiMwYTgwNWUiIHN0cm9rZS13aWR0aD0iNC41Ii8+PHBhdGggZD0iTTY3LjM0OCA0OS44MDJhNS4zNiA1LjM2IDAgMCAxLTEuNTggMy44MjdsLTguNzIgOC43MmE1LjQ1IDUuNDUgMCAwIDEtNy42NzYgMGwtOC42OTgtOC43MmE1LjM4IDUuMzggMCAwIDEtMS42MDItMy44MjcgNS41MiA1LjUyIDAgMCAxIDEuNTgtMy44NDljLjY0NS0uNTM0IDEuNjAxLTEuNTggMTIuNTctMS41OCAxMC45NjcgMCAxMS45OSAxLjAyNCAxMi41NDYgMS41OGE1LjQzIDUuNDMgMCAwIDEgMS41OCAzLjg1eiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGE4MDVlIiBzdHJva2Utd2lkdGg9IjcuNSIvPjxwYXRoIGQ9Ik02Ny4zNDggNDkuODAyYTUuMzYgNS4zNiAwIDAgMS0xLjU4IDMuODI3bC04LjcyIDguNzJhNS40NSA1LjQ1IDAgMCAxLTcuNjc2IDBsLTguNjk4LTguNzJhNS4zOCA1LjM4IDAgMCAxLTEuNjAyLTMuODI3IDUuNTIgNS41MiAwIDAgMSAxLjU4LTMuODQ5Yy42NDUtLjUzNCAxLjYwMS0xLjU4IDEyLjU3LTEuNTggMTAuOTY3IDAgMTEuOTkgMS4wMjQgMTIuNTQ2IDEuNThhNS40MyA1LjQzIDAgMCAxIDEuNTggMy44NSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==";
 
   const vm = Scratch.vm;
+  const runtime = vm.runtime;
   const isPM = Scratch.extensions.isPenguinMod;
-  let extensionInstance; // created when the extension is "registered"
+  const TEMP_BLOCK_OPCODE = "SP0zMenuMaker___SP0zMenuMaker_TEMP_BLOCK"; // opcode of the temporary block added to keep the extension in the project
 
+  let extRevmovable = false, extensionInstance; // created when the extension is "registered"
   let menusXML = `<label text="Try creating some menus!" />`;
   let customMenus = {
     "new-menu-1": { items: [{ text: "foo", value: "bar" }], acceptReporters: true }
@@ -242,6 +244,7 @@
   }
 
   function initMenuMaker() {
+    extRevmovable = false;
     const allBlocks = ScratchBlocks.mainWorkspace.blockDB_; // Custom Block Modal Overrides BlockDB
     ScratchBlocks.Procedures.createProcedureDefCallback_();
     const isDark = isPM ? document.body.getAttribute("theme") === "dark" : ReduxStore.getState().scratchGui.theme.theme.gui === "dark";
@@ -341,11 +344,35 @@
   class SP0zMenuMaker {
     constructor() {
       const self = this; // To avoid slow writes every time a menu is changed
-      const oldToJSON = vm.toJSON;
-      vm.toJSON = function(...args) {
+      const oldToJSON = vm.constructor.prototype.toJSON;
+      vm.constructor.prototype.toJSON = function (...args) {
+        if (extRevmovable) return oldToJSON.apply(this, args);
         if (!isPM) vm.runtime.extensionStorage.SP0zMenuMaker = self.serialize().SP0zMenuMaker;
-        return oldToJSON.apply(this, args);
+
+        // Make the extension stay by adding a dummy block
+        const blocks = runtime.targets[0].blocks;
+        blocks._blocks[TEMP_BLOCK_OPCODE] = {
+          opcode: TEMP_BLOCK_OPCODE, id: TEMP_BLOCK_OPCODE, fields: {},
+          next: null, parent: null, shadow: false, toLevel: true,
+          x: undefined, y: undefined
+        }
+        const jsonStr = oldToJSON.apply(this, args);
+        // Block IDs may have been compressed at this point
+        const tempBlockId = Object.values(blocks._blocks).find(o => o.opcode === TEMP_BLOCK_OPCODE)?.id;
+        if (tempBlockId) delete blocks._blocks[tempBlockId];
+        return jsonStr;
       };
+
+      const oldinstallTargets = vm.installTargets;
+      vm.installTargets = function (...args) {
+        // Remove the dummy block
+        if (args[0] && args[0][0]) {
+          const tempBlockId = Object.values(args[0][0].blocks._blocks).find(o => o.opcode === TEMP_BLOCK_OPCODE)?.id;
+          if (tempBlockId) delete args[0][0].blocks._blocks[tempBlockId];
+        }
+        return oldinstallTargets.apply(this, args);
+      };
+
       // Load the menus
       this.refreshStorage();
       vm.runtime.on("PROJECT_LOADED", () => {
@@ -357,6 +384,7 @@
         vm.once("BEFORE_EXECUTE", () => vm.refreshWorkspace());
     	});
     }
+
     refreshStorage() { // TurboWarp support
       if (!isPM) this.deserialize(vm.runtime.extensionStorage);
     }
@@ -375,6 +403,11 @@
             func: "makeMenu",
             blockType: Scratch.BlockType.BUTTON,
             text: "Open Menu Editor"
+          },
+          {
+            func: "removeExt",
+            blockType: Scratch.BlockType.BUTTON,
+            text: "Remove this Extension"
           },
           {
             opcode: "importMenus",
@@ -397,6 +430,23 @@
     }
 
     makeMenu() { initMenuMaker() }
+
+    removeExt() {
+      extRevmovable = true;
+      const deleteBlock = (target, blockId) => {
+        if (target === vm.editingTarget && Scratch.gui) Scratch.gui.getBlockly().then(SB => SB.getMainWorkspace().getBlockById(blockId)?.dispose(true, false));
+        else target.blocks.deleteBlock(blockId);
+      };
+      customMenus = {};
+      menusXML = `<label text="Try creating some menus!" />`;
+      for (const target of runtime.targets) {
+        for (const block of Object.values(target.blocks._blocks)) {
+          if (block.opcode.startsWith("SP0zMenuMaker_")) deleteBlock(target, block.id);
+        }
+      }
+      vm.extensionManager.refreshBlocks();
+      alert("Save and reload the project for the extension to fully be removed.");
+    }
 
     importMenus(args) {
       try {
