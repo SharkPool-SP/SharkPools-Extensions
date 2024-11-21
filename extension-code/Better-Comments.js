@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.01
+// Version V.2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -24,6 +24,7 @@
   const isPM = Scratch.extensions.isPenguinMod;
   const markdownConsts = {
     "**": "b", "*/": "i", "~~": "s", "#1": "h1", "#2": "h2",
+    "@c": `span style="color: ---"`, "@h": `span style="background-color: ---"`, "@f": `span style="font-family: ---"`,
     "<i": "img", "<a": "audio", "<v": "video",
   };
   let commentStore = {};
@@ -51,7 +52,18 @@
         const form = markdownConsts[code];
         const cacheInd = mdCache.indexOf(form);
         if (cacheInd === -1) {
-          if (form === "img" || form === "audio" || form === "video") {
+          if (code === "@c" || code === "@h" || code === "@f") {
+            const testString = txt.substring(i + 2, txt.length);
+            const ind = testString.indexOf(":");
+            if (testString.indexOf(code) > -1 && ind) {
+              const color = testString.substring(0, ind);
+              md += `<${form.replace("---", color)}>`;
+              mdCache.push(form);
+              i += ind + 1;
+            } else {
+              md += code;
+            }
+          } else if (form === "img" || form === "audio" || form === "video") {
             const testString = txt.substring(i + 2, txt.length);
             const ind = testString.indexOf(`${form[0]}>`);
             if (ind === -1) md += `&lt;${form[0]}`;
@@ -296,7 +308,7 @@
       svg.setAttribute("opacity", opacity / 100);
       commentStore[ID].opacity = opacity;
       if (!isPM) runtime.extensionStorage["SPcomments"] = { storage: commentStore };
-      convert2Md(comment, txt2md(comment.getText()));
+      convert2Md(comment, comment.getText());
     }
   }
 
@@ -318,7 +330,7 @@
         textAlign: values.alignment, fontSize, txtColor: values.txtColor
       };
       if (isPM) runtime.extensionStorage["SPcomments"] = { storage: commentStore };
-      convert2Md(comment, txt2md(comment.getText()));
+      convert2Md(comment, comment.getText());
     }
   }
 
@@ -388,7 +400,7 @@
     txt.style.fontSize = `${data.fontSize || 16}px`;
     txt.style.color = data.txtColor;
 
-    convert2Md(comment, txt2md(comment.getText()));
+    convert2Md(comment, comment.getText());
   }
 
   function convert2Md(comment, txt) {
@@ -493,7 +505,7 @@
       }
     });
   }
-  if (typeof scaffolding === 'undefined') startListenerWorker();
+  if (typeof scaffolding === "undefined") startListenerWorker();
 
   class SPcomments {
     getInfo() {
@@ -518,8 +530,11 @@
 
     tutorial() {
       alert([
-        "Bold Text → **text**\n","Italic Text → */text*/\n","Strike Text → ~~text~~\n", "Header 1 Text → #1text#1\n",
-        "Header 2 Text → #2text#2\n", "Image → <i url i>\n", "Audio → <a url a>\n", "Video → <v url v>"
+        "Can be Inlined:\n",
+        "Bold Text → **text**\n","Italic Text → */text*/\n","Strike Text → ~~text~~\n","Header 1 Text → #1text#1\n","Header 2 Text → #2text#2\n",
+        "\nCannot be Inlined:\n",
+        "Color → @c #ff0000: text@c\n","Highlight → @h #00ff00: text@h\n","Font → @f name: text@f\n",
+        "Image → <i url i>\n", "Audio → <a url a>\n", "Video → <v url v>"
       ].join(""));
     }
 
