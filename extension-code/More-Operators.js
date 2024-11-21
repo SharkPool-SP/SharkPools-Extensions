@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.2.01
+// Version V.1.2.1
 
 (function (Scratch) {
   "use strict";
@@ -103,6 +103,16 @@
             text: "is [NUM] prime?",
             arguments: {
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 }
+            }
+          },
+          "---",
+          {
+            opcode: "timePassed",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "has [NUM] seconds passed?",
+            arguments: {
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
             }
           },
           "---",
@@ -264,9 +274,10 @@
             opcode: "trim",
             extensions: ["colours_operators"],
             blockType: Scratch.BlockType.REPORTER,
-            text: "trim [STRING]",
+            text: "trim [STRING] at [TYPE]",
             arguments: {
-              STRING: { type: Scratch.ArgumentType.STRING, defaultValue: "apple    " }
+              STRING: { type: Scratch.ArgumentType.STRING, defaultValue: "apple    " },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "PADS", defaultValue: "both" }
             }
           },
           {
@@ -491,13 +502,22 @@
     }
 
     with(args) {
-      args.STRING1 = Scratch.Cast.toString(args.STRING1)
-      if (args.TYPE === "starts") return args.STRING1.startsWith(args.STRING2);
-      if (args.TYPE === "ends") return args.STRING1.endsWith(args.STRING2);
-      return args.STRING1.startsWith(args.STRING2) && args.STRING1.endsWith(args.STRING2);
+      const string = Scratch.Cast.toString(args.STRING1)
+      if (args.TYPE === "starts") return string.startsWith(args.STRING2);
+      if (args.TYPE === "ends") return string.endsWith(args.STRING2);
+      return string.startsWith(args.STRING2) && string.endsWith(args.STRING2);
     }
 
     noContain(args) { return !vm.runtime.ext_scratch3_operators.contains(args) }
+
+    timePassed(args, util) {
+      const id = util.thread.blockContainer.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id)?.id;
+      if (util.thread.stackFrames[0][id + "startTime"] !== undefined) return Date.now() > util.thread.stackFrames[0][id + "startTime"];
+      else {
+        util.thread.stackFrames[0][id + "startTime"] = Date.now() + (Scratch.Cast.toNumber(args.NUM) * 1000);
+        return false;
+      }
+    }
 
     typeString(args) {
       if (args.TYPE === "||") return args.STRING1 || args.STRING2;
@@ -587,14 +607,15 @@
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
     }
 
-    trim(args) { return Scratch.Cast.toString(args.STRING).trim() }
+    trim(args) {
+      return Scratch.Cast.toString(args.STRING)[args.TYPE === "start" ? "trimStart" : args.TYPE === "end" ? "trimEnd" : "trim"]();
+    }
 
     padding(args) {
-      const length = Scratch.Cast.toNumber(args.NUM),
-            string = Scratch.Cast.toString(args.STRING1);
+      const length = Scratch.Cast.toNumber(args.NUM), string = Scratch.Cast.toString(args.STRING1);
       if (args.TYPE === "start") return string.padStart(length, args.STRING2);
       if (args.TYPE === "end") return string.padEnd(length, args.STRING2);
-      return args.STRING1.padStart(string.length + ((length - string.length) / 2), args.STRING2).padEnd(length, args.STRING2);
+      return string.padStart(string.length + ((length - string.length) / 2), args.STRING2).padEnd(length, args.STRING2);
     }
 
     insertString(args) {
