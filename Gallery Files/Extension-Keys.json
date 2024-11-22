@@ -425,14 +425,21 @@
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/JSON-Array.js",
       "tags": ".all.utilities",
       "status": "update",
-      "date": "Last Updated: 11/17/2024"
+      "date": "Last Updated: 11/21/2024"
     },
     "My-Blocks-Plus": {
       "credits": "Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/My-Blocks-Plus.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Released: 10/26/2024"
+      "status": "update",
+      "date": "Last Updated: 11/21/2024"
+    },
+    "Dropdown-Maker": {
+      "credits": "Create Custom Dropdowns! Best paired with My Blocks+. Made by SharkPool, CST, and 0znzw",
+      "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Dropdown-Maker.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 11/21/2024"
     },
     "Turbo-Skins": {
       "credits": "Improved Skins Extension. Made by SharkPool, inspired by LilyMakesThings",
