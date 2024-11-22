@@ -6,11 +6,13 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.0.1
+// Version V.1.1.0
 
-/* Update Plans
-- custom menu maker
-- global blocks
+/* TODO
+V1.2
+- set default value
+- block images?
+- branches
 */
 
 (function (Scratch) {
@@ -31,7 +33,10 @@
     return start + {
       "norm": "MzU7ZmlsbDojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjx0ZXh0IHN0eWxlPSJmb250LXNpemU6MTJweDtmaWxsOiM2ZTc0ODg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhTmV1ZS1Cb2xkLCBIZWx2ZXRpY2EgTmV1ZSwgc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7bGV0dGVyLXNwYWNpbmc6MGVtOyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTcuNSAyOSkiPnRleHQ8L3RleHQ+PC9zdmc+",
       "num": "MzU7ZmlsbDojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjx0ZXh0IHN0eWxlPSJmb250LXNpemU6MTJweDtmaWxsOiM2ZTc0ODg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhTmV1ZS1Cb2xkLEhlbHZldGljYSBOZXVlLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6NzAwO2xldHRlci1zcGFjaW5nOjAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1IDI5KSI+MDwvdGV4dD48L3N2Zz4=",
-      "col": "ZmY7ZmlsbDojMGYwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjwvc3ZnPg=="
+      "col": "ZmY7ZmlsbDojMGYwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjwvc3ZnPg==",
+      "ang": "ZmY7ZmlsbDojNDQ4OGU2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjxwYXRoIGQ9Ik0xNi4xNTQgMjQuNWMwLTYuNzggNS40OTYtMTIuMjc2IDEyLjI3Ni0xMi4yNzZTNDAuNzA1IDE3LjcyIDQwLjcwNSAyNC41IDM1LjIxIDM2Ljc3NiAyOC40MyAzNi43NzYgMTYuMTU0IDMxLjI4IDE2LjE1NCAyNC41eiIgZmlsbD0iIzQyODBkNyIgc3Ryb2tlPSIjMzM3M2NjIiBzdHJva2Utd2lkdGg9Ii41Ii8+PHBhdGggZD0iTTI4LjQzIDI0LjVWMTIuNTA0YzYuNjI1IDAgMTEuOTk2IDUuMzcgMTEuOTk2IDExLjk5NnoiIGZpbGwtb3BhY2l0eT0iLjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjguNDMgMjQuNWgxMi4yNzUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTI4LjQzIDI0LjVWMTIuNDQ4IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iLjUiLz48cGF0aCBkPSJNMzcuMzEgMjQuNWgxLjU2N20tLjM1NiAyLjcwNC0xLjUxMy0uNDA2bS0uODg4IDIuMTQyIDEuMzU4Ljc4NE0zNC43MSAzMC43OGwxLjEwNyAxLjEwN20tMi45NDcuMzAzLjc4NCAxLjM1OG0tMi45MjYtLjQ3LjQwNiAxLjUxM20tMi43MDQuMzU2VjMzLjM4bS0yLjI5OC0uMzAyLS40MDYgMS41MTNtLTIuNTItMS4wNDMuNzg0LTEuMzU4bS0xLjg0LTEuNDEtMS4xMDcgMS4xMDdtLS4zMDMtMi45NDctMS4zNTguNzg0bS40Ny0yLjkyNi0xLjUxMy40MDZNMTkuNTUgMjQuNWgtMS41NjdtMS44NjktMi4yOTgtMS41MTMtLjQwNm0xLjA0My0yLjUyIDEuMzU3Ljc4NG0xLjQxMS0xLjg0LTEuMTA3LTEuMTA3bTIuOTQ3LS4zMDMtLjc4NC0xLjM1OG0yLjkyNi40Ny0uNDA2LTEuNTEzbTIuNzA0IDEuMjExdi0xLjU2N20yLjcwNC4zNTYtLjQwNiAxLjUxM20yLjkyNi0uNDctLjc4NCAxLjM1OG0xLjg0IDEuNDEgMS4xMDctMS4xMDdtMS42NjEgMi4xNjMtMS4zNTguNzg0bS44ODggMi4xNDIgMS41MTMtLjQwNiIgc3Ryb2tlLW9wYWNpdHk9Ii41IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iLjI1Ii8+PHBhdGggZD0iTTI3LjkwOCAyNC41YS41MjIuNTIyIDAgMSAxIDEuMDQ0IDAgLjUyMi41MjIgMCAwIDEtMS4wNDQgMHoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIuNSIvPjxwYXRoIGQ9Ik0zOC41NTUgMjQuNWEyLjYxMiAyLjYxMiAwIDEgMSA1LjIyMyAwIDIuNjEyIDIuNjEyIDAgMCAxLTUuMjIzIDB6IiBmaWxsPSIjZmZmIiBzdHJva2Utb3BhY2l0eT0iLjI1IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTEuNSAtMTU1LjUpIiBmaWxsPSIjNGM5N2ZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48cGF0aCBkPSJNNDEuMTcxIDIzLjcxNWMwLS4xNDQuMDkzLS4xOS4yMS0uMTAzbDEgLjc0OWMuMTE2LjA4Ni4xMTcuMjI0LS4wMDMuMzFsLS45OTQuNzJjLS4xMTguMDg0LS4yMTMuMDM1LS4yMTMtLjEwN3YtLjQzNmwtMS4xNzgtLjE5NmEuMTYuMTYgMCAwIDEtLjEyOC0uMTUyYzAtLjA3My4wNi0uMTQuMTI4LS4xNTJsMS4xNzgtLjE5N3oiIGZpbGw9IiM0Yzk3ZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==",
+      "note": "MzU7ZmlsbDojZmZmIi8+PHBhdGggZD0iTTM1Ljc0IDI4LjMwNGMuMjk2IDEuNDc5LTEuMDggMi42NzMtMy4wNzMgMi42NzMtMS45ODkgMC0zLjgzNi0xLjE5NC00LjEyNy0yLjY3My0uMjk3LTEuNDggMS4wNzgtMi42NzggMy4wNzItMi42NzguNDE5IDAgLjgzLjA1NCAxLjIyNC4xNTEuMjE5LjA1Ni40MTIuMTE3LjYwNy4xOTYuNTY0LS4wMTMtLjA2Ny0xLjQ4Ni0xLjE4OC03LjkyLTEuMzgyLTcuOTY4IDEuOTgxLTEuMjEyIDUuNjc4LTEuNzgzIDMuNjk3LS41NzMuMDUgMy4xMjEtMi4zNjQgMi40OS0yLjQxMi0uNjQtMy4wMTEtNC42MzMuMTcgOS41NDR6bS0xMS4wMDggMy44OGMuMjkgMS40OC0xLjA4NSAyLjY3OS0zLjA3MSAyLjY3OS0xLjk4OCAwLTMuODM1LTEuMi00LjEzMi0yLjY4LS4yOS0xLjQ3OCAxLjA4NC0yLjY3NyAzLjA3Ni0yLjY3Ny42NSAwIDEuMjguMTI3IDEuODUuMzUyLjUzMi0uMDM2LS4wOTgtMS41NC0xLjIwNy03LjkyLTEuMzgtNy45NjggMS45ODItMS4yMTEgNS42NzYtMS43ODMgMy42OTYtLjU3OS4wNSAzLjEyMi0yLjM2MiAyLjQ4My0yLjQxMi0uNjQtMy4wMTItNC42MzIuMTcgOS41NDV6IiBmaWxsPSIjNmU3NDg4Ii8+PC9zdmc+",
+      "mat": "MzU7ZmlsbDojMGRhNTdhIi8+PHBhdGggZD0iTTE3LjUgMTYuNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXptNSAwYTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yNy41IDE2LjVhMSAxIDAgMCAxLTEtMXYtMmExIDEgMCAwIDEgMS0xaDJhMSAxIDAgMCAxIDEgMXYyYTEgMSAwIDAgMS0xIDF6IiBmaWxsPSIjMGZiZDhjIi8+PHBhdGggZD0iTTMyLjUgMTYuNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXptNSAwYTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxem0tMjAgNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXptNSAwYTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxem01IDBhMSAxIDAgMCAxLTEtMXYtMmExIDEgMCAwIDEgMS0xaDJhMSAxIDAgMCAxIDEgMXYyYTEgMSAwIDAgMS0xIDF6bTUgMGExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXptNSAwYTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxem0tMjAgNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjIuNSAyNi41YTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxeiIgZmlsbD0iIzBmYmQ4YyIvPjxwYXRoIGQ9Ik0yNy41IDI2LjVhMSAxIDAgMCAxLTEtMXYtMmExIDEgMCAwIDEgMS0xaDJhMSAxIDAgMCAxIDEgMXYyYTEgMSAwIDAgMS0xIDF6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTMyLjUgMjYuNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXoiIGZpbGw9IiMwZmJkOGMiLz48cGF0aCBkPSJNMzcuNSAyNi41YTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxem0tMjAgNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjIuNSAzMS41YTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxem01IDBhMSAxIDAgMCAxLTEtMXYtMmExIDEgMCAwIDEgMS0xaDJhMSAxIDAgMCAxIDEgMXYyYTEgMSAwIDAgMS0xIDF6bTUgMGExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXoiIGZpbGw9IiMwZmJkOGMiLz48cGF0aCBkPSJNMzcuNSAzMS41YTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxem0tMjAgNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXptNSAwYTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yNy41IDM2LjVhMSAxIDAgMCAxLTEtMXYtMmExIDEgMCAwIDEgMS0xaDJhMSAxIDAgMCAxIDEgMXYyYTEgMSAwIDAgMS0xIDF6IiBmaWxsPSIjMGZiZDhjIi8+PHBhdGggZD0iTTMyLjUgMzYuNWExIDEgMCAwIDEtMS0xdi0yYTEgMSAwIDAgMSAxLTFoMmExIDEgMCAwIDEgMSAxdjJhMSAxIDAgMCAxLTEgMXptNSAwYTEgMSAwIDAgMS0xLTF2LTJhMSAxIDAgMCAxIDEtMWgyYTEgMSAwIDAgMSAxIDF2MmExIDEgMCAwIDEtMSAxeiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=="
     }[name];
   };
 
@@ -39,8 +44,9 @@
   const runtime = vm.runtime;
   const isPM = Scratch.extensions.isPenguinMod;
 
-  // Opcode of the temporary block added to keep the extension in the project
-  const TEMP_BLOCK_OPCODE = "SPmbpCST_$-,.___SPmbpCST_TEMP_BLOCK";
+  const TEMP_BLOCK_OPCODE = "SPmbpCST_$-,.___SPmbpCST_TEMP_BLOCK"; // opcode of the temporary block added to keep the extension in the project
+  const CUSTOM_MENU_ID = "SP0zMenuMaker_menu_";
+  const targetProcData = Symbol("MBPprocedureData"); // place to store important global procedure data
 
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
@@ -71,6 +77,9 @@
 
   const inputTypes = {
     col: { opcode: "colour_picker", fieldName: "COLOUR", defaultValue: randomColour },
+    note: { opcode: "note", fieldName: "NOTE", defaultValue: "60" },
+    mat: { opcode: "matrix", fieldName: "MATRIX", defaultValue: isPM ? "1111001010011100100011000" : "1111110101001000010001110" },
+    ang: { opcode: "math_angle", fieldName: "NUM", defaultValue: "90" },
     // %n technically already exists but some parts of scratch-blocks replace it with %s so we can't use it
     num: { opcode: "math_number", fieldName: "NUM", defaultValue: "0" },
   };
@@ -81,7 +90,8 @@
   }
   // Used for setting dropdowns to the correct block color. Update when adding new input types
   function isNormalInput(opcode) {
-    return opcode === "colour_picker" || opcode === "math_number" || opcode === "text";
+    return opcode === "note" || opcode === "matrix" || opcode === "colour_picker"
+      || opcode === "math_angle" || opcode === "math_number" || opcode === "text";
   }
 
   // if true, scrolling to My Blocks will scroll to My Blocks+ instead
@@ -89,6 +99,15 @@
   let shouldScrollToMBP = false;
 
   // Custom Block Modal
+  const returnTypeError = (e) => {
+    // used for PenguinMod
+    const modal = document.querySelector(`div[class="ReactModalPortal"]`);
+    if (modal?.parentNode) {
+      console.warn("Ignore the following Error about 'connectionDBList', it fixes itself");
+      modal.querySelector(`[class^="close-button_close-button_"]`).click();
+    }
+  };
+
   function openBlockMaker(workspace, isEditing) {
     if (extensionRemovable) return;
     shouldScrollToMBP = true;
@@ -102,7 +121,21 @@
       const optionRow = modal.querySelectorAll(`[class^="custom-procedures_options-row_"]`);
       const returnCheck = modal.querySelectorAll(`input[type="checkbox"]`);
 
-      modal.firstChild.style.overflow = "auto";
+      const innerModal = modal.firstChild;
+      innerModal.style.overflow = "auto";
+      let ogTop;
+      innerModal.addEventListener("scroll", () => {
+        const activeInput = document.querySelector(`div[class^="blocklyWidgetDiv"][class*="fieldTextInput"]`);
+        if (activeInput) {
+          if (!ogTop) {
+            const modalRect = innerModal.getBoundingClientRect();
+            const inputRect = activeInput.getBoundingClientRect();
+            ogTop = inputRect.top - modalRect.top + innerModal.scrollTop;
+          }
+          activeInput.style.top = `${ogTop - innerModal.scrollTop}px`;
+        }
+      });
+
       modal.querySelector(`[class^="custom-procedures_color-picker-area_"]`).style.display = "none";
       if (optionRow[1]) optionRow[1].style.display = "none";
       if (returnCheck[1]) returnCheck[1].parentNode.addEventListener("click", (e) => {
@@ -117,14 +150,18 @@
 
     attachInputBtns(row, blockEditor, isDark, workspace);
     attachColors(row, isDark, blockEditor);
-    attachCheckboxes(modal, blockEditor);
+    attachCheckboxes(modal, blockEditor, isEditing, curProc);
 
     // Attach Okay Button Listener
     const okBtn = modal.querySelector(`button[class^="custom-procedures_ok-button_"]`);
     okBtn.addEventListener("click", (e) => {
       // prevent proccode conflicts
       const existingPrototype = ScratchBlocks.Procedures.getPrototypeBlock(blockEditor.procCode_, workspace);
-      if (existingPrototype && (!isEditing || curProc !== blockEditor.procCode_)) {
+      const existingCache = globalBlocksCache[blockEditor.procCode_];
+      if (
+        (existingPrototype && (!isEditing || curProc !== blockEditor.procCode_)) ||
+        (existingCache !== undefined && !isEditing)
+      ) {
         alert("A custom block with this text already exists!");
         e.stopImmediatePropagation();
         return;
@@ -134,6 +171,11 @@
       storeSet(blockEditor.procCode_, tempStore);
       if (isEditing && curProc !== blockEditor.procCode_) storeDel(curProc);
       refreshGlobalBlocksCache();
+
+      if (isPM) {
+        window.removeEventListener("error", returnTypeError, { once: true });
+        window.addEventListener("error", returnTypeError, { once: true });
+      }
     });
   }
 
@@ -146,7 +188,10 @@
     dropBtn.addEventListener("click", () => openMenuSelector(editor, isDark, workspace));
 
     // dynamic btn
-    const paths = { "number or text": "norm", "number": "num", "color": "col" };
+    const paths = {
+      "number or text": "norm", "number": "num", "angle": "ang", 
+      "color": "col", "piano": "note", "matrix": "mat"
+    };
     const inpBtn = row.childNodes[1].cloneNode(true);
     const img = inpBtn.childNodes[0], btn = inpBtn.childNodes[2];
     img.src = inputURIs("norm");
@@ -193,7 +238,7 @@
     }
   }
 
-  function attachCheckboxes(modal, editor) {
+  function attachCheckboxes(modal, editor, isEditing, ogProcode) {
     const checkRow = isPM ? modal.querySelector(`div[class^="custom-procedures_button-row_"]`).previousSibling
       : modal.querySelector(`[class^="custom-procedures_checkbox-row"]`);
     const makeBox = (txt, val, func) => {
@@ -203,26 +248,41 @@
       box.addEventListener("click", () => func(box.childNodes[0].checked));
       return box;
     };
-    checkRow.append(isPM ? "" : document.createElement("br"), makeBox(
+    if (isEditing && isPM) {
+      const isReturner = editor.getReturns();
+      const returnType = makeBox(
+        "Boolean", editor.outputType === "boolean",
+        (val) => { editor.setType(val ? "boolean" : "string") }
+      );
+      returnType.style.display = isReturner ? "" : "none";
+      returnType.style.marginLeft = "5px";
+      const returnCheck = makeBox(
+        "Returns a value", isReturner,
+        (val) => {
+          editor.setReturns(val);
+          if (val) {
+            editor.setType("string");
+            returnType.childNodes[0].checked = false;
+            returnType.style.display = "";
+          } else {
+            editor.setType("statement");
+            returnType.style.display = "none";
+          }
+        }
+      );
+      checkRow.append(returnCheck, returnType);
+    }
+    checkRow.append(isPM && !isEditing ? "" : document.createElement("br"), makeBox(
       "Cap block", tempStore.isTerminal !== undefined ? tempStore.isTerminal : false,
       (val) => {
         editor.setNextStatement(!val);
         tempStore.isTerminal = val;
       }
     ));
-
-    /*
-      Hello codeminer!
-      Global custom blocks are planned, but they're still unfinished and very broken
-      so the option is hidden.
-      -CST & SP
-    */
-    /*checkRow.append(isPM ? "" : document.createElement("br"), makeBox(
+    checkRow.append(document.createElement("br"), makeBox(
       "Available for all sprites", tempStore.global !== undefined ? tempStore.global : false,
-      (val) => {
-        tempStore.global = val;
-      }
-    ));*/
+      (val) => { tempStore.global = val }
+    ));
   }
 
   function attachColors(row, isDark, editor) {
@@ -241,12 +301,8 @@
     };
 
     const colorDiv = document.createElement("div");
-    colorDiv.style.display = "flex";
-    colorDiv.style.justifyContent = "center";
-    colorDiv.style.alignItems = "center";
-    colorDiv.style.marginTop = "15px";
+    colorDiv.setAttribute("style", "display: flex; justify-content: center; align-items: center; margin-top: 15px; border-radius: 10px;");
     if (isPM) colorDiv.style.marginBottom = "15px";
-    colorDiv.style.borderRadius = "10px";
     colorDiv.style.border = `solid ${isDark ? "#343434" : "#D9D9D9"} 2.5px`;
 
     const mainColors = ScratchBlocks.Colours;
@@ -258,19 +314,14 @@
     ];
     colors.forEach(color => {
       const circle = document.createElement("div");
+      circle.setAttribute("style", "width: 35px; height: 35px; border-radius: 50%; border: 2.5px solid rgba(0, 0, 0, 0.13); margin: 7px; cursor: pointer;");
       circle.style.backgroundColor = color;
-      circle.style.width = "35px"; circle.style.height = "35px";
-      circle.style.borderRadius = "50%"; circle.style.border = "solid #00000021 2.5px";
-      circle.style.margin = "7px"; circle.style.cursor = "pointer";
       circle.style.boxShadow = `0px 0px 0px 2.5px ${isDark ? "#343434" : "#D9D9D9"}`;
       colorDiv.appendChild(circle);
       if (color === "red") {
         const innerImg = document.createElement("img");
         innerImg.src = colorPkrURI;
-        innerImg.style.width = "25px"; innerImg.style.height = "25px";
-        innerImg.style.position = "relative"; innerImg.style.padding = "2px";
-        innerImg.style.left = "50%"; innerImg.style.top = "50%";
-        innerImg.style.transform = "translate(-50%, -50%)";
+        innerImg.setAttribute("style", "width: 25px; height: 25px; position: relative; padding: 2px; left: 50%; top: 50%; transform: translate(-50%, -50%);");
         circle.addEventListener("click", () => {
           bounceAnim(circle);
           colInp.click();
@@ -278,9 +329,7 @@
 
         const colInp = document.createElement("input");
         colInp.type = "color";
-        colInp.style.opacity = "0"; colInp.style.cursor = "pointer";
-        colInp.style.width = "1px"; colInp.style.height = "1px";
-        colInp.style.transform = "translate(15px, -25px)";
+        colInp.setAttribute("style", "opacity: 0; cursor: pointer; width: 1px; height: 1px; transform: translate(15px, -25px);");
         circle.append(innerImg, colInp);
         colInp.addEventListener("input", () => {
           circle.style.backgroundColor = colInp.value;
@@ -293,6 +342,7 @@
         });
       }
     });
+    if (!tempStore.color) setCol(colors[9]);
     row.parentNode.insertBefore(colorDiv, row.parentNode.lastChild.previousSibling);
   }
 
@@ -314,44 +364,45 @@
     const avoid = ["looks_costumenumbername", "extension_wedo_tilt_menu", "lmsMoreEvents_menu_state"];
     let allBlocks = Object.keys(ScratchBlocks.Blocks);
     allBlocks = allBlocks.filter((i) => i.includes("menu") && !avoid.includes(i));
+    allBlocks.unshift("looks_costume", "looks_backdrops", "sensing_keyoptions");
+    allBlocks.forEach((e, i) => {
+      if (e.startsWith(CUSTOM_MENU_ID)) {
+        allBlocks.unshift(e);
+        allBlocks.splice(i + 1, 1);
+      }
+    });
     let selectedMenu = allBlocks[0];
 
     const dropDiv = document.createElement("div");
-    dropDiv.style.width = "100%"; dropDiv.style.height = "200px";
-    dropDiv.style.marginBottom = "15px"; dropDiv.style.overflow = "scroll";
-    dropDiv.style.borderRadius = "10px";
+    dropDiv.setAttribute("style", "width: 100%; height: 200px; margin-bottom: 15px; overflow: scroll; border-radius: 10px;");
     dropDiv.style.border = `solid ${isDark ? "#343434" : "#D9D9D9"} 2px`;
 
     for (let i = 0; i < allBlocks.length; i++) {
       const dropItem = document.createElement("div");
       const text = document.createElement("div");
       const prev = document.createElement("div");
+      dropItem.setAttribute("style", "cursor: pointer; padding: 8px; width: 100%; height: max-content; display: flex; flex-direction: column; align-items: center; justify-content: center;");
       dropItem.append(prev, text);
+      text.textContent = allBlocks[i].replace(CUSTOM_MENU_ID, "");
 
-      dropItem.style.cursor = "pointer"; dropItem.style.padding = "8px";
-      dropItem.style.width = "100%"; dropItem.style.height = "max-content";
-      dropItem.style.display = "flex"; dropItem.style.flexDirection = "column";
-      dropItem.style.alignItems = "center"; dropItem.style.justifyContent = "center"; 
-      text.textContent = allBlocks[i];
-
+      const isCustom = allBlocks[i].includes(CUSTOM_MENU_ID);
       const block = ogWorkspace.getBlockById(allBlocks[i]);
       let prevTxt = block ? block.inputList[0].fieldRow[0].text_.substring(0, 17) : "";
       if (prevTxt.length === 17) prevTxt += "...";
       prev.outerHTML =  `
-        <div style="background: ${block ? block.colour_ : "#505050"}; border-radius: ${block ? 50 : 5}px; width: max-content; text-align: center; margin-bottom: 5px; padding: 5px 10px 5px 10px; font-weight: 500; border: solid 1px rgba(0,0,0,0.3)">
+        <div style="color: #fff; background: ${isCustom ? "#FF6680" : block ? block.colour_ : "#505050"}; border-radius: ${block ? 50 : 5}px; width: max-content; text-align: center; margin-bottom: 5px; padding: 5px 10px 5px 10px; font-weight: 500; border: solid 1px rgba(0,0,0,0.3)">
           <span>${block ? prevTxt : "???"}</span><img style="margin-left: 5px;" src="${arrowIcon}.svg">
         </div>
       `;
 
-      const bgColor = i % 2 === 0 ? "#aaa3" : "transparent";
+      const bgColor = i % 2 === 0 ? isCustom ? "#cc526640" : "#aaa3" : isCustom ? "#cc526680" : "transparent";
       dropItem.style.backgroundColor = `var(--selected-color, ${bgColor})`;
-      if (i === 0) dropItem.style.setProperty("--selected-color", "#aaaa");
+      if (i === 0) dropItem.style.setProperty("--selected-color", isCustom ? "#f7889a99" : "#aaaa");
       dropDiv.appendChild(dropItem);
-
       dropItem.addEventListener("click", () => {
         Array.from(dropDiv.children).forEach(c => { c.style.removeProperty("--selected-color"); });
-        dropItem.style.setProperty("--selected-color", "#aaaa");
-        selectedMenu = text.textContent;
+        dropItem.style.setProperty("--selected-color", isCustom ? "#f7889a99" : "#aaaa");
+        selectedMenu = allBlocks[i];
       });
     }
     body.insertBefore(dropDiv, body.lastChild);
@@ -364,7 +415,7 @@
       editor.addStringNumberExternal();
       const args = editor.argumentIds_;
       const id = args[args.length - 1];
-      editor.displayNames_[args.length - 1] = selectedMenu;
+      editor.displayNames_[args.length - 1] = selectedMenu.replace(CUSTOM_MENU_ID, "");
       editor.updateDisplay_();
       editor.focusLastEditor_();
 
@@ -399,8 +450,7 @@
         return {
           kind: "SPmbpCST.setParam", paramIndex, val: this.descendInputOfBlock(block, "VALUE")
         };
-      }
-      else return _ogIRdescendStack.call(this, block);
+      } else return _ogIRdescendStack.call(this, block);
     };
     const _ogIRdescendInp = ScriptTreeGenerator.prototype.descendInput;
     ScriptTreeGenerator.prototype.descendInput = function (block) {
@@ -413,6 +463,9 @@
         const val = this.descendInput(node.val);
         const i = node.paramIndex;
         if (i !== undefined && i !== -1) this.source += `p${i} = ${val.asSafe()};\n`;
+      } else if (node.kind === "procedures.call") {
+        // This gets Global Procedures to work for some reason
+        return _ogJSdescendStack.call(this, node);
       } else return _ogJSdescendStack.call(this, node);
     };
     const _ogJSdescendInp = JSGenerator.prototype.descendInput;
@@ -425,6 +478,9 @@
           const i = a.indexOf(v);
           return i > -1 ? arguments[i] : "";
         })()`, exp.TYPE_STRING);
+      } else if (node.kind === "procedures.call") {
+        // This gets Global Procedures to work for some reason
+        return _ogJSdescendInp.call(this, node);
       } else return _ogJSdescendInp.call(this, node);
     };
   }
@@ -445,10 +501,8 @@
         const otherBlock = input?.connection?.targetConnection?.sourceBlock_;
         if (otherBlock.isShadow()) {
           // penguinmod doesnt have quaternary colors yet
-          if (isPM) otherBlock.setColour(otherBlock.getColour(), otherBlock.getColourSecondary(),
-            block.getColourTertiary());
-          else otherBlock.setColour(otherBlock.getColour(), otherBlock.getColourSecondary(),
-            block.getColourTertiary(), otherBlock.getColourQuaternary());
+          if (isPM) otherBlock.setColour(otherBlock.getColour(), otherBlock.getColourSecondary(), block.getColourTertiary());
+          else otherBlock.setColour(otherBlock.getColour(), otherBlock.getColourSecondary(), block.getColourTertiary(), otherBlock.getColourQuaternary());
         }
       }
     }
@@ -511,14 +565,46 @@
           });
         }
       }
+
+      // Disconnect and reconnect the prototype from the define block when
+      // changing the output type in PM because otherwise errors will happen
+      // we have to create a new define block to change its type
+      let defineBlock = (
+        isPM && this.type === "procedures_prototype" && this.getParent()?.type?.startsWith("procedures_definition")
+      ) ? this.getParent() : null;
+      let savedDefConnect = null, savedShadow = null;
+      const newOpcode = this.output_ ? "procedures_definition_return" : "procedures_definition";
+      if (isPM && defineBlock && defineBlock.type !== newOpcode) {
+        savedDefConnect = (this.previousConnection || this.outputConnection).targetConnection;
+        savedShadow = savedDefConnect.getShadowDom();
+        const savedNextConnect = defineBlock.nextConnection?.targetConnection;
+
+        // Remove the shadow DOM, then disconnect the block.  Otherwise a shadow block
+        // will respawn instantly, and we'd have to remove it when we remove the input.
+        savedNextConnect?.disconnect();
+
+        // Recreate the define block with a changed type
+        const ws = defineBlock.workspace;
+        const xml = ScratchBlocks.Xml.blockToDom(defineBlock);
+        const position = defineBlock.getRelativeToSurfaceXY();
+        xml.setAttribute("type", newOpcode);
+        defineBlock.dispose();
+        defineBlock = ScratchBlocks.Xml.domToBlock(xml, ws);
+        defineBlock.moveBy(position.x, position.y);
+        if (savedNextConnect) savedNextConnect.connect(defineBlock.nextConnection);
+      }
       ogUpdateDisplay.call(this);
+      if (savedDefConnect) {
+        savedDefConnect = defineBlock.getInput("custom_block").connection;
+        (this.previousConnection || this.outputConnection).connect(savedDefConnect);
+        savedDefConnect.setShadowDom(savedShadow);
+      }
 
       if (!this.isInsertionMarker()) {
         // ScratchBlocks ways of getting the next block won't work while the blocks are being created
         const actualNextBlock = this.getNextBlock() || vm?.editingTarget?.blocks?.getBlock(this.id)?.next || (domToBlockXml && domToBlockXml.querySelector("next"));
         const isReturner = isPM ? this.output_ : this.return_;
-        if (!store.isTerminal !== undefined && !isReturner && !actualNextBlock)
-          this.setNextStatement(!store.isTerminal, this.type === "procedures_prototype" ? true : undefined);
+        if (!store.isTerminal !== undefined && !isReturner && !actualNextBlock) this.setNextStatement(!store.isTerminal, this.type === "procedures_prototype" ? true : undefined);
       } else {
         // The insertion marker should copy the terminal-ness of the source block,
         // otherwise Blockly will throw an error
@@ -535,6 +621,7 @@
     const ogAttachShadow = utils.attachShadow_;
     utils.attachShadow_ = function (input, argumentType) {
       if (extensionRemovable) return ogAttachShadow.call(this, input, argumentType);
+      // TODO use stored default values for V 1.2
       const store = this.SPmbpCST_store || storeGet(this.getProcCode());
       if (!store || !store.inputs || !store.inputs[input.name]) return ogAttachShadow.call(this, input, argumentType);
       const { opcode, fieldName, defaultValue } = getInputData(store.inputs[input.name]);
@@ -593,11 +680,13 @@
       SB.Blocks[opcode].setDragging = argumentReporterSetDragging;
       SB.Blocks[opcode].setParent = argumentReporterSetParent;
     }
-    SB.Extensions.register("SPmbpCST_defineColored", function () {
-      this.setDragging = argumentReporterSetDragging;
-      this.setParent = argumentReporterSetParent;
-      updateArgumentReporterColor(this);
-    });
+    try {
+      SB.Extensions.register("SPmbpCST_defineColored", function () {
+        this.setDragging = argumentReporterSetDragging;
+        this.setParent = argumentReporterSetParent;
+        updateArgumentReporterColor(this);
+      });
+    } catch {/* already defined */}
 
     // Turn procedure calls marked as cap blocks into cap blocks if they can be turned into cap blocks
     function checkCapBlock(block) {
@@ -635,30 +724,42 @@
     // Patch Procedure Edit and Create to also open our Modal
     const procs = SB.Procedures;
     const ogCreateCall = procs.createProcedureDefCallback_;
-    procs.createProcedureDefCallback_ = function (workspace) {
-      const sharedWork = SB.mainWorkspace;
-      ogCreateCall.call(this, workspace);
-      openBlockMaker(sharedWork, false);
-    };
-    const ogEditCall = procs.editProcedureCallback_;
-    procs.editProcedureCallback_ = function (block) {
-      const sharedWork = SB.mainWorkspace;
-      const val = ogEditCall.call(this, block);
-      openBlockMaker(sharedWork, true);
-      return val;
+    if (runtime.SPmbpCSTOldStorage === undefined) {
+      procs.createProcedureDefCallback_ = function (workspace) {
+        const sharedWork = SB.mainWorkspace;
+        ogCreateCall.call(this, workspace);
+        openBlockMaker(sharedWork, false);
+      };
+      const ogEditCall = procs.editProcedureCallback_;
+      procs.editProcedureCallback_ = function (block) {
+        if (block.type === "procedures_call") {
+          const isGlobal = globalBlocksCache[block.procCode_];
+          if (isGlobal && isGlobal.id !== vm.editingTarget.id) {
+            alert("Global Blocks can only be editted in their Sprite of Origin");
+            vm.setEditingTarget(isGlobal.id);
+            return;
+          }
+        }
+        const sharedWork = SB.mainWorkspace;
+        const val = ogEditCall.call(this, block);
+        openBlockMaker(sharedWork, true);
+        return val;
+      }
     }
     // Patch Procedure Flyout to also interact with the extension
     const ogFlyoutCall = procs.flyoutCategory;
     procs.flyoutCategory = function (workspace) {
       const val = ogFlyoutCall.call(this, workspace);
-      compileProcedures(val);
+      compileProcedures(val, workspace, procs);
       return val;
     }
   })
 
   // Other patches
-  function patchTarget(target) {
-    return; // global custom blocks disabled (TODO)
+  function patchTarget() {
+    // create a target to patch Target.Blocks
+    const target = new vm.exports.RenderedTarget({blocks: null}, runtime);
+
     const Blocks = target.blocks.constructor;
     const oldGetProcDef = Blocks.prototype.getProcedureDefinition;
     Blocks.prototype.getProcedureDefinition = function (name) {
@@ -673,7 +774,7 @@
       const thisBlock = oldGetBlock.call(this, name);
       if (thisBlock) return thisBlock;
       for (const target of this.runtime.targets) {
-        if (target.blocks === this) continue;
+        if (!target.isOriginal || target.blocks === this) continue;
         const targetBlock = oldGetBlock.call(target.blocks, name);
         if (targetBlock) return targetBlock;
       }
@@ -682,19 +783,19 @@
     const oldPopProcCache = Blocks.prototype.populateProcedureCache;
     Blocks.prototype.populateProcedureCache = function () {
       if (this._cache.proceduresPopulated) return;
+      refreshGlobalBlocksCache();
       oldPopProcCache.call(this);
       for (const proccode of Object.keys(globalBlocksCache)) {
         const target = globalBlocksCache[proccode];
         if (target.blocks === this) continue;
-        target.blocks.populateProcedureCache();
+        oldPopProcCache.call(target.blocks);
         // add global blocks to this cache if they aren't present already
-        this._cache.procedureParamNames[proccode] ??= target.blocks._cache.procedureParamNames[proccode];
-        this._cache.procedureDefinitions[proccode] ??= target.blocks._cache.procedureDefinitions[proccode];
+        this._cache.procedureParamNames[proccode] = target.blocks._cache.procedureParamNames[proccode];
+        this._cache.procedureDefinitions[proccode] = target.blocks._cache.procedureDefinitions[proccode];
       }
     }
   }
-  if (runtime.targets[0]) patchTarget(runtime.targets[0]);
-  else runtime.once("targetWasCreated", patchTarget);
+  patchTarget();
 
   const oldToJSON = vm.constructor.prototype.toJSON;
   vm.constructor.prototype.toJSON = function (...args) {
@@ -719,6 +820,93 @@
     return jsonStr;
   }
 
+  const oldGetOpcode = runtime.getOpcodeFunction;
+  runtime.constructor.prototype.getOpcodeFunction = function (opcode) {
+    if (opcode === "procedures_call") return patchedCallFunc;
+    return oldGetOpcode.call(this, opcode);
+  }
+
+  const patchedCallFunc = (args, util) => {
+    // Patched Block code from:
+    // https://github.com/TurboWarp/scratch-vm/blob/develop/src/blocks/scratch3_procedures.js#L28-L82
+    const stackFrame = util.stackFrame;
+    const isReporter = !!args.mutation.return;
+    if (stackFrame.executed) {
+      if (isReporter) {
+        const returnValue = stackFrame.returnValue;
+        const threadStackFrame = util.thread.peekStackFrame();
+        threadStackFrame.params = null;
+        delete stackFrame.returnValue;
+        delete stackFrame.executed;
+        return returnValue;
+      }
+      return;
+    }
+
+    const procedureCode = args.mutation.proccode;
+    const isGlobal = globalBlocksCache[procedureCode];
+
+    const paramNamesIdsAndDefaults = (isGlobal ? isGlobal.blocks : util).getProcedureParamNamesIdsAndDefaults(procedureCode);
+    if (paramNamesIdsAndDefaults === null) {
+      if (isReporter) return "";
+      return;
+    }
+
+    const [paramNames, paramIds, paramDefaults] = paramNamesIdsAndDefaults;
+    util.initParams();
+    for (let i = 0; i < paramIds.length; i++) {
+      if (Object.prototype.hasOwnProperty.call(args, paramIds[i])) util.pushParam(paramNames[i], args[paramIds[i]]);
+      else util.pushParam(paramNames[i], paramDefaults[i]);
+    }
+
+    const addonBlock = util.runtime.getAddonBlock(procedureCode);
+    if (addonBlock) {
+      const result = addonBlock.callback(util.thread.getAllparams(), util);
+      if (util.thread.status === 1) stackFrame.executed = true;
+      return result;
+    }
+
+    stackFrame.executed = true;
+    if (isReporter) {
+      util.thread.peekStackFrame().waitingReporter = true;
+      stackFrame.returnValue = "";
+    }
+    util.startProcedure({ proc: procedureCode, isGlobal });
+  };
+
+  const oldStep2Proc = runtime.sequencer.stepToProcedure;
+  runtime.sequencer.constructor.prototype.stepToProcedure = function (thread, procedureCode) {
+    if (procedureCode.isGlobal === undefined) oldStep2Proc.call(this, thread, procedureCode.proc);
+    else {
+      const target = procedureCode.isGlobal;
+      const def = target.blocks.getProcedureDefinition(procedureCode.proc);
+      if (!def) return;
+      if (thread.isPatched === undefined) {
+        // patch this function for the thread
+        thread.isPatched = true;
+        thread.goToNextBlock = () => {
+          thread.reuseStackForNextBlock(target.blocks.getNextBlock(thread.peekStack()));
+        };
+      }
+      const isRecursive = thread.isRecursiveCall(procedureCode.proc);
+      thread.pushStack(def);
+      if (thread.peekStackFrame().warpMode && thread.warpTimer.timeElapsed() > Sequencer.WARP_TIME) thread.status = Thread.STATUS_YIELD;
+      else {
+        const defBlock = target.blocks.getBlock(def);
+        const innerBlock = target.blocks.getBlock(defBlock.inputs.custom_block.block);
+        let doWarp = false;
+        if (innerBlock && innerBlock.mutation) {
+          const warp = innerBlock.mutation.warp;
+          if (typeof warp === "boolean") doWarp = warp;
+          else if (typeof warp === "string") doWarp = JSON.parse(warp);
+        }
+        if (doWarp) thread.peekStackFrame().warpMode = true;
+        else if (isRecursive) thread.status = Thread.STATUS_YIELD;
+      }
+    }
+  }
+
+  // Internals
   // Remove unused procedures before saving
   function removeUnusedProcs() {
     for (const target of runtime.targets) {
@@ -743,6 +931,10 @@
 
   // Custom Blocks Internals
   function storeGet(name, target = null) {
+    // first check if its a global block proccode
+    const globalStore = globalBlocksCache[name];
+    if (globalStore !== undefined) return storage[globalStore.id]?.[name] ?? {};
+
     const id = (target || vm.editingTarget).id;
     return storage[id]?.[name] ?? {};
   }
@@ -758,8 +950,12 @@
   }
 
   function deserializeStorage(data) {
-    if (isPM) storage = data.SPmbpCST || {};
-    else {
+    if (isPM) {
+      storage = data.SPmbpCST || {};
+      if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+        runtime.once("PROJECT_LOADED", () => SB.Procedures.flyoutCategory(SB.mainWorkspace));
+      });
+    } else {
       storage = {}; // target ID's change when saving :(
       for (let i = 0; i < runtime.targets.length; i++) {
         const target = runtime.targets[i];
@@ -774,15 +970,13 @@
       });
     }
   }
-  if (typeof scaffolding === "undefined") {
-    // use existing storage when loaded twice
-    storage = runtime.SPmbpCSTOldStorage || {};
-    if (!isPM) runtime.once("PROJECT_LOADED", () => deserializeStorage());
-  }
+  // use existing storage when loaded twice
+  storage = runtime.SPmbpCSTOldStorage || {};
+  if (!isPM) runtime.once("PROJECT_LOADED", () => deserializeStorage());
 
   function refreshGlobalBlocksCache() {
-    return; // global custom blocks disabled (TODO)
     globalBlocksCache = {};
+    vm.globalBlocksCache = globalBlocksCache;
     for (const targetId of Object.keys(storage)) {
       const target = runtime.getTargetById(targetId);
       if (!target) continue;
@@ -803,22 +997,43 @@
     return;
   }
 
-  function compileProcedures(xmlList) {
-    proceduresXML = xmlList.filter(o => o.getAttribute("type") === "procedures_call").map(o => o.outerHTML).join("");
+  function compileProcedures(xmlList, workspace, utils) {
+    xmlList = xmlList.filter(o => o.getAttribute("type") === "procedures_call");
+    const returnables = isPM ? {} : utils.getAllProcedureReturnTypes(workspace);
 
     refreshGlobalBlocksCache();
-    for (const proccode of Object.keys(globalBlocksCache)) {
-      const target = globalBlocksCache[proccode];
-      if (target === vm.editingTarget) continue;
-      const proto = getBlockPrototype(target, proccode);
-      if (proto) {
-        const pure = document.createElement("block");
-        pure.setAttribute("type", "procedures_call");
-        pure.setAttribute("gap", "12");
-        pure.innerHTML = target.blocks.mutationToXML(proto.mutation);
-        fillProcedureBlock(pure);
-        addedBlocks.push(pure);
+    const globalProcs = Object.keys(globalBlocksCache);
+    for (let i = xmlList.length; i--;) {
+      const proc = xmlList[i].querySelector("mutation").getAttribute("proccode");
+      if (globalProcs.indexOf(proc) > -1) xmlList.splice(i, 1);
+    }
+    proceduresXML = xmlList.map(o => o.outerHTML).join("");
+
+    if (globalProcs.length > 0) {
+      let tempList = `<sep gap="12"/><label text="Global Blocks"/><sep gap="6"/>`;
+      for (const proccode of globalProcs) {
+        const target = globalBlocksCache[proccode];
+        if (target[targetProcData] === undefined) target[targetProcData] = {};
+        if (target[targetProcData][proccode] === undefined) target[targetProcData][proccode] = {};
+        const proto = getBlockPrototype(target, proccode);
+        if (proto) {
+          const space = target[targetProcData][proccode];
+          const pure = document.createElement("block");
+          pure.setAttribute("type", "procedures_call");
+          pure.setAttribute("gap", "12");
+          pure.innerHTML = target.blocks.mutationToXML(proto.mutation);
+          if (!isPM) {
+            if (space.return === undefined) space.return = returnables[proccode] ?? 0;
+            else {
+              if (returnables[proccode] !== undefined && space.return !== returnables[proccode])
+                space.return = returnables[proccode];
+            }
+          }
+          tempList += pure.outerHTML.replace("<mutation", `<mutation generateshadows="true" ${isPM ? "" : `return="${space.return}"`}`);
+        }
       }
+      tempList += `<sep gap="6"/><label text="Private Blocks"/><sep gap="6"/>`;
+      proceduresXML = tempList + proceduresXML;
     }
     vm.extensionManager.refreshBlocks();
   }
@@ -953,19 +1168,14 @@
 
     getProcedureParamMenu() {
       if (
-        !ScratchBlocks || !ScratchBlocks.selected ||
-        ScratchBlocks.selected.isInFlyout || ScratchBlocks.selected.type !== "SPmbpCST_setParam"
+        !ScratchBlocks || !ScratchBlocks.selected || ScratchBlocks.selected.isInFlyout || ScratchBlocks.selected.type !== "SPmbpCST_setParam"
       ) return ["parameter name"];
       let topBlock = ScratchBlocks.selected, parent = null;
       while ((parent = topBlock?.getParent())) {
         topBlock = parent;
       }
       if (!topBlock || !topBlock.type.startsWith("procedures_definition")) return ["(not in a define script!)"];
-      const input = topBlock.getInput("custom_block");
-      if (!input) return ["(invalid define block!)"];
-      const conn = input.connection;
-      if (!conn) return ["(invalid define block!)"];
-      const innerBlock = conn.targetBlock();
+      const innerBlock = topBlock.getInput("custom_block")?.connection?.targetBlock();
       if (!innerBlock || !innerBlock.type == "procedures_prototype") return ["(invalid define block!)"];
       return innerBlock.displayNames_.length ? innerBlock.displayNames_ : [""];
     }
