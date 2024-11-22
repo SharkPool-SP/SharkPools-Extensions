@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.31
+// Version V.1.0.4
 
 (function (Scratch) {
   "use strict";
@@ -515,7 +515,7 @@
             items: [
               "random", "ascending", "descending",
               "ascending by length", "descending by length",
-              "most common", "least common"
+              "A-z", "z-A", "most common", "least common"
             ]
           }
         },
@@ -749,6 +749,8 @@
         case "descending": return arr.sort((a, b) => b - a);
         case "descending by length": return arr.sort((a, b) => b.length - a.length);
         case "ascending by length": return arr.sort((a, b) => a.length - b.length);
+        case "A-z": return arr.sort((a, b) => a.localeCompare(b));
+        case "z-A": return arr.sort((a, b) => b.localeCompare(a));
         case "most common": return sortFreq(arr, true);
         case "least common": return sortFreq(arr, false);
         default:
