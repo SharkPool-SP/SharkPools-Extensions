@@ -6,7 +6,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // License: MIT AND LGPLv3
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -328,6 +328,7 @@
 	  });
   }
   function startListenerWorker() {
+    if (typeof ReduxStore === "undefined") return;
     const checkInEditor = () => !ReduxStore.getState().scratchGui.mode.isPlayerOnly;
     let inEditor = checkInEditor();
     if (inEditor) attachEvents();
