@@ -109,8 +109,8 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 10/31/2024"
+      "status": "update",
+      "date": "Last Updated: 11/23/2024"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
@@ -179,7 +179,7 @@
       "credits": "Customize and Organize Lists Monitors. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Sty-Lists.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/16/2024"
     },
     "Gamepad-Expanded": {
@@ -256,7 +256,7 @@
       "credits": "Fetch Statistics and Information and Play Songs from Spotify. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Spotify.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/16/2024"
     },
     "SoundCloud-API": {
@@ -382,7 +382,7 @@
       "credits": "Better Comments with Color and Text Customization. Made by SharkPool",
       "url": "https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/extension-code/Better-Comments.js",
       "tags": ".all.expanded.addon",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/14/2024"
     },
     "Sprite-Panel": {
