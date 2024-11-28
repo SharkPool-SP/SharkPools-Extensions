@@ -88,3 +88,9 @@ body {
 .tagBar .tag:hover {
   transform: scale(1.15);
 }
+
+.ext-tag {
+  position: absolute;
+  right: -40px;
+  top: -20px;
+}
