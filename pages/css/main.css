@@ -11,7 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   align-content: center;
-  gap: 20px;
+  gap: 15px;
 }
 .navBar .navHeader {
   display: flex;
@@ -39,16 +39,28 @@ body {
   transform: scale(1.1);
 }
 
-.tagBar {
+.innerNav {
   display: flex;
   align-items: center;
   justify-content: center;
   align-items: center;
   align-content: center;
+}
+.innerNav .navImg {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  transition: transform 200ms ease-in-out;
+  transform: scale(1);
+}
+.innerNav .navImg:hover {
+  transform: scale(1.2);
+}
+.tagBar {
   width: 100%;
   max-width: 800px;
   height: 60px;
-  margin: 25px auto;
+  margin: 15px;
   background-color: #242424;
   border: solid 6px #2f2f2f;
   border-radius: 50px;
@@ -70,5 +82,5 @@ body {
   transform: scale(1);
 }
 .tagBar .tag:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
