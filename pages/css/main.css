@@ -7,9 +7,7 @@ body {
 
 .navBar {
   display: flex;
-  align-items: center;
   justify-content: center;
-  align-items: center;
   align-content: center;
   gap: 15px;
 }
@@ -41,9 +39,7 @@ body {
 
 .innerNav {
   display: flex;
-  align-items: center;
   justify-content: center;
-  align-items: center;
   align-content: center;
 }
 .innerNav .navImg {
@@ -57,6 +53,9 @@ body {
   transform: scale(1.2);
 }
 .tagBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 800px;
   height: 60px;
@@ -66,12 +65,13 @@ body {
   border-radius: 50px;
 }
 .tagBar .tag {
+  display: inline-block;
   cursor: pointer;
   user-select: none;
   width: auto;
   height: 35px;
   margin: 10px auto;
-  padding: 0 10px 0 10px;
+  padding: 10px auto;
   font-weight: 600;
   font-size: 20px;
   line-height: 35px;
