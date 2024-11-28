@@ -41,6 +41,7 @@ body {
   display: flex;
   justify-content: center;
   align-content: center;
+  align-items: center;
 }
 .innerNav .navImg {
   width: 70px;
@@ -65,13 +66,15 @@ body {
   border-radius: 50px;
 }
 .tagBar .tag {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   user-select: none;
   width: auto;
   height: 35px;
   margin: 10px auto;
-  padding: 10px auto;
+  padding: 2px 10px 2px;
   font-weight: 600;
   font-size: 20px;
   line-height: 35px;
