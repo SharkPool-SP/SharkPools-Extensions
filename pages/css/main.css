@@ -23,8 +23,9 @@ body {
 }
 .navBar .header {
   font-size: 15px;
+  font-weight: 600;
   color: #b7e9ff;
-  max-width: 480px;
+  max-width: 500px;
 }
 .navBar img {
   width: 100px;
