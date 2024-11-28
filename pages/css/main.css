@@ -30,7 +30,7 @@ body {
   width: 100px;
   height: 100px;
   cursor: pointer;
-  transition: transform 200ms ease-in-out;
+  transition: transform 150ms ease-in-out;
   transform: scale(1);
 }
 .navBar img:hover {
@@ -47,7 +47,7 @@ body {
   width: 70px;
   height: 70px;
   cursor: pointer;
-  transition: transform 200ms ease-in-out;
+  transition: transform 150ms ease-in-out;
   transform: scale(1);
 }
 .innerNav .navImg:hover {
@@ -81,7 +81,7 @@ body {
   background-color: #00b8ff;
   border: solid 5px #007dff;
   border-radius: 50px;
-  transition: transform 200ms ease-in-out;
+  transition: transform 150ms ease-in-out;
   transform: scale(1);
 }
 .tagBar .tag:hover {
