@@ -1,6 +1,5 @@
 body {
   text-align: center;
-  background-color: #111111;
   padding: 20px;
   font-family: Sans-Serif;
   color: #fff;
@@ -63,7 +62,7 @@ body {
   padding: 0 10px 0 10px;
   font-weight: 600;
   font-size: 20px;
-  line-height: 30px;
+  line-height: 35px;
   background-color: #00b8ff;
   border: solid 5px #007dff;
   border-radius: 50px;
