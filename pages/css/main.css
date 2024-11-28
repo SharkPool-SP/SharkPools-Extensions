@@ -1,0 +1,75 @@
+body {
+  text-align: center;
+  background-color: #111111;
+  padding: 20px;
+  font-family: Sans-Serif;
+  color: #fff;
+}
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 20px;
+}
+.navBar .navHeader {
+  display: flex;
+  flex-direction: column;
+  font-size: 30px;
+  color: #b7e9ff;
+}
+.navBar .title {
+  font-family: "Lilita One", Sans-Serif;
+  margin-bottom: 2px;
+}
+.navBar .header {
+  font-size: 15px;
+  color: #b7e9ff;
+  max-width: 480px;
+}
+.navBar img {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  transition: transform 200ms ease-in-out;
+  transform: scale(1);
+}
+.navBar img:hover {
+  transform: scale(1.1);
+}
+
+.tagBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  max-width: 800px;
+  height: 60px;
+  margin: 25px auto;
+  background-color: #242424;
+  border: solid 6px #2f2f2f;
+  border-radius: 50px;
+}
+.tagBar .tag {
+  cursor: pointer;
+  user-select: none;
+  width: auto;
+  height: 35px;
+  margin: 10px auto;
+  padding: 0 10px 0 10px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  background-color: #00b8ff;
+  border: solid 5px #007dff;
+  border-radius: 50px;
+  transition: transform 200ms ease-in-out;
+  transform: scale(1);
+}
+.tagBar .tag:hover {
+  transform: scale(1.2);
+}
