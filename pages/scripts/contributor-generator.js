@@ -6,7 +6,7 @@ async function displayContributors() {
   main.classList.add("ext-div");
   main.setAttribute("style", "pointer-events: auto; width: 100%;");
 
-  const json = await (await fetch("/Gallery%20Files/Contributors.json")).json();
+  const json = await (await fetch("Gallery%20Files/Contributors.json")).json();
   Object.values(json).forEach((item) => {
     const img = document.createElement("img");
     img.src = item.url;
