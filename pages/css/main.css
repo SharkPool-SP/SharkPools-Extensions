@@ -94,3 +94,8 @@ body {
   right: -35px;
   top: -25px;
 }
+.ext-pin {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
