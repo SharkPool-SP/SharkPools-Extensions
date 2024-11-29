@@ -99,8 +99,8 @@ body {
   left: 5px;
   top: 5px;
   transition: transform 150ms ease-in-out;
-  transform: scale(0.9);
+  transform: scale(0.7);
 }
 .ext-pin:hover {
-  transform: scale(1);
+  transform: scale(0.9);
 }
