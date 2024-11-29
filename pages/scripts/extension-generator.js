@@ -8,16 +8,16 @@ function displayExts(json) {
   main.setAttribute("style", "pointer-events: auto; width: 100%;");
 
   Object.entries(json).forEach((item) => {
-    const info = item[1];
+    const name = item[0], info = item[1];
 
     const holderDiv = document.createElement("div");
-    holderDiv.classList.add(item[0]);
+    holderDiv.classList.add(name);
     holderDiv.setAttribute("style", "display: inline-block; width: 300px; height: 150px; opacity: 0; margin: 20px; cursor: pointer; transform: scale(1);");
 
     const img = document.createElement("img");
-    img.id = item[0];
+    img.id = name;
     img.setAttribute("loading", "lazy");
-    img.src = `/extension-thumbs/${item[0]}.svg`;
+    img.src = `/extension-thumbs/${name}.svg`;
 
     const tag = info.status ? genTag(info.status) : "";
     if (tag) tags.push(tag);
@@ -28,14 +28,18 @@ function displayExts(json) {
       holderDiv.style.opacity = "1";
     };
 
-    holderDiv.addEventListener("click", () => {
-      console.log(info);
+    holderDiv.addEventListener("click", (e) => {
+      downloadExt(name, info);
+      e.stopImmediatePropagation();
     });
     holderDiv.addEventListener("mouseenter", () => {
+      holderDiv.appendChild(genPin(name));
+      genText("ext-desc", info);
       holderDiv.animate([{ transform: "scale(1)" }, { transform: "scale(1.1)" }], { duration: 200, easing: "ease-in-out" });
       holderDiv.style.transform = "scale(1.1)";
     });
     holderDiv.addEventListener("mouseleave", () => {
+      holderDiv.lastChild.remove();
       holderDiv.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 200, easing: "ease-in-out" });
       holderDiv.style.transform = "scale(1)";
     });
