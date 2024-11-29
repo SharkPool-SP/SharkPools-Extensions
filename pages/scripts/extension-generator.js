@@ -40,6 +40,7 @@ function displayExts(json) {
     });
     holderDiv.addEventListener("mouseleave", () => {
       holderDiv.lastChild.remove();
+      removeText("ext-desc");
       holderDiv.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 200, easing: "ease-in-out" });
       holderDiv.style.transform = "scale(1)";
     });
