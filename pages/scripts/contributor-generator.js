@@ -1,4 +1,7 @@
 async function displayContributors() {
+  const oldDiv = document.querySelector(".ext-div");
+  if (oldDiv) oldDiv.remove();
+
   const main = document.createElement("div");
   main.classList.add("ext-div");
   main.setAttribute("style", "pointer-events: auto; width: 100%;");
