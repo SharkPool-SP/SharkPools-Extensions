@@ -254,6 +254,7 @@ function openSearch() {
   const bg = document.createElement("img");
   bg.classList.add("search-ui");
   bg.src = "Gallery%20Files/main-assets/search-bg.svg";
+  bg.setAttribute("draggable", "false");
 
   const input = document.createElement("input");
   input.classList.add("search-input");
@@ -263,6 +264,7 @@ function openSearch() {
   const submit = document.createElement("img");
   submit.classList.add("search-enter");
   submit.src = "Gallery%20Files/main-assets/search-enter.svg";
+  submit.setAttribute("draggable", "false");
   submit.addEventListener("click", (e) => {
     displayExts(filterExts(galleryData.extensions, query));
     searchContainer.remove();
@@ -272,6 +274,7 @@ function openSearch() {
   const leave = document.createElement("img");
   leave.classList.add("search-leave");
   leave.src = "Gallery%20Files/main-assets/search-exit.svg";
+  leave.setAttribute("draggable", "false");
   leave.addEventListener("click", (e) => {
     displayExts(filterExts(galleryData.extensions));
     searchContainer.remove();
