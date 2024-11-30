@@ -3,6 +3,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 9999;
 }
 .search-ui {
   transform: scale(1.5);
@@ -12,7 +13,7 @@
   left: 50%;
   top: 43%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 99;
   font-size: 30px;
   font-family: Lilita One, Sans-Serif;
 }
@@ -27,7 +28,8 @@
   border: none;
   color: #fff;
   background-color: #00000000;
-  z-index: 9999;
+  padding: 10px;
+  z-index: 99;
   font-size: 20px;
   font-family: Sans-Serif;
 }
@@ -37,7 +39,7 @@
   left: 50%;
   top: 56.5%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 99;
   transition: width 200ms ease-in-out;
   width: 125px;
 }
@@ -49,7 +51,7 @@
   left: 68%;
   top: 42%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 99;
   transition: width 200ms ease-in-out;
   width: 40px;
 }
