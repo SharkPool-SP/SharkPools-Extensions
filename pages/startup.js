@@ -1,6 +1,5 @@
 let isPenguinMod = false, inCredits = false;
-let currentTag = "all", downloadType = "download";
-let galleryData = {}, pins = [];
+let currentTag = "all", downloadType = "download", pins = [];
 
 /* Storage */
 function getCleanStorage() {
@@ -203,7 +202,9 @@ async function downloadExt(name, data) {
   if (isPenguinMod) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
-    messager.postMessage({ loadExt: data.url }, "https://studio.penguinmod.com");
+    messager.postMessage({
+      loadExt: `https://sharkpools-extensions.vercel.app/extension-code/${name}.js`
+    }, "https://studio.penguinmod.com");
     genText("center-notif", "Copied to PenguinMod!");
   } else {
     if (downloadType === "download") {
@@ -243,7 +244,7 @@ function openSearch() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
+  const galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
   if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
   else {
     const params = new URLSearchParams(location.search);
