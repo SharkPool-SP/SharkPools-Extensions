@@ -19,6 +19,7 @@ function displayExts(json) {
     img.id = name;
     img.setAttribute("loading", "lazy");
     img.setAttribute("draggable", "false");
+    img.style.width = "300px";
     img.src = name === "override404" ? "pages/404.svg" : `extension-thumbs/${name}.svg`;
 
     const tag = info.status ? genTag(info.status) : "";
