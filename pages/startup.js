@@ -13,7 +13,6 @@ function getCleanStorage() {
     console.warn("Removing Malformed LocalStorage");
     localStorage.removeItem("SPgalleryInfo");
   }
-  = localStorage.getItem("SPgalleryInfo") || {};
   currentTag = store.tag || "all";
   downloadType = store.downloadType === "download" ? "download" : "clipboard";
   if (store.pinnedExts && store.pinnedExts?.constructor?.name === "Array") pins = store.pinnedExts || [];
