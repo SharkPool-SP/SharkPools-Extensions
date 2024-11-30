@@ -7,9 +7,7 @@ function getCleanStorage() {
   localStorage.removeItem("extensions.turbowarp.org/local-storage:SP.extension.gal.DATA"); // remnant of the past
   let store;
   try {
-    store = localStorage.getItem("SPgalleryInfo");
-    if (store?.constructor?.name === "Object") store = JSON.parse(store);
-    else store = {};
+    store = JSON.parse(localStorage.getItem("SPgalleryInfo"));
   } catch {
     console.warn("Removing Malformed LocalStorage");
     localStorage.removeItem("SPgalleryInfo");
