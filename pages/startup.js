@@ -1,5 +1,6 @@
 let isPenguinMod = false, inCredits = false;
-let currentTag = "all", downloadType = "download", pins = [];
+let currentTag = "all", downloadType = "download";
+let galleryData = {}, pins = [];
 
 /* Storage */
 function getCleanStorage() {
@@ -242,7 +243,7 @@ function openSearch() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
+  galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
   if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
   else {
     const params = new URLSearchParams(location.search);
