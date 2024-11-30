@@ -5,15 +5,17 @@ let galleryData = {}, pins = [];
 /* Storage */
 function getCleanStorage() {
   localStorage.removeItem("extensions.turbowarp.org/local-storage:SP.extension.gal.DATA"); // remnant of the past
-  let store;
+  let store = {};
   try {
     store = JSON.parse(localStorage.getItem("SPgalleryInfo"));
   } catch {
     console.warn("Removing Malformed LocalStorage");
     localStorage.removeItem("SPgalleryInfo");
+    store = {};
   }
   currentTag = store.tag || "all";
   downloadType = store.downloadType === "download" ? "download" : "clipboard";
+  document.querySelector(`img[class="navImg"]`).src = `Gallery%20Files/main-assets/${downloadType}.svg`;
   if (store.pinnedExts && store.pinnedExts?.constructor?.name === "Array") pins = store.pinnedExts || [];
 }
 
@@ -86,11 +88,12 @@ function addBtnBehaviours() {
 }
 
 /* Utils */
-function filterExts(json, searchQ = "") {
+function filterExts(json, searchQ) {
   delete json.Example;
   const entries = Object.entries(json);
   let newEntries = [];
   if (currentTag === "search") {
+    if (searchQ === undefined) searchQ = "";
     // order by query
     entries.forEach((entry) => {
       const extData = entry[1];
@@ -236,10 +239,44 @@ async function downloadExt(name, data) {
 
 /* Search UI */
 function openSearch() {
-  alert("SharkPool is working on rewriting the Search Bar, Sorry!");
   let query = "";
-  displayExts(filterExts(galleryData.extensions), query);
-  updateStorage();
+  const searchContainer = document.createElement("div");
+  searchContainer.classList.add("search-div");
+  
+  const text = document.createElement("div");
+  text.classList.add("search-txt");
+  text.textContent = "Search for an Extension";
+
+  const bg = document.createElement("img");
+  bg.classList.add("search-ui");
+  bg.src = "Gallery%20Files/main-assets/search-bg.svg";
+
+  const input = document.createElement("input");
+  input.classList.add("search-input");
+  input.type = "text";
+  input.addEventListener("change", (e) => query = e.target.value);
+
+  const submit = document.createElement("img");
+  submit.classList.add("search-enter");
+  submit.src = "Gallery%20Files/main-assets/search-enter.svg";
+  submit.addEventListener("click", (e) => {
+    displayExts(filterExts(galleryData.extensions), query);
+    searchContainer.remove();
+    e.stopImmediatePropagation();
+  });
+
+  const leave = document.createElement("img");
+  leave.classList.add("search-leave");
+  leave.src = "Gallery%20Files/main-assets/search-exit.svg";
+  leave.addEventListener("click", (e) => {
+    displayExts(filterExts(galleryData.extensions));
+    searchContainer.remove();
+    e.stopImmediatePropagation();
+  });
+
+  searchContainer.append(text, bg, input, submit, leave);
+  document.body.appendChild(searchContainer);
+  input.focus();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
