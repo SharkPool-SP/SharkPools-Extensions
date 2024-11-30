@@ -18,6 +18,7 @@ function displayExts(json) {
     const img = document.createElement("img");
     img.id = name;
     img.setAttribute("loading", "lazy");
+    img.setAttribute("draggable", "false");
     img.src = `extension-thumbs/${name}.svg`;
 
     const tag = info.status ? genTag(info.status) : "";
