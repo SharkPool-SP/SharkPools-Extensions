@@ -94,15 +94,17 @@ function filterExts(json, searchQ) {
   let newEntries = [];
   if (currentTag === "search") {
     if (searchQ === undefined) searchQ = "";
+    searchQ = searchQ.toLowerCase();
     // order by query
     entries.forEach((entry) => {
       const extData = entry[1];
       if (
-        entry[0].includes(searchQ.replaceAll(" ", "-")) ||
-        extData.credits.includes(searchQ) || extData.date.includes(searchQ)
+        entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
+        extData.credits.toLowerCase().includes(searchQ) || extData.date.includes(searchQ)
       ) newEntries.push(entry);
     });
-    return Object.fromEntries(newEntries);
+    if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
+    else return Object.fromEntries(newEntries);
   } else if (currentTag === "all") {
     // order by newest => updated => old
     entries.forEach((entry) => {
@@ -158,6 +160,7 @@ function genPin(extName) {
 }
 
 function genText(type, text) {
+  if (!text || !type) return;
   const desc = document.createElement("div");
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
