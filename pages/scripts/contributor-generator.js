@@ -11,6 +11,8 @@ async function displayContributors() {
     const img = document.createElement("img");
     img.src = item.url;
     img.setAttribute("style", "width: 150px; height: 150px; opacity: 0; margin: 25px; cursor: pointer; transform: scale(1);");
+    img.setAttribute("draggable", "false");
+    img.setAttribute("loading", "lazy");
     main.appendChild(img);
     img.onload = () => {
       img.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
