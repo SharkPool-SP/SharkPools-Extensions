@@ -1,3 +1,4 @@
+
 function displayExts(json) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
@@ -34,15 +35,18 @@ function displayExts(json) {
     });
     holderDiv.addEventListener("mouseenter", () => {
       holderDiv.appendChild(genPin(name));
-      genText("ext-desc", info);
+      genText("ext-desc", info.credits);
+      genText("ext-log", info.date);
       holderDiv.animate([{ transform: "scale(1)" }, { transform: "scale(1.1)" }], { duration: 200, easing: "ease-in-out" });
       holderDiv.style.transform = "scale(1.1)";
     });
     holderDiv.addEventListener("mouseleave", () => {
-      holderDiv.lastChild.remove();
-      removeText("ext-desc");
+      removeText();
       holderDiv.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 200, easing: "ease-in-out" });
       holderDiv.style.transform = "scale(1)";
+      const pin = holderDiv.lastChild;
+      const animation = pin.animate([{ opacity: "1" }, { opacity: "0" }], { duration: 200, easing: "ease-in-out" });
+      animation.onfinish = () => pin.remove();
     });
   });
   document.body.appendChild(main);
