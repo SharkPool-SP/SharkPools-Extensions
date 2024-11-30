@@ -19,9 +19,9 @@ function getCleanStorage() {
 }
 
 function updateStorage() {
-  localStorage.setItem("SPgalleryInfo", JSON.stringify(
+  localStorage.setItem("SPgalleryInfo", JSON.stringify({
     tag: currentTag, pinnedExts: pins, downloadType
-  ));
+  }));
 }
 
 /* Button Functionality */
