@@ -7,23 +7,33 @@ let currentTag = "all", downloadType = "download", pins = [];
 /* Button Functionality */
 function addBtnBehaviours() {
   const navBtns = document.querySelectorAll(`img[class="navImg"]`);
-  // file type
-  navBtns[0].addEventListener("click", (e) => {
+  const extDwnload = navBtns[0]; // file type
+  extDwnload.addEventListener("click", (e) => {
+    removeText();
     downloadType = downloadType === "clipboard" ? "download" : "clipboard";
-    navBtns[0].src = `/Gallery%20Files/main-assets/${downloadType}.svg`;
-    navBtns[0].animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
-    navBtns[0].style.transform = "scale(1.1)";
+    extDwnload.src = `Gallery%20Files/main-assets/${downloadType}.svg`;
+    extDwnload.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
+    extDwnload.style.transform = "scale(1.1)";
     e.stopImmediatePropagation();
   });
-  // to/from contributers
-  navBtns[1].addEventListener("click", (e) => {
+  extDwnload.addEventListener("mouseleave", () => removeText());
+  if (!isPenguinMod) extDwnload.addEventListener("mouseenter", () => genText("center-notif", `Extensions will be ${downloadType === "download" ? "Downloaded" : "Copied to Clipboard"}`));
+  else {
+    extDwnload.style.filter = "brightness(0.3)";
+    extDwnload.addEventListener("mouseenter", () => genText("center-notif", "Extensions are Auto-Loaded to PenguinMod"));
+  }
+
+  const toContribs = navBtns[1]; // to/from contributers
+  toContribs.addEventListener("click", (e) => {
     inCredits = !inCredits;
     if (inCredits) displayContributors();
     else displayExts(filterExts(galleryData.extensions));
-    navBtns[1].animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
-    navBtns[1].style.transform = "scale(1.1)";
+    toContribs.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
+    toContribs.style.transform = "scale(1.1)";
     e.stopImmediatePropagation();
   });
+  toContribs.addEventListener("mouseleave", () => removeText());
+  toContribs.addEventListener("mouseenter", () => genText("center-notif", `Go to ${inCredits ? "Contributors" : "Main"} Page`));
 
   const tags = document.querySelectorAll(`div[class="tag"]`);
   tags.forEach((item) => {
@@ -33,7 +43,11 @@ function addBtnBehaviours() {
     item.addEventListener("click", (e) => {
       tags.forEach((i) => i.setAttribute("style", ""));
       item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
+
       currentTag = item.id;
+      let s = new URLSearchParams(location.search);
+      s.set("tag", item.id);
+      history.replaceState("", "", "?" + s.toString());
       if (currentTag === "search") openSearch();
       else displayExts(filterExts(galleryData.extensions));
       e.stopImmediatePropagation();
@@ -42,7 +56,7 @@ function addBtnBehaviours() {
 
   if (isPenguinMod) {
     const logo = document.querySelector(`img[class="toHost"]`);
-    logo.src = "/Gallery%20Files/main-assets/logo-PM.svg";
+    logo.src = "Gallery%20Files/main-assets/logo-PM.svg";
     logo.setAttribute("onclick", "window.open('https://penguinmod.com/')");
   }
 }
@@ -89,14 +103,14 @@ function genTag(type) {
   const tag = document.createElement("img");
   tag.classList.add("ext-tag");
   tag.setAttribute("rng", Math.random() * 1.5 + 1.5);
-  tag.src = `/Gallery%20Files/main-assets/ext-${type}.svg`;
+  tag.src = `Gallery%20Files/main-assets/ext-${type}.svg`;
   return tag;
 }
 
 function genPin(extName) {
   const pin = document.createElement("img");
   pin.classList.add("ext-pin");
-  pin.src = `/Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
+  pin.src = `Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
   pin.style.opacity = "0";
   pin.onload = () => {
     if (pin.getAttribute("alrExists")) return;
@@ -108,14 +122,54 @@ function genPin(extName) {
     const ind = pins.indexOf(extName);
     if (ind > -1) pins.splice(ind, 1);
     else pins.push(extName);
-    pin.src = `/Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
+    pin.src = `Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
     e.stopImmediatePropagation();
   });
   return pin;
 }
 
 function genText(type, text) {
-  // TODO
+  const desc = document.createElement("div");
+  desc.classList.add("text-descriptor");
+  desc.setAttribute("type", type);
+  desc.setAttribute("style", "width: max-content; max-width: 90%; background-color: rgba(0,56,87,.86); border: solid 7px #0093ff; padding: 20px; border-radius: 15px; font-size: 20px; font-weight: 600; position: fixed; left: -50%; transform: translate(-50%, -50%); z-index: 999;");
+  desc.textContent = text;
+  switch (type) {
+    case "ext-desc":
+      desc.style.top = "85%";
+      desc.style.color = "#b7e9ff";
+      break;
+    case "ext-log":
+      desc.style.top = "15%";
+      desc.style.left = "150%";
+      desc.style.color = "#b7e9ff";
+      break;
+    case "center-notif":
+      desc.style.borderColor = "#ebebeb";
+      desc.style.backgroundColor = "rgba(87,87,87,.86)";
+      desc.style.top = "50%";
+      desc.style.fontSize = "25px";
+      break;
+    case "contributor":
+      desc.style.borderColor = "#ebebeb";
+      desc.style.backgroundColor = "rgba(87,87,87,.86)";
+      desc.style.top = "85%";
+      break;
+  }
+  document.body.appendChild(desc);
+  const animation = desc.animate([{ left: desc.style.left }, { left: "50%" }], { duration: 400, easing: "ease-in-out" });
+  animation.onfinish = () => desc.style.left = "50%";
+}
+
+function removeText() {
+  const elements = document.querySelectorAll(".text-descriptor");
+  elements.forEach((element) => {
+    const type = element.getAttribute("type");
+    const animation = element.animate(
+      [{ left: "50%" }, { left: type === "ext-log" ? "-50%" : "150%" }], { duration: 400, easing: "ease-in-out" }
+    );
+    animation.onfinish = () => element.remove();
+  });
 }
 
 async function downloadExt(name, data) {
@@ -123,7 +177,7 @@ async function downloadExt(name, data) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
     messager.postMessage({ loadExt: data.url }, "https://studio.penguinmod.com");
-    // TODO msg
+    genText("center-notif", "Copied to PenguinMod!");
   } else {
     if (downloadType === "download") {
       fetch(data.url)
@@ -145,7 +199,7 @@ async function downloadExt(name, data) {
         const text = await (await fetch(data.url)).text();
         navigator.clipboard.writeText(text)
           .then(() => {
-            // TODO msg
+            genText("center-notif", "Copied to Clipboard!");
           })
           .catch(() => window.open(data.url));
       }
@@ -154,11 +208,12 @@ async function downloadExt(name, data) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("onload");
-  const galleryData = await (await fetch("/Gallery%20Files/Extension-Keys.json")).json();
-  if (!galleryData.site["is up"]) window.location.href = "/pages/down.html";
+  const galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
+  if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
   else {
-    isPenguinMod = window.location.search.includes("originPM=true");
+    const params = new URLSearchParams(location.search);
+    isPenguinMod = Boolean(params.get("originPM"));
+    currentTag = params.get("tag") || "all";
     addBtnBehaviours();
     displayExts(filterExts(galleryData.extensions));
   }
