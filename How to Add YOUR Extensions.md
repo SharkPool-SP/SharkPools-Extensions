@@ -18,7 +18,7 @@
     ```
     "[Extension-Name]": {
        "credits": "[A Short Description of your Extension with Credits]",
-       "url": "[Link to the RAW GITHUB FILE for your Extension Code]",
+       "url": "[File path to your Extension Code]",
        "tags": "[Tags that Relate to your Extension]"
        "status": "[use 'new' if its a new extension or 'update' if its an update to an existing extension]"
     }
@@ -30,9 +30,10 @@
     - 'expanded' --> Expansion of an existing Custom/Vanilla Extension
     - 'category' --> Expansion of an existing Main/Sub Category (Motion, Looks, Control, etc)
     - 'fetching' --> Extensions that use 'fetch' or anything related to it
+    - 'addon' --> Extensions that are Addons to the Editor (i.e Better Comments, Sprite Panel)
 
   **Note: Dont worry about the Extension Thumbnail as they are Automatically Loaded**
 
 **Step 5**: Pull Request and You're Done!
 
-**Note: Remember to include all files and changes (SVG Thumbnail, Extension Code, and JSON additions: RAW Code Link, Credits, Name, Tags))**
+**Note: Remember to include all files and changes (SVG Thumbnail, Extension Code, and JSON additions: Code Link, Credits, Name, Tags))**
