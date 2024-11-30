@@ -136,7 +136,7 @@ function genText(type, text) {
   desc.textContent = text;
   switch (type) {
     case "ext-desc":
-      desc.style.top = "85%";
+      desc.style.top = "90%";
       desc.style.color = "#b7e9ff";
       break;
     case "ext-log":
@@ -153,7 +153,7 @@ function genText(type, text) {
     case "contributor":
       desc.style.borderColor = "#ebebeb";
       desc.style.backgroundColor = "rgba(87,87,87,.86)";
-      desc.style.top = "85%";
+      desc.style.top = "90%";
       break;
   }
   document.body.appendChild(desc);
