@@ -23,7 +23,7 @@ async function displayContributors() {
       img.style.transform = "scale(1.1)";
     });
     img.addEventListener("mouseleave", () => {
-      removeText("contributor");
+      removeText();
       img.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 150, easing: "ease-in-out" });
       img.style.transform = "scale(1)";
     });
