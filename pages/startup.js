@@ -2,7 +2,28 @@ let isPenguinMod = false, inCredits = false;
 let currentTag = "all", downloadType = "download", pins = [];
 
 /* Storage */
-// TODO storage
+function getCleanStorage() {
+  localStorage.removeItem("extensions.turbowarp.org/local-storage:SP.extension.gal.DATA"); // remnant of the past
+  let store;
+  try {
+    store = localStorage.getItem("SPgalleryInfo");
+    if (store?.constructor?.name === "Object") store = JSON.parse(store);
+    else store = {};
+  } catch {
+    console.warn("Removing Malformed LocalStorage");
+    localStorage.removeItem("SPgalleryInfo");
+  }
+  = localStorage.getItem("SPgalleryInfo") || {};
+  currentTag = store.tag || "all";
+  downloadType = store.downloadType === "download" ? "download" : "clipboard";
+  if (store.pinnedExts && store.pinnedExts?.constructor?.name === "Array") pins = store.pinnedExts || [];
+}
+
+function updateStorage() {
+  localStorage.setItem("SPgalleryInfo", JSON.stringify(
+    tag: currentTag, pinnedExts: pins, downloadType
+  ));
+}
 
 /* Button Functionality */
 function addBtnBehaviours() {
@@ -14,6 +35,7 @@ function addBtnBehaviours() {
     extDwnload.src = `Gallery%20Files/main-assets/${downloadType}.svg`;
     extDwnload.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
     extDwnload.style.transform = "scale(1.1)";
+    updateStorage();
     e.stopImmediatePropagation();
   });
   extDwnload.addEventListener("mouseleave", () => removeText());
@@ -50,7 +72,10 @@ function addBtnBehaviours() {
       s.set("tag", item.id);
       history.replaceState("", "", "?" + s.toString());
       if (currentTag === "search") openSearch();
-      else displayExts(filterExts(galleryData.extensions));
+      else {
+        displayExts(filterExts(galleryData.extensions));
+        updateStorage();
+      }
       e.stopImmediatePropagation();
     });
   });
@@ -124,6 +149,7 @@ function genPin(extName) {
     if (ind > -1) pins.splice(ind, 1);
     else pins.push(extName);
     pin.src = `Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
+    updateStorage();
     e.stopImmediatePropagation();
   });
   return pin;
@@ -208,13 +234,22 @@ async function downloadExt(name, data) {
   }
 }
 
+/* Search UI */
+function openSearch() {
+  alert("SharkPool is working on rewriting the Search Bar, Sorry!");
+  let query = "";
+  displayExts(filterExts(galleryData.extensions), query);
+  updateStorage();
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
   if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
   else {
     const params = new URLSearchParams(location.search);
     isPenguinMod = Boolean(params.get("originPM"));
-    currentTag = params.get("tag") || "all";
+    getCleanStorage();
+    currentTag = params.get("tag") || currentTag;
     addBtnBehaviours();
     displayExts(filterExts(galleryData.extensions));
   }
