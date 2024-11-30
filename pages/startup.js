@@ -41,6 +41,7 @@ function addBtnBehaviours() {
       item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
     }
     item.addEventListener("click", (e) => {
+      inCredits = false;
       tags.forEach((i) => i.setAttribute("style", ""));
       item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
 
