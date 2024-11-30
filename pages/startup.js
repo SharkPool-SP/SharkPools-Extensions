@@ -8,10 +8,10 @@ function getCleanStorage() {
   let store = {};
   try {
     store = JSON.parse(localStorage.getItem("SPgalleryInfo"));
+    if (store === null) store = {};
   } catch {
     console.warn("Removing Malformed LocalStorage");
     localStorage.removeItem("SPgalleryInfo");
-    store = {};
   }
   currentTag = store.tag || "all";
   downloadType = store.downloadType === "download" ? "download" : "clipboard";
@@ -102,6 +102,7 @@ function filterExts(json, searchQ) {
         extData.credits.includes(searchQ) || extData.date.includes(searchQ)
       ) newEntries.push(entry);
     });
+    return Object.fromEntries(newEntries);
   } else if (currentTag === "all") {
     // order by newest => updated => old
     entries.forEach((entry) => {
@@ -260,7 +261,7 @@ function openSearch() {
   submit.classList.add("search-enter");
   submit.src = "Gallery%20Files/main-assets/search-enter.svg";
   submit.addEventListener("click", (e) => {
-    displayExts(filterExts(galleryData.extensions), query);
+    displayExts(filterExts(galleryData.extensions, query));
     searchContainer.remove();
     e.stopImmediatePropagation();
   });
