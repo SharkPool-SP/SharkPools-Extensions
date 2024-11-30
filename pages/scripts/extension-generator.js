@@ -19,7 +19,7 @@ function displayExts(json) {
     img.id = name;
     img.setAttribute("loading", "lazy");
     img.setAttribute("draggable", "false");
-    img.src = `extension-thumbs/${name}.svg`;
+    img.src = name === "override404" ? "pages/404.svg" : `extension-thumbs/${name}.svg`;
 
     const tag = info.status ? genTag(info.status) : "";
     if (tag) tags.push(tag);
@@ -29,6 +29,7 @@ function displayExts(json) {
       holderDiv.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
       holderDiv.style.opacity = "1";
     };
+    if (name === "override404") return;
 
     holderDiv.addEventListener("click", (e) => {
       downloadExt(name, info);
