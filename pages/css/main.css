@@ -89,7 +89,7 @@ body {
   transform: scale(1.15);
 }
 
-.ext-div {
+.ext-holder {
   display: inline-block;
   width: 300px;
   height: 150px;
