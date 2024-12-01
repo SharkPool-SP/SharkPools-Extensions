@@ -52,5 +52,13 @@
     <script src="pages/scripts/extension-generator.js" defer=""></script>
     <script src="pages/scripts/contributor-generator.js" defer=""></script>
     <script src="pages/startup.js"></script>
+    <div id="bloom-filter">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <filter id="bloom-filter">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5"></feGaussianBlur>
+          <feComposite in2="SourceGraphic" operator="arithmetic" k2=".5" k3="1" color-interpolation-filters="sRGB"></feComposite>
+        </filter>
+      </svg>
+    </div>
   </body>
 </html>
