@@ -44,7 +44,7 @@ function displayExts(json) {
       holderDiv.appendChild(genPin(name));
       genText("ext-desc", info.credits);
       genText("ext-log", info.date);
-      holderDiv.firstChild.style.filter = "url(#filter-1)";
+      holderDiv.firstChild.style.filter = "url(#bloom-filter)";
       holderDiv.animate([{ transform: "scale(1)" }, { transform: "scale(1.1)" }], { duration: 200, easing: "ease-in-out" });
       holderDiv.style.transform = "scale(1.1)";
     });
