@@ -6,14 +6,12 @@ function displayExts(json) {
   let tags = [];
   const main = document.createElement("div");
   main.classList.add("ext-div");
-  main.setAttribute("style", "pointer-events: auto; width: 100%;");
 
   Object.entries(json).forEach((item) => {
     const name = item[0], info = item[1];
 
     const holderDiv = document.createElement("div");
-    holderDiv.classList.add(name);
-    holderDiv.setAttribute("style", "display: inline-block; width: 300px; height: 150px; opacity: 0; margin: 20px; cursor: pointer; transform: scale(1);");
+    holderDiv.classList.add("ext-holder);
 
     const img = document.createElement("img");
     img.id = name;
