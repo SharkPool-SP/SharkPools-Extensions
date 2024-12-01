@@ -208,7 +208,7 @@ async function downloadExt(name, data) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
     messager.postMessage({
-      loadExt: `https://sharkpools-extensions.vercel.app/extension-code/${name}.js`
+      loadExt: `https://sharkpools-extensions.vercel.app/${data.url}`
     }, "https://studio.penguinmod.com");
     genText("center-notif", "Copied to PenguinMod!");
   } else {
