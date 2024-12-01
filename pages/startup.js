@@ -164,7 +164,6 @@ function genText(type, text) {
   const desc = document.createElement("div");
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
-  desc.setAttribute("style", "width: max-content; max-width: 90%; background-color: rgba(0,56,87,.86); border: solid 7px #0093ff; padding: 20px; border-radius: 15px; font-size: 20px; font-weight: 600; position: fixed; left: -50%; transform: translate(-50%, -50%); z-index: 999;");
   desc.textContent = text;
   switch (type) {
     case "ext-desc":
