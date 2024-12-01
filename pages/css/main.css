@@ -114,11 +114,26 @@ body {
   transform: scale(0.9);
 }
 
-.contributer {
+.contributor {
   width: 150px;
   height: 150px;
   opacity: 0;
   margin: 25px;
   cursor: pointer;
   transform: scale(1);
+}
+
+.text-descriptor {
+  width: max-content;
+  max-width: 90%;
+  background-color: rgba(0,56,87,.86);
+  border: solid 7px #0093ff;
+  border-radius: 15px;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  position: fixed;
+  left: -50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
 }
