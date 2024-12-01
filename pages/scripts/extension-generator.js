@@ -1,4 +1,3 @@
-
 function displayExts(json) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
@@ -11,7 +10,7 @@ function displayExts(json) {
     const name = item[0], info = item[1];
 
     const holderDiv = document.createElement("div");
-    holderDiv.classList.add("ext-holder);
+    holderDiv.classList.add("ext-holder");
 
     const img = document.createElement("img");
     img.id = name;
