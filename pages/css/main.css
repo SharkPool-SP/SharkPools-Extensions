@@ -96,6 +96,7 @@ body {
   margin: 20px;
   opacity: 0;
   cursor: pointer;
+  transform: scale(1);
 }
 .ext-tag {
   position: absolute;
