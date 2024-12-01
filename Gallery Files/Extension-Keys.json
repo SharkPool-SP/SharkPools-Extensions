@@ -95,7 +95,7 @@
       "credits": "Create Highly Customizable Particle Engines with No Clones. Made by SharkPool",
       "url": "extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/24/2024"
     },
     "Particle-Tools": {
@@ -368,7 +368,7 @@
       "credits": "New Powerful Operator Blocks. Made by SharkPool",
       "url": "extension-code/More-Operators.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/20/2024"
     },
     "Captchas": {
@@ -424,21 +424,21 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "extension-code/JSON-Array.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/21/2024"
     },
     "My-Blocks-Plus": {
       "credits": "Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
       "url": "extension-code/My-Blocks-Plus.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/21/2024"
     },
     "Dropdown-Maker": {
       "credits": "Create Custom Dropdowns! Best paired with My Blocks+. Made by SharkPool, CST, and 0znzw",
       "url": "extension-code/Dropdown-Maker.js",
       "tags": ".all.utilities",
-      "status": "new",
+      "status": "",
       "date": "Released: 11/21/2024"
     },
     "Turbo-Skins": {
