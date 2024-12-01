@@ -2,7 +2,7 @@ function displayExts(json) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
 
-  let tags = [];
+  let tags = []; shouldSplit = currentTag === "all";
   const main = document.createElement("div");
   main.classList.add("ext-div");
 
@@ -22,7 +22,14 @@ function displayExts(json) {
     const tag = info.status ? genTag(info.status) : "";
     if (tag) tags.push(tag);
     holderDiv.append(img, tag);
+    if (shouldSplit && !tag) {
+      const breaker = document.createElement("div");
+      breaker.classList.add("ext-breaker");
+      main.appendChild(breaker);
+      shouldSplit = false;
+    }
     main.appendChild(holderDiv);
+
     img.onload = () => {
       holderDiv.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
       holderDiv.style.opacity = "1";
