@@ -3,6 +3,7 @@ body {
   padding: 20px;
   font-family: Sans-Serif;
   color: #fff;
+  user-select: none;
 }
 
 .navBar {
