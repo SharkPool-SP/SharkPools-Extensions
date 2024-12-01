@@ -55,7 +55,7 @@ function addBtnBehaviours() {
     e.stopImmediatePropagation();
   });
   toContribs.addEventListener("mouseleave", () => removeText());
-  toContribs.addEventListener("mouseenter", () => genText("center-notif", `Go to ${inCredits ? "Contributors" : "Main"} Page`));
+  toContribs.addEventListener("mouseenter", () => genText("center-notif", `Go to ${inCredits ? "Main" : "Contributors"} Page`));
 
   const tags = document.querySelectorAll(`div[class="tag"]`);
   tags.forEach((item) => {
