@@ -4,13 +4,12 @@ async function displayContributors() {
 
   const main = document.createElement("div");
   main.classList.add("ext-div");
-  main.setAttribute("style", "pointer-events: auto; width: 100%;");
 
   const json = await (await fetch("Gallery%20Files/Contributors.json")).json();
   Object.values(json).forEach((item) => {
     const img = document.createElement("img");
+    img.classList.add("contributor");
     img.src = item.url;
-    img.setAttribute("style", "width: 150px; height: 150px; opacity: 0; margin: 25px; cursor: pointer; transform: scale(1);");
     img.setAttribute("draggable", "false");
     img.setAttribute("loading", "lazy");
     main.appendChild(img);
