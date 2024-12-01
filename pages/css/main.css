@@ -113,3 +113,12 @@ body {
 .ext-pin:hover {
   transform: scale(0.9);
 }
+
+.contributer {
+  width: 150px;
+  height: 150px;
+  opacity: 0;
+  margin: 25px;
+  cursor: pointer;
+  transform: scale(1);
+}
