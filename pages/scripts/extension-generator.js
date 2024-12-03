@@ -22,11 +22,13 @@ function displayExts(json) {
     const tag = info.status ? genTag(info.status) : "";
     if (tag) tags.push(tag);
     holderDiv.append(img, tag);
-    if (shouldSplit && !tag) {
-      const breaker = document.createElement("div");
-      breaker.classList.add("ext-breaker");
-      main.appendChild(breaker);
-      shouldSplit = false;
+    if (!pins.includes(name)) {
+      if (shouldSplit && !tag) {
+        const breaker = document.createElement("div");
+        breaker.classList.add("ext-breaker");
+        main.appendChild(breaker);
+        shouldSplit = false;
+      }
     }
     main.appendChild(holderDiv);
 
