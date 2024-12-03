@@ -259,6 +259,12 @@ function openSearch() {
   input.classList.add("search-input");
   input.type = "text";
   input.addEventListener("change", (e) => query = e.target.value);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      displayExts(filterExts(galleryData.extensions, e.target.value));
+      searchContainer.remove();
+    }
+  });
 
   const submit = document.createElement("img");
   submit.classList.add("search-enter");
