@@ -74,7 +74,7 @@
       "credits": "New Sensing Blocks made by SharkPool",
       "url": "extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/26/2024"
     },
     "Better-Input": {
@@ -340,8 +340,8 @@
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "extension-code/Renderer-Control.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 07/25/2024"
+      "status": "update",
+      "date": "Last Updated: 12/05/2024"
     },
     "Timezones": {
       "credits": "Convert and Get Time in Different Timezones. Made by ion/ammunimium",
