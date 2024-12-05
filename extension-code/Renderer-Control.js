@@ -3,7 +3,7 @@
 // Description: Control Visuals of Sprites, Backdrops, Pen, Video, and More!
 // By: SharkPool
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function (Scratch) {
   "use strict";
@@ -290,7 +290,7 @@
       const allLay = render._drawList;
       if (allLay.indexOf(args.ID) !== -1) {
         render._allDrawables[args.ID].skin._rotationCenter = new Float32Array([x, y, 0]);
-        render._allDrawables[args.ID]._rotationCenterDirty = true;
+        render._allDrawables[args.ID]._skinWasAltered();
       }
     }
 
