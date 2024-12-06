@@ -3,7 +3,7 @@
 // Description: Fetch Spreadsheet Data
 // By: SharkPool
 
-// Version 1.2.0
+// Version 1.2.01
 
 (function (Scratch) {
   "use strict";
@@ -121,20 +121,28 @@
     async getSheetData(id, name) {
       const defaultReturn = encodingType === "2D Array" ? "[]" : "{}";
       try {
+        const convert4Item = (obj, ind) => {
+          const items = encodingType.endsWith("Array") ? [] : {};
+          if (encodingType.endsWith("Array")) for (let i = 0; i < obj.length; i++) items.push(obj[i].c[ind].f ?? obj[i].c[ind].v ?? "");
+          else for (let i = 0; i < obj.length; i++) items[i] = obj[i].c[ind].f ?? obj[i].c[ind].v ?? "";
+          return items;
+        };
+
         id = id === "/d/..." ? defaultID : Scratch.Cast.toString(id);
         name = encodeURIComponent(Scratch.Cast.toString(name));
         const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${name}&cache=${Math.random()}`;
         const response = await Scratch.fetch(`${proxy}${url}`);
         if (!response.ok) return defaultReturn;
-        const csvContent = await response.text();
-        let value = csvContent.split("\n").map(item => item.split(`","`).map(field => field.replace(/^"|"$/g, "")));
-        if (encodingType === "Object") {
-          for (var i = 0; i < value.length; i++) {
-            value[i] = Object.assign({}, value[i]);
-          }
+        let csvContent = await response.text();
+        csvContent = JSON.parse(csvContent.substring(csvContent.indexOf(`table":`) + 7, csvContent.length - 25) + "}");
+
+        let obj = [];
+        if (encodingType === "2D Array") csvContent.cols.forEach((item, i) => { obj.push([item.label, convert4Item(csvContent.rows, i)]) });
+        else {
+          obj = {};
+          csvContent.cols.forEach((item, i) => { obj[item.label] = convert4Item(csvContent.rows, i) });
         }
-        if (encodingType !== "2D Array") value = Object.assign({}, value);
-        return JSON.stringify(value);
+        return JSON.stringify(obj);
       } catch(e) {
         console.warn(e);
         return defaultReturn;
