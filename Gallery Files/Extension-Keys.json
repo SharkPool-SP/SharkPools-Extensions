@@ -270,8 +270,8 @@
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
-      "status": "",
-      "date": "Last Updated: 07/31/2024"
+      "status": "update",
+      "date": "Last Updated: 12/06/2024"
     },
     "Money-Utilities": {
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
