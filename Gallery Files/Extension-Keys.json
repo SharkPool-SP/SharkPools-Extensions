@@ -109,7 +109,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/30/2024"
     },
     "Image-Effects": {
@@ -172,7 +172,7 @@
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
       "url": "extension-code/Variables-Expanded.js",
       "tags": ".all.expanded.utilities.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 11/30/2024"
     },
     "Sty-Lists": {
@@ -271,7 +271,7 @@
       "url": "extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
       "status": "update",
-      "date": "Last Updated: 12/07/2024"
+      "date": "Last Updated: 12/09/2024"
     },
     "Money-Utilities": {
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
