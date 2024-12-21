@@ -270,7 +270,7 @@
       "credits": "Read and Write Google Spreadsheets. Made by SharkPool",
       "url": "extension-code/Google-Spreadsheets.js",
       "tags": ".all.fetching.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/09/2024"
     },
     "Money-Utilities": {
@@ -340,7 +340,7 @@
       "credits": "Control Visuals of Pen, Video Camera, Backdrops, Sprites and More. Made by SharkPool",
       "url": "extension-code/Renderer-Control.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/05/2024"
     },
     "Timezones": {
@@ -403,8 +403,8 @@
       "credits": "Create and Export SVG Spritesheets. Made by SharkPool",
       "url": "extension-code/SVG-Spritesheets.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 08/15/2024"
+      "status": "update",
+      "date": "Last Updated: 12/20/2024"
     },
     "Community-Spotlight": {
       "credits": "Display and Promote Projects for Free. Made by SharkPool and the Community Spotlight Team",
