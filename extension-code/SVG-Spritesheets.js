@@ -131,7 +131,7 @@
         .replace(/data-paper-data="[^"]*" /g, "").replace(/<!--[\s\S]*?-->/g, "")
         .replace(/<title>[\s\S]*?<\/title>/g, "").replace(/<desc>[\s\S]*?<\/desc>/g, "")
         .replaceAll("#000000", "#000").replaceAll("#ffffff", "#fff").replaceAll("#00000000", "none")
-        .replace("svg version=\"1.1\" ", "")
+        .replace("svg version=\"1.1\" ", "svg ")
         .replace(/>\s+</g, "><").replace(/\s+$/g, "").trim();
     }
 
