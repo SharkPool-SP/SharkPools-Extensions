@@ -403,14 +403,14 @@
       "credits": "Create and Export SVG Spritesheets. Made by SharkPool",
       "url": "extension-code/SVG-Spritesheets.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/20/2024"
     },
     "Community-Spotlight": {
       "credits": "Display and Promote Projects for Free. Made by SharkPool and the Community Spotlight Team",
       "url": "extension-code/Community-Spotlight.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/21/2024"
     },
     "GIF-Manager": {
