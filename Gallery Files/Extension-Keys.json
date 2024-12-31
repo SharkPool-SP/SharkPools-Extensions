@@ -298,8 +298,8 @@
       "credits": "Create and Read QR Codes (Client-Side). Made by SharkPool",
       "url": "extension-code/QR-Codes.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 07/23/2024"
+      "status": "update",
+      "date": "Last Updated: 12/30/2024"
     },
     "Runtime-Events": {
       "credits": "Events from the Runtime. Made by SharkPool",
