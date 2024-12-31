@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.1.0
+// Version V.1.1.01
 
 /* TODO
 V1.2
@@ -526,8 +526,8 @@ V1.2
       return returnValue;
     }
 
-    const oldScrollToCategory = ScratchBlocks.Toolbox.prototype.scrollToCategoryById;
-    ScratchBlocks.Toolbox.prototype.scrollToCategoryById = function(id) {
+    const oldScrollToCategory = SB.Toolbox.prototype.scrollToCategoryById;
+    SB.Toolbox.prototype.scrollToCategoryById = function(id) {
       if (id === "myBlocks" && shouldScrollToMBP) {
         shouldScrollToMBP = false;
         id = "SPmbpCST";
@@ -585,11 +585,11 @@ V1.2
 
         // Recreate the define block with a changed type
         const ws = defineBlock.workspace;
-        const xml = ScratchBlocks.Xml.blockToDom(defineBlock);
+        const xml = SB.Xml.blockToDom(defineBlock);
         const position = defineBlock.getRelativeToSurfaceXY();
         xml.setAttribute("type", newOpcode);
         defineBlock.dispose();
-        defineBlock = ScratchBlocks.Xml.domToBlock(xml, ws);
+        defineBlock = SB.Xml.domToBlock(xml, ws);
         defineBlock.moveBy(position.x, position.y);
         if (savedNextConnect) savedNextConnect.connect(defineBlock.nextConnection);
       }
