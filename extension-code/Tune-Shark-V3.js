@@ -979,9 +979,9 @@
       if (time < 0 || time > duration || chan < 0 || chan > buffer.numberOfChannels - 1) return 0;
 
       let value = 0;
-      if (args.TYPE !== "raw noise") {
-        if (sound._cache[args.TYPE][`${time}${chan}`] !== undefined) value = sound._cache[args.TYPE][`${time}${chan}`];
-      } else {
+      if (args.TYPE !== "raw noise" && sound._cache[args.TYPE][`${time}${chan}`] !== undefined)
+        value = sound._cache[args.TYPE][`${time}${chan}`];
+      else {
         const sampleRate = buffer.sampleRate;
         const channelData = buffer.getChannelData(chan);
         const sampleIndex = Math.floor(sampleRate * time);
