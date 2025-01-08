@@ -145,3 +145,34 @@ body {
   z-index: 999;
   pointer-events: none;
 }
+/*scrollbar */
+:root {
+    --track-color: #363636;
+    --thumb-color: #6366f1;
+    --scrollbar-width: 22px;
+    --scrollbar-radius: 50px;
+    --scrollbar-width-moz: auto;
+}
+        
+/* Chrome, Edge, Safari */
+body::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+}
+        
+body::-webkit-scrollbar-thumb {
+    background-color: var(--thumb-color);
+    border-radius: var(--scrollbar-radius);
+}
+        
+body::-webkit-scrollbar-track {
+    background-color: var(--track-color);
+}
+
+
+/* Firefox */
+@supports not selector(::-webkit-scrollbar) {
+* {
+    scrollbar-width: var(--scrollbar-width-moz);
+    scrollbar-color: var(--thumb-color) var(--track-color);
+  }
+}
