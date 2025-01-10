@@ -40,7 +40,7 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 01/03/2025"
+      "date": "Last Updated: 01/12/2025"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
@@ -165,8 +165,8 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Martinelplayz and 0znzw",
       "url": "extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "",
-      "date": "Last Updated: 08/21/2024"
+      "status": "update",
+      "date": "Last Updated: 01/12/2025"
     },
     "Monitors-Plus": {
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
@@ -207,7 +207,7 @@
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
       "url": "extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/01/2025"
     },
     "Pause-Utilities": {
@@ -298,7 +298,7 @@
       "credits": "Create and Read QR Codes (Client-Side). Made by SharkPool",
       "url": "extension-code/QR-Codes.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/30/2024"
     },
     "Runtime-Events": {
@@ -431,7 +431,7 @@
       "credits": "Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
       "url": "extension-code/My-Blocks-Plus.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 12/30/2024"
     },
     "Dropdown-Maker": {
@@ -447,6 +447,13 @@
       "tags": ".all.utilities.expanded",
       "status": "",
       "date": "Released: 11/02/2024"
+    },
+    "Scenes": {
+      "credits": "Create Scenes like Unity in Your Project. Made by SharkPool",
+      "url": "extension-code/Scenes.js",
+      "tags": ".all.utilities.addon",
+      "status": "new",
+      "date": "Released: 01/12/2025"
     },
     "Example": {
       "credits": "",
