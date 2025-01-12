@@ -85,7 +85,7 @@
       const currentlyInEditor = checkInEditor();
       if (inEditor !== currentlyInEditor) {
         inEditor = currentlyInEditor;
-        if (inEditor) attachTab();
+        if (inEditor) vm.once("workspaceUpdate", () => attachTab());
       }
       if (currentlyInEditor) {
         if (guiElements["cloneTab"]) {
