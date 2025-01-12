@@ -71,35 +71,35 @@
       "date": "Last Updated: 01/28/2024"
     },
     "Hyper-Sense": {
-      "credits": "New Sensing Blocks made by SharkPool",
+      "credits": "New Sensing Blocks. Made by SharkPool",
       "url": "extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 11/26/2024"
     },
     "Better-Input": {
-      "credits": "Expansion of the 'Ask and Wait' block using CSS. Made by SharkPool",
+      "credits": "Expansion of the 'Ask and Wait' block. Made by SharkPool",
       "url": "extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
       "status": "",
       "date": "Last Updated: 11/02/2024"
     },
     "Camera-Sensing-Plus": {
-      "credits": "Better Camera Sensing Extension for Sprites. Apply green screens and more! Made by SharkPool",
+      "credits": "Expansion of the Video Sensing Extension. Display the Camera on Sprites and take Screenshots! Made by SharkPool",
       "url": "extension-code/Camera-Sensing-Plus.js",
       "tags": ".all.utilities.expanded.fetching.category",
       "status": "",
       "date": "Last Updated: 06/09/2024"
     },
     "Particle-Engine": {
-      "credits": "Create Highly Customizable Particle Engines with No Clones. Made by SharkPool",
+      "credits": "Create Highly Customizable Particle Engines with NO Clones. Made by SharkPool",
       "url": "extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
       "status": "",
       "date": "Last Updated: 11/24/2024"
     },
     "Particle-Tools": {
-      "credits": "Tools that make creating particle systems easy! Made by SharkPool",
+      "credits": "Tools that make creating Particle Systems Easy! Made by SharkPool",
       "url": "extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
       "status": "",
