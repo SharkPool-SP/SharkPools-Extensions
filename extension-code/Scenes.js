@@ -573,7 +573,7 @@
         scenes[name] = this.convert2Scene();
         if (isEditor) {
           this.refreshBlocks(true);
-          sceneThumbs[name] = defaultSceneThumb;
+          sceneThumbs[name] = { isDefault: true, img: defaultSceneThumb };
         }
       }
     }
