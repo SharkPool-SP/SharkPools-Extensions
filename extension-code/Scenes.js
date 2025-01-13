@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -69,6 +69,7 @@
     childs[0].src = constructTabIMG();
     childs[1].textContent = "Scenes";
     guiElements["cloneTab"] = { cloneTab, img: childs[0] };
+    cloneTab.setAttribute("style", "display: flex; justify-content: center; align-items: center;");
     cloneTab.addEventListener("click", (e) => {
       ReduxStore.dispatch({
         type: "scratch-gui/navigation/ACTIVATE_TAB", activeTabIndex: -1
@@ -362,18 +363,19 @@
       }
       if (runtime.ext_pen !== undefined) {
         const penSource = render._allDrawables[runtime.ext_pen._penDrawableId];
-        const penSkin = penSource.skin;
-
-        const effects = structuredClone(penSource._uniforms);
-        delete effects.u_silhouetteColor;
-        delete effects.u_modelMatrix;
-        sceneData.extra.penData = {
-          visible: penSource._visible, effects,
-          direction: penSource._direction,
-          size: [penSource._scale[0], penSource._scale[1]],
-          pos: [penSource._position[0], penSource._position[1]]
-          // pen attributes is sprite-based and is stored in target storage
-        };
+        const penSkin = penSource?.skin;
+        if (penSkin) {
+          const effects = structuredClone(penSource._uniforms);
+          delete effects.u_silhouetteColor;
+          delete effects.u_modelMatrix;
+          sceneData.extra.penData = {
+            visible: penSource._visible, effects,
+            direction: penSource._direction,
+            size: [penSource._scale[0], penSource._scale[1]],
+            pos: [penSource._position[0], penSource._position[1]]
+            // pen attributes is sprite-based and is stored in target storage
+          };
+        }
       }
 
       // save some runtime options
@@ -406,7 +408,7 @@
       let penSource, penSkin;
       if (runtime.ext_pen !== undefined) {
         penSource = render._allDrawables[runtime.ext_pen._penDrawableId];
-        penSkin = penSource.skin;
+        penSkin = penSource?.skin;
       }
 
       // decode Sprite data
