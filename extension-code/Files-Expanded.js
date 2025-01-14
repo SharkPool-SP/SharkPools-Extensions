@@ -1,5 +1,5 @@
 // Name: Files Expanded
-// ID: FilesExpanded
+// ID: filesExpanded
 // Description: Read, upload, and download files.
 // By: GarboMuffin
 // By: SharkPool
@@ -421,13 +421,13 @@
     return btoa(binary);
   }
 
-  class FilesExpanded {
+  class filesExpanded {
     constructor() {
       this._showUnsafeOptions = false;
     }
     getInfo() {
       return {
-        id: "FilesExpanded",
+        id: "filesExpanded",
         name: Scratch.translate("Files Expanded"),
         menuIconURI,
         color1: "#fcb103",
@@ -1290,5 +1290,5 @@
     }
   }
 
-  Scratch.extensions.register((runtime.ext_FilesExpanded = new FilesExpanded()));
+  Scratch.extensions.register((runtime.ext_filesExpanded = new filesExpanded()));
 })(Scratch);
