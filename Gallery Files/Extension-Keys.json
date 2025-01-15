@@ -74,8 +74,8 @@
       "credits": "New Sensing Blocks. Made by SharkPool",
       "url": "extension-code/Hyper-Sense.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 11/26/2024"
+      "status": "update",
+      "date": "Last Updated: 01/15/2025"
     },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block. Made by SharkPool",
@@ -354,7 +354,7 @@
       "credits": "Generate Perlin Noise. Made by SharkPool",
       "url": "extension-code/Perlin-Noise.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/08/2025"
     },
     "Extra-Controls": {
