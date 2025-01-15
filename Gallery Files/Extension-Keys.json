@@ -40,7 +40,7 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
       "status": "update",
-      "date": "Last Updated: 01/12/2025"
+      "date": "Last Updated: 01/14/2025"
     },
     "Tune-Shark": {
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
@@ -214,8 +214,8 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 08/08/2024"
+      "status": "update",
+      "date": "Last Updated: 01/14/2025"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
