@@ -455,6 +455,13 @@
       "status": "new",
       "date": "Released: 01/12/2025"
     },
+      "Twitch Chat": {
+      "credits": "Interact with your Twitch chat! made by Somroti",
+      "url": "extension-code/twitch-chat.js",
+      "tags": ".all.utilities",
+      "status": "new",
+      "date": "Released: 01/18/2025"
+    },
     "Example": {
       "credits": "",
       "url": "",
