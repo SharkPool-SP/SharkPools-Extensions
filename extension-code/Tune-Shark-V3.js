@@ -29,6 +29,8 @@
       extraIcons[key];
 
   // Modified Pizzicato Library (Web Audio API, but with Premade Effects and Stuff)
+  // Modified Version: https://github.com/SharkPool-SP/pizzicato/
+  // Original: https://github.com/alemangui/pizzicato
   // https://github.com/alemangui/pizzicato/blob/master/LICENSE
 
   const scriptElement = document.createElement("script");
@@ -66,7 +68,7 @@
 
   let deltaTime = 0,
     prevFrameTime = 0;
-  let soundBank = {};
+  let soundBank = Object.create(null);
   let settings = { flagCtrl: false, canSave: false };
 
   class SPtuneShark3 {
@@ -177,7 +179,7 @@
                 sound.stop();
                 bank.currentTime = lastTime;
                 sound.play(0, lastTime);
-                this.patchLinks(sound.sourceNode, bank);
+                this.fixAudioNodes(sound.sourceNode, bank);
               }
             }
           }
@@ -227,22 +229,10 @@
             },
           },
           {
-            opcode: "convertSound",
-            blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate(
-              "convert sound [NAME1] from URL to URI and save to [NAME2]"
-            ),
-            blockIconURI: extraIcons.set,
-            arguments: {
-              NAME1: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: Scratch.translate("MySound"),
-              },
-              NAME2: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: Scratch.translate("MySound2"),
-              },
-            },
+            opcode: "convertSound", blockType: Scratch.BlockType.COMMAND,
+            text: "convert sound [NAME1] from URL to URI and save to [NAME2]",
+            blockIconURI: extraIcons.set, hideFromPalette: true, // deprecated
+            arguments: { NAME1: { type: Scratch.ArgumentType.STRING }, NAME2: { type: Scratch.ArgumentType.STRING } },
           },
           {
             opcode: "bindSound",
@@ -551,7 +541,7 @@
           {
             opcode: "setThing", blockType: Scratch.BlockType.COMMAND, hideFromPalette: true, // deprecated
             text: "set [TYPE] of sound [NAME] to [VALUE]",
-            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" }, TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffects" }, VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 } },
+            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" }, TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffects" }, VALUE: { type: Scratch.ArgumentType.NUMBER } },
           },
           {
             opcode: "setThingNew",
@@ -811,6 +801,10 @@
     }
 
     // Helper Funcs
+    getSound(name) {
+      return soundBank[name];
+    }
+
     startHats(data) {
       let newThreads = [];
       runtime.allScriptsByOpcodeDo(
@@ -871,7 +865,7 @@
       return isNaN(value) ? 0 : value;
     }
 
-    patchLinks(src, sound) {
+    fixAudioNodes(src, sound) {
       src.playbackRate.value = sound.pitch;
       src.detune.value = sound.detune;
       src.gainSuccessor.gain.value = sound.gain;
@@ -907,7 +901,8 @@
             return;
           }
           case "DISTORTION": {
-            return (thisEffect.gain = options.gain);
+            thisEffect.gain = options.gain;
+            return;
           }
           case "BITCRUSH": {
             thisEffect.frequency = Math.max(30000, Cast.toNumber(args.FREQ));
@@ -982,14 +977,14 @@
           if (!sound.playing) con.currentTime = atTime;
           sound.play(0, atTime);
           const srcNode = sound.sourceNode;
-          this.patchLinks(srcNode, con);
+          this.fixAudioNodes(srcNode, con);
           if (Object.keys(con.binds).length > 0) {
             Object.keys(con.binds).forEach((key) => {
               const thisSound = con.binds[key];
               const context = thisSound.context;
               if (!context.playing) thisSound.currentTime = atTime;
               context.play(0, atTime);
-              this.patchLinks(context.sourceNode, thisSound);
+              this.fixAudioNodes(context.sourceNode, thisSound);
             });
           }
           if (sound.loop)
@@ -1001,9 +996,7 @@
         }
         this.startHats({ name: con.name, type: "starts" });
       } catch {
-        console.warn(
-          Scratch.translate("Audio has not loaded yet, ignore next error.")
-        );
+        console.warn(Scratch.translate("Audio has not loaded yet!"));
         sound.stop(); // Reset
       }
     }
@@ -1029,7 +1022,7 @@
         ctx.stop();
         sound.currentTime = lastTime;
         ctx.play(0, lastTime);
-        this.patchLinks(ctx.sourceNode, sound);
+        this.fixAudioNodes(ctx.sourceNode, sound);
       }
     }
 
@@ -1088,12 +1081,8 @@
         });
         // this part of the Library was modified to work like this
         engine.sourceNode = engine.getSourceNode();
-        const bank = (soundBank[args.NAME] = this.generateData(
-          args.NAME,
-          sourceURL,
-          engine,
-          true
-        ));
+        const bank = this.generateData(args.NAME, sourceURL, engine, true);
+        soundBank[args.NAME] = bank;
         engine.on("stop", () => {
           bank.currentTime =
             engine.loop && bank.loopParm[1]
@@ -1460,10 +1449,9 @@
         delete sound.effects[name];
       }
       sound.rate = sound.pitch * sound.speed * Math.pow(2, sound.detune / 1200);
-      this.patchLinks(ctx.sourceNode, sound);
+      this.fixAudioNodes(ctx.sourceNode, sound);
     }
 
-    setThing(args) { this.setThingNew(args) }
     setThingNew(args) {
       const sound = soundBank[args.NAME];
       if (sound === undefined) return;
@@ -1487,7 +1475,7 @@
         return this.updateEffect(distort, sound, "DISTORTION", args);
       }
       sound.rate = sound.pitch * sound.speed * Math.pow(2, sound.detune / 1200);
-      this.patchLinks(ctx.sourceNode, sound);
+      this.fixAudioNodes(ctx.sourceNode, sound);
     }
 
     setReverb(args) {
@@ -1640,6 +1628,7 @@
         return { SPtuneShark3: { bank: convertedBank, settings } };
       }
     }
+
     deserialize(data) {
       this.loadStorage(data.SPtuneShark3);
     }
