@@ -3,7 +3,7 @@
 // Description: Color Utilities and Color Conversions
 // By: SharkPool
 
-// Version 1.3.1
+// Version 1.3.11
 
 (function (Scratch) {
   "use strict";
@@ -247,7 +247,7 @@
     convPen(args) { return Scratch.Cast.toString(args.COLOR).slice(0, 7) }
 
     hex2COL(args) {
-      const value = this[args.COL === "rgb" ? "hex2RGBA" : args.COL === "rgb" ? "hex2HSV" : "hex2DEC"](args.COLOR);
+      const value = this[args.COL === "rgb" ? "hex2RGBA" : args.COL === "hsv" ? "hex2HSV" : "hex2DEC"](args.COLOR);
       return JSON.stringify(value);
     }
 
