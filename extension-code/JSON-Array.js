@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.4
+// Version V.1.0.41
 
 (function (Scratch) {
   "use strict";
@@ -513,7 +513,7 @@
           ORDERING: {
             acceptReporters: true,
             items: [
-              "random", "ascending", "descending",
+              "random", "reverse", "ascending", "descending",
               "ascending by length", "descending by length",
               "A-z", "z-A", "most common", "least common"
             ]
@@ -745,6 +745,7 @@
         });
       }
       switch (args.ORDERER) {
+        case "reverse": return arr.reverse();
         case "ascending": return arr.sort((a, b) => a - b);
         case "descending": return arr.sort((a, b) => b - a);
         case "descending by length": return arr.sort((a, b) => b.length - a.length);
