@@ -19,15 +19,7 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
-  const regenReporters = ["SPjson_objKey", "SPjson_objValue"];
-  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-    const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
-    SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-      const result = ogCheck(block);
-      if (result) return true;
-      return block.isShadow() && regenReporters.includes(block.type);
-    };
-  });
+  const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
   // Modify Visual Report to stringify JSON
   const ogVisReport = runtime.visualReport;
@@ -36,7 +28,7 @@
     return ogVisReport.call(this, blockId, value);
   };
 
-  // Allow Square Blocks (TW)
+  // Custom Square Block Shapes
   const ogConverter = runtime._convertBlockForScratchBlocks.bind(runtime);
   runtime._convertBlockForScratchBlocks = function (blockInfo, categoryInfo) {
     const res = ogConverter(blockInfo, categoryInfo);
@@ -44,7 +36,50 @@
     return res;
   }
 
-  const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+  const regenReporters = ["SPjson_objKey", "SPjson_objValue"];
+  const jsonBlocks = ["SPjson_jsonValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson"];
+  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+    // Regen Reporters
+    const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
+      const result = ogCheck(block);
+      if (result) return true;
+      return block.isShadow() && regenReporters.includes(block.type);
+    };
+
+    // Custom JSON Block Shape
+    const makeShape = (width) => {
+      width -= 35;
+      return (`
+        m20 0h${width}C${width + 30} 0 ${width + 30} 4 ${width + 30} 12
+        c0 0 2 0 3 0 1 0 3 2 3 3 0 1 0 8 0 10 0 2-1 3-3 3-2 0-3 0-3 0
+        C${width + 30} 37 ${width + 30} 40 ${width + 20} 40h${(width + 10) * -1}
+        C5 40 5 36 4 28c0 0-1 0-2 0-2 0-3-1-3-3l0-10c0 0 0-3 4-3 0 0 1 0 1 0C5 4 5 0 10 0z
+      `).replaceAll("\n", "").trim();
+    };
+
+    const ogRender = SB.BlockSvg.prototype.render;
+    SB.BlockSvg.prototype.render = function (...args) {
+      const data = ogRender.call(this, ...args);
+      if (this.svgPath_ && jsonBlocks.includes(this.type)) {
+        if (this.type !== "SPjson_jsonValid") {
+          const fixedWidth = this.width - 35;
+          this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
+          this.svgPath_.setAttribute("d", makeShape(this.width));
+        }
+        this.inputList.forEach((input) => {
+          if (input.name.startsWith("OBJ")) {
+            const block = input.connection.targetBlock();
+            if (block && block.svgPath_) {
+              block.svgPath_.setAttribute("transform", `scale(1, ${block.height / 40})`);
+              block.svgPath_.setAttribute("d", makeShape(block.width));
+            }
+          }
+        });
+      }
+      return data;
+    }
+  });
 
   // See Line -- 72
   // TODO: Find a way to use this on monitor displays if possible?
