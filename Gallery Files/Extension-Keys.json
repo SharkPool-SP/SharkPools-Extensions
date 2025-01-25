@@ -410,7 +410,7 @@
       "credits": "Display and Promote Projects for Free. Made by SharkPool and the Community Spotlight Team",
       "url": "extension-code/Community-Spotlight.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 01/17/2025"
     },
     "GIF-Manager": {
@@ -452,8 +452,8 @@
       "credits": "Create Scenes like Unity in Your Project. Made by SharkPool",
       "url": "extension-code/Scenes.js",
       "tags": ".all.utilities.addon",
-      "status": "new",
-      "date": "Released: 01/12/2025"
+      "status": "update",
+      "date": "Last Updated: 01/25/2025"
     },
     "Example": {
       "credits": "",
