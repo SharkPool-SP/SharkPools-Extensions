@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.01
+// Version V.1.0.02
 
 (function (Scratch) {
   "use strict";
@@ -33,30 +33,13 @@
 
   function openModal(titleName, func) {
     // in a Button Context, ScratchBlocks always exists
-    ScratchBlocks.Variables.createVariable(ScratchBlocks.mainWorkspace, null, "broadcast_msg");
-    const modalHolder = document.querySelector(`div[class="ReactModalPortal"]`);
-    const modal = modalHolder.querySelector(`div[class="box_box_2jjDp"]`);
-
-    modal.querySelector(`div[class^="modal_header-item_"]`).textContent = "Scene Manager";
-    modal.querySelector(`div[class^="prompt_label_"]`).textContent = titleName;
-
-    const button = modal.querySelector(`button[class^="prompt_ok-button_"]`);
-    const cloneOkay = button.cloneNode(true);
-    button.parentNode.appendChild(cloneOkay);
-    button.remove();
-    cloneOkay.addEventListener("click", (e) => {
-      func(e, modal);
-      cloneOkay.previousElementSibling.click();
-      runtime.requestBlocksUpdate();
-    });
-
-    modalHolder.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        func(e, modal);
-        cloneOkay.previousElementSibling.click();
-        runtime.requestBlocksUpdate();
-      }
-    });
+    ScratchBlocks.prompt(
+      titleName,
+      "",
+      (value) => func(value),
+      "Scene Manager",
+      "broadcast_msg"
+    );
   }
 
   function attachTab() {
@@ -287,29 +270,25 @@
     }
 
     createBtn() {
-      openModal("New Scene name:", async (e, modal) =>{
-        const name = modal.querySelector(`input[class^="prompt_variable-name-text-input_"]`);
-        if (name.value) {
-          scenes[name.value] = this.convert2Scene();
-          sceneThumbs[name.value] = { isDefault: false, img: "" };
-          sceneThumbs[name.value].img = await new Promise((resolve) => {
+      openModal("New Scene name:", async (name) =>{
+        if (name) {
+          scenes[name] = this.convert2Scene();
+          sceneThumbs[name] = { isDefault: false, img: "" };
+          sceneThumbs[name].img = await new Promise((resolve) => {
             render.requestSnapshot((uri) => { resolve(uri) });
           });
           this.refreshBlocks(true);
         }
-        e.stopPropagation();
       });
     }
 
     deleteBtn() {
-      openModal("Remove Scene named:", (e, modal) =>{
-        const name = modal.querySelector(`input[class^="prompt_variable-name-text-input_"]`);
-        if (name.value) {
-          delete scenes[name.value];
-          delete sceneThumbs[name.value];
+      openModal("Remove Scene named:", (name) =>{
+        if (name) {
+          delete scenes[name];
+          delete sceneThumbs[name];
           this.refreshBlocks(true);
         }
-        e.stopPropagation();
       });
     }
 
