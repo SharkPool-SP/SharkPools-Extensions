@@ -21,13 +21,6 @@
 
   const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
-  // Modify Visual Report to stringify JSON
-  const ogVisReport = runtime.visualReport;
-  runtime.visualReport = function (blockId, value) {
-    if (typeof value === "object") value = JSON.stringify(value);
-    return ogVisReport.call(this, blockId, value);
-  };
-
   // Custom Square Block Shapes
   const ogConverter = runtime._convertBlockForScratchBlocks.bind(runtime);
   runtime._convertBlockForScratchBlocks = function (blockInfo, categoryInfo) {
@@ -81,8 +74,7 @@
     }
   });
 
-  // See Line -- 72
-  // TODO: Find a way to use this on monitor displays if possible?
+  // See Line -- 
   function stringifyVariables() {
     for (let i = 0; i < runtime.targets.length; i++) {
       const target = runtime.targets[i];
@@ -142,6 +134,41 @@
     stringifyVariables();
     return ogSaveProjectNonZIP.apply(this, args);
   };
+
+  // Modify Visual Report to stringify JSON
+  const ogVisReport = runtime.visualReport;
+  runtime.visualReport = function (blockId, value) {
+    if (typeof value === "object") value = JSON.stringify(value);
+    return ogVisReport.call(this, blockId, value);
+  };
+
+  // Modify Monitors to stringify JSON
+  if (typeof scaffolding === "undefined") {
+    const ogListener = vm.listeners("MONITORS_UPDATE").find((f) => f.name === "onMonitorsUpdate");
+    if (ogListener) vm.removeListener("MONITORS_UPDATE", ogListener);
+    vm.on("MONITORS_UPDATE", (monitors) => {
+      monitors._list._tail.array.forEach((entry) => {
+        const data = entry[1]._map._root?.entries || entry[1]._map._root.nodes;
+        const valueInd = data.findIndex((e) => { return e.entry && e.entry[0] === "value" });
+        if (valueInd === -1) return;
+
+        if (data[0]?.entry && data[0]?.entry[1] === "list") {
+          data[valueInd].entry[1] = data[valueInd].entry[1].map((item) => {
+            if (typeof item === "object") item = JSON.stringify(item);
+            return item;
+          });
+        } else {
+          const value = data[valueInd].entry[1];
+          if (typeof value === "object") data[valueInd].entry[1] = JSON.stringify(value);
+        }
+      });
+
+      ReduxStore.dispatch({
+        type: "scratch-gui/monitors/UPDATE_MONITORS",
+        monitors
+      });
+    });
+  }
 
   class SPjson {
     constructor() {
@@ -588,7 +615,7 @@
       window.alert([
         "This extension is fast because it works with raw objects instead of repeatedly parsing them.",
         "However, this may lead to confusion or incorrect assumptions that certain behaviors are bugs.",
-        "For example, it's intentional that monitors and text-based components may not display or may crash when handling raw objects.",
+        "For example, it's intentional that text-based components may not properly display when handling raw objects.",
         "To resolve this, simply use the (({}) to (string v)) block to convert the object to a string."
       ].join("\n\n"));
     }
