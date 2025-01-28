@@ -74,13 +74,13 @@
   class SPtuneShark3 {
     constructor() {
       this.loadStorage = function (storage) {
+        if (storage === undefined) return;
         const getTargetName = (name) => {
           return runtime.targets.find((t) => {
             return t.getName().replaceAll("/", "") === name;
           });
         };
 
-        if (storage === undefined) return;
         settings = storage.settings;
         soundBank = storage.bank;
         for (const item in soundBank) {
