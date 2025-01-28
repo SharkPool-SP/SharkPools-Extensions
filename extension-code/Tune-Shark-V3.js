@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.4.23
+// Version V.3.4.24
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -74,6 +74,12 @@
   class SPtuneShark3 {
     constructor() {
       this.loadStorage = function (storage) {
+        const getTargetName = (name) => {
+          return runtime.targets.find((t) => {
+            return t.getName().replaceAll("/", "") === name;
+          });
+        };
+
         if (storage === undefined) return;
         settings = storage.settings;
         soundBank = storage.bank;
@@ -87,7 +93,7 @@
             let target =
               info[0] === "Stage"
                 ? runtime.getTargetForStage()
-                : runtime.getSpriteTargetByName(info[0]);
+                : getTargetName(info[0]);
             if (target === undefined) {
               alert(
                 Scratch.translate(
@@ -98,7 +104,7 @@
             }
 
             const scratchSound = target.sprite.sounds.find((i) => {
-              return i.name === info[1];
+              return i.name.replaceAll("/", "") === info[1];
             });
             if (scratchSound === undefined) {
               alert(
