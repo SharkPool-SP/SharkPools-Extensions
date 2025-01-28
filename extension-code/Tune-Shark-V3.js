@@ -82,7 +82,7 @@
         };
 
         settings = storage.settings;
-        soundBank = storage.bank;
+        soundBank = structuredClone(storage.bank);
         for (const item in soundBank) {
           const sound = soundBank[item];
           sound.loaded = false;
