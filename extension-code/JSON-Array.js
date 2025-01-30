@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.41
+// Version V.1.0.5
 
 (function (Scratch) {
   "use strict";
@@ -29,7 +29,7 @@
     return res;
   }
 
-  const regenReporters = ["SPjson_objKey", "SPjson_objValue"];
+  const regenReporters = ["SPjson_objKey", "SPjson_objValue", "SPjson_arrValueA", "SPjson_arrValueB"];
   const jsonBlocks = ["SPjson_jsonValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     // Regen Reporters
@@ -445,6 +445,67 @@
               ORDERER: { type: Scratch.ArgumentType.STRING, menu: "ORDERING" }
             }
           },
+          "---",
+          {
+            opcode: "arrCheck", blockType: Scratch.BlockType.BOOLEAN,
+            text: "check [ARR] if [TYPE] item [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "ARRAY_CHECK" },
+              ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              IND: {}, VAL: {}, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
+              IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
+            },
+          },
+          {
+            opcode: "arrMap", blockType: Scratch.BlockType.REPORTER, outputShape: 3,
+            text: "map [ARR] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true,
+            arguments: {
+              ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              IND: {}, VAL: {},
+              VALUE: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
+            },
+          },
+          {
+            opcode: "arrValueA", blockType: Scratch.BlockType.REPORTER,
+            hideFromPalette: true, text: "value A", allowDropAnywhere: true
+          },
+          {
+            opcode: "arrValueB", blockType: Scratch.BlockType.REPORTER,
+            hideFromPalette: true, text: "value B", allowDropAnywhere: true
+          },
+          {
+            opcode: "arrSort", blockType: Scratch.BlockType.REPORTER, outputShape: 3,
+            text: "sort [ARR] using rule [A] [B] [IMG] [VALUE]", hideFromPalette: true,
+            arguments: {
+              ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              A: {}, B: {},
+              VALUE: { type: Scratch.ArgumentType.STRING },
+              IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
+            },
+          },
+          {
+            blockType: Scratch.BlockType.XML,
+            xml: `
+              <block type="SPjson_arrCheck">
+                <field name="TYPE">every</field>
+                <value name="ARR"><shadow type="text"><field name="TEXT">["a", "b", "c"]</field></shadow></value>
+                <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
+                <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
+              </block>
+              <block type="SPjson_arrMap">
+                <value name="ARR"><shadow type="text"><field name="TEXT">["a", "b", "c"]</field></shadow></value>
+                <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
+                <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
+                <value name="VALUE"><shadow type="text"><field name="TEXT">d</field></shadow></value>
+              </block>
+              <block type="SPjson_arrSort">
+                <value name="ARR"><shadow type="text"><field name="TEXT">[1, 2, 3]</field></shadow></value>
+                <value name="A"><shadow type="SPjson_arrValueA"></shadow></value>
+                <value name="B"><shadow type="SPjson_arrValueB"></shadow></value>
+                <value name="VALUE"><shadow type="text"><field name="TEXT"></field></shadow></value>
+              </block>`
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Utilities" },
           {
             opcode: "parse",
@@ -503,7 +564,7 @@
             hideFromPalette: true, text: "value", allowDropAnywhere: true
           },
           {
-            opcode: "filter", blockType: Scratch.BlockType.CONDITIONAL, branchCount: -1,
+            opcode: "filter", blockType: Scratch.BlockType.CONDITIONAL, branchCount: -1, // deprecated
             text: "in thread [TYPE] [OBJ] by [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CUST_ORDER" },
@@ -513,8 +574,18 @@
             },
           },
           {
-            opcode: "filterResult", blockType: Scratch.BlockType.REPORTER,
+            opcode: "filterResult", blockType: Scratch.BlockType.REPORTER, // deprecated
             disableMonitor: true, hideFromPalette: true, text: "thread filter result"
+          },
+          {
+            opcode: "filterNew", blockType: Scratch.BlockType.REPORTER,
+            text: "[TYPE] [OBJ] by [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "CUST_ORDER" },
+              OBJ: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              IND: {}, VAL: {}, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
+              IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
+            },
           },
           {
             opcode: "forEach", blockType: Scratch.BlockType.LOOP,
@@ -527,13 +598,12 @@
           {
             blockType: Scratch.BlockType.XML,
             xml: `
-              <block type="SPjson_filter">
+              <block type="SPjson_filterNew">
                 <field name="TYPE">filter</field>
                 <value name="OBJ"><shadow type="text"><field name="TEXT">{"JSON":"or array"}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
               </block>
-              <block type="SPjson_filterResult"></block>
               <sep gap="36"></sep>
               <block type="SPjson_forEach">
                 <value name="OBJ"><shadow type="text"><field name="TEXT">{"JSON":"or array"}</field></shadow></value>
@@ -568,6 +638,7 @@
         menus: {
           TOGGLER: ["enabled", "disabled"],
           CUST_ORDER: ["filter", "order"],
+          ARRAY_CHECK: ["every", "some"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values"] },
           CONVERTS: { acceptReporters: true, items: ["string", "array", "JSON"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
@@ -608,6 +679,53 @@
         if (isNaN(val) || val === Infinity || val === -Infinity) return Scratch.Cast.toString(val);
       }
       return val;
+    }
+
+    reporterYield(util, wasCompiled) {
+      const thisBlock = util.thread.stackFrames[0].myID ?? util.thread.blockContainer.getBlock(
+        wasCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op?.id
+      );
+      if (!thisBlock) return true;
+
+      util.thread.stackFrames[0].myID = thisBlock;
+      util.thread.peekStackFrame().isLoop = true;
+      if (thisBlock.inputs.BOOL && thisBlock.inputs.BOOL.block) util.thread.pushStack(thisBlock.inputs.BOOL.block);
+      util.yield();
+    }
+
+    filterHandler(args, util, finishFunc, yieldFunc, optInitYield) {
+      const handleCon = (isArray, item) => {
+        if (!item) return;
+        const thing = isArray ? item[1] || "" : item || {};
+        if (args.BOOL) util.stackFrame.newObj.unshift(thing);
+        else if (args.TYPE === "order") util.stackFrame.newObj.push(thing);
+      };
+      if (util.stackFrame.execute === undefined) {
+        const parse = this.tryParse(args.OBJ);
+        const entry = Object.entries(parse);
+        if (entry.length === 0) return parse;
+        util.stackFrame.newObj = [];
+        util.stackFrame.execute = true;
+        util.stackFrame.entry = entry;
+        util.stackFrame.index = entry.length;
+        util.thread.stackFrames[0].isArray = Array.isArray(parse);
+        // Initialize JSON in stackframes
+        if (!optInitYield) yieldFunc(util);
+        else {
+          const status = optInitYield(util);
+          if (status === true) return Array.isArray(parse) ? [] : {};
+        }
+      } else {
+        const { index, entry } = util.stackFrame;
+        if (index < 0) util.stackFrame.execute = "done";
+        else {
+          util.thread.stackFrames[0].SPjson = entry[index - 1];
+          handleCon(util.thread.stackFrames[0].isArray, entry[index]);
+        }
+        util.stackFrame.index--;
+      }
+      if (util.stackFrame.execute === "done") return finishFunc(util);
+      else yieldFunc(util);
     }
 
     // Buttons and Settings
@@ -825,6 +943,98 @@
       }
     }
 
+    arrCheck(args, util) {
+      if (util.stackFrame.execute === undefined) {
+        const array = this.tryParse(args.ARR, 1);
+        if (array.length === 0) return false;
+        util.stackFrame.checks = [];
+        util.stackFrame.execute = true;
+        util.stackFrame.array = array;
+        util.stackFrame.index = array.length - 1;
+        util.stackFrame.wasCompiled = util.thread.isCompiled;
+        util.thread.isCompiled = false;
+        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (yieldFail === true) return false;
+      } else {
+        const { index, array } = util.stackFrame;
+        if (index < 0) util.stackFrame.execute = "done";
+        else if (array[index] !== undefined) {
+          util.thread.stackFrames[0].SPjson = [index + 1, array[index]];
+          util.stackFrame.checks.push(Scratch.Cast.toBoolean(args.BOOL));
+        }
+        util.stackFrame.index--;
+      }
+      if (util.stackFrame.execute === "done") {
+        util.thread.isCompiled = util.stackFrame.wasCompiled;
+        if (args.TYPE === "every") return util.stackFrame.checks.indexOf(false) < 0;
+        else return util.stackFrame.checks.indexOf(true) > -1;
+      } else this.reporterYield(util);
+    }
+
+    arrMap(args, util) {
+      if (util.stackFrame.execute === undefined) {
+        const array = this.tryParse(args.ARR, 1);
+        if (array.length === 0) return [];
+        util.stackFrame.execute = true;
+        util.stackFrame.array = array;
+        util.stackFrame.index = array.length - 1;
+        util.stackFrame.wasCompiled = util.thread.isCompiled;
+        util.thread.isCompiled = false;
+        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (yieldFail === true) return [];
+      } else {
+        const { index, array } = util.stackFrame;
+        if (index < 0) util.stackFrame.execute = "done";
+        else if (array[index] !== undefined) {
+          util.thread.stackFrames[0].SPjson = [index + 1, array[index]];
+          util.stackFrame.array[index] = args.VALUE;
+        }
+        util.stackFrame.index--;
+      }
+      if (util.stackFrame.execute === "done") {
+        util.thread.isCompiled = util.stackFrame.wasCompiled;
+
+        const fixedArray = util.stackFrame.array;
+        fixedArray.unshift(fixedArray.pop());
+        return fixedArray;
+      } else this.reporterYield(util);
+    }
+
+    arrSort(args, util) {
+      if (util.stackFrame.execute === undefined) {
+        const array = this.tryParse(args.ARR, 1);
+        if (array.length === 0) return [];
+        util.stackFrame.execute = true;
+        util.stackFrame.array = array;
+        util.stackFrame.sortedVals = {};
+        util.stackFrame.i = 0;
+        util.stackFrame.j = 0;
+        util.stackFrame.wasCompiled = util.thread.isCompiled;
+        util.thread.isCompiled = false;
+        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (yieldFail === true) return [];
+      } else {
+        const { i, j, array } = util.stackFrame;
+        if (i > array.length - 1) util.stackFrame.execute = "done";
+        else {
+          util.thread.stackFrames[0].SPjson = [array[i], array[j]];
+          const propName = j > array.length - 1 ? `0${array[i]}` : i < 1 ? `${array[j]}${array[array.length - 1]}` : `${array[j]}${array[i - 1]}`;
+          util.stackFrame.sortedVals[propName] = Scratch.Cast.toNumber(args.VALUE);
+          util.stackFrame.j++;
+          if (j > array.length - 1) {
+            util.stackFrame.i++;
+            util.stackFrame.j = 0;
+          }
+        }
+      }
+      if (util.stackFrame.execute === "done") {
+        util.thread.isCompiled = util.stackFrame.wasCompiled;
+
+        const sorted = util.stackFrame.sortedVals;
+        return util.stackFrame.array.sort((a, b) => sorted[`${a}${b}`]);
+      } else this.reporterYield(util);
+    }
+
     // Util Funcs
     parse(args) {
       const obj = args.OBJ;
@@ -877,53 +1087,66 @@
       }
       return "";
     }
-
     objValue(args, util) {
       const arr = util.thread.stackFrames[0].SPjson;
       return arr ? arr[1] ?? "" : "";
     }
 
-    filter(args, util) {
-      const handleCon = (isArray, item) => {
-        if (!item) return;
-        const thing = isArray ? item[1] || "" : item || {};
-        if (args.BOOL) util.stackFrame.newObj.unshift(thing);
-        else if (args.TYPE === "order") util.stackFrame.newObj.push(thing);
-      };
-      if (util.stackFrame.execute === undefined) {
-        const parse = this.tryParse(args.OBJ);
-        const entry = Object.entries(parse);
-        if (entry.length === 0) return parse;
-        util.stackFrame.newObj = [];
-        util.stackFrame.execute = true;
-        util.stackFrame.entry = entry;
-        util.stackFrame.index = entry.length;
-        util.thread.stackFrames[0].isArray = Array.isArray(parse);
-        util.startBranch(1, true); // Initialize JSON in stackframes
-      } else {
-        const { index, entry } = util.stackFrame;
-        if (index < 0) util.stackFrame.execute = "done";
-        else {
-          util.thread.stackFrames[0].SPjson = entry[index - 1];
-          handleCon(util.thread.stackFrames[0].isArray, entry[index]);
-        }
-        util.stackFrame.index--;
-      }
-      if (util.stackFrame.execute === "done") {
-        if (util.thread.stackFrames[0].isArray) util.thread.SPjsonFilterRes = util.stackFrame.newObj;
-        else {
-          const newObj = {};
-          const stored = util.stackFrame.newObj;
-          for (let i = 0; i < stored.length; i++) {
-            const item = stored[i];
-            newObj[item[0]] = item[1];
-          }
-          util.thread.SPjsonFilterRes = newObj;
-        }
-      } else util.startBranch(1, true);
+    arrValueA(args, util) {
+      const arr = util.thread.stackFrames[0].SPjson;
+      return arr ? arr[0] ?? "" : "";
+    }
+    arrValueB(args, util) {
+      const arr = util.thread.stackFrames[0].SPjson;
+      return arr ? arr[1] ?? "" : "";
     }
 
+    // deprecated stack filter block
     filterResult(_, util) { return util.thread.SPjsonFilterRes ?? "" }
+    filter(args, util) {
+      this.filterHandler(
+        args, util,
+        (util) => {
+          if (util.thread.stackFrames[0].isArray) util.thread.SPjsonFilterRes = util.stackFrame.newObj;
+          else {
+            const newObj = {};
+            const stored = util.stackFrame.newObj;
+            for (let i = 0; i < stored.length; i++) {
+              const item = stored[i];
+              newObj[item[0]] = item[1];
+            }
+            util.thread.SPjsonFilterRes = newObj;
+          }
+        },
+        (util) => util.startBranch(1, true)
+      );
+    }
+
+    filterNew(args, util) {
+      return this.filterHandler(
+        args, util,
+        (util) => {
+          util.thread.isCompiled = util.stackFrame.wasCompiled;
+          if (util.thread.stackFrames[0].isArray) return util.stackFrame.newObj;
+          else {
+            const newObj = {};
+            const stored = util.stackFrame.newObj;
+            for (let i = 0; i < stored.length; i++) {
+              const item = stored[i];
+              newObj[item[0]] = item[1];
+            }
+            return newObj;
+          }
+        },
+        (util) => this.reporterYield(util),
+        (util) => {
+          util.stackFrame.wasCompiled = util.thread.isCompiled;
+          util.thread.isCompiled = false;
+          const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled);
+          if (yieldFail === true) return true; // initiate a override
+        }
+      );
+    }
 
     forEach(args, util) {
       if (util.stackFrame.execute) {
