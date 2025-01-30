@@ -468,11 +468,13 @@
           },
           {
             opcode: "arrValueA", blockType: Scratch.BlockType.REPORTER,
-            hideFromPalette: true, text: "value A", allowDropAnywhere: true
+            hideFromPalette: true, allowDropAnywhere: true,
+            text: "value A", color1: "#677cd6"
           },
           {
             opcode: "arrValueB", blockType: Scratch.BlockType.REPORTER,
-            hideFromPalette: true, text: "value B", allowDropAnywhere: true
+            hideFromPalette: true, allowDropAnywhere: true,
+            text: "value B", color1: "#677cd6"
           },
           {
             opcode: "arrSort", blockType: Scratch.BlockType.REPORTER, outputShape: 3,
@@ -557,11 +559,13 @@
           "---",
           {
             opcode: "objKey", blockType: Scratch.BlockType.REPORTER,
-            hideFromPalette: true, text: "key", allowDropAnywhere: true
+            hideFromPalette: true, allowDropAnywhere: true,
+            text: "value", color1: "#677cd6"
           },
           {
             opcode: "objValue", blockType: Scratch.BlockType.REPORTER,
-            hideFromPalette: true, text: "value", allowDropAnywhere: true
+            hideFromPalette: true, allowDropAnywhere: true,
+            text: "value", color1: "#677cd6"
           },
           {
             opcode: "filter", blockType: Scratch.BlockType.CONDITIONAL, branchCount: -1, // deprecated
