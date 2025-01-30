@@ -560,7 +560,7 @@
           {
             opcode: "objKey", blockType: Scratch.BlockType.REPORTER,
             hideFromPalette: true, allowDropAnywhere: true,
-            text: "value", color1: "#677cd6"
+            text: "key", color1: "#677cd6"
           },
           {
             opcode: "objValue", blockType: Scratch.BlockType.REPORTER,
