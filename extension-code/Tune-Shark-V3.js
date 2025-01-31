@@ -1458,6 +1458,7 @@
       this.fixAudioNodes(ctx.sourceNode, sound);
     }
 
+    setThing(args) { this.setThingNew(args) }
     setThingNew(args) {
       const sound = soundBank[args.NAME];
       if (sound === undefined) return;
