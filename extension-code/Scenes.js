@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.02
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -308,11 +308,12 @@
         const cloneOrigin = target.sprite.clones[0];
 
         // Turbowarp doesnt use the same target ID every project load :(
-        if (!isPM && !target.extensionStorage["SPscenes"])
-          target.extensionStorage["SPscenes"] = { ogID: realId };
+        if (!isPM && !target.extensionStorage["SPscenes"]) target.extensionStorage["SPscenes"] = { ogID: realId };
 
         const safeVars = [];
-        Object.values(target.variables).map((vari) => safeVars.push([vari.id, vari.value]));
+        Object.values(target.variables).map((vari) => {
+          if (!vari.isCloud) safeVars.push([vari.id, vari.value]);
+        });
         sceneData.targets[realId] = {
           x: target.x, y: target.y,
           rotation: target.rotationStyle,
