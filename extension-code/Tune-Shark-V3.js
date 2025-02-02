@@ -86,7 +86,6 @@
         };
         const loadEndHandler = (index) => {
           if (index >= sounds.length - 1) soundBank = tempBank;
-          console.log(index, sounds.length, soundBank);
         };
 
         for (let i = 0; i < sounds.length; i++) {
