@@ -7,7 +7,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT AND MPL-2.0
 
-// Version: 1.7.0
+// Version: 1.7.1
 
 (function (Scratch) {
   "use strict";
@@ -37,7 +37,7 @@
 
   let enableVis = true;
   let openFileSelectorMode = MODE_MODAL;
-  let storedFiles = {};
+  let storedFiles = Object.create(null);
   let FileName = "", FileSize = "0kb", RawFileSize = "0", fileDate = "", lastData = "";
   let openModals = 0;
   let selectorOptions = {
@@ -646,6 +646,21 @@
             },
           },
           {
+            opcode: "updateFileURL",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("write URL [URL] to stored file [NAME]"),
+            arguments: {
+              URL: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==",
+              },
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("my-file-1"),
+              },
+            },
+          },
+          {
             opcode: "storedInfo",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("[FORMAT] in stored file [NAME]"),
@@ -1170,7 +1185,27 @@
         await writable.close();
         this.updateStore(args.NAME, args.TXT, {
           lastModified: Date.now(),
-          size: args.TXT.length,
+          size: Scratch.Cast.toString(args.TXT).length,
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async updateFileURL(args) {
+      if (!this.checkFileAPI() || storedFiles[args.NAME] === undefined) return;
+      try {
+        const url = Scratch.Cast.toString(args.URL);
+        const res = await Scratch.fetch(url);
+        if (!res.ok) return;
+        const blob = await res.blob();
+  
+        const writable = await storedFiles[args.NAME].file.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        this.updateStore(args.NAME, url, {
+          lastModified: Date.now(),
+          size: url.length,
         });
       } catch (e) {
         console.warn(e);
