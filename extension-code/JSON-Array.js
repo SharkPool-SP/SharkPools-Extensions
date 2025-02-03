@@ -4,7 +4,8 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.6
+// Version V.1.0.7
+// TODO fix reporter yielding issues
 
 (function (Scratch) {
   "use strict";
@@ -30,7 +31,7 @@
   }
 
   const regenReporters = ["SPjson_objKey", "SPjson_objValue", "SPjson_arrValueA", "SPjson_arrValueB"];
-  const jsonBlocks = ["SPjson_jsonValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson"];
+  const jsonBlocks = ["SPjson_jsonValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson", "SPjson_jsonMap"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     // Regen Reporters
     const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
@@ -302,6 +303,27 @@
               OBJ1: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
               OBJ2: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key2":"value2"}`, exemptFromNormalization: true }
             },
+          },
+          "---",
+          {
+            opcode: "jsonMap", blockType: Scratch.BlockType.REPORTER,
+            text: "map [OBJ] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true,
+            arguments: {
+              OBJ: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              IND: {}, VAL: {},
+              VALUE: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
+            },
+          },
+          {
+            blockType: Scratch.BlockType.XML,
+            xml: `
+              <block type="SPjson_jsonMap">
+                <value name="OBJ"><shadow type="text"><field name="TEXT">{"key":"value"}</field></shadow></value>
+                <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
+                <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
+                <value name="VALUE"><shadow type="text"><field name="TEXT">value-2</field></shadow></value>
+              </block>`
           },
           { blockType: Scratch.BlockType.LABEL, text: "Arrays" },
           {
@@ -842,6 +864,36 @@
       return {
         ...this.tryParse(args.OBJ1, 0), ...this.tryParse(args.OBJ2, 0)
       }
+    }
+
+    jsonMap(args, util) {
+      if (util.stackFrame.execute === undefined) {
+        const entries = Object.entries(this.tryParse(args.OBJ, 0));
+        if (entries.length === 0) return [];
+        util.stackFrame.execute = true;
+        util.stackFrame.entries = entries;
+        util.stackFrame.index = entries.length - 1;
+        util.stackFrame.wasCompiled = util.thread.isCompiled;
+        util.thread.isCompiled = false;
+        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (yieldFail === true) return {};
+      } else {
+        const { index, entries } = util.stackFrame;
+        if (index < 0) util.stackFrame.execute = "done";
+        else if (entries[index] !== undefined) {
+          const fixedindex = index - 1 < 0 ? entries.length - 1 : index - 1;
+          util.thread.stackFrames[0].SPjson = entries[index];
+          util.stackFrame.entries[fixedindex][1] = args.VALUE;
+        }
+        util.stackFrame.index--;
+      }
+      if (util.stackFrame.execute === "done") {
+        util.thread.isCompiled = util.stackFrame.wasCompiled;
+
+        const fixedEntries = util.stackFrame.entries;
+        fixedEntries.unshift(fixedEntries.pop());
+        return Object.fromEntries(fixedEntries);
+      } else this.reporterYield(util);
     }
 
     // Array Funcs
