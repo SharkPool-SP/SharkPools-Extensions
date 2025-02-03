@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.5
+// Version V.1.0.6
 
 (function (Scratch) {
   "use strict";
@@ -913,9 +913,7 @@
     }
 
     mergeArray(args) {
-      return [
-        ...this.tryParse(args.ARR1, 1), ...this.tryParse(args.ARR2, 1)
-      ];
+      return this.tryParse(args.ARR1, 1).concat(this.tryParse(args.ARR2, 1));
     }
 
     arrOrder(args) {
