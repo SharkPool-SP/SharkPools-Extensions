@@ -144,8 +144,8 @@
       "credits": "Fetch Audio and Audio Information from Newgrounds. Made by SharkPool, works best with Tune Shark",
       "url": "extension-code/Newgrounds-Audio.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Last Updated: 09/21/2024"
+      "status": "update",
+      "date": "Last Updated: 02/01/2025"
     },
     "Sprite-Parenting": {
       "credits": "Link sprites together and make them follow the parent's data. Made by SharkPool",
