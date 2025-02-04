@@ -455,6 +455,13 @@
       "status": "update",
       "date": "Last Updated: 02/01/2025"
     },
+    "Keys-Plus-V2": {
+      "credits": "Even more powerful and flexible key press detection blocks with some additional features. Made by StackOverflow",
+      "url": "extension-code/KeysPlusV2.js",
+      "tags": ".all.utilities.expanded.category",
+      "status": "new",
+      "date": "Last Updated: 02/04/2025"
+    },
     "Example": {
       "credits": "",
       "url": "",
