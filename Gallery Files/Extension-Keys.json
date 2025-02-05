@@ -77,6 +77,13 @@
       "status": "",
       "date": "Last Updated: 01/15/2025"
     },
+    "Keys-Plus-V2": {
+      "credits": "Powerful and flexible key press detection blocks with some additional features. Made by StackOverflow",
+      "url": "extension-code/KeysPlusV2.js",
+      "tags": ".all.utilities.expanded.category",
+      "status": "new",
+      "date": "Released: 02/05/2025"
+    },
     "Better-Input": {
       "credits": "Expansion of the 'Ask and Wait' block. Made by SharkPool",
       "url": "extension-code/Better-Input.js",
@@ -454,13 +461,6 @@
       "tags": ".all.utilities.addon",
       "status": "update",
       "date": "Last Updated: 02/01/2025"
-    },
-    "Keys-Plus-V2": {
-      "credits": "Even more powerful and flexible key press detection blocks with some additional features. Made by StackOverflow",
-      "url": "extension-code/KeysPlusV2.js",
-      "tags": ".all.utilities.expanded.category",
-      "status": "new",
-      "date": "Last Updated: 02/04/2025"
     },
     "Example": {
       "credits": "",
