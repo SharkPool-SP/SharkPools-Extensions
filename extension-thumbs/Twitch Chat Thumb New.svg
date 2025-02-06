@@ -1,0 +1,54 @@
+<svg width="290" xmlns="http://www.w3.org/2000/svg" height="150" id="screenshot-e8d39a92-ded2-80a2-8005-b27bd2ed73e0" fill="none" version="1.1"><style>/* cyrillic-ext */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKcg72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKew72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKcw72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKfA72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* latin-ext */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKcQ72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKfw72.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}</style><g id="shape-e8d39a92-ded2-80a2-8005-b27bd2ed73e0"><g class="fills" id="fills-e8d39a92-ded2-80a2-8005-b27bd2ed73e0"><rect rx="0" ry="0" width="290" height="150" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" class="frame-background"/></g><g class="frame-children"><g id="shape-e8d39a92-ded2-80a2-8005-b279b5dd21f9"><defs><radialGradient id="fill-color-gradient-render-2-0" cx=".513" cy=".323" r=".718" gradientTransform="matrix(-0.999889, -0.014883, 0.014883, -0.999889, 1.021880, 0.654495)"><stop offset="0" stop-color="#8e00ff"/><stop offset="1" stop-color="#c400ff"/></radialGradient><pattern patternUnits="userSpaceOnUse" x="0" y="0" width="290" height="150" id="fill-0-render-2"><rect width="290" height="150" style="fill: url(&quot;#fill-color-gradient-render-2-0&quot;);"/></pattern></defs><rect rx="14" ry="14" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" width="290" height="150" fill="url(#fill-0-render-2)" class="fills" id="fills-e8d39a92-ded2-80a2-8005-b279b5dd21f9"/><g id="strokes-e8d39a92-ded2-80a2-8005-b279b5dd21f9" class="strokes"><g class="inner-stroke-shape" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)"><defs><linearGradient id="stroke-color-gradient-render-2-0" x1=".006" y1=".476" x2=".995" y2=".484"><stop offset="0" stop-color="#dabc00"/><stop offset="1" stop-color="#c17300"/></linearGradient><clipPath id="inner-stroke-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0"><use href="#stroke-shape-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0"/></clipPath><rect rx="14" ry="14" x="0" y="0" width="290" height="150" id="stroke-shape-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0" style="fill: none; stroke-width: 10; stroke: url(&quot;#stroke-color-gradient-render-2-0&quot;);"/></defs><use href="#stroke-shape-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0" clip-path="url('#inner-stroke-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0')"/></g></g></g><g id="shape-e8d39a92-ded2-80a2-8005-b27af0c72fe6"><defs><pattern patternUnits="userSpaceOnUse" x="100" y="11" width="90" height="90" id="fill-0-render-3"><image id="fill-image-render-3-0" href="https://design.penpot.app/assets/by-file-media-id/37d6e7bf-72f9-806c-8005-b27af0bfe9fb" preserveAspectRatio="xMidYMid slice" width="90" height="90" opacity="1"/></pattern></defs><rect rx="0" ry="0" x="100" y="11" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" width="90" height="90" fill="url(#fill-0-render-3)" class="fills" id="fills-e8d39a92-ded2-80a2-8005-b27af0c72fe6"/></g><g transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" class="text-container" id="shape-e8d39a92-ded2-80a2-8005-b27b15d21d6f"><defs><pattern patternUnits="userSpaceOnUse" x="43" y="98" width="190.266" height="41" id="fill-0-render-4-0"><rect width="190.266" height="41" style="fill: rgb(255, 255, 255); fill-opacity: 1;"/></pattern></defs><text x="53.359" y="140" dominant-baseline="ideographic" textLength="190.266" lengthAdjust="spacingAndGlyphs" style="text-transform: none; font-family: Ubuntu; letter-spacing: normal; font-style: normal; font-weight: 400; white-space: pre; font-size: 36px; text-decoration: none solid rgb(255, 255, 255); direction: ltr; fill: rgb(255, 255, 255); fill-opacity: 1;" class="fills" id="fills-e8d39a92-ded2-80a2-8005-b27b15d21d6f">Twitch Chat</text></g></g></g></svg>
