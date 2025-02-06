@@ -873,9 +873,11 @@
         util.stackFrame.execute = true;
         util.stackFrame.entries = entries;
         util.stackFrame.index = entries.length - 1;
-        util.stackFrame.wasCompiled = util.thread.isCompiled;
-        util.thread.isCompiled = false;
-        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
+          util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
+          util.thread.isCompiled = false;
+        }
+        const yieldFail = this.reporterYield(util, util.thread.stackFrames[0].SPwasCompiled); // Initialize JSON in stackframes
         if (yieldFail === true) return {};
       } else {
         const { index, entries } = util.stackFrame;
@@ -888,7 +890,7 @@
         util.stackFrame.index--;
       }
       if (util.stackFrame.execute === "done") {
-        util.thread.isCompiled = util.stackFrame.wasCompiled;
+        util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
 
         const fixedEntries = util.stackFrame.entries;
         fixedEntries.unshift(fixedEntries.pop());
@@ -1005,9 +1007,11 @@
         util.stackFrame.execute = true;
         util.stackFrame.array = array;
         util.stackFrame.index = array.length - 1;
-        util.stackFrame.wasCompiled = util.thread.isCompiled;
-        util.thread.isCompiled = false;
-        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
+          util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
+          util.thread.isCompiled = false;
+        }
+        const yieldFail = this.reporterYield(util, util.thread.stackFrames[0].SPwasCompiled); // Initialize JSON in stackframes
         if (yieldFail === true) return false;
       } else {
         const { index, array } = util.stackFrame;
@@ -1019,7 +1023,8 @@
         util.stackFrame.index--;
       }
       if (util.stackFrame.execute === "done") {
-        util.thread.isCompiled = util.stackFrame.wasCompiled;
+        util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
+
         if (args.TYPE === "every") return util.stackFrame.checks.indexOf(false) < 0;
         else return util.stackFrame.checks.indexOf(true) > -1;
       } else this.reporterYield(util);
@@ -1032,9 +1037,11 @@
         util.stackFrame.execute = true;
         util.stackFrame.array = array;
         util.stackFrame.index = array.length - 1;
-        util.stackFrame.wasCompiled = util.thread.isCompiled;
-        util.thread.isCompiled = false;
-        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
+          util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
+          util.thread.isCompiled = false;
+        }
+        const yieldFail = this.reporterYield(util, util.thread.stackFrames[0].SPwasCompiled); // Initialize JSON in stackframes
         if (yieldFail === true) return [];
       } else {
         const { index, array } = util.stackFrame;
@@ -1046,7 +1053,7 @@
         util.stackFrame.index--;
       }
       if (util.stackFrame.execute === "done") {
-        util.thread.isCompiled = util.stackFrame.wasCompiled;
+        util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
 
         const fixedArray = util.stackFrame.array;
         fixedArray.unshift(fixedArray.pop());
@@ -1063,9 +1070,11 @@
         util.stackFrame.sortedVals = {};
         util.stackFrame.i = 0;
         util.stackFrame.j = 0;
-        util.stackFrame.wasCompiled = util.thread.isCompiled;
-        util.thread.isCompiled = false;
-        const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled); // Initialize JSON in stackframes
+        if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
+          util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
+          util.thread.isCompiled = false;
+        }
+        const yieldFail = this.reporterYield(util, util.thread.stackFrames[0].SPwasCompiled); // Initialize JSON in stackframes
         if (yieldFail === true) return [];
       } else {
         const { i, j, array } = util.stackFrame;
@@ -1082,7 +1091,7 @@
         }
       }
       if (util.stackFrame.execute === "done") {
-        util.thread.isCompiled = util.stackFrame.wasCompiled;
+        util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
 
         const sorted = util.stackFrame.sortedVals;
         return util.stackFrame.array.sort((a, b) => sorted[`${a}${b}`]);
@@ -1180,7 +1189,7 @@
       return this.filterHandler(
         args, util,
         (util) => {
-          util.thread.isCompiled = util.stackFrame.wasCompiled;
+          util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
           if (util.thread.stackFrames[0].isArray) return util.stackFrame.newObj;
           else {
             const newObj = {};
@@ -1194,7 +1203,7 @@
         },
         (util) => this.reporterYield(util),
         (util) => {
-          util.stackFrame.wasCompiled = util.thread.isCompiled;
+          util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
           util.thread.isCompiled = false;
           const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled);
           if (yieldFail === true) return true; // initiate a override
