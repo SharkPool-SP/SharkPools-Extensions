@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.7
+// Version V.1.0.71
 // TODO fix reporter yielding issues
 
 (function (Scratch) {
@@ -1203,8 +1203,10 @@
         },
         (util) => this.reporterYield(util),
         (util) => {
-          util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
-          util.thread.isCompiled = false;
+          if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
+            util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
+            util.thread.isCompiled = false;
+          }
           const yieldFail = this.reporterYield(util, util.stackFrame.wasCompiled);
           if (yieldFail === true) return true; // initiate a override
         }
