@@ -1,3 +1,8 @@
+// Name: Twitch Chat
+// ID: twitchChat
+// Description: Interact with your Twitch Chat!
+// By: Somroti
+
 (function(Scratch) {
     'use strict';
   
