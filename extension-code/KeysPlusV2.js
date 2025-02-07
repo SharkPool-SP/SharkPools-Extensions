@@ -1,8 +1,8 @@
 // Name: Keys+ V2
 // ID: enderKeysPlusV2
-// Description: even more powerful and flexible key press detection blocks with some additional features.
-// By: Ender-Studio
-// Original: Ender-Studio
+// Description: Even more powerful and flexible key press detection blocks with some additional features.
+// By: StackOverflow
+// Original: StackOverflow
 // License: MIT & LGPL-3.0
 
 (function(Scratch){
@@ -575,17 +575,18 @@
             };
         }
         _isKeyPressed(_key, _source) {
+            const key = Cast.toString(_key)
             const keysPressed = this._getKeysPressed();
             if (keysPressed.length) keysPressed.unshift("any");
-            if (_key.startsWith("#")) {
-                const source = (this._tags[_key] ?? []).find(key => keysPressed.includes(key));
+            if (key.startsWith("#")) {
+                const source = (this._tags[key] ?? []).find(currentKey => keysPressed.includes(currentKey));
                 return _source 
-                    ? { source: source, isPressed: !!source } 
+                    ? { source, isPressed: !!source } 
                     : !!source;
             }
             return _source 
-                ? { source: _key, isPressed: keysPressed.includes(_key) } 
-                : keysPressed.includes(_key);
+                ? { source: key, isPressed: keysPressed.includes(key) } 
+                : keysPressed.includes(key);
         }        
         _isKeysPressed(_keys, ordered) {
             console.log(this._parse(_keys))
@@ -843,9 +844,8 @@
             catch { return { error: "Invalid JSON" }; };
 
             if (typeof data !== "object" || data === null) return { error: "Invalid JSON" };
-            const output = () => {
+            if (Array.isArray(data)) return { error: "Input can't be an Array" }
 
-            }
             if (_type === "tags") {
                 for (const tag in data) {
                     if (tag.startsWith("#")) {
