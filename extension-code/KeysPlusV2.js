@@ -1,8 +1,8 @@
 // Name: Keys+ V2
 // ID: enderKeysPlusV2
-// Description: even more powerful and flexible key press detection blocks with some additional features.
-// By: Ender-Studio
-// Original: Ender-Studio
+// Description: Even more powerful and flexible key press detection blocks with some additional features.
+// By: StackOverflow
+// Original: StackOverflow
 // License: MIT & LGPL-3.0
 
 (function(Scratch){
@@ -450,6 +450,7 @@
                             keys: { type: Scratch.ArgumentType.STRING, defaultValue: '"a", "b", "c"' }
                         }
                     },
+                    "---",
                     {
                         opcode: "deleteTag",
                         blockType: Scratch.BlockType.COMMAND,
@@ -457,6 +458,11 @@
                         arguments: {
                             tag: { type: Scratch.ArgumentType.STRING, defaultValue: "abc" }
                         }
+                    },
+                    {
+                        opcode: "deleteAllTags",
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: "delete all tags",
                     },
                     "---",
                     {
@@ -515,6 +521,12 @@
                         arguments: {
                             setting: { type: Scratch.ArgumentType.STRING, menu: "settings" }
                         }
+                    },
+                    "---",
+                    {
+                        opcode: "resetSettings",
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: "reset all settings"
                     }
                 ],
                 menus: {
@@ -566,29 +578,29 @@
             return keys.map(key => key.slice(1));
         }
         _parse(keys) {
-            if (Array.isArray(keys)) keys;
+            if (Array.isArray(keys)) return keys.map(key => Cast.toString(key));
             try {
                 const parsed = JSON.parse(/^\[.*\]$/.test(keys) ? keys : `[${keys}]`);
-                return Array.isArray(parsed) ? parsed : [];
+                return Array.isArray(parsed) ? parsed.map(key => Cast.toString(key)) : [];
             } catch {
                 return [];
             };
         }
         _isKeyPressed(_key, _source) {
+            const key = Cast.toString(_key)
             const keysPressed = this._getKeysPressed();
             if (keysPressed.length) keysPressed.unshift("any");
-            if (_key.startsWith("#")) {
-                const source = (this._tags[_key] ?? []).find(key => keysPressed.includes(key));
+            if (key.startsWith("#")) {
+                const source = (this._tags[key] ?? []).find(currentKey => keysPressed.includes(currentKey));
                 return _source 
-                    ? { source: source, isPressed: !!source } 
+                    ? { source, isPressed: !!source } 
                     : !!source;
             }
             return _source 
-                ? { source: _key, isPressed: keysPressed.includes(_key) } 
-                : keysPressed.includes(_key);
+                ? { source: key, isPressed: keysPressed.includes(key) } 
+                : keysPressed.includes(key);
         }        
         _isKeysPressed(_keys, ordered) {
-            console.log(this._parse(_keys))
             const keys = this._parse(_keys);
             if (!keys.length) return false;
             if (ordered) {
@@ -696,6 +708,7 @@
             }
             const ordered = args.mode === "together & in order";
             const isKeysPressed = this._isKeysPressed(keys, ordered);
+            console.log(isKeysPressed)
             if (isKeysPressed) {
                 const key = ordered
                     ? keys[keys.length - 1]
@@ -784,9 +797,14 @@
         createTag(args) {
             this._tags["#" + args.tag] = this._parse(args.keys);
         }
+
         deleteTag(args) {
             delete this._tags["#" + args.tag];
         }
+        deleteAllTags() {
+            this._tags = {}
+        }
+
         valueOfTag(args) {
             return JSON.stringify(this._tags["#" + args.tag] ?? []);
         }
@@ -800,6 +818,12 @@
         }
         isSettingEnabled(args) {
             return this._settings[args.setting];
+        }
+        resetSettings() {
+            this._settings = {
+                "clearOnBlur": true,
+                "includeTags": true
+            }
         }
         // Storage
         
@@ -843,9 +867,8 @@
             catch { return { error: "Invalid JSON" }; };
 
             if (typeof data !== "object" || data === null) return { error: "Invalid JSON" };
-            const output = () => {
+            if (Array.isArray(data)) return { error: "Input can't be an Array" }
 
-            }
             if (_type === "tags") {
                 for (const tag in data) {
                     if (tag.startsWith("#")) {
