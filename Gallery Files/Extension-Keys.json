@@ -39,7 +39,7 @@
       "credits": "Advanced Audio Engine with Complex Sound Control, Audio Effects and More. Made by SharkPool",
       "url": "extension-code/Tune-Shark-V3.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/01/2025"
     },
     "Tune-Shark": {
@@ -116,15 +116,15 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 01/11/2025"
+      "status": "update",
+      "date": "Last Updated: 02/10/2025"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 11/05/2024"
+      "status": "update",
+      "date": "Last Updated: 02/09/2025"
     },
     "Image-Editor": {
       "credits": "Create and Edit the Pixel Data of Images. Made by SharkPool",
@@ -151,7 +151,7 @@
       "credits": "Fetch Audio and Audio Information from Newgrounds. Made by SharkPool, works best with Tune Shark",
       "url": "extension-code/Newgrounds-Audio.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/01/2025"
     },
     "Sprite-Parenting": {
@@ -172,7 +172,7 @@
       "credits": "New Blocks added to GarboMuffin's File Extension. Made by SharkPool, Drago Cuven and 0znzw",
       "url": "extension-code/Files-Expanded.js",
       "tags": ".all.expanded.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/01/2025"
     },
     "Monitors-Plus": {
@@ -221,8 +221,8 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 01/14/2025"
+      "status": "update",
+      "date": "Last Updated: 02/10/2025"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
@@ -459,7 +459,7 @@
       "credits": "Create Scenes like Unity in Your Project. Made by SharkPool",
       "url": "extension-code/Scenes.js",
       "tags": ".all.utilities.addon",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/01/2025"
     },
     "Example": {
