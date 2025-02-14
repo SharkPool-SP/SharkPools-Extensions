@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.71
+// Version V.1.0.72
 // TODO fix reporter yielding issues
 
 (function (Scratch) {
@@ -374,6 +374,17 @@
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a", exemptFromNormalization: true },
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["z", "b", "c"]`, exemptFromNormalization: true }
+            },
+          },
+          {
+            opcode: "arrSwap",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "swap item [IND1] with item [IND2] in [ARR]",
+            outputShape: 3,
+            arguments: {
+              IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
+              IND2: { type: Scratch.ArgumentType.STRING, defaultValue: 3 },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
             },
           },
           {
@@ -921,6 +932,14 @@
       const arr = this.tryParse(args.ARR, 1);
       const ind = this.toArrInd(args.IND);
       if (arr.length > ind) arr[ind] = this.toSafe(args.ITEM);
+      return arr;
+    }
+
+    arrSwap(args) {
+      const arr = this.tryParse(args.ARR, 1);
+      const ind1 = this.toArrInd(args.IND1);
+      const ind2 = this.toArrInd(args.IND2);
+      [arr[ind1], arr[ind2]] = [arr[ind2], arr[ind1]];
       return arr;
     }
 
