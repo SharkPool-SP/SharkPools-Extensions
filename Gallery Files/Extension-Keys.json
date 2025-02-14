@@ -81,7 +81,7 @@
       "credits": "Powerful and flexible key press detection blocks with some additional features. Made by StackOverflow",
       "url": "extension-code/KeysPlusV2.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/05/2025"
     },
     "Better-Input": {
@@ -432,7 +432,7 @@
       "url": "extension-code/JSON-Array.js",
       "tags": ".all.utilities",
       "status": "update",
-      "date": "Last Updated: 01/29/2025"
+      "date": "Last Updated: 02/13/2025"
     },
     "My-Blocks-Plus": {
       "credits": "Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
