@@ -462,7 +462,7 @@
       "status": "",
       "date": "Last Updated: 02/01/2025"
     },
-    "Example": {
+    "Twitch-Chat": {
       "credits": "Interact with your Twitch Chat! Made by Somroti",
       "url": "extension-code/Twitch-Chat.js",
       "tags": ".all.utilities.fetching.new",
