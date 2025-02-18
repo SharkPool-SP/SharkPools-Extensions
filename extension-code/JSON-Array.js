@@ -4,8 +4,8 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.72
-// TODO fix reporter yielding issues
+// Version V.1.0.73
+// TODO compile this extension
 
 (function (Scratch) {
   "use strict";
@@ -700,7 +700,8 @@
       try {
         if (this.alwaysParse) {
           const parsed = JSON.parse(obj);
-          return typeof parsed === "object" ? parsed : defaultV;
+          return (optType === 1 && Array.isArray(parsed)) || (optType === 0 && typeof parsed === "object") ?
+            parsed : defaultV;
         }
         return defaultV;
       } catch {
