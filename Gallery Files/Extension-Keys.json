@@ -84,8 +84,15 @@
       "status": "",
       "date": "Released: 02/05/2025"
     },
+    "Popup-Phoenix": {
+      "credits": "Create and design custom Popups! A remaster of 'Better Input'. Made by SharkPool",
+      "url": "extension-code/Popup-Phoenix.js",
+      "tags": ".all.utilities.expanded",
+      "status": "new",
+      "date": "Released: 02/19/2025"
+    },
     "Better-Input": {
-      "credits": "Expansion of the 'Ask and Wait' block. Made by SharkPool",
+      "credits": "Expansion of the 'Ask and Wait' block. Deprecated, please use Popup-Phoenix. Made by SharkPool",
       "url": "extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
       "status": "",
@@ -116,14 +123,14 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/10/2025"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
       "url": "extension-code/Image-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/09/2025"
     },
     "Image-Editor": {
@@ -221,7 +228,7 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/10/2025"
     },
     "Text-to-Speech": {
