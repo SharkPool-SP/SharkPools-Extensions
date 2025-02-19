@@ -124,6 +124,7 @@ body {
 .contributor {
   width: 150px;
   height: 150px;
+  border-radius: 150px;
   opacity: 0;
   margin: 25px;
   cursor: pointer;
