@@ -461,7 +461,7 @@
           const element = input.DOMelement;
 
           const returnValue = element.getAttribute("returnValue");
-          boxInfo.value = returnValue ? JSON.parse(returnValue) : element.firstChild.value;
+          boxInfo.value[input.data.id] = returnValue ? JSON.parse(returnValue) : element.firstChild.value;
         }
       }
     };
