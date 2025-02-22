@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.73
+// Version V.1.0.8
 // TODO compile this extension
 
 (function (Scratch) {
@@ -64,7 +64,7 @@
         this.inputList.forEach((input) => {
           if (input.name.startsWith("OBJ")) {
             const block = input.connection.targetBlock();
-            if (block && block.svgPath_) {
+            if (block && block.type === "text" && block.svgPath_) {
               block.svgPath_.setAttribute("transform", `scale(1, ${block.height / 40})`);
               block.svgPath_.setAttribute("d", makeShape(block.width));
             }
@@ -176,9 +176,11 @@
       this.settings = [
         { text: "always cast values", value: "alwaysCast" },
         { text: "always parse text objects", value: "alwaysParse" },
-        { text: "dont edit source objects", value: "useNewObj" }
+        { text: "always try parsing", value: "alwaysTryParse" },
+        { text: "dont edit source objects", value: "useNewObj" },
       ];
-      this.alwaysCast = true; this.alwaysParse = true; this.useNewObj = true;
+      this.alwaysCast = true; this.alwaysParse = true;
+      this.alwaysTryParse = true; this.useNewObj = true;
     }
     getInfo() {
       return {
@@ -694,14 +696,21 @@
 
     // Helper Funcs
     tryParse(obj, optType) {
-      if ((optType === 1 && Array.isArray(obj)) || (optType === 0 && typeof obj === "object"))
-        return this.useNewObj ? structuredClone(obj) : obj;
+      if (!this.alwaysTryParse) return obj;
+      if (
+        (optType === 1 && Array.isArray(obj)) ||
+        (optType === 0 && obj.constructor?.name === "Object") ||
+        (optType === undefined && typeof obj === "object")
+      ) return this.useNewObj ? structuredClone(obj) : obj;
       const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
       try {
         if (this.alwaysParse) {
           const parsed = JSON.parse(obj);
-          return (optType === 1 && Array.isArray(parsed)) || (optType === 0 && typeof parsed === "object") ?
-            parsed : defaultV;
+          return (
+            (optType === 1 && Array.isArray(parsed)) ||
+            (optType === 0 && parsed.constructor?.name === "Object") ||
+            optType === undefined
+          ) ? parsed : defaultV;
         }
         return defaultV;
       } catch {

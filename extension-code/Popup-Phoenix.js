@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -461,7 +461,7 @@
           const element = input.DOMelement;
 
           const returnValue = element.getAttribute("returnValue");
-          boxInfo.value = returnValue ? JSON.parse(returnValue) : element.firstChild.value;
+          boxInfo.value[input.data.id] = returnValue ? JSON.parse(returnValue) : element.firstChild.value;
         }
       }
     };
@@ -1084,7 +1084,7 @@
         util.stackFrame.awaitingInput = true;
       }
 
-      if ((reportResponse ? true : args.TYPE === "wait") && popup.waiting) util.yield();
+      if ((reportResponse ? true : args.TYPE === "wait") && popup?.waiting) util.yield();
       if (reportResponse) return typeof popup.value === "object" ? 
         JSON.stringify(popup.value) : popup.value || "";
     }
@@ -1122,11 +1122,13 @@
 
     /* popups */
     createPopup(args) {
+      this.removePopup(args);
       const id = Cast.toString(args.ID);
       genDefaultBox(id, true);
     }
 
     deletePopup(args) {
+      this.removePopup(args);
       const id = Cast.toString(args.ID);
       delete styleStorage.popups[id];
       delete elementStorage.popups[id];
