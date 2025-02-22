@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.74
+// Version V.1.0.8
 // TODO compile this extension
 
 (function (Scratch) {
@@ -176,9 +176,11 @@
       this.settings = [
         { text: "always cast values", value: "alwaysCast" },
         { text: "always parse text objects", value: "alwaysParse" },
-        { text: "dont edit source objects", value: "useNewObj" }
+        { text: "always try parsing", value: "alwaysTryParse" },
+        { text: "dont edit source objects", value: "useNewObj" },
       ];
-      this.alwaysCast = true; this.alwaysParse = true; this.useNewObj = true;
+      this.alwaysCast = true; this.alwaysParse = true;
+      this.alwaysTryParse = true; this.useNewObj = true;
     }
     getInfo() {
       return {
@@ -694,6 +696,7 @@
 
     // Helper Funcs
     tryParse(obj, optType) {
+      if (!this.alwaysTryParse) return obj;
       if (
         (optType === 1 && Array.isArray(obj)) ||
         (optType === 0 && obj.constructor?.name === "Object") ||
