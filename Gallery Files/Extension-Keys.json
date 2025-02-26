@@ -88,7 +88,7 @@
       "credits": "Create and design custom Popups! A remaster of 'Better Input'. Made by SharkPool",
       "url": "extension-code/Popup-Phoenix.js",
       "tags": ".all.utilities.expanded",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/19/2025"
     },
     "Better-Input": {
@@ -438,7 +438,7 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "extension-code/JSON-Array.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/20/2025"
     },
     "My-Blocks-Plus": {
