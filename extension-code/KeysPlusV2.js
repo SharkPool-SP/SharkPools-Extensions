@@ -629,7 +629,7 @@
         }
         isMouseHit(args) {
             const time = this.timeMouseDown(args);
-            return time !== 0 && time <= 0.075;
+            return time !== 0 && time <= 0.028;
         }
 
         timeMouseDown(args) {
@@ -669,11 +669,11 @@
 
         isKeysHit(args) {
             const time = this.timeKeysPressed(args);
-            return time !== 0 && time <= 0.075;
+            return time !== 0 && time <= 0.028;
         }
         isKeyHit(args) {
             const time = this.timeKeyPressed(args);
-            return time !== 0 && time <= 0.075;
+            return time !== 0 && time <= 0.028;
         }
 
         lastKeyPressed() {
@@ -734,7 +734,7 @@
         }
         whenKeybindTriggered(args) {
             const time = this.timeKeybindTriggered(args);
-            return time !== 0 && time <= 0.075;
+            return time !== 0 && time <= 0.028;
         }
 
         timeKeybindTriggered(args) {
@@ -751,13 +751,13 @@
         keybindBindMultiple(args) {
             const event = Cast.toString(args.event);
             const trigger = Cast.toString(args.trigger);
-            this._keybinds[event] ??= {};
+            this._keybinds[event] = this._keybinds[event] ?? {};
             this._keybinds[event][trigger] = { "mode": args.mode, "keys": this._parse(args.keys) };
         }
         keybindBind(args) {
             const event = Cast.toString(args.event);
             const trigger = Cast.toString(args.trigger);
-            this._keybinds[event] ??= {};
+            this._keybinds[event] = this._keybinds[event] ?? {};
             this._keybinds[event][trigger] = { "mode": "together & in order", "keys": [Cast.toString(args.key)] };
         };
         keybindUnbind(args) {
@@ -834,10 +834,13 @@
             switch (args.type) {
                 case "tags":
                     this._tags = result.output;
+                    break;
                 case "keybinds":
                     this._keybinds = result.output;
+                    break;
                 case "settings":
                     this._settings = result.output;
+                    break;
                 case "all":
                     this._tags = result.output["tags"];
                     this._keybinds = result.output["keybinds"];
