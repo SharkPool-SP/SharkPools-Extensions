@@ -732,11 +732,13 @@
       const thisBlock = util.thread.stackFrames[0].myID ?? util.thread.blockContainer.getBlock(
         wasCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op?.id
       );
-      if (!thisBlock) return true;
+      if (!thisBlock) return true; // abort!
 
       util.thread.stackFrames[0].myID = thisBlock;
       util.thread.peekStackFrame().isLoop = true;
-      if (thisBlock.inputs.BOOL && thisBlock.inputs.BOOL.block) util.thread.pushStack(thisBlock.inputs.BOOL.block);
+
+      const pushBlock = thisBlock.inputs.BOOL?.block || thisBlock.inputs.VALUE?.block;
+      if (pushBlock) util.thread.pushStack(pushBlock);
       util.yield();
     }
 

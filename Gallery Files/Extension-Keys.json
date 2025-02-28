@@ -88,7 +88,7 @@
       "credits": "Create and design custom Popups! A remaster of 'Better Input'. Made by SharkPool",
       "url": "extension-code/Popup-Phoenix.js",
       "tags": ".all.utilities.expanded",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/19/2025"
     },
     "Better-Input": {
@@ -109,8 +109,8 @@
       "credits": "Create Highly Customizable Particle Engines with NO Clones. Made by SharkPool",
       "url": "extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 11/24/2024"
+      "status": "update",
+      "date": "Last Updated: 02/22/2025"
     },
     "Particle-Tools": {
       "credits": "Tools that make creating Particle Systems Easy! Made by SharkPool",
@@ -438,7 +438,7 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "extension-code/JSON-Array.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/20/2025"
     },
     "My-Blocks-Plus": {
