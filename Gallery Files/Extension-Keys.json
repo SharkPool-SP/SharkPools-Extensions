@@ -168,6 +168,13 @@
       "status": "",
       "date": "Last Updated: 02/29/2024"
     },
+    "Rigidbodies": {
+      "credits": "Fast, math-based collision detections using Rigidbodies. Made by SharkPool",
+      "url": "extension-code/Rigidbodies.js",
+      "tags": ".all.utilities.category",
+      "status": "new",
+      "date": "Released: 02/28/2025"
+    },
     "Lazy-Collisions": {
       "credits": "Utility blocks that make detecting collisions easy and fast. Made by SharkPool and Food",
       "url": "extension-code/Lazy-Collisions.js",
