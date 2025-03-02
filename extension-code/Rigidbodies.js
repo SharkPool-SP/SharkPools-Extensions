@@ -603,7 +603,7 @@
 
     // PenguinMod & Turbowarp Storage
     serialize() {
-      const cleanBlocks = blocks.filter((b) => { return b.hideFromPalette === true });
+      const cleanBlocks = blocks.filter((b) => { return b.hideFromPalette === undefined || b.hideFromPalette === false });
       if (!isPM) runtime.extensionStorage["SPrigidBody"] = { blocks: cleanBlocks, bodies };
       else return { SPrigidBody: { blocks, bodies } };
     }
