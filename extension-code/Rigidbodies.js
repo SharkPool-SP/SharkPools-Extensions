@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -31,6 +31,10 @@
   let hideBlocks = true;
 
   const radianConverter = Math.PI / 180;
+  const defaultBody = {
+    type: "square", x: 0, y: 0,
+    scale: [1, 1], dir: 0, circAccuracy: 20
+  };
 
   // Internals & Monitors
   function updateAllBodyMonitors() {
@@ -47,7 +51,7 @@
         delete bodyMonitors[entry[0]];
         return;
       }
-      div.style.left = `${body.x}px`; div.style.top = `${body.y}px`;
+      div.style.left = `${body.x}px`; div.style.top = `${body.y * -1}px`;
       div.firstChild.style.transform = `rotate(${body.dir}deg) scale(${body.scale[0]}, ${body.scale[1]})`;
     }
   }
@@ -209,6 +213,15 @@
               OCT_SHAPE1: {}, OCT_SHAPE2: {}
             }
           },
+          {
+            opcode: "boundsOfBox",
+            blockType: Scratch.BlockType.REPORTER,
+            hideFromPalette: hideBlocks,
+            text: "bounding box of [OCT_SHAPE]",
+            arguments: {
+              OCT_SHAPE: {}
+            }
+          },
           "---",
           {
             opcode: "setBodyType",
@@ -293,10 +306,10 @@
         const block = blocks.find((i) => { return i.text == value });
         if (block) block.hideFromPalette = false;
         else blocks.push(newBlock);
-        bodies[value] = {
-          name: value, type, x: 0, y: 0,
-          scale: [1, 1], dir: 0, circAccuracy: 20
-        };
+        const body = structuredClone(defaultBody);
+        body.name = value; body.type = type;
+        bodies[value] = body;
+
         hideBlocks = false;
         this.serialize();
         vm.extensionManager.refreshBlocks("SPrigidBody");
@@ -324,8 +337,13 @@
     }
 
     getBody(obj) {
-      if (obj?.name) return bodies[obj.name] ?? "";
-      else {
+      if (obj?.name) {
+        // allow for custom bodies using JSON
+        return bodies[obj.name] ?? { 
+          ...structuredClone(defaultBody),
+          ...obj
+        };
+      } else {
         console.warn("Error: Expected Pure JSON!");
         return "";
       }
@@ -338,10 +356,9 @@
       const rotWidth = Math.abs(width * Math.cos(rads)) + Math.abs(height * Math.sin(rads));
       const rotHeight = Math.abs(width * Math.sin(rads)) + Math.abs(height * Math.cos(rads));
       return {
-        x: info.x, y: info.y,
         width: rotWidth, height: rotHeight,
         left: info.x - rotWidth / 2, right: info.x + rotWidth / 2,
-        top: info.y + rotHeight / 2, bottom: info.y - rotHeight / 2,
+        top: -info.y + rotHeight / 2, bottom: -info.y - rotHeight / 2,
       };
     }
 
@@ -356,13 +373,14 @@
     }
 
     collisionPoint(bodyInfo, bounds, x, y) {
-      const { type, x: bx, y: by, scale, dir } = bodyInfo;
-      const [scaleX, scaleY] = scale;
-      const angle = dir * radianConverter;
+      const bx = bodyInfo.x;
+      const by = bodyInfo.y * -1;
+      const [scaleX, scaleY] = bodyInfo.scale;
+      const angle = bodyInfo.dir * radianConverter;
       const cosA = Math.cos(angle), sinA = Math.sin(angle);
       const localPoint = this.transformPoint(x, y, bx, by, cosA, sinA);
       const halfW = 50 * scaleX, halfH = 50 * scaleY;
-      switch (type) {
+      switch (bodyInfo.type) {
         case "square": {
           return (
             localPoint.x >= -halfW && localPoint.x <= halfW && localPoint.y >= -halfH && localPoint.y <= halfH
@@ -404,7 +422,8 @@
 
     /* Object Collision */
     genShapePoints(bodyInfo) {
-      const { x, y, type, dir, scale, circAccuracy } = bodyInfo;
+      const { x, dir, scale, circAccuracy } = bodyInfo;
+      const y = bodyInfo.y * -1;
       const points = [];
       const addPoint = (px, py) => {
         const rad = dir * radianConverter;
@@ -415,7 +434,7 @@
       };
 
       const scaledX = 50 * scale[0], scaledY = 50 * scale[1];
-      switch (type) {
+      switch (bodyInfo.type) {
         case "square":
           addPoint(-scaledX, -scaledY);
           addPoint(scaledX, -scaledY);
@@ -526,6 +545,12 @@
       return Math.sqrt((dx * dx) + (dy * dy));
     }
 
+    boundsOfBox(args) {
+      const info = this.getBody(args.OCT_SHAPE);
+      if (!info) return "{}";
+      return JSON.stringify(this.getBoundingBox(info));
+    }
+
     setBodyType(args) {
       const info = this.getBody(args.OCT_SHAPE);
       if (!info) return;
@@ -556,7 +581,7 @@
       const info = this.getBody(args.OCT_SHAPE);
       if (!info) return;
       info.x = Cast.toNumber(args.x);
-      info.y = Cast.toNumber(args.y) * -1;
+      info.y = Cast.toNumber(args.y);
       updateAllBodyMonitors();
     }
 
