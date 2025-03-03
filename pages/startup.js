@@ -293,7 +293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
   else {
     const params = new URLSearchParams(location.search);
-    isPenguinMod = Boolean(params.get("originPM"));
+    isPenguinMod = params.get("originPM") === "true";
     getCleanStorage();
     currentTag = params.get("tag") || currentTag;
     addBtnBehaviours();
