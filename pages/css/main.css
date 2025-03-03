@@ -107,6 +107,7 @@ body {
   transform: scale(1);
 }
 .ext-holder:hover {
+  filter: url(#bloom-filter);
   transform: scale(1.1);
 }
 .ext-tag {
