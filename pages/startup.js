@@ -260,7 +260,7 @@ function openSearch() {
   input.type = "text";
   input.addEventListener("change", (e) => query = e.target.value);
   input.addEventListener("keydown", (e) => {
-    displayExts(filterExts(galleryData.extensions, e.target.value));
+    displayExts(filterExts(galleryData.extensions, e.target.value), true);
     if (e.key === "Enter") searchContainer.remove();
   });
 
