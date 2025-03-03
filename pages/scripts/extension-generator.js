@@ -1,4 +1,4 @@
-function displayExts(json) {
+function displayExts(json, optDontFade) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
 
@@ -32,7 +32,7 @@ function displayExts(json) {
     }
     main.appendChild(holderDiv);
 
-    img.onload = () => {
+    if (!optDontFade) img.onload = () => {
       holderDiv.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
       holderDiv.style.opacity = "1";
     };
