@@ -210,7 +210,7 @@ async function downloadExt(name, data) {
     messager.postMessage({
       loadExt: `https://sharkpools-extensions.vercel.app/${data.url}`
     }, "https://studio.penguinmod.com");
-    genText("center-notif", "Copied to PenguinMod!");
+    genText("center-notif", "Copied to PenguinMod! Check the Editor");
   } else {
     if (downloadType === "download") {
       fetch(data.url)
