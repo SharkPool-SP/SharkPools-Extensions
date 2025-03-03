@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.8
+// Version V.1.0.81
 // TODO compile this extension
 
 (function (Scratch) {
@@ -31,7 +31,7 @@
   }
 
   const regenReporters = ["SPjson_objKey", "SPjson_objValue", "SPjson_arrValueA", "SPjson_arrValueB"];
-  const jsonBlocks = ["SPjson_jsonValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson", "SPjson_jsonMap"];
+  const jsonBlocks = ["SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson", "SPjson_jsonMap"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     // Regen Reporters
     const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
@@ -56,7 +56,7 @@
     SB.BlockSvg.prototype.render = function (...args) {
       const data = ogRender.call(this, ...args);
       if (this.svgPath_ && jsonBlocks.includes(this.type)) {
-        if (this.type !== "SPjson_jsonValid") {
+        if (this.type !== "SPjson_jsonValid" && this.type !== "SPjson_objValid") {
           const fixedWidth = this.width - 35;
           this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
           this.svgPath_.setAttribute("d", makeShape(this.width));
@@ -75,7 +75,14 @@
     }
   });
 
-  // See Line -- 100
+  // Patch Saving Pure Objects to Variables
+  // We must stringify them for it to work
+  const og2JSON = vm.constructor.prototype.toJSON;
+  vm.constructor.prototype.toJSON = function (optTargetId, serializationOptions) {
+    stringifyVariables();
+    return og2JSON.call(this, optTargetId, serializationOptions);
+  }
+
   function stringifyVariables() {
     for (let i = 0; i < runtime.targets.length; i++) {
       const target = runtime.targets[i];
@@ -96,45 +103,6 @@
       }
     }
   }
-
-  // Patch Saving Pure Objects to Variables
-  // We must stringify them for it to work
-  const beforeSave = () =>
-    new Promise((resolve) => {
-      stringifyVariables();
-      resolve();
-    });
-  const ogSaveProjectSb3 = vm.saveProjectSb3;
-  vm.saveProjectSb3 = async function (...args) {
-    await beforeSave();
-    return await ogSaveProjectSb3.apply(this, args);
-  };
-  const ogSaveProjSb3Stream = vm.saveProjectSb3Stream;
-  vm.saveProjectSb3Stream = function (...args) {
-    let realStream = null;
-    const queuedCalls = [];
-    const whenStreamReady = (methodName, args) => {
-      if (realStream) return realStream[methodName].apply(realStream, args);
-      else return new Promise((resolve) => { queuedCalls.push({ resolve, methodName, args }) });
-    };
-    const streamWrapper = {
-      on: (...args) => void whenStreamReady("on", args), pause: (...args) => void whenStreamReady("pause", args),
-      resume: (...args) => void whenStreamReady("resume", args), accumulate: (...args) => whenStreamReady("accumulate", args)
-    };
-    beforeSave().then(() => {
-      realStream = ogSaveProjSb3Stream.apply(this, args);
-      for (const queued of queuedCalls) queued.resolve(realStream[queued.methodName].apply(realStream, queued.args));
-      queuedCalls.length = 0;
-    });
-    return streamWrapper;
-  };
-
-  // Also do this for Restore Points
-  const ogSaveProjectNonZIP = vm.saveProjectSb3DontZip;
-  vm.saveProjectSb3DontZip = function (...args) {
-    stringifyVariables();
-    return ogSaveProjectNonZIP.apply(this, args);
-  };
 
   // Modify Visual Report to stringify JSON
   const ogVisReport = runtime.visualReport;
@@ -196,9 +164,9 @@
           },
           { blockType: Scratch.BlockType.LABEL, text: "JSON" },
           {
-            opcode: "jsonValid",
+            opcode: "objValid",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "is JSON [OBJ] valid?",
+            text: "is object [OBJ] valid?",
             arguments: {
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
             },
@@ -545,6 +513,14 @@
           },
           { blockType: Scratch.BlockType.LABEL, text: "Utilities" },
           {
+            opcode: "jsonValid",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is JSON [OBJ] valid?",
+            arguments: {
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
+            },
+          },
+          {
             opcode: "parse",
             blockType: Scratch.BlockType.REPORTER,
             text: "parse [OBJ]",
@@ -802,20 +778,9 @@
     }
 
     // JSON Funcs
-    jsonValid(args) {
-      const obj = args.OBJ;
-      const type = typeof obj;
-      if (type === "object") return true;
-      if (this.alwaysParse) {
-        if (type != "string") return false;
-        try {
-          JSON.parse(obj);
-          return true;
-        } catch {
-          return false;
-        }
-      }
-      return false;
+    objValid(args) {
+      const obj = this.tryParse(args.OBJ);
+      return typeof obj === "object" && obj.constructor?.name === "Object";
     }
 
     jsonBuilder(args) { return { [args.KEY] : this.toSafe(args.VAL) } }
@@ -1130,6 +1095,22 @@
     }
 
     // Util Funcs
+    jsonValid(args) {
+      const obj = args.OBJ;
+      const type = typeof obj;
+      if (type === "object") return true;
+      if (this.alwaysParse) {
+        if (type != "string") return false;
+        try {
+          JSON.parse(obj);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+      return false;
+    }
+
     parse(args) {
       const obj = args.OBJ;
       if (typeof obj === "object") return obj;
