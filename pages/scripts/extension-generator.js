@@ -46,15 +46,9 @@ function displayExts(json, optDontFade) {
       holderDiv.appendChild(genPin(name));
       genText("ext-desc", info.credits);
       genText("ext-log", info.date);
-      holderDiv.firstChild.style.filter = "url(#bloom-filter)";
-      holderDiv.animate([{ transform: "scale(1)" }, { transform: "scale(1.1)" }], { duration: 200, easing: "ease-in-out" });
-      holderDiv.style.transform = "scale(1.1)";
     });
     holderDiv.addEventListener("mouseleave", () => {
       removeText();
-      holderDiv.firstChild.style.filter = "";
-      holderDiv.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 200, easing: "ease-in-out" });
-      holderDiv.style.transform = "scale(1)";
       const pin = holderDiv.lastChild;
       const animation = pin.animate([{ opacity: "1" }, { opacity: "0" }], { duration: 200, easing: "ease-in-out" });
       animation.onfinish = () => pin.remove();
