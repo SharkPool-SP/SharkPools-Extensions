@@ -106,13 +106,13 @@ function filterExts(json, searchQ) {
     if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
     else return Object.fromEntries(newEntries);
   } else if (currentTag === "all") {
-    // order by newest => updated => old
+    // order by newest => updated => old, hide deprecated
     entries.forEach((entry) => {
       if (entry[1].status === "update") newEntries.unshift(entry);
     });
     entries.forEach((entry) => {
       if (entry[1].status === "new") newEntries.unshift(entry);
-      else newEntries.push(entry);
+      else if (!entry[1].isDeprecated) newEntries.push(entry);
     });
   } else {
     // order by tag
