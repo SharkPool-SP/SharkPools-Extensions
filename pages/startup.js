@@ -260,10 +260,8 @@ function openSearch() {
   input.type = "text";
   input.addEventListener("change", (e) => query = e.target.value);
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      displayExts(filterExts(galleryData.extensions, e.target.value));
-      searchContainer.remove();
-    }
+    displayExts(filterExts(galleryData.extensions, e.target.value));
+    if (e.key === "Enter") searchContainer.remove();
   });
 
   const submit = document.createElement("img");
@@ -271,7 +269,6 @@ function openSearch() {
   submit.src = "Gallery%20Files/main-assets/search-enter.svg";
   submit.setAttribute("draggable", "false");
   submit.addEventListener("click", (e) => {
-    displayExts(filterExts(galleryData.extensions, query));
     searchContainer.remove();
     e.stopImmediatePropagation();
   });
