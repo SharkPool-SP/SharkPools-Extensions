@@ -18,16 +18,8 @@ async function displayContributors() {
       img.style.opacity = "1";
     };
     img.addEventListener("click", () => window.open("https://github.com/" + item.name));
-    img.addEventListener("mouseenter", () => {
-      genText("contributor", item.name);
-      img.animate([{ transform: "scale(1)" }, { transform: "scale(1.1)" }], { duration: 150, easing: "ease-in-out" });
-      img.style.transform = "scale(1.1)";
-    });
-    img.addEventListener("mouseleave", () => {
-      removeText();
-      img.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 150, easing: "ease-in-out" });
-      img.style.transform = "scale(1)";
-    });
+    img.addEventListener("mouseenter", () => genText("contributor", item.name));
+    img.addEventListener("mouseleave", () => removeText());
   });
   document.body.appendChild(main);
 }
