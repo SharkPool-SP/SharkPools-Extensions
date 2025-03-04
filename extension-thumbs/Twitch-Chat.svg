@@ -1,0 +1,54 @@
+<svg width="304" xmlns="http://www.w3.org/2000/svg" height="160" id="screenshot-e8d39a92-ded2-80a2-8005-b27bd2ed73e0" viewBox="-10 -5 304 160" fill="none" version="1.1"><style>/* cyrillic-ext */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKcg72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKew72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKcw72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKfA72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* latin-ext */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKcQ72j00.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: &apos;Ubuntu&apos;;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://design.penpot.app/internal/gfonts/font/ubuntu/v20/4iCs6KVjbNBYlgoKfw72.woff2) format(&apos;woff2&apos;);
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}</style><g id="shape-e8d39a92-ded2-80a2-8005-b27bd2ed73e0"><g class="fills" id="fills-e8d39a92-ded2-80a2-8005-b27bd2ed73e0"><rect rx="0" ry="0" width="290" height="150" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" class="frame-background"/></g><g class="frame-children"><g id="shape-e8d39a92-ded2-80a2-8005-b279b5dd21f9"><rect rx="18" ry="18" x="-10" y="-5" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" width="304" height="160" style="fill: rgb(139, 0, 255); fill-opacity: 1;" class="fills" id="fills-e8d39a92-ded2-80a2-8005-b279b5dd21f9"/><g id="strokes-e8d39a92-ded2-80a2-8005-b279b5dd21f9" class="strokes"><g class="inner-stroke-shape" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)"><defs><linearGradient id="stroke-color-gradient-render-2-0" x1=".006" y1=".476" x2=".995" y2=".484"><stop offset="0" stop-color="#6d00a9"/><stop offset="1" stop-color="#6d00a9"/></linearGradient><clipPath id="inner-stroke-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0"><use href="#stroke-shape-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0"/></clipPath><rect rx="18" ry="18" x="-10" y="-5" width="304" height="160" id="stroke-shape-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0" style="fill: none; stroke-width: 20; stroke: url(&quot;#stroke-color-gradient-render-2-0&quot;);"/></defs><use href="#stroke-shape-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0" clip-path="url('#inner-stroke-render-2-e8d39a92-ded2-80a2-8005-b279b5dd21f9-0')"/></g></g></g><g transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)" class="text-container" id="shape-e8d39a92-ded2-80a2-8005-b27b15d21d6f"><defs><pattern patternUnits="userSpaceOnUse" x="43" y="98" width="190.266" height="41" id="fill-0-render-3-0"><rect width="190.266" height="41" style="fill: rgb(255, 255, 255); fill-opacity: 1;"/></pattern></defs><text x="53.359" y="140" dominant-baseline="ideographic" textLength="190.266" lengthAdjust="spacingAndGlyphs" style="text-transform: none; font-family: Ubuntu; letter-spacing: normal; font-style: normal; font-weight: 400; white-space: pre; font-size: 36px; text-decoration: none solid rgb(255, 255, 255); direction: ltr; fill: rgb(255, 255, 255); fill-opacity: 1;" class="fills" id="fills-e8d39a92-ded2-80a2-8005-b27b15d21d6f">Twitch Chat</text></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b16b8bf" style="fill: rgb(0, 0, 0);"><g id="shape-31d62aba-76fa-802f-8005-b36a5b1aba41" style="opacity: 1;"><path d="M182.440,15.572C158.887,15.573,135.410,15.573,112.009,15.572C123.664,15.242,135.402,15.078,147.224,15.078C159.046,15.078,170.785,15.242,182.440,15.572ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(98, 62, 164);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1aba41"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1bfcba" style="opacity: 1;"><path d="M112.009,15.572C135.410,15.573,158.887,15.573,182.440,15.572C182.481,31.059,182.440,46.545,182.316,62.032C175.355,69.075,168.395,76.118,161.434,83.161C156.574,83.243,151.714,83.326,146.853,83.408C143.799,86.463,140.751,89.511,137.710,92.552C133.839,92.675,129.967,92.717,126.095,92.675C126.095,89.545,126.095,86.415,126.095,83.284C119.834,83.284,113.574,83.284,107.313,83.284C107.272,65.162,107.313,47.039,107.437,28.917C108.895,24.417,110.419,19.968,112.009,15.572ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(101, 66, 165);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1bfcba"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1cbad1" style="opacity: 1;"><path d="M135.486,80.813C135.486,77.765,135.486,74.717,135.486,71.670C129.967,71.670,124.447,71.670,118.928,71.670C118.928,55.112,118.928,38.555,118.928,21.997C137.792,21.997,156.656,21.997,175.520,21.997C175.561,34.683,175.520,47.369,175.397,60.055C171.566,63.885,167.736,67.716,163.905,71.546C157.562,71.628,151.219,71.711,144.876,71.793C141.779,75.017,138.649,78.024,135.486,80.813ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(254, 254, 254);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1cbad1"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1cec79" style="opacity: 1;"><path d="M137.957,36.330C140.263,36.330,142.570,36.330,144.876,36.330C144.876,43.332,144.876,50.334,144.876,57.336C142.570,57.336,140.263,57.336,137.957,57.336C137.957,50.334,137.957,43.332,137.957,36.330ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(168, 148, 204);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1cec79"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1d2be9" style="opacity: 1;"><path d="M138.204,36.578C140.346,36.578,142.487,36.578,144.629,36.578C144.629,43.415,144.629,50.252,144.629,57.089C142.487,57.089,140.346,57.089,138.204,57.089C138.204,50.252,138.204,43.415,138.204,36.578ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(99, 64, 164);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1d2be9"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1d9204" style="opacity: 1;"><path d="M156.739,36.330C159.045,36.330,161.352,36.330,163.658,36.330C163.658,43.332,163.658,50.334,163.658,57.336C161.352,57.336,159.045,57.336,156.739,57.336C156.739,50.334,156.739,43.332,156.739,36.330ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(165, 145, 203);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1d9204"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1dedc9" style="opacity: 1;"><path d="M156.986,36.578C159.127,36.578,161.269,36.578,163.411,36.578C163.411,43.415,163.411,50.252,163.411,57.089C161.269,57.089,159.127,57.089,156.986,57.089C156.986,50.252,156.986,43.415,156.986,36.578ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(99, 64, 164);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1dedc9"/></g><g id="shape-31d62aba-76fa-802f-8005-b36a5b1e3a5d" style="opacity: 1;"><path d="M118.928,71.670C124.447,71.670,129.967,71.670,135.486,71.670C135.486,74.717,135.486,77.765,135.486,80.813C135.240,77.892,135.157,74.926,135.239,71.917C129.759,71.998,124.322,71.916,118.928,71.670ZZ" style="shape-rendering: geometricprecision; text-rendering: geometricprecision; fill-rule: evenodd; clip-rule: evenodd; fill: rgb(180, 163, 211);" class="fills" id="fills-31d62aba-76fa-802f-8005-b36a5b1e3a5d"/></g></g></g></g></svg>
