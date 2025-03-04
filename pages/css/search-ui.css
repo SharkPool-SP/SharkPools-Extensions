@@ -22,14 +22,16 @@
   left: 50%;
   top: 49.3%;
   transform: translate(-50%, -50%);
-  width: 410px;
+  width: 400px;
   height: 28px;
   border-radius: 25px;
   border: none;
   color: #fff;
   background-color: #00000000;
-  padding: 10px;
+  padding: 0px 10px 0px 0px;
+  margin: -2px 5px 0px 0px;
   z-index: 99;
+  text-indent: 10px;
   font-size: 20px;
   font-family: Sans-Serif;
 }

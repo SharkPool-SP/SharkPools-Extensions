@@ -1,4 +1,4 @@
-function displayExts(json) {
+function displayExts(json, optDontFade) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
 
@@ -32,7 +32,7 @@ function displayExts(json) {
     }
     main.appendChild(holderDiv);
 
-    img.onload = () => {
+    if (!optDontFade) img.onload = () => {
       holderDiv.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
       holderDiv.style.opacity = "1";
     };
@@ -46,15 +46,9 @@ function displayExts(json) {
       holderDiv.appendChild(genPin(name));
       genText("ext-desc", info.credits);
       genText("ext-log", info.date);
-      holderDiv.firstChild.style.filter = "url(#bloom-filter)";
-      holderDiv.animate([{ transform: "scale(1)" }, { transform: "scale(1.1)" }], { duration: 200, easing: "ease-in-out" });
-      holderDiv.style.transform = "scale(1.1)";
     });
     holderDiv.addEventListener("mouseleave", () => {
       removeText();
-      holderDiv.firstChild.style.filter = "";
-      holderDiv.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 200, easing: "ease-in-out" });
-      holderDiv.style.transform = "scale(1)";
       const pin = holderDiv.lastChild;
       const animation = pin.animate([{ opacity: "1" }, { opacity: "0" }], { duration: 200, easing: "ease-in-out" });
       animation.onfinish = () => pin.remove();
