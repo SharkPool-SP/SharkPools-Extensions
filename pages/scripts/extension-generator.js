@@ -32,7 +32,8 @@ function displayExts(json, optDontFade) {
     }
     main.appendChild(holderDiv);
 
-    if (!optDontFade) img.onload = () => {
+    if (optDontFade) holderDiv.style.opacity = "1";
+    else img.onload = () => {
       holderDiv.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
       holderDiv.style.opacity = "1";
     };
