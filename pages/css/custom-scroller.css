@@ -1,18 +1,36 @@
-::-webkit-scrollbar {
-  background-color: #00000000;
+:root {
+    --track-color: #171717;
+    --thumb-color: #34befa;
+    --scrollbar-width: 22px;
+    --scrollbar-radius: 50px;
+    --scrollbar-width-moz: auto;
 }
-::-webkit-scrollbar-track {
-  background-color: #00000000;
+
+/* Chrome, Edge, Safari */
+body::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  background-color: var(--track-color);
 }
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-track {
+  background-color: var(--track-color);
+}
+body::-webkit-scrollbar-thumb {
+  border-radius: var(--scrollbar-radius);
+  border: 3px solid #c7feff;
+  background-clip: padding-box;
   background: repeating-linear-gradient(
     to bottom,
     #175773,
     #175773 16px,
     #c7feff 16px,
     #c7feff 19px
-  ); 
-  border: 3px solid #c7feff;
-  border-radius: 14px;
-  background-clip: padding-box;
+  );
+}
+
+/* Firefox */
+@supports not selector(::-webkit-scrollbar) {
+* {
+    scrollbar-width: var(--scrollbar-width-moz);
+    scrollbar-color: var(--thumb-color) var(--track-color);
+  }
 }
