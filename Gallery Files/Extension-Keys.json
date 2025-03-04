@@ -46,6 +46,7 @@
       "credits": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3. Made by SharkPool, inspired by LilyMakesThings",
       "url": "extension-code/Tune-Shark.js",
       "tags": ".all.utilities.category",
+      "isDeprecated": true,
       "status": "",
       "date": "Last Updated: 10/07/2024"
     },
@@ -95,6 +96,7 @@
       "credits": "Expansion of the 'Ask and Wait' block. Deprecated, please use Popup-Phoenix. Made by SharkPool",
       "url": "extension-code/Better-Input.js",
       "tags": ".all.utilities.expanded",
+      "isDeprecated": true,
       "status": "",
       "date": "Last Updated: 11/02/2024"
     },
@@ -116,6 +118,7 @@
       "credits": "Tools that make creating Particle Systems Easy! Made by SharkPool",
       "url": "extension-code/Particle-Tools.js",
       "tags": ".all.utilities",
+      "isDeprecated": true,
       "status": "",
       "date": "Last Updated: 02/04/2024"
     },
