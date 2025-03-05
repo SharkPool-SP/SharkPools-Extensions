@@ -60,7 +60,7 @@
     "Geometry-Dash-API": {
       "credits": "Fetch Geometry Dash statistics and information. Made by SharkPool and GD Colon. Thank you RobTopGames.",
       "url": "extension-code/Geometry-Dash-API.js",
-      "tags": ".all.utilities.fetching",
+      "tags": ".all.fetching",
       "status": "",
       "date": "Last Updated: 12/20/2023"
     },
@@ -103,7 +103,7 @@
     "Camera-Sensing-Plus": {
       "credits": "Expansion of the Video Sensing Extension. Display the Camera on Sprites and take Screenshots! Made by SharkPool",
       "url": "extension-code/Camera-Sensing-Plus.js",
-      "tags": ".all.utilities.expanded.fetching.category",
+      "tags": ".all.utilities.expanded.category",
       "status": "",
       "date": "Last Updated: 06/09/2024"
     },
@@ -153,7 +153,7 @@
     "Recording": {
       "credits": "Utility blocks for recording yourself while your project runs. Made by SharkPool",
       "url": "extension-code/Recording.js",
-      "tags": ".all.utilities.fetching",
+      "tags": ".all.utilities",
       "status": "",
       "date": "Last Updated: 08/26/2024"
     },
@@ -209,7 +209,7 @@
     "Gamepad-Expanded": {
       "credits": "New Blocks added to Garbomuffin's Gamepad Extension. Made by DNin01 and Meehdrescher",
       "url": "extension-code/Gamepad-Expanded.js",
-      "tags": ".all.expanded.utilities",
+      "tags": ".all.expanded.category",
       "status": "",
       "date": "Released: 10/??/2023"
     },
@@ -244,7 +244,7 @@
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
       "url": "extension-code/Text-to-Speech.js",
-      "tags": ".all.expanded.fetching.utilities",
+      "tags": ".all.expanded.fetching",
       "status": "",
       "date": "Last Updated: 01/02/2024"
     },
@@ -300,7 +300,7 @@
     "Money-Utilities": {
       "credits": "Convert Currencies and get Currency Information. Made by SharkPool",
       "url": "extension-code/Money-Utilities.js",
-      "tags": ".all.fetching",
+      "tags": ".all.fetching.utilities",
       "status": "",
       "date": "Last Updated: 03/13/2024"
     },
@@ -447,7 +447,7 @@
     "JSON-Array": {
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "extension-code/JSON-Array.js",
-      "tags": ".all.utilities",
+      "tags": ".all.utilities.expanded",
       "status": "update",
       "date": "Last Updated: 03/02/2025"
     },
@@ -482,7 +482,7 @@
     "Example": {
       "credits": "",
       "url": "",
-      "tags": ".all.utilities.expanded.fetching.searchQ",
+      "tags": ".all.utilities.expanded.fetching.category.addon.searchQ",
       "status": "",
       "date": ""
     }
