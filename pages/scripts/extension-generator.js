@@ -26,7 +26,7 @@ function displayExts(json, optDontFade) {
       if (shouldSplit && !tag) {
         const breaker = document.createElement("div");
         breaker.classList.add("ext-breaker");
-        main.appendChild(breaker);
+        main.append(breaker, document.createElement("br"));
         shouldSplit = false;
       }
     }
