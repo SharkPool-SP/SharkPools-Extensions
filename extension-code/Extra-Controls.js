@@ -618,7 +618,7 @@
       const fields = Object.entries(block.fields);
       for (var i = 0; i < fields.length; i++) {
         const field = fields[i];
-        args[field[0]] = field[1].value;
+        args[field[0]] = op.startsWith("data_") ? field[1] : field[1].value;
       }
       const inputs = Object.entries(block.inputs);
       for (var i = 0; i < inputs.length; i++) {
