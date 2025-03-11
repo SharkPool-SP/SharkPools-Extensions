@@ -111,7 +111,7 @@
       "credits": "Create Highly Customizable Particle Engines with NO Clones. Made by SharkPool",
       "url": "extension-code/Particle-Engine.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 02/22/2025"
     },
     "Particle-Tools": {
@@ -126,8 +126,8 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "",
-      "date": "Last Updated: 02/10/2025"
+      "status": "update",
+      "date": "Last Updated: 03/10/2025"
     },
     "Image-Effects": {
       "credits": "Apply new, non-vanilla effects and edits to Images and Sprites! Made by SharkPool",
@@ -385,7 +385,7 @@
       "credits": "New Advanced Control Blocks. Made by SharkPool",
       "url": "extension-code/Extra-Controls.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/04/2025"
     },
     "More-Operators": {
@@ -448,7 +448,7 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "extension-code/JSON-Array.js",
       "tags": ".all.utilities.expanded",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/02/2025"
     },
     "My-Blocks-Plus": {
