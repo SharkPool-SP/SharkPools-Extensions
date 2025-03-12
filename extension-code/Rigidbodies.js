@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.01
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -275,7 +275,22 @@
               x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
-          }
+          },
+          "---",
+          {
+            opcode: "bodyTemporary",
+            blockType: Scratch.BlockType.REPORTER,
+            hideFromPalette: hideBlocks,
+            text: "temporary [OCT_SHAPES] body at x: [x] y: [y] direction [ANGLE] scale x: [sX] y: [sY]",
+            arguments: {
+              OCT_SHAPES: { type: Scratch.ArgumentType.STRING, menu: "BODY_SHAPES" },
+              x: { type: Scratch.ArgumentType.NUMBER },
+              y: { type: Scratch.ArgumentType.NUMBER },
+              ANGLE: { type: Scratch.ArgumentType.ANGLE, defaultValue: 90 },
+              sX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              sY: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
+            }
+          },
         ],
         menus: {
           BODY_SHAPES: { acceptReporters: true, items: bodyTypes }
@@ -599,6 +614,21 @@
         Cast.toNumber(args.x) / 100, Cast.toNumber(args.y) / 100
       ];
       updateAllBodyMonitors();
+    }
+
+    bodyTemporary(args, util) {
+      const type = args.OCT_SHAPES;
+      if (bodyTypes.indexOf(type) === -1) return "";
+
+      const bodyInfo = {
+        name: `temporaryBody-${Math.random()}`, type, circAccuracy: 20,
+        x: Cast.toNumber(args.x), y: Cast.toNumber(args.y),
+        scale: [Cast.toNumber(args.sX) / 100, Cast.toNumber(args.sY) / 100],
+        dir: Cast.toNumber(args.ANGLE) - 90,
+      };
+
+      const isInExtBlock = this.getPrevBlock(util)?.opcode.startsWith("SPrigidBody_");
+      return isInExtBlock ? bodyInfo : JSON.stringify(bodyInfo);
     }
 
     // PenguinMod & Turbowarp Storage
