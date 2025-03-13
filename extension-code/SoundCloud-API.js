@@ -387,7 +387,7 @@
       SB.SPgradients = { gradientUrls: {}, patched: false };
       const BSP = SB.BlockSvg.prototype, BSPR = BSP.render;
       BSP.render = function(...args) {
-        const blockTheme = ReduxStore.getState().scratchGui.theme.theme.blocks;
+        const blockTheme = ReduxStore.getState().scratchGui?.theme?.theme?.blocks;
         const res = BSPR.apply(this, args);
         let category;
         if (this?.svgPath_ && this?.category_ && (category = this.type.slice(0, this.type.indexOf("_"))) && SB.SPgradients.gradientUrls[category]) {
