@@ -11,8 +11,8 @@
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": "",
-      "date": "Last Updated: 02/10/2024"
+      "status": "update",
+      "date": "Last Updated: 03/18/2025"
     },
     "Time-Calculation": {
       "credits": "Blocks for calculating time differences. Made by SharkPool",
@@ -122,6 +122,13 @@
       "status": "",
       "date": "Last Updated: 02/04/2024"
     },
+    "Looks-Expanded": {
+      "credits": "Expansion of the Looks Category. Made by SharkPool and CST",
+      "url": "extension-code/Looks-Expanded.js",
+      "tags": ".all.utilities.expanded.category",
+      "status": "new",
+      "date": "Released: 03/18/2025"
+    },
     "Sprite-Effects": {
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "extension-code/Sprite-Effects.js",
@@ -191,6 +198,13 @@
       "tags": ".all.expanded.fetching",
       "status": "",
       "date": "Last Updated: 02/01/2025"
+    },
+    "Temporary-Variables": {
+      "credits": "Create temporary variables for sprites, threads, and the project. Made by SharkPool",
+      "url": "extension-code/Temporary-Variables.js",
+      "tags": ".all.utilities.category",
+      "status": "new",
+      "date": "Released: 03/18/2025"
     },
     "Monitors-Plus": {
       "credits": "New Variable Blocks and New Monitor types. Made by SharkPool and DogeIsCut",
