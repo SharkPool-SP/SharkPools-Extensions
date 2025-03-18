@@ -493,6 +493,13 @@
       "status": "",
       "date": "Last Updated: 02/01/2025"
     },
+    "Pen-Papers": {
+      "credits": "Create Multiple Pen Layers! Made by SharkPool, inspired by ObviousAlex",
+      "url": "extension-code/Pen-Papers.js",
+      "tags": ".all.utilities.expanded.category",
+      "status": "new",
+      "date": "Released: 03/18/2025"
+    },
     "Example": {
       "credits": "",
       "url": "",
