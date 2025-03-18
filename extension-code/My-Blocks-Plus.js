@@ -1,4 +1,4 @@
-// Name: My Blocks+
+ // Name: My Blocks+
 // ID: SPmbpCST
 // Description: Create Better Custom Blocks
 // By: SharkPool
@@ -6,11 +6,10 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.1.01
+// Version V.1.1.02
 
 /* TODO
 V1.2
-- set default value
 - block images?
 - branches
 */
@@ -776,6 +775,17 @@ V1.2
       for (const target of this.runtime.targets) {
         if (!target.isOriginal || target.blocks === this) continue;
         const targetBlock = oldGetBlock.call(target.blocks, name);
+        if (targetBlock) return targetBlock;
+      }
+      return undefined;
+    }
+    const oldGetBranch = Blocks.prototype.getBranch;
+    Blocks.prototype.getBranch = function (id, branchNum) {
+      const thisBlock = oldGetBranch.call(this, id, branchNum);
+      if (thisBlock) return thisBlock;
+      for (const target of this.runtime.targets) {
+        if (!target.isOriginal || target.blocks === this) continue;
+        const targetBlock = oldGetBranch.call(target.blocks, id, branchNum);
         if (targetBlock) return targetBlock;
       }
       return undefined;
