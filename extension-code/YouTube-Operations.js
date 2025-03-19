@@ -3,7 +3,7 @@
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
 
-// Version V.1.7.11
+// Version V.1.7.2
 
 (function (Scratch) {
   "use strict";
@@ -22,7 +22,6 @@
   // For file fetching, we must use this, its slower but works all the time
   // We also use it as a backup in case proxy 1 fails to work
   const proxy2 = "https://api.codetabs.com/v1/proxy?quest=";
-
 
   let player = "window";
   //let playerOpts = { controls: 1, autoplay: 1, loop: 0 } -- Stopped Working, see L:378
@@ -53,14 +52,13 @@
   runtime.on("PROJECT_STOP_ALL", closeFrame);
 
   class SPyoutubeoperations {
-    constructor() { this.youtubeWindows = {} }
     getInfo() {
       return {
         id: "SPyoutubeoperations",
         name: "YouTube Operations",
         menuIconURI,
         blockIconURI,
-        color1: "#FF0000",
+        color1: "#ff0000",
         color2: "#c10000",
         color3: "#820000",
         blocks: [
@@ -95,9 +93,10 @@
           {
             opcode: "vid2MP4",
             blockType: Scratch.BlockType.REPORTER,
-            text: "video [VIDEO_ID] to mp4",
+            text: "video [VIDEO_ID] to [TYPE]",
             arguments: {
-              VIDEO_ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" }
+              VIDEO_ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "EXPORT_TYPES" }
             }
           },
           "---",
@@ -165,6 +164,7 @@
         ],
         menus: {
           DISPLAY: ["window", "canvas"],
+          EXPORT_TYPES: ["mp4", "mp3"],
           STAT_OPTIONS: {
             acceptReporters: true,
             items: ["like", "dislike", "view count", "rating", "date created"]
@@ -223,7 +223,7 @@
     }
 
     async fetchtitle(args) {
-      const stat = args.STAT.toLowerCase().replace(" ", "");
+      const stat = Scratch.Cast.toString(args.STAT).toLowerCase().replace(" ", "");
       if (stat === "description" || stat === "length") return await this.fetchOthersVideo(args);
       try {
         const response = await Scratch.fetch(`https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${args.VIDEO_ID}&format=json`);
@@ -238,30 +238,19 @@
     }
 
     async vid2MP4(args) {
-      try {
-        const response = await Scratch.fetch(`https://yt2html5.com/?id=${args.VIDEO_ID}`);
-        if (response.ok) {
-          const txt = await response.text();
-          if (Object.keys(JSON.parse(txt).data).length === 0) return "API is Down";
-          const start = txt.indexOf(`"url":"`) + 7;
-          const end = txt.indexOf("\"", start + 1);
-          if (start !== -1 && end !== -1) {
-            const value = txt.substring(start, end);
-            if (value === "ess") return "API is Down"
-            else return value;
-          }
-        }
-        return "";
-      } catch { return "Failed to Fetch" }
+      const type = args.TYPE === "mp4" ? "getVideo" : "getAudio";
+      const url = `${proxy2}https://youtubeapi.up.railway.app/${type}?videoId=${args.VIDEO_ID}&quality=480p`;
+      return url;
     }
 
     async fetchUserThing(args) {
-      if (args.URL.split("/").slice(-1)[0].split("/").length > 3) {
-        args.URL = args.URL.substring(0, lastIndex) + args.URL.substring(lastIndex + 1);
+      let url = Scratch.Cast.toString(url);
+      if (url.split("/").slice(-1)[0].split("/").length > 3) {
+        url = url.substring(0, lastIndex) + url.substring(lastIndex + 1);
       }
-      if (args.THING === "total view count" || args.THING === "joined date") args.URL = args.URL + "/about";
+      if (args.THING === "total view count" || args.THING === "joined date") url += "/about";
       try {
-        const response = await Scratch.fetch(proxy + args.URL);
+        const response = await Scratch.fetch(proxy + url);
         if (response.ok) {
           const text = await response.text();
           let match, pattern;
@@ -310,9 +299,9 @@
     }
 
     async fetchOthersVideo(args) {
-      args.VIDEO_ID = `https://www.youtube.com/watch?v=${args.VIDEO_ID}`;
+      const url = `https://www.youtube.com/watch?v=${args.VIDEO_ID}`;
       try {
-        const response = await Scratch.fetch(proxy2 + args.VIDEO_ID);
+        const response = await Scratch.fetch(proxy2 + url);
         if (response.ok) {
           const text = await response.text();
           let pattern, match = "";
@@ -344,14 +333,12 @@
     }
 
     async getResults(args) {
-      args.QUERY = encodeURIComponent(args.QUERY.replace(/ /g, "+"));
-      args.QUERY = args.QUERY.replaceAll("%2B", "+");
+      const query = encodeURIComponent(args.QUERY.replace(/ /g, "+")).replaceAll("%2B", "+");
       try {
-        const response = await Scratch.fetch(proxy + `https://www.youtube.com/results?search_query=${args.QUERY}`);
+        const response = await Scratch.fetch(proxy + `https://www.youtube.com/results?search_query=${query}`);
         if (response.ok) {
           const text = await response.text();
-          const pattern = /\/watch\?v=([a-zA-Z0-9_-]{11})/g;
-          const matchArray = text.match(pattern) || [];
+          const matchArray = text.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/g) || [];
           return JSON.stringify(matchArray.map(match => match.slice(9)));
         }
         return "[]";
@@ -363,8 +350,8 @@
     openYouTubeLinkInNewWindow(args) { this.openYouTubeLinkInNewWindowAtTime(args) }
 
     openYouTubeLinkInNewWindowAtTime(args) {
-      const minutes = Scratch.Cast.toNumber(args.MINUTES) || 0;
-      const seconds = Scratch.Cast.toNumber(args.SECONDS) || 0;
+      const minutes = Scratch.Cast.toNumber(args.MINUTES);
+      const seconds = Scratch.Cast.toNumber(args.SECONDS);
       const startTime = minutes * 60 + seconds;
       let url = `https://www.yout-ube.com/watch?v=${args.ID}&t=${startTime}&fullscreen=yes`;
       let params = `&width=${Math.max(100, Math.min(Scratch.Cast.toNumber(args.WIDTH), window.screen.width))}`;
