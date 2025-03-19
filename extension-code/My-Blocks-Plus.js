@@ -734,9 +734,13 @@ V1.2
         if (block.type === "procedures_call") {
           const isGlobal = globalBlocksCache[block.procCode_];
           if (isGlobal && isGlobal.id !== vm.editingTarget.id) {
-            alert("Global Blocks can only be editted in their Sprite of Origin");
             vm.setEditingTarget(isGlobal.id);
-            return;
+            window.setTimeout(function() {
+              const blockId = vm.editingTarget.blocks.getProcedureDefinition(block.procCode_)
+              block = SB.mainWorkspace.getBlockById(blockId);
+              return procs.editProcedureCallback_.call(this, block);
+            }, 600); // > 300 was needed in testing. Using 600 to be safe.
+            return;            
           }
         }
         const sharedWork = SB.mainWorkspace;
