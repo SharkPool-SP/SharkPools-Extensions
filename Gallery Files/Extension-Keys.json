@@ -182,7 +182,7 @@
       "credits": "Fast, math-based collision detections using Rigidbodies. Made by SharkPool",
       "url": "extension-code/Rigidbodies.js",
       "tags": ".all.utilities.category",
-      "status": "new",
+      "status": "",
       "date": "Released: 02/28/2025"
     },
     "Lazy-Collisions": {
