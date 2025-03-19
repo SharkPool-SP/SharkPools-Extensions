@@ -239,7 +239,7 @@
 
     async vid2MP4(args) {
       const type = args.TYPE === "mp4" ? "getVideo" : "getAudio";
-      const url = `${proxy2}https://youtubeapi.up.railway.app/${type}?videoId=${args.VIDEO_ID}`;
+      const url = `${proxy2}https://youtubeapi.up.railway.app/${type}?videoId=${args.VIDEO_ID}&quality=480p`;
       return url;
     }
 
