@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -25,7 +25,8 @@
   const drawableKey = Symbol("SPlooksKey");
   const newUniforms = [
     "u_replaceColorFromSP", "u_replaceColorToSP", "u_replaceThresholdSP", "u_numReplacersSP",
-    "u_tintColorSP", "u_warpSP", "u_saturateSP", "u_opaqueSP", "u_contrastSP"
+    "u_warpSP", "u_tintColorSP", "u_saturateSP", "u_opaqueSP", "u_contrastSP",
+    "u_posterizeSP", "u_sepiaSP", "u_bloomSP"
   ];
 
   /* patch for new effects */
@@ -34,7 +35,10 @@
       warp: [0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5],
       tint: [1, 1, 1, 1],
       replacers: [],
-      newEffects: { saturation: 1, opaque: 0, contrast: 1 }
+      newEffects: {
+        saturation: 1, opaque: 0, contrast: 1,
+        posterize: 0, sepia: 0, bloom: 0
+      }
     };
   }
 
@@ -102,6 +106,7 @@ void main() {
         `uniform sampler2D u_skin;`,
         `uniform sampler2D u_skin;
 #define MAX_REPLACERS 15
+#define MAX_POINTS 15
 uniform vec3 u_replaceColorFromSP[MAX_REPLACERS];
 uniform vec4 u_replaceColorToSP[MAX_REPLACERS];
 uniform float u_replaceThresholdSP[MAX_REPLACERS];
@@ -111,6 +116,9 @@ uniform vec4 u_tintColorSP;
 uniform float u_saturateSP;
 uniform float u_opaqueSP;
 uniform float u_contrastSP;
+uniform float u_posterizeSP;
+uniform float u_sepiaSP;
+uniform float u_bloomSP;
 
 vec3 spRGB2HSV(vec3 c) {
   vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -125,8 +133,7 @@ vec3 spHSV2RGB(vec3 c) {
   vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
   vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
   return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-`
+}`
       ).replace(
         `gl_FragColor.rgb = clamp(gl_FragColor.rgb / (gl_FragColor.a + epsilon), 0.0, 1.0);`,
         `gl_FragColor.rgb = clamp(gl_FragColor.rgb / (gl_FragColor.a + epsilon), 0.0, 1.0);
@@ -155,6 +162,29 @@ if (u_saturateSP < 0.0) {
 }
 finalColor = spHSV2RGB(hsv);
 finalColor = (finalColor - 0.5) * u_contrastSP + 0.5;
+if (u_posterizeSP > 0.0) {
+  finalColor = floor(finalColor * u_posterizeSP) / u_posterizeSP;
+}
+if (u_sepiaSP > 0.0) {
+  vec3 sepiaColor = vec3(
+    dot(finalColor, vec3(0.393, 0.769, 0.189)),
+    dot(finalColor, vec3(0.349, 0.686, 0.168)),
+    dot(finalColor, vec3(0.272, 0.534, 0.131))
+  );
+  finalColor = mix(finalColor, sepiaColor, u_sepiaSP);
+}
+if (u_bloomSP > 0.0) {
+  vec3 bloom = max(finalColor - 0.4, 0.0);
+
+  bloom += texture2D(u_skin, v_texCoord + vec2( 0.001,  0.001)).rgb;
+  bloom += texture2D(u_skin, v_texCoord + vec2(-0.001,  0.001)).rgb;
+  bloom += texture2D(u_skin, v_texCoord + vec2( 0.001, -0.001)).rgb;
+  bloom += texture2D(u_skin, v_texCoord + vec2(-0.001, -0.001)).rgb;
+  bloom *= 0.25;
+
+  finalColor += bloom * u_bloomSP;
+  finalColor = clamp(finalColor, 0.0, 1.0);
+}
 
 gl_FragColor.rgb = finalColor * u_tintColorSP.rgb;
 float baseAlpha = finalAlpha;
@@ -245,7 +275,10 @@ gl_FragColor.a = baseAlpha;`
         u_warpSP: { method: "uniform2fv", value: effectData.warp },
         u_saturateSP: { method: "uniform1f", value: effectData.newEffects.saturation },
         u_opaqueSP: { method: "uniform1f", value: effectData.newEffects.opaque },
-        u_contrastSP: { method: "uniform1f", value: effectData.newEffects.contrast }
+        u_contrastSP: { method: "uniform1f", value: effectData.newEffects.contrast },
+        u_posterizeSP: { method: "uniform1f", value: effectData.newEffects.posterize },
+        u_sepiaSP: { method: "uniform1f", value: effectData.newEffects.sepia },
+        u_bloomSP: { method: "uniform1f", value: effectData.newEffects.bloom }
       };
 
       Object.entries(newUniformSetters).forEach(([key, { method, value }]) => {
@@ -276,7 +309,10 @@ gl_FragColor.a = baseAlpha;`
       warp: [0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5],
       tint: [1, 1, 1, 1],
       replacers: [],
-      newEffects: { saturation: 1, opaque: 0, contrast: 1 }
+      newEffects: {
+        saturation: 1, opaque: 0, contrast: 1,
+        posterize: 0, sepia: 0, bloom: 0
+      }
     };
     ogClearEffects.call(this);
   };
@@ -526,7 +562,7 @@ gl_FragColor.a = baseAlpha;`
     getEffects() {
       const effects = Object.keys(vm.editingTarget?.effects || {});
       if (!isPM) effects.push("saturation", "opaque");
-      effects.push("contrast");
+      effects.push("contrast", "posterize", "sepia", "bloom");
       return effects.length > 0 ? effects : [""];
     }
 
@@ -553,6 +589,10 @@ gl_FragColor.a = baseAlpha;`
         parseInt(hex.slice(4, 6), 16) / 255,
         a / 255
       ];
+    }
+
+    arrayMatches(arr1, arr2) {
+      return arr1.every((val, i) => val === arr2[i]);
     }
 
     // Block Funcs
@@ -602,15 +642,20 @@ gl_FragColor.a = baseAlpha;`
       const target = this.getTarget(args.TARGET, util);
       if (target) {
         const name = Cast.toString(args.EFFECT);
+        let value = Cast.toNumber(args.VALUE);
+        if (name !== "posterize") value /= 100;
         if (
-          name === "contrast" || (!isPM && (name === "saturation" || name === "opaque"))
+          name === "contrast" || name === "posterize" ||
+          name === "sepia" || name === "bloom" ||
+          (!isPM && (name === "saturation" || name === "opaque"))
         ) {
           const drawable = render._allDrawables[target.drawableID];
           initDrawable(drawable);
-          drawable[drawableKey].newEffects[name] = Cast.toNumber(args.VALUE) / 100;
-          render.dirty = true;
+          const oldValue = drawable[drawableKey].newEffects[name];
+          drawable[drawableKey].newEffects[name] = value
+          if (oldValue !== value) render.dirty = true;
         } else {
-          target.setEffect(name, Cast.toNumber(args.VALUE));
+          target.setEffect(name, value);
         }
       }
     }
@@ -622,11 +667,14 @@ gl_FragColor.a = baseAlpha;`
       const effects = target.effects;
       const name = Cast.toString(args.EFFECT);
       if (
-        name === "contrast" || (!isPM && (name === "saturation" || name === "opaque"))
+        name === "contrast" || name === "posterize" ||
+        name === "sepia" || name === "bloom" ||
+        (!isPM && (name === "saturation" || name === "opaque"))
       ) {
         const drawable = render._allDrawables[target.drawableID];
         initDrawable(drawable);
-        return drawable[drawableKey].newEffects[name] * 100;
+        const value = drawable[drawableKey].newEffects[name];
+        return name === "posterize" ? value : value * 100;
       }
       if (Object.prototype.hasOwnProperty.call(effects, name)) return effects[name];
       return 0;
@@ -638,8 +686,9 @@ gl_FragColor.a = baseAlpha;`
 
       const drawable = render._allDrawables[target.drawableID];
       initDrawable(drawable);
+      const oldTint = drawable[drawableKey].tint;
       drawable[drawableKey].tint = this.hex2Vec4(args.COLOR);
-      render.dirty = true;
+      if (!this.arrayMatches(oldTint, drawable[drawableKey].tint)) render.dirty = true;
     }
 
     replaceColor(args, util) {
@@ -675,8 +724,10 @@ gl_FragColor.a = baseAlpha;`
 
       const drawable = render._allDrawables[target.drawableID];
       initDrawable(drawable);
-      drawable[drawableKey].replacers = [];
-      render.dirty = true;
+      if (drawable[drawableKey].replacers.length > 0) {
+        drawable[drawableKey].replacers = [];
+        render.dirty = true;
+      }
     }
 
     warpSprite(args, util) {
@@ -685,13 +736,14 @@ gl_FragColor.a = baseAlpha;`
 
       const drawable = render._allDrawables[target.drawableID];
       initDrawable(drawable);
+      const oldWarp = drawable[drawableKey].warp;
       drawable[drawableKey].warp = [
         Cast.toNumber(args.x1) / -200, Cast.toNumber(args.y1) / -200,
         Cast.toNumber(args.x2) / -200, Cast.toNumber(args.y2) / -200,
         Cast.toNumber(args.x4) / -200, Cast.toNumber(args.y4) / -200,
         Cast.toNumber(args.x3) / -200, Cast.toNumber(args.y3) / -200
       ];
-      render.dirty = true;
+      if (!this.arrayMatches(oldWarp, drawable[drawableKey].warp)) render.dirty = true;
     }
 
     showSprite(args, util) {
