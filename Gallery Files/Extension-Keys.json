@@ -252,8 +252,8 @@
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 02/10/2025"
+      "status": "update",
+      "date": "Last Updated: 03/19/2025"
     },
     "Text-to-Speech": {
       "credits": "Better Text to Speech using TikTok API. Made by SharkPool",
