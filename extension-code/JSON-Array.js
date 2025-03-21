@@ -4,8 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.81
-// TODO compile this extension
+// Version V.1.0.9
 
 (function (Scratch) {
   "use strict";
@@ -21,6 +20,7 @@
   const runtime = vm.runtime;
 
   const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+  let extClass;
 
   // Custom Square Block Shapes
   const ogConverter = runtime._convertBlockForScratchBlocks.bind(runtime);
@@ -137,6 +137,165 @@
         monitors
       });
     });
+  }
+
+  // Compiler Patches
+  // TODO remove this when there is a dedicated API for refreshing block arguments
+  const generateParser = (type, alwaysTryParse) => {
+    if (!alwaysTryParse) return `(o) => {return o}`;
+
+    const defaultV = type === undefined ? "o" : type === 0 ? "{}" : "[]";
+    let funcString = `(o) => {\n`;
+
+    if (type === undefined) funcString += `if (typeof o === "object") return o;\n`;
+    else if (type === 0) funcString += `if (o.constructor?.name === "Object") return o;\n`;
+    else funcString += `if (Array.isArray(o)) return o;\n`;
+
+    funcString += `try {\n`;
+    funcString += `const p = JSON.parse(o);\n`;
+    if (type === undefined) funcString += `return p;\n`;
+    else if (type === 0) funcString += `return p.constructor?.name === "Object" ? p : ${defaultV};\n`;
+    else funcString += `return Array.isArray(p) ? p : ${defaultV};\n`;
+    funcString += `} catch {return ${defaultV}}\n`;
+    return funcString + "}";
+  }
+  const generateCleanser = (type) => {
+    let funcString = `(() => {\n`;
+    funcString += `const t = typeof ${type};\n`;
+    funcString += `if (t === "undefined") return "";\n`;
+    funcString += `else if (t === "object") return JSON.stringify(${type});\n`;
+    funcString += `else return ${type}.toString();\n`;
+    return funcString + "})()";
+  }
+
+  function getCompiler() {
+    if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
+    else if (vm.exports.JSGenerator && vm.exports.IRGenerator?.exports) return {
+      ...vm.exports, ScriptTreeGenerator: vm.exports.IRGenerator.exports.ScriptTreeGenerator
+    };
+  }
+  const compiler = getCompiler();
+  if (compiler) {
+    const { JSGenerator, ScriptTreeGenerator } = compiler;
+    const _ogIRdescendInp = ScriptTreeGenerator.prototype.descendInput;
+    const exp = JSGenerator.exports === undefined ? JSGenerator.unstable_exports : JSGenerator.exports;
+    ScriptTreeGenerator.prototype.descendInput = function (block) {
+      switch (block.opcode) {
+        case "SPjson_arrValueA": return { kind: "SPjson.arrValA" };
+        case "SPjson_arrValueB": return { kind: "SPjson.arrValB" };
+        case "SPjson_objKey": return { kind: "SPjson.objKey" };
+        case "SPjson_objValue": return { kind: "SPjson.objVal" };
+        case "SPjson_jsonMap":
+          return {
+            kind: "SPjson.jsonMap",
+            obj: this.descendInputOfBlock(block, "OBJ"), value: this.descendInputOfBlock(block, "VALUE")
+          };
+        case "SPjson_arrCheck":
+          return {
+            kind: "SPjson.arrCheck", type: block.fields.TYPE.value,
+            array: this.descendInputOfBlock(block, "ARR"), bool: this.descendInputOfBlock(block, "BOOL"),
+          };
+        case "SPjson_arrMap":
+          return {
+            kind: "SPjson.arrMap",
+            array: this.descendInputOfBlock(block, "ARR"), value: this.descendInputOfBlock(block, "VALUE")
+          };
+        case "SPjson_arrSort":
+          return {
+            kind: "SPjson.arrSort",
+            array: this.descendInputOfBlock(block, "ARR"), value: this.descendInputOfBlock(block, "VALUE")
+          };
+        case "SPjson_filterNew":
+          return {
+            kind: "SPjson.filter", type: block.fields.TYPE.value,
+            obj: this.descendInputOfBlock(block, "OBJ"), bool: this.descendInputOfBlock(block, "BOOL")
+          };
+        default: return _ogIRdescendInp.call(this, block);
+      }
+    };
+    const _ogJSdescendInp = JSGenerator.prototype.descendInput;
+    JSGenerator.prototype.descendInput = function (node) {
+      if (node === undefined) return;
+      switch (node.kind) {
+        case "SPjson.arrValA": return new exp.TypedInput(generateCleanser("SParrA"), exp.TYPE_STRING);
+        case "SPjson.arrValB": return new exp.TypedInput(generateCleanser("SParrB"), exp.TYPE_STRING);
+        case "SPjson.objKey": return new exp.TypedInput(generateCleanser("SPobjK"), exp.TYPE_STRING);
+        case "SPjson.objVal": return new exp.TypedInput(generateCleanser("SPobjV"), exp.TYPE_STRING);
+        case "SPjson.jsonMap": {
+          const safeObj = this.descendInput(node.obj).asUnknown();
+          const safeValue = this.descendInput(node.value).asUnknown();
+          return new exp.TypedInput(`(function() {
+            function* generator() {
+              const p = (${generateParser(0, extClass.alwaysTryParse)})(${safeObj});
+              const e = Object.entries(p);
+              for (const [SPobjK, SPobjV] of e) yield [SPobjK, ${safeValue}];
+            }
+            return Object.fromEntries(generator());
+          })()`, exp.TYPE_UNKNOWN);
+        }
+        case "SPjson.arrCheck": {
+          const safeObj = this.descendInput(node.array).asUnknown();
+          const safeBool = this.descendInput(node.bool).asBoolean();
+          return new exp.TypedInput(`(function() {
+            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+            return p.${node.type === "some" ? "some" : "every"}((SPobjV, SPobjK) => {
+              SPobjK++;
+              return ${safeBool};
+            });
+          })()`, exp.TYPE_BOOLEAN);
+        }
+        case "SPjson.arrMap": {
+          const safeObj = this.descendInput(node.array).asUnknown();
+          const safeValue = this.descendInput(node.value).asUnknown();
+          return new exp.TypedInput(`(function() {
+            function* generator() {
+              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+              let SPobjK = 1;
+              for (const SPobjV of p) {
+                yield ${safeValue};
+                SPobjK++;
+              }
+            }
+            return [...generator()];
+          })()`, exp.TYPE_UNKNOWN);
+        }
+        case "SPjson.arrSort": {
+          const safeObj = this.descendInput(node.array).asUnknown();
+          const safeValue = this.descendInput(node.value).asUnknown();
+          return new exp.TypedInput(`(function() {
+            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+            return p.sort((SParrA, SParrB) => { return ${safeValue} });
+          })()`, exp.TYPE_BOOLEAN);
+        }
+        case "SPjson.filter": {
+          const safeObj = this.descendInput(node.obj).asUnknown();
+          const safeBool = this.descendInput(node.bool).asBoolean();
+          return new exp.TypedInput(`(function() {
+            const p = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj});
+            const e = Object.entries(p);
+            const isO = p.constructor?.name === "Object";
+            ${node.type === "filter" ? `const f = e.filter(([SPobjK, SPobjV]) => {
+              if (!isO) SPobjK++;
+              return ${safeBool};
+            });
+            return isO ? Object.fromEntries(f) : f.map((i) => { return i[1] });` :
+            `const n = [];
+            e.forEach(([SPobjK, SPobjV]) => {
+              if (isO) {
+                if (${safeBool}) n.unshift([SPobjK, SPobjV]);
+                else n.push([SPobjK, SPobjV]);
+              } else {
+                SPobjK++;
+                if (${safeBool}) n.unshift(SPobjV);
+                else n.push(SPobjV);
+              }
+            });
+            return isO ? Object.fromEntries(n) : n;`}
+          })()`, exp.TYPE_UNKNOWN);
+        }
+        default: return _ogJSdescendInp.call(this, node);
+      }
+    };
   }
 
   class SPjson {
@@ -1245,5 +1404,6 @@
     }
   }
 
-  Scratch.extensions.register(new SPjson());
+  extClass = new SPjson();
+  Scratch.extensions.register(extClass);
 })(Scratch);
