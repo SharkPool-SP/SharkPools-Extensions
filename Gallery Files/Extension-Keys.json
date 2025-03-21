@@ -133,7 +133,7 @@
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
       "url": "extension-code/Sprite-Effects.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/10/2025"
     },
     "Image-Effects": {
@@ -462,14 +462,14 @@
       "credits": "Super Fast JSON and Array Extension. Made by SharkPool",
       "url": "extension-code/JSON-Array.js",
       "tags": ".all.utilities.expanded",
-      "status": "",
-      "date": "Last Updated: 03/02/2025"
+      "status": "update",
+      "date": "Last Updated: 03/21/2025"
     },
     "My-Blocks-Plus": {
       "credits": "Better Custom Blocks. Made by SharkPool, CST, and 0znzw",
       "url": "extension-code/My-Blocks-Plus.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/17/2025"
     },
     "Dropdown-Maker": {
