@@ -158,7 +158,7 @@
     },
     "Looks-Expanded": {
       "desc": "Expansion of the Looks Category",
-      "creator": "SharkPool, CST",
+      "creator": "SharkPool, CST1229",
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
@@ -599,7 +599,7 @@
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
-      "creator": "SharkPool, CST, 0znzw",
+      "creator": "SharkPool, CST1229, 0znzw",
       "url": "extension-code/My-Blocks-Plus.js",
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
@@ -608,7 +608,7 @@
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
-      "creator": "SharkPool, CST, 0znzw",
+      "creator": "SharkPool, CST1229, 0znzw",
       "url": "extension-code/Dropdown-Maker.js",
       "banner": "extension-thumbs/Dropdown-Maker.svg",
       "tags": ["all", "utilities"],
