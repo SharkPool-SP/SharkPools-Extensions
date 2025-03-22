@@ -1,5 +1,6 @@
 let isPenguinMod = false, inCredits = false;
 let currentTag = "all", downloadType = "download";
+let compress = false, eraseDeprecation = false;
 let galleryData = {}, pins = [];
 
 /* Storage */
@@ -15,7 +16,6 @@ function getCleanStorage() {
   }
   currentTag = store.tag || "all";
   downloadType = store.downloadType === "download" ? "download" : "clipboard";
-  document.querySelector(`img[class="navImg"]`).src = `Gallery%20Files/main-assets/${downloadType}.svg`;
   if (store.pinnedExts && store.pinnedExts?.constructor?.name === "Array") pins = store.pinnedExts || [];
 }
 
@@ -28,7 +28,8 @@ function updateStorage() {
 /* Button Functionality */
 function addBtnBehaviours() {
   const navBtns = document.querySelectorAll(`img[class="navImg"]`);
-  const extDwnload = navBtns[0]; // file type
+  /* Settings Button */
+  const extDwnload = navBtns[0];
   extDwnload.addEventListener("click", (e) => {
     removeText();
     downloadType = downloadType === "clipboard" ? "download" : "clipboard";
@@ -38,14 +39,9 @@ function addBtnBehaviours() {
     updateStorage();
     e.stopImmediatePropagation();
   });
-  extDwnload.addEventListener("mouseleave", () => removeText());
-  if (!isPenguinMod) extDwnload.addEventListener("mouseenter", () => genText("center-notif", `Extensions will be ${downloadType === "download" ? "Downloaded" : "Copied to Clipboard"}`));
-  else {
-    extDwnload.style.filter = "brightness(0.3)";
-    extDwnload.addEventListener("mouseenter", () => genText("center-notif", "Extensions are Auto-Loaded to PenguinMod"));
-  }
 
-  const toContribs = navBtns[1]; // to/from contributers
+  /* Contributers Button */
+  const toContribs = navBtns[1];
   toContribs.addEventListener("click", (e) => {
     inCredits = !inCredits;
     if (inCredits) displayContributors();
@@ -54,18 +50,18 @@ function addBtnBehaviours() {
     toContribs.style.transform = "scale(1.1)";
     e.stopImmediatePropagation();
   });
-  toContribs.addEventListener("mouseleave", () => removeText());
-  toContribs.addEventListener("mouseenter", () => genText("center-notif", `Go to ${inCredits ? "Main" : "Contributors"} Page`));
 
   const tags = document.querySelectorAll(`div[class="tag"]`);
   tags.forEach((item) => {
     if (currentTag === item.id) {
-      item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
+      item.style.backgroundColor = "#003cff";
+      item.style.borderColor = "#001fff";
     }
     item.addEventListener("click", (e) => {
       inCredits = false;
       tags.forEach((i) => i.setAttribute("style", ""));
-      item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
+      item.style.backgroundColor = "#003cff";
+      item.style.borderColor = "#001fff";
 
       currentTag = item.id;
       let s = new URLSearchParams(location.search);
@@ -165,28 +161,14 @@ function genText(type, text) {
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
   desc.textContent = text;
-  switch (type) {
-    case "ext-desc":
-      desc.style.top = "90%";
-      desc.style.color = "#b7e9ff";
-      break;
-    case "ext-log":
-      desc.style.top = "15%";
-      desc.style.left = "150%";
-      desc.style.color = "#b7e9ff";
-      break;
-    case "center-notif":
-      desc.style.borderColor = "#ebebeb";
-      desc.style.backgroundColor = "rgba(87,87,87,.86)";
-      desc.style.top = "50%";
-      desc.style.fontSize = "25px";
-      break;
-    case "contributor":
+  // reimplement if needed
+  /*switch (type) {
+    case "contributor":*/
       desc.style.borderColor = "#ebebeb";
       desc.style.backgroundColor = "rgba(87,87,87,.86)";
       desc.style.top = "90%";
-      break;
-  }
+      /*break;
+  }*/
   document.body.appendChild(desc);
   const animation = desc.animate([{ left: desc.style.left }, { left: "50%" }], { duration: 400, easing: "ease-in-out" });
   animation.onfinish = () => desc.style.left = "50%";
@@ -197,7 +179,7 @@ function removeText() {
   elements.forEach((element) => {
     const type = element.getAttribute("type");
     const animation = element.animate(
-      [{ left: "50%" }, { left: type === "ext-log" ? "-50%" : "150%" }], { duration: 400, easing: "ease-in-out" }
+      [{ left: "50%" }, { left: "150%" }], { duration: 400, easing: "ease-in-out" }
     );
     animation.onfinish = () => element.remove();
   });
@@ -231,9 +213,7 @@ async function downloadExt(name, data) {
       else {
         const text = await (await fetch(data.url)).text();
         navigator.clipboard.writeText(text)
-          .then(() => {
-            genText("center-notif", "Copied to Clipboard!");
-          })
+          .then(() => genText("center-notif", "Copied to Clipboard!"))
           .catch(() => window.open(data.url));
       }
     }
@@ -288,6 +268,7 @@ function openSearch() {
   input.focus();
 }
 
+/* Initializer */
 document.addEventListener("DOMContentLoaded", async () => {
   galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
   if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
