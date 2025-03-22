@@ -4,8 +4,10 @@ body {
   font-family: Sans-Serif;
   color: #fff;
   user-select: none;
+  overflow: hidden auto;
 }
 
+/* Main */
 .navBar {
   display: flex;
   justify-content: center;
@@ -90,6 +92,15 @@ body {
   transform: scale(1.15);
 }
 
+/* Extensions */
+.ext-div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: absolute;
+  width: 105%;
+  left: -2.5%;
+}
 .ext-breaker {
   display: inline-block;
   width: 90%;
@@ -99,8 +110,10 @@ body {
 .ext-holder {
   display: inline-block;
   width: 300px;
-  height: 150px;
-  margin: 20px;
+  height: 300px;
+  margin: 20px 20px 20px 20px;
+  border: solid grey 2px;
+  border-radius: 19px;
   opacity: 0;
   cursor: pointer;
   transition: transform 200ms ease-in-out;
@@ -110,6 +123,28 @@ body {
   filter: url(#bloom-filter);
   transform: scale(1.1);
 }
+.ext-data pre {
+  margin: 0;
+  padding: 7px 10px 10px 10px;
+  text-wrap: wrap;
+  font-family: Sans-Serif;
+  font-size: 15px;
+  user-select: text;
+}
+.ext-data .desc-breaker {
+  width: 250px;
+  border-top: dashed grey 2px;
+  margin: auto;
+}
+.ext-data .update-date {
+  width: 300px;
+  position: absolute;
+  bottom: 2px;
+  padding: 0 0 10px 0;
+  color: #a1a1a1;
+  font-size: 14px;
+}
+
 .ext-tag {
   position: absolute;
   right: -35px;
@@ -126,6 +161,7 @@ body {
   transform: scale(0.9);
 }
 
+/* Contributors */
 .contributor {
   width: 150px;
   height: 150px;
