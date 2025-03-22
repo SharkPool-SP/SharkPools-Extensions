@@ -20,16 +20,19 @@ function displayExts(json, optDontFade) {
     /* Data Setup */
     const desc = document.createElement("pre");
     desc.textContent = info.desc;
+    const descBreaker = document.createElement("div");
+    descBreaker.classList.add("desc-breaker");
 
     const creator = document.createElement("pre");
     creator.innerHTML = `<b>Creator${info.creator.includes(",") ? "s" : ""}: </b>${info.creator}`;
 
     const date = document.createElement("pre");
+    date.classList.add("update-date");
     date.textContent = info.date;
 
     const dataDiv = document.createElement("div");
     dataDiv.classList.add("ext-data");
-    dataDiv.append(desc, creator, date);
+    dataDiv.append(desc, descBreaker, creator, date);
 
     /* Tag Setup */
     const tag = info.status ? genTag(info.status) : "";
