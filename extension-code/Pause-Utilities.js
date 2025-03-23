@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.8.0
+// Version V.1.8.01
 
 (function (Scratch) {
   "use strict";
@@ -30,6 +30,7 @@
   // check if the pause button exists, we will use that if availiable
   const pauseButton = document.querySelector(typeof scaffolding !== "undefined" ? `[class*="pause-button"]` : "img.pause-btn.addons-display-none-pause");
 
+  /* Deprecation Marker */
   const pauseHandler = () => {
     runtime.allScriptsByOpcodeDo("SPPause_whenProjectPaused", (script, target) => {
       const topBlockId = script.blockId;
@@ -37,14 +38,19 @@
       if (!threadExists) runtime._pushThread(topBlockId, target);
     });
   };
+  /* Marker End */
 
   runtime.on("PROJECT_STOP_ALL", () => { storedScripts = Object.create(null) });
   runtime.on("RUNTIME_PAUSED", () => {
     runtime.once("BEFORE_EXECUTE", () => runtime.allScriptsByOpcodeDo("SPPause_whenProjectPausedNew", (script, target) => runtime._pushThread(script.blockId, target)));
+    /* Deprecation Marker */
     runtime.on("BEFORE_EXECUTE", pauseHandler); // for Deprecated "while" block
+    /* Marker End */
   });
   runtime.on("RUNTIME_UNPAUSED", () => {
+    /* Deprecation Marker */
     runtime.removeListener("BEFORE_EXECUTE", pauseHandler); // for Deprecated "while" block
+    /* Marker End */
     runtime.startHats("SPPause_whenProjectUnPaused");
     if (isPM) {
       // Fix Paused Threads (Rare and Shouldnt Happen, but Failsafe)
@@ -169,9 +175,10 @@
             text: Scratch.translate("all paused scripts"),
             disableMonitor: true
           },
+          /* Deprecation Marker */
           {
             opcode: "pauseLoopCon", blockType: Scratch.BlockType.COMMAND,
-            hideFromPalette: true, // Deprecated
+            hideFromPalette: true,
             text: "if [CON] pause this script with ID [NAME]",
             arguments: {
               CON: { type: Scratch.ArgumentType.BOOLEAN }, NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my script" }
@@ -179,7 +186,7 @@
           },
           {
             opcode: "breakLoopCon", blockType: Scratch.BlockType.COMMAND,
-            hideFromPalette: true, // Deprecated
+            hideFromPalette: true,
             text: "if [CON] unpause script with ID [NAME]",
             arguments: {
               CON: { type: Scratch.ArgumentType.BOOLEAN }, NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my script" }
@@ -187,14 +194,15 @@
           },
           {
             opcode: "whenProjectPaused", blockType: Scratch.BlockType.EVENT,
-            hideFromPalette: true, // Deprecated
+            hideFromPalette: true,
             text: "while project is paused",
             isEdgeActivated: false
           },
+          /* Marker End */
         ],
         menus: {
-          TARGETS: { acceptReporters: true, items: this._getTargets(false) },
-          TARGETS2: { acceptReporters: true, items: this._getTargets(true) }
+          TARGETS: { acceptReporters: true, items: this._getTargets(true) },
+          TARGETS2: { acceptReporters: true, items: this._getTargets(false) }
         }
       };
     }
@@ -204,9 +212,9 @@
       const spriteNames = [{ text: Scratch.translate("myself"), value: "_myself_" }];
       if (includeStage) spriteNames.push({ text: Scratch.translate("Stage"), value: "_stage_" });
       const targets = runtime.targets;
-      for (let i = 1; i < targets.length; i++) {
+      for (let i = 0; i < targets.length; i++) {
         const target = targets[i];
-        if (target.isOriginal) spriteNames.push(target.getName());
+        if (target.isOriginal && !target.isStage) spriteNames.push(target.getName());
       }
       return spriteNames.length > 0 ? spriteNames : [""];
     }
@@ -293,9 +301,10 @@
 
     allPausedScripts() { return JSON.stringify(Object.keys(storedScripts)) }
 
-    // Deprecated
+    /* Deprecation Marker */
     pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
     breakLoopCon(args) { if (Cast.toBoolean(args.CON)) this.breakLoop(args) }
+    /* Marker End */
   }
 
   Scratch.extensions.register(new SPPause());

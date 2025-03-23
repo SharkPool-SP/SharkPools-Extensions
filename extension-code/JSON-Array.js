@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.9
+// Version V.1.0.91
 
 (function (Scratch) {
   "use strict";
@@ -237,11 +237,14 @@
           const safeObj = this.descendInput(node.array).asUnknown();
           const safeBool = this.descendInput(node.bool).asBoolean();
           return new exp.TypedInput(`(function() {
-            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
-            return p.${node.type === "some" ? "some" : "every"}((SPobjV, SPobjK) => {
-              SPobjK++;
-              return ${safeBool};
-            });
+            function* generator() {
+              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+              yield p.${node.type === "some" ? "some" : "every"}((SPobjV, SPobjK) => {
+                SPobjK++;
+                return ${safeBool};
+              });
+            }
+            return [...generator()][0];
           })()`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.arrMap": {
@@ -263,34 +266,54 @@
           const safeObj = this.descendInput(node.array).asUnknown();
           const safeValue = this.descendInput(node.value).asUnknown();
           return new exp.TypedInput(`(function() {
-            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
-            return p.sort((SParrA, SParrB) => { return ${safeValue} });
-          })()`, exp.TYPE_BOOLEAN);
+            function* generator() {
+              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+              const sorted = [...p].sort((SParrA, SParrB) => { return ${safeValue}; });
+              for (const item of sorted) yield item;
+            }
+            return [...generator()];
+          })()`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.filter": {
           const safeObj = this.descendInput(node.obj).asUnknown();
           const safeBool = this.descendInput(node.bool).asBoolean();
           return new exp.TypedInput(`(function() {
-            const p = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj});
-            const e = Object.entries(p);
-            const isO = p.constructor?.name === "Object";
-            ${node.type === "filter" ? `const f = e.filter(([SPobjK, SPobjV]) => {
-              if (!isO) SPobjK++;
-              return ${safeBool};
-            });
-            return isO ? Object.fromEntries(f) : f.map((i) => { return i[1] });` :
-            `const n = [];
-            e.forEach(([SPobjK, SPobjV]) => {
-              if (isO) {
-                if (${safeBool}) n.unshift([SPobjK, SPobjV]);
-                else n.push([SPobjK, SPobjV]);
+            function* generator() {
+              const p = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj});
+              const e = Object.entries(p);
+              const isO = p.constructor?.name === "Object";
+
+              if (${node.type === "filter"}) {
+                if (isO) {
+                  const result = {};
+                  for (let [SPobjK, SPobjV] of e) {
+                    if (${safeBool}) result[SPobjK] = SPobjV;
+                  }
+                  yield result;
+                } else {
+                  const result = [];
+                  for (let [SPobjK, SPobjV] of e) {
+                    SPobjK++;
+                    if (${safeBool}) result.push(SPobjV);
+                  }
+                  yield result;
+                }
               } else {
-                SPobjK++;
-                if (${safeBool}) n.unshift(SPobjV);
-                else n.push(SPobjV);
+                const n = [];
+                for (let [SPobjK, SPobjV] of e) {
+                  if (isO) {
+                    if (${safeBool}) n.unshift([SPobjK, SPobjV]);
+                    else n.push([SPobjK, SPobjV]);
+                  } else {
+                    SPobjK++;
+                    if (${safeBool}) n.unshift(SPobjV);
+                    else n.push(SPobjV);
+                  }
+                }
+                yield isO ? Object.fromEntries(n) : n;
               }
-            });
-            return isO ? Object.fromEntries(n) : n;`}
+            }
+            return [...generator()][0];
           })()`, exp.TYPE_UNKNOWN);
         }
         default: return _ogJSdescendInp.call(this, node);

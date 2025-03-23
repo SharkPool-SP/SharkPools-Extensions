@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.01
+// Version V.1.0.02
 
 (function (Scratch) {
   "use strict";
@@ -214,7 +214,17 @@ gl_FragColor.a = baseAlpha;`
   };
 
   const MAX_REPLACERS = 15;
-  render.constructor.prototype._drawThese = function (drawables, drawMode, projection, opts = {}) {
+  // Clipping and Blending Support
+  let toCorrectThing = null, active = false, flipY = false;
+  const canvas = render.canvas;
+  let width = 0, height = 0;
+  let scratchUnitWidth = 480, scratchUnitHeight = 360;
+
+  render._drawThese = function (drawables, drawMode, projection, opts = {}) {
+    // Clipping and Blending Support
+    active = true;
+    [scratchUnitWidth, scratchUnitHeight] = render.getNativeSize();
+
     const gl = render._gl;
     let currentShader = null;
 
@@ -299,6 +309,11 @@ gl_FragColor.a = baseAlpha;`
       twgl.drawBufferInfo(gl, this._bufferInfo, gl.TRIANGLES);
     }
     this._regionId = null;
+
+    // Clipping and Blending Support
+    gl.disable(gl.SCISSOR_TEST);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    active = false;
   };
 
   // reset on stop/start/clear
@@ -316,6 +331,17 @@ gl_FragColor.a = baseAlpha;`
     };
     ogClearEffects.call(this);
   };
+
+  // Clipping and Blending Support
+  if (vm.extensionManager._loadedExtensions.has("xeltallivclipblend")) {
+    const gl = render._gl;
+    /* compressed code from Clipping and Blending.js */
+    const bfb = gl.bindFramebuffer;
+    const ogGetUniforms = render.exports.Drawable.prototype.getUniforms;
+    gl.bindFramebuffer=function(e,i){if(e==gl.FRAMEBUFFER){if(null==i)toCorrectThing=!0,flipY=!1,width=canvas.width,height=canvas.height;else if(render._penSkinId){let f=render._allSkins[render._penSkinId]._framebuffer;i==f.framebuffer?(toCorrectThing=!0,flipY=!0,width=f.width,height=f.height):toCorrectThing=!1}else toCorrectThing=!1}bfb.call(this,e,i)};
+    function setupModes(e,n,a){if(e){gl.enable(gl.SCISSOR_TEST);let E=(e.x_min/scratchUnitWidth+.5)*width|0,S=(e.y_min/scratchUnitHeight+.5)*height|0,N=(e.x_max/scratchUnitWidth+.5)*width|0,b,l=((e.y_max/scratchUnitHeight+.5)*height|0)-S;a&&(S=(-e.y_max/scratchUnitHeight+.5)*height|0),gl.scissor(E,S,N-E,l)}else gl.disable(gl.SCISSOR_TEST);switch(n){case"additive":gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.ONE,gl.ONE);break;case"subtract":gl.blendEquation(gl.FUNC_REVERSE_SUBTRACT),gl.blendFunc(gl.ONE,gl.ONE);break;case"multiply":gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.DST_COLOR,gl.ONE_MINUS_SRC_ALPHA);break;case"invert":gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.ONE_MINUS_DST_COLOR,gl.ONE_MINUS_SRC_COLOR);break;default:gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA)}}
+    render.exports.Drawable.prototype.getUniforms=function(){return active&&toCorrectThing&&setupModes(this.clipbox,this.blendMode,flipY),ogGetUniforms.call(this)};
+  }
 
   /* patch for "when costume switches" event */
   const ogSetCoreCostume = looksCore.constructor.prototype._setCostume;
@@ -461,7 +487,7 @@ gl_FragColor.a = baseAlpha;`
           },
           {
             blockType: Scratch.BlockType.XML,
-            xml: "<sep gap=\"24\"/><label text=\"Warpping does NOT affect Collisions\"/><sep gap=\"6\"/>",
+            xml: "<sep gap=\"24\"/><label text=\"Warping does NOT affect Collisions\"/><sep gap=\"6\"/>",
           },
           {
             opcode: "warpSprite",
