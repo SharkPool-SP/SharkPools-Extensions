@@ -91,15 +91,17 @@
   transform: translate(450%, -50%) scale(1.15);
 }
 
+.setting-holder {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+}
 .setting-div {
   width: 430px;
   border: solid 2px #fff;
   border-radius: 12px;
-  position: absolute;
-  z-index: 99;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 .setting-div div {
   width: 80%;
