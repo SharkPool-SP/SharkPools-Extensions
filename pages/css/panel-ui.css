@@ -18,8 +18,8 @@
 .search-txt {
   position: fixed;
   left: 50%;
-  top: 40%;
-  transform: translate(-50%, -50%);
+  top: 50%;
+  transform: translate(-50%, 250%);
   z-index: 99;
   font-size: 30px;
   font-family: Lilita One, Sans-Serif;
@@ -27,8 +27,8 @@
 .search-input {
   position: fixed;
   left: 50%;
-  top: 49.3%;
-  transform: translate(-50%, -50%);
+  top: 50%;
+  transform: translate(-50%, -70%);
   width: 400px;
   height: 28px;
   border-radius: 25px;
@@ -46,8 +46,8 @@
 .search-enter {
   position: fixed;
   left: 50%;
-  top: 58.5%;
-  transform: translate(-50%, -50%);
+  top: 50%;
+  transform: translate(-50%, 70%);
   z-index: 99;
   transition: width 200ms ease-in-out;
   width: 125px;
@@ -58,8 +58,8 @@
 .search-leave {
   position: fixed;
   left: 50%;
-  top: 40%;
-  transform: translate(450%, -50%) scale(1);
+  top: 50%;
+  transform: translate(450%, -225%) scale(1);
   z-index: 99;
   transition: transform 200ms ease-in-out;
   width: 40px;
@@ -71,8 +71,8 @@
 .panel-txt {
   position: fixed;
   left: 50%;
-  top: 30%;
-  transform: translate(-50%, -50%);
+  top: 50%;
+  transform: translate(-50%, -450%);
   z-index: 99;
   font-size: 30px;
   font-family: Lilita One, Sans-Serif;
@@ -81,8 +81,8 @@
 .panel-leave {
   position: fixed;
   left: 50%;
-  top: 30%;
-  transform: translate(450%, -50%) scale(1);
+  top: 50%;
+  transform: translate(450%, -400%) scale(1);
   z-index: 99;
   transition: transform 200ms ease-in-out;
   width: 40px;
