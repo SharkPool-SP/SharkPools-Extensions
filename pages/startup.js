@@ -16,12 +16,15 @@ function getCleanStorage() {
   }
   currentTag = store.tag || "all";
   downloadType = store.downloadType === "download" ? "download" : "clipboard";
-  if (store.pinnedExts && store.pinnedExts?.constructor?.name === "Array") pins = store.pinnedExts || [];
+  compress = store.compress ?? false;
+  eraseDeprecation = store.eraseDeprecation ?? false;
+  if (store.pinnedExts && Array.isArray(store.pinnedExts)) pins = store.pinnedExts;
 }
 
 function updateStorage() {
   localStorage.setItem("SPgalleryInfo", JSON.stringify({
-    tag: currentTag, pinnedExts: pins, downloadType
+    tag: currentTag, pinnedExts: pins,
+    downloadType, compress, eraseDeprecation
   }));
 }
 
@@ -31,12 +34,7 @@ function addBtnBehaviours() {
   /* Settings Button */
   const extDwnload = navBtns[0];
   extDwnload.addEventListener("click", (e) => {
-    removeText();
-    downloadType = downloadType === "clipboard" ? "download" : "clipboard";
-    extDwnload.src = `Gallery%20Files/main-assets/${downloadType}.svg`;
-    extDwnload.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
-    extDwnload.style.transform = "scale(1.1)";
-    updateStorage();
+    openSettingsPanel();
     e.stopImmediatePropagation();
   });
 
@@ -46,8 +44,6 @@ function addBtnBehaviours() {
     inCredits = !inCredits;
     if (inCredits) displayContributors();
     else displayExts(filterExts(galleryData.extensions));
-    toContribs.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
-    toContribs.style.transform = "scale(1.1)";
     e.stopImmediatePropagation();
   });
 
@@ -218,6 +214,54 @@ async function downloadExt(name, data) {
       }
     }
   }
+}
+
+/* Settings Panel */
+function openSettingsPanel() {
+  let query = "";
+  const searchContainer = document.createElement("div");
+  searchContainer.classList.add("search-div");
+  
+  const text = document.createElement("div");
+  text.classList.add("search-txt");
+  text.textContent = "Search for an Extension";
+
+  const bg = document.createElement("img");
+  bg.classList.add("search-ui");
+  bg.src = "Gallery%20Files/main-assets/search-bg.svg";
+  bg.setAttribute("draggable", "false");
+
+  const input = document.createElement("input");
+  input.classList.add("search-input");
+  input.type = "text";
+  input.addEventListener("change", (e) => query = e.target.value);
+  input.addEventListener("keydown", (e) => {
+    displayExts(filterExts(galleryData.extensions, e.target.value), true);
+    if (e.key === "Enter") searchContainer.remove();
+  });
+
+  const submit = document.createElement("img");
+  submit.classList.add("search-enter");
+  submit.src = "Gallery%20Files/main-assets/search-enter.svg";
+  submit.setAttribute("draggable", "false");
+  submit.addEventListener("click", (e) => {
+    searchContainer.remove();
+    e.stopImmediatePropagation();
+  });
+
+  const leave = document.createElement("img");
+  leave.classList.add("search-leave");
+  leave.src = "Gallery%20Files/main-assets/search-exit.svg";
+  leave.setAttribute("draggable", "false");
+  leave.addEventListener("click", (e) => {
+    displayExts(filterExts(galleryData.extensions));
+    searchContainer.remove();
+    e.stopImmediatePropagation();
+  });
+
+  searchContainer.append(text, bg, input, submit, leave);
+  document.body.appendChild(searchContainer);
+  input.focus();
 }
 
 /* Search UI */
