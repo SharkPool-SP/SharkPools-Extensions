@@ -88,7 +88,7 @@
   width: 40px;
 }
 .panel-leave:hover {
-  transform: translate(450%, -50%) scale(1.15);
+  transform: translate(450%, -400%) scale(1.15);
 }
 
 .setting-holder {
@@ -97,11 +97,13 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
+  margin-top: 15px;
 }
 .setting-div {
   width: 430px;
   border: solid 2px #fff;
   border-radius: 12px;
+  margin-top: 15px;
 }
 .setting-div div {
   width: 80%;
