@@ -59,13 +59,13 @@
   position: fixed;
   left: 50%;
   top: 40%;
-  transform: translate(450%, -50%);
+  transform: translate(450%, -50%) scale(1);
   z-index: 99;
-  transition: width 200ms ease-in-out;
+  transition: scale 200ms ease-in-out;
   width: 40px;
 }
 .search-leave:hover {
-  width: 45px;
+  transform: translate(450%, -50%) scale(1.15);
 }
 
 .panel-txt {
@@ -82,11 +82,11 @@
   position: fixed;
   left: 50%;
   top: 40%;
-  transform: translate(450%, -50%);
+  transform: translate(450%, -50%) scale(1);
   z-index: 99;
-  transition: width 200ms ease-in-out;
+  transition: scale 200ms ease-in-out;
   width: 40px;
 }
 .panel-leave:hover {
-  width: 45px;
+  transform: translate(450%, -50%) scale(1.15);
 }
