@@ -116,6 +116,10 @@ function genText(type, text) {
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
   desc.textContent = text;
+  if (type === "center-notif") {
+    desc.style.top = "50%";
+    desc.style.fontSize = "25px";
+  }
 
   document.body.appendChild(desc);
   const animation = desc.animate([{ left: desc.style.left }, { left: "50%" }], { duration: 400, easing: "ease-in-out" });
@@ -176,7 +180,6 @@ function filterExts(json, searchQ) {
 }
 
 async function downloadExt(name, data) {
-  // TODO implement new stuff
   if (isPenguinMod) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
@@ -184,38 +187,49 @@ async function downloadExt(name, data) {
       loadExt: `https://sharkpools-extensions.vercel.app/${data.url}`
     }, "https://studio.penguinmod.com");
     genText("center-notif", "Copied to PenguinMod! Check the Editor");
-  } else {
-    if (downloadType === "download") {
-      fetch(data.url)
-        .then(response => response.blob())
-        .then(blob => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = name + ".js";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-        }).catch(() => window.open(data.url));
-    } else {
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      if (isSafari) window.open(data.url);
-      else {
-        const text = await (await fetch(data.url)).text();
-        navigator.clipboard.writeText(text)
-          .then(() => genText("center-notif", "Copied to Clipboard!"))
-          .catch(() => window.open(data.url));
-      }
+    return;
+  }
+
+  if (downloadType === "url") {
+    window.open(data.url);
+    return;
+  }
+
+  let extCode = await (await fetch(data.url)).text();
+  if (eraseDeprecation) {
+    const regex = new RegExp(`\\s*/\\* Deprecation Marker \\*/[\\s\\S]*?/\\* Marker End \\*/`, "g");
+    extCode = extCode.replace(regex, "").replace(/\n{3,}/g, "\n\n");
+  }
+  if (compress) {
+    // compress extCode
+    name += "-minified";
+    try {
+      extCode = (await Terser.minify(extCode)).code;
+    } catch(e) {
+      console.warn("Couldnt Compress Extension: " + name, e);
     }
+  }
+
+  if (downloadType === "clipboard") {
+    navigator.clipboard.writeText(extCode)
+      .then(() => genText("center-notif", "Copied to Clipboard!"))
+      .catch(() => window.open(data.url));
+  } else {
+    const url = URL.createObjectURL(new Blob([extCode]));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name + ".js";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 }
 
 /* Settings Panel */
-function genInputBox(opts, message, yPos, override) {
+function genInputBox(opts, message) {
   const container = document.createElement("div");
   container.classList.add("setting-div");
-  container.style.top = yPos;
 
   opts.forEach((input) => {
     const box = document.createElement("input");
@@ -240,7 +254,6 @@ function genInputBox(opts, message, yPos, override) {
 }
 
 function openSettingsPanel() {
-  // TODO finish PM GUI and 'override'
   const panelContainer = document.createElement("div");
   panelContainer.classList.add("search-div");
 
@@ -275,9 +288,7 @@ function openSettingsPanel() {
         checked: downloadType === "url", text: "Open Extensions in new Tabs",
         func: (e, box) => downloadTypeFunc(e, box, "url")
       }
-    ],
-    isPenguinMod ? "Extensions are automatically added to PenguinMod when clicked" : "",
-    "42%", isPenguinMod
+    ]
   );
   const deprecationBox = genInputBox(
     [{
@@ -285,11 +296,9 @@ function openSettingsPanel() {
       func: (e, box) => {
         if (e.target !== box) box.checked = !box.checked;
         eraseDeprecation = box.checked;
-        updateStorage();
       }
     }],
-    "Removes unused extension code. Lowers the file size but breaks compatibility with older versions",
-    "56%", isPenguinMod
+    "Removes unused extension code. Lowers the file size but breaks compatibility with older versions"
   );
   const compressBox = genInputBox(
     [{
@@ -297,12 +306,14 @@ function openSettingsPanel() {
       func: (e, box) => {
         if (e.target !== box) box.checked = !box.checked;
         compress = box.checked;
-        updateStorage();
       }
     }],
-    "Compresses extension code. Lowers the file size",
-    "68%", isPenguinMod
+    "Compresses extension code. Lowers the file size"
   );
+
+  const settingHolder = document.createElement("div");
+  settingHolder.classList.add("setting-holder");
+  settingHolder.append(downloadTypeBox, deprecationBox, compressBox);
 
   const leave = document.createElement("img");
   leave.classList.add("panel-leave");
@@ -314,7 +325,16 @@ function openSettingsPanel() {
     e.stopImmediatePropagation();
   });
 
-  panelContainer.append(text, bg, downloadTypeBox, deprecationBox, compressBox, leave);
+  if (isPenguinMod) {
+    const pmDesc = document.createElement("div");
+    pmDesc.classList.add("pm-descriptor");
+    pmDesc.textContent = "You are browsing the PenguinMod version of the Gallery. Extensions are automatically added to the Editor when clicked"; 
+    const extraStyles = document.createElement("style");
+    extraStyles.innerHTML = `.setting-holder{margin-top:15px;filter:blur(3px) brightness(75%)}.pm-descriptor{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;z-index:99;font-size:16px;font-style:italic;font-weight:600;text-shadow:#000 0 0 15px;color:pink}`;
+    panelContainer.append(extraStyles, pmDesc);
+  }
+
+  panelContainer.append(text, bg, settingHolder, leave);
   document.body.appendChild(panelContainer);
 }
 
