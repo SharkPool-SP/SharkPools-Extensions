@@ -15,7 +15,7 @@ function getCleanStorage() {
     localStorage.removeItem("SPgalleryInfo");
   }
   currentTag = store.tag || "all";
-  downloadType = store.downloadType === "download" ? "download" : "clipboard";
+  downloadType = store.downloadType || "download";
   compress = store.compress ?? false;
   eraseDeprecation = store.eraseDeprecation ?? false;
   if (store.pinnedExts && Array.isArray(store.pinnedExts)) pins = store.pinnedExts;
@@ -79,49 +79,7 @@ function addBtnBehaviours() {
   }
 }
 
-/* Utils */
-function filterExts(json, searchQ) {
-  delete json.Example;
-  const entries = Object.entries(json);
-  let newEntries = [];
-  if (currentTag === "search") {
-    if (searchQ === undefined) searchQ = "";
-    searchQ = searchQ.toLowerCase();
-    // order by query
-    entries.forEach((entry) => {
-      const extData = entry[1];
-      if (
-        entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
-        extData.desc.toLowerCase().includes(searchQ) || extData.date.includes(searchQ) ||
-        extData.creator.includes(searchQ)
-      ) newEntries.push(entry);
-    });
-    if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
-    else return Object.fromEntries(newEntries);
-  } else if (currentTag === "all") {
-    // order by newest => updated => old, hide deprecated
-    entries.forEach((entry) => {
-      if (entry[1].status === "update") newEntries.unshift(entry);
-    });
-    entries.forEach((entry) => {
-      if (entry[1].status === "new") newEntries.unshift(entry);
-      else if (!entry[1].isDeprecated) newEntries.push(entry);
-    });
-  } else {
-    // order by tag
-    entries.forEach((entry) => {
-      if (entry[1].tags.includes(currentTag)) newEntries.push(entry);
-    });
-  }
-  // finally order by pins
-  const pinOrder = [];
-  newEntries.forEach((entry) => {
-    if (pins.includes(entry[0])) pinOrder.unshift(entry);
-    else pinOrder.push(entry);
-  });
-  return Object.fromEntries(pinOrder);
-}
-
+/* GUI Utils */
 function genTag(type) {
   const tag = document.createElement("img");
   tag.classList.add("ext-tag");
@@ -158,14 +116,7 @@ function genText(type, text) {
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
   desc.textContent = text;
-  // reimplement if needed
-  /*switch (type) {
-    case "contributor":*/
-      desc.style.borderColor = "#ebebeb";
-      desc.style.backgroundColor = "rgba(87,87,87,.86)";
-      desc.style.top = "90%";
-      /*break;
-  }*/
+
   document.body.appendChild(desc);
   const animation = desc.animate([{ left: desc.style.left }, { left: "50%" }], { duration: 400, easing: "ease-in-out" });
   animation.onfinish = () => desc.style.left = "50%";
@@ -182,7 +133,50 @@ function removeText() {
   });
 }
 
+/* Internal Utils */
+function filterExts(json, searchQ) {
+  delete json.Example;
+  const entries = Object.entries(json);
+  let newEntries = [];
+  if (currentTag === "search") {
+    if (searchQ === undefined) searchQ = "";
+    searchQ = searchQ.toLowerCase();
+    // order by query
+    entries.forEach((entry) => {
+      const extData = entry[1];
+      if (
+        entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
+        extData.credits.toLowerCase().includes(searchQ) || extData.date.includes(searchQ)
+      ) newEntries.push(entry);
+    });
+    if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
+    else return Object.fromEntries(newEntries);
+  } else if (currentTag === "all") {
+    // order by newest => updated => old, hide deprecated
+    entries.forEach((entry) => {
+      if (entry[1].status === "update") newEntries.unshift(entry);
+    });
+    entries.forEach((entry) => {
+      if (entry[1].status === "new") newEntries.unshift(entry);
+      else if (!entry[1].isDeprecated) newEntries.push(entry);
+    });
+  } else {
+    // order by tag
+    entries.forEach((entry) => {
+      if (entry[1].tags.includes(currentTag)) newEntries.push(entry);
+    });
+  }
+  // finally order by pins
+  const pinOrder = [];
+  newEntries.forEach((entry) => {
+    if (pins.includes(entry[0])) pinOrder.unshift(entry);
+    else pinOrder.push(entry);
+  });
+  return Object.fromEntries(pinOrder);
+}
+
 async function downloadExt(name, data) {
+  // TODO implement new stuff
   if (isPenguinMod) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
@@ -218,51 +212,110 @@ async function downloadExt(name, data) {
 }
 
 /* Settings Panel */
+function genInputBox(opts, message, yPos, override) {
+  const container = document.createElement("div");
+  container.classList.add("setting-div");
+  container.style.top = yPos;
+
+  opts.forEach((input) => {
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.checked = input.checked;
+
+    const label = document.createElement("pre");
+    label.textContent = input.text;
+
+    const div = document.createElement("div");
+    div.append(box, label);
+    div.addEventListener("click", (e) => input.func(e, box));
+    container.appendChild(div);
+  });
+  if (message) {
+    const msg = document.createElement("div");
+    msg.classList.add("desc-msg");
+    msg.textContent = message;
+    container.append(msg);
+  }
+  return container;
+}
+
 function openSettingsPanel() {
-  let query = "";
-  const searchContainer = document.createElement("div");
-  searchContainer.classList.add("search-div");
-  
+  // TODO finish PM GUI and 'override'
+  const panelContainer = document.createElement("div");
+  panelContainer.classList.add("search-div");
+
   const text = document.createElement("div");
-  text.classList.add("search-txt");
-  text.textContent = "Search for an Extension";
+  text.classList.add("panel-txt");
+  text.textContent = "Export Settings";
 
   const bg = document.createElement("img");
   bg.classList.add("search-ui");
-  bg.src = "Gallery%20Files/main-assets/search-bg.svg";
+  bg.src = "Gallery%20Files/main-assets/panel-bg.svg";
   bg.setAttribute("draggable", "false");
 
-  const input = document.createElement("input");
-  input.classList.add("search-input");
-  input.type = "text";
-  input.addEventListener("change", (e) => query = e.target.value);
-  input.addEventListener("keydown", (e) => {
-    displayExts(filterExts(galleryData.extensions, e.target.value), true);
-    if (e.key === "Enter") searchContainer.remove();
-  });
-
-  const submit = document.createElement("img");
-  submit.classList.add("search-enter");
-  submit.src = "Gallery%20Files/main-assets/search-enter.svg";
-  submit.setAttribute("draggable", "false");
-  submit.addEventListener("click", (e) => {
-    searchContainer.remove();
-    e.stopImmediatePropagation();
-  });
+  const downloadTypeFunc = (e, box, type) => {
+    downloadType = type;
+    if (e.target !== box) box.checked = !box.checked;
+    const otherBoxes = box.parentNode.parentNode.querySelectorAll("input");
+    otherBoxes.forEach((checkbox) => {
+      if (checkbox !== box) checkbox.checked = false;
+    });
+  };
+  const downloadTypeBox = genInputBox(
+    [
+      {
+        checked: downloadType === "download", text: "Download Extensions to My Device",
+        func: (e, box) => downloadTypeFunc(e, box, "download")
+      },
+      {
+        checked: downloadType === "clipboard", text: "Copy Extensions to Clipboard",
+        func: (e, box) => downloadTypeFunc(e, box, "clipboard")
+      },
+      {
+        checked: downloadType === "url", text: "Open Extensions in new Tabs",
+        func: (e, box) => downloadTypeFunc(e, box, "url")
+      }
+    ],
+    isPenguinMod ? "Extensions are automatically added to PenguinMod when clicked" : "",
+    "42%", isPenguinMod
+  );
+  const deprecationBox = genInputBox(
+    [{
+      checked: eraseDeprecation, text: "Remove Deprecated Code",
+      func: (e, box) => {
+        if (e.target !== box) box.checked = !box.checked;
+        eraseDeprecation = box.checked;
+        updateStorage();
+      }
+    }],
+    "Removes unused extension code. Lowers the file size but breaks compatibility with older versions",
+    "56%", isPenguinMod
+  );
+  const compressBox = genInputBox(
+    [{
+      checked: compress, text: "Compress Code",
+      func: (e, box) => {
+        if (e.target !== box) box.checked = !box.checked;
+        compress = box.checked;
+        updateStorage();
+      }
+    }],
+    "Compresses extension code. Lowers the file size",
+    "68%", isPenguinMod
+  );
 
   const leave = document.createElement("img");
-  leave.classList.add("search-leave");
+  leave.classList.add("panel-leave");
   leave.src = "Gallery%20Files/main-assets/search-exit.svg";
   leave.setAttribute("draggable", "false");
   leave.addEventListener("click", (e) => {
-    displayExts(filterExts(galleryData.extensions));
-    searchContainer.remove();
+    updateStorage();
+    panelContainer.remove();
     e.stopImmediatePropagation();
   });
 
-  searchContainer.append(text, bg, input, submit, leave);
-  document.body.appendChild(searchContainer);
-  input.focus();
+  panelContainer.append(text, bg, downloadTypeBox, deprecationBox, compressBox, leave);
+  document.body.appendChild(panelContainer);
 }
 
 /* Search UI */
@@ -270,7 +323,7 @@ function openSearch() {
   let query = "";
   const searchContainer = document.createElement("div");
   searchContainer.classList.add("search-div");
-  
+
   const text = document.createElement("div");
   text.classList.add("search-txt");
   text.textContent = "Search for an Extension";
