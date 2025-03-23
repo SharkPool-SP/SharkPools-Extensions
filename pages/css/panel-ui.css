@@ -90,3 +90,33 @@
 .panel-leave:hover {
   transform: translate(450%, -50%) scale(1.15);
 }
+
+.setting-div {
+  width: 430px;
+  border: solid 2px #fff;
+  border-radius: 12px;
+  position: absolute;
+  z-index: 99;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.setting-div div {
+  width: 80%;
+  margin: 8px 5px 8px 40px;
+  display: flex;
+  transform: scale(1.15);
+}
+.setting-div input {
+  margin: 3px;
+}
+.setting-div pre {
+  margin: 3px 0 0 5px;
+}
+.setting-div .desc-msg {
+  display: block;
+  margin: 0 0 8px 45px;
+  font-size: 12px;
+  font-style: italic;
+  color: pink;
+}
