@@ -19,7 +19,7 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, 250%);
+  transform: translate(-50%, -250%);
   z-index: 99;
   font-size: 30px;
   font-family: Lilita One, Sans-Serif;
@@ -65,7 +65,7 @@
   width: 40px;
 }
 .search-leave:hover {
-  transform: translate(450%, -50%) scale(1.15);
+  transform: translate(450%, -225%) scale(1.15);
 }
 
 .panel-txt {
