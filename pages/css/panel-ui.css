@@ -51,6 +51,7 @@
   z-index: 99;
   transition: transform 200ms ease-in-out;
   width: 125px;
+  cursor: pointer;
 }
 .search-enter:hover {
   transform: translate(-50%, 70%) scale(1.15);
@@ -63,6 +64,7 @@
   z-index: 99;
   transition: transform 200ms ease-in-out;
   width: 40px;
+  cursor: pointer;
 }
 .search-leave:hover {
   transform: translate(450%, -225%) scale(1.15);
@@ -86,6 +88,7 @@
   z-index: 99;
   transition: transform 200ms ease-in-out;
   width: 40px;
+  cursor: pointer;
 }
 .panel-leave:hover {
   transform: translate(450%, -400%) scale(1.15);
@@ -104,6 +107,7 @@
   border: solid 2px #fff;
   border-radius: 12px;
   margin-top: 15px;
+  cursor: pointer;
 }
 .setting-div div {
   width: 80%;
