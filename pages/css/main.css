@@ -179,14 +179,15 @@ body {
 .text-descriptor {
   width: max-content;
   max-width: 90%;
-  background-color: rgba(0,56,87,.86);
-  border: solid 7px #0093ff;
+  background-color: rgba(87,87,87,.86);
+  border: solid 7px #ebebeb;
   border-radius: 15px;
   padding: 20px;
   font-size: 20px;
   font-weight: 600;
   position: fixed;
   left: -50%;
+  top: 90%;
   transform: translate(-50%, -50%);
   z-index: 999;
   pointer-events: none;
