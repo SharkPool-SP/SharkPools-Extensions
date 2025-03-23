@@ -18,28 +18,31 @@ function displayExts(json, optDontFade) {
     img.src = name === "override404" ? "pages/404.svg" : info.banner;
 
     /* Data Setup */
-    const desc = document.createElement("pre");
-    desc.textContent = info.desc;
-    const descBreaker = document.createElement("div");
-    descBreaker.classList.add("desc-breaker");
+    let dataDiv = "";
+    if (name !== "override404") {
+      const desc = document.createElement("pre");
+      desc.textContent = info.desc;
+      const descBreaker = document.createElement("div");
+      descBreaker.classList.add("desc-breaker");
 
-    const creator = document.createElement("pre");
-    creator.innerHTML = `<b>Creator${info.creator.includes(",") ? "s" : ""}: </b>${info.creator}`;
+      const creator = document.createElement("pre");
+      creator.innerHTML = `<b>Creator${info.creator.includes(",") ? "s" : ""}: </b>${info.creator}`;
 
-    const date = document.createElement("pre");
-    date.classList.add("update-date");
-    date.textContent = info.date;
+      const date = document.createElement("pre");
+      date.classList.add("update-date");
+      date.textContent = info.date;
 
-    const dataDiv = document.createElement("div");
-    dataDiv.classList.add("ext-data");
-    dataDiv.append(desc, descBreaker, creator, date);
+      dataDiv = document.createElement("div");
+      dataDiv.classList.add("ext-data");
+      dataDiv.append(desc, descBreaker, creator, date);
+    }
 
     /* Tag Setup */
     const tag = info.status ? genTag(info.status) : "";
     if (tag) tags.push(tag);
 
     const holderDiv = document.createElement("div");
-    holderDiv.classList.add("ext-holder");
+    if (name !== "override404") holderDiv.classList.add("ext-holder");
     holderDiv.append(img, dataDiv, tag);
     if (!pins.includes(name)) {
       if (shouldSplit && !tag) {
@@ -64,6 +67,7 @@ function displayExts(json, optDontFade) {
       const pin = holderDiv.lastChild;
       const animation = pin.animate([{ opacity: "1" }, { opacity: "0" }], { duration: 200, easing: "ease-in-out" });
       animation.onfinish = () => pin.remove();
+      removeText();
     });
     holderDiv.addEventListener("click", (e) => {
       downloadExt(name, info);
