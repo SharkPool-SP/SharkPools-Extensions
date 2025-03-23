@@ -1,4 +1,7 @@
 .search-div {
+  background-color: rgba(17, 17, 17, .5);
+  width: 100%;
+  height: 100%;
   position: fixed;
   left: 50%;
   top: 50%;
@@ -6,12 +9,16 @@
   z-index: 9999;
 }
 .search-ui {
-  transform: scale(1.5);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1.5);
 }
+
 .search-txt {
   position: fixed;
   left: 50%;
-  top: 43%;
+  top: 40%;
   transform: translate(-50%, -50%);
   z-index: 99;
   font-size: 30px;
@@ -39,7 +46,7 @@
 .search-enter {
   position: fixed;
   left: 50%;
-  top: 56.5%;
+  top: 58.5%;
   transform: translate(-50%, -50%);
   z-index: 99;
   transition: width 200ms ease-in-out;
@@ -50,13 +57,36 @@
 }
 .search-leave {
   position: fixed;
-  left: 68%;
-  top: 42%;
+  left: 72%;
+  top: 40%;
   transform: translate(-50%, -50%);
   z-index: 99;
   transition: width 200ms ease-in-out;
   width: 40px;
 }
 .search-leave:hover {
+  width: 45px;
+}
+
+.panel-txt {
+  position: fixed;
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  font-size: 30px;
+  font-family: Lilita One, Sans-Serif;
+}
+
+.panel-leave {
+  position: fixed;
+  left: 72%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  transition: width 200ms ease-in-out;
+  width: 40px;
+}
+.panel-leave:hover {
   width: 45px;
 }
