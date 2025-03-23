@@ -92,7 +92,8 @@ function filterExts(json, searchQ) {
       const extData = entry[1];
       if (
         entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
-        extData.credits.toLowerCase().includes(searchQ) || extData.date.includes(searchQ)
+        extData.desc.toLowerCase().includes(searchQ) || extData.date.includes(searchQ) ||
+        extData.creator.includes(searchQ)
       ) newEntries.push(entry);
     });
     if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
