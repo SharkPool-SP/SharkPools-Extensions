@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.91
+// Version V.1.0.92
 
 (function (Scratch) {
   "use strict";
@@ -177,8 +177,43 @@
   const compiler = getCompiler();
   if (compiler) {
     const { JSGenerator, ScriptTreeGenerator } = compiler;
-    const _ogIRdescendInp = ScriptTreeGenerator.prototype.descendInput;
     const exp = JSGenerator.exports === undefined ? JSGenerator.unstable_exports : JSGenerator.exports;
+    const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
+    ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
+      switch (block.opcode) {
+        case "SPjson_forEach":
+          this.analyzeLoop();
+          return {
+            kind: "SPjson.forEach",
+            obj: this.descendInputOfBlock(block, "OBJ"), branch: this.descendSubstack(block, "SUBSTACK")
+          };
+        default: return _ogIRdescendStack.call(this, block);
+      }
+    }
+    const _ogJSdescendStack = JSGenerator.prototype.descendStackedBlock;
+    JSGenerator.prototype.descendStackedBlock = function (node) {
+      switch (node.kind) {
+        case "SPjson.forEach":
+          const safeObj = this.descendInput(node.obj).asUnknown();
+          const objVar = this.localVariables.next();
+          const isArray = this.localVariables.next();
+          const i = this.localVariables.next();
+
+          this.source += `let ${objVar} = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj})\n;`;
+          this.source += `const ${isArray} = Array.isArray(${objVar})\n;`;
+          this.source += `${objVar} = Object.entries(${objVar})\n;`;
+          this.source += `for (let ${i} = 0; ${i} < ${objVar}.length; ${i}++) {\n;`;
+          this.source += `let [SPobjK, SPobjV] = ${objVar}[${i}];\n`;
+          this.source += `if (${isArray}) SPobjK++\n`;
+          this.descendStack(node.branch, new exp.Frame(true));
+          this.yieldLoop();
+          this.source += `}\n`;
+          break;
+        default: return _ogJSdescendStack.call(this, node);
+      }
+    }
+
+    const _ogIRdescendInp = ScriptTreeGenerator.prototype.descendInput;
     ScriptTreeGenerator.prototype.descendInput = function (block) {
       switch (block.opcode) {
         case "SPjson_arrValueA": return { kind: "SPjson.arrValA" };
