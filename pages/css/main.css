@@ -215,7 +215,14 @@ body {
   position: relative;
   overflow: hidden;
   animation: donateShine 2s linear infinite;
+  cursor: pointer;
+  transition: transform 150ms ease-in-out;
+  transform: scale(1);
 }
+.donateBtn:hover {
+  transform: scale(1.1);
+}
+
 @keyframes donateShine {
   0% { background-position: 100% 0; }
   100% { background-position: -100% 0; }
