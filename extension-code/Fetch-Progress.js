@@ -2,6 +2,7 @@
 // ID: SPprogress
 // Description: Fetch the content and progress of URLs in different encoded formats.
 // By: SharkPool
+// License: MIT
 
 // Version V.2.0.01
 
@@ -49,15 +50,17 @@
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "ENCODING" }
             },
           },
+          /* Deprecation Marker */
           {
             opcode: "fetchThis", blockType: Scratch.BlockType.COMMAND,
-            text: "fetch [URL] as [TYPE] with size [SIZE] bytes as [TYPE]", hideFromPalette: true, // deprecated
+            text: "fetch [URL] as [TYPE] with size [SIZE] bytes as [TYPE]", hideFromPalette: true,
             arguments: {
               URL: { type: Scratch.ArgumentType.STRING },
               SIZE: { type: Scratch.ArgumentType.NUMBER },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "ENCODING" }
             },
           },
+          /* Marker End */
           "---",
           {
             opcode: "whenFetched",
