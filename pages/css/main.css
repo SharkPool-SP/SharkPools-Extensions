@@ -176,6 +176,7 @@ body {
   transform: scale(1.1);
 }
 
+/* Text Descriptors */
 .text-descriptor {
   width: max-content;
   max-width: 90%;
@@ -191,4 +192,31 @@ body {
   transform: translate(-50%, -50%);
   z-index: 999;
   pointer-events: none;
+}
+
+/* Donate Button */
+.donateBtn {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 5px;
+  background: linear-gradient(110deg, #00b8ff 40%, #66d9ff 50%, #00b8ff 60%);
+  background-size: 200% 100%;
+  border: solid 6px #007dff;
+  border-radius: 50px;
+  line-height: 150%;
+  text-indent: 10px;
+  font-size: 20px;
+  font-family: Sans-Serif;
+  font-weight: 600;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  animation: donateShine 2s linear infinite;
+}
+@keyframes donateShine {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
