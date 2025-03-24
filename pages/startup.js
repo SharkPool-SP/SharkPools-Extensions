@@ -30,6 +30,13 @@ function updateStorage() {
 
 /* Button Functionality */
 function addBtnBehaviours() {
+  /* Donate Button */
+  const donateBtn = document.querySelector(`button[class="donateBtn"]`);
+  donateBtn.addEventListener("click", (e) => {
+    window.open("https://www.paypal.com/donate?hosted_button_id=...", "_blank");
+    e.stopImmediatePropagation();
+  });
+
   const navBtns = document.querySelectorAll(`img[class="navImg"]`);
   /* Settings Button */
   const extDwnload = navBtns[0];
@@ -47,6 +54,7 @@ function addBtnBehaviours() {
     e.stopImmediatePropagation();
   });
 
+  /* Tags */
   const tags = document.querySelectorAll(`div[class="tag"]`);
   tags.forEach((item) => {
     if (currentTag === item.id) {
