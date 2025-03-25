@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.2.0.1
+// Version V.2.0.11
 
 (function (Scratch) {
   "use strict";
@@ -60,6 +60,7 @@
               anim.buffer += anim.fps / 1000;
               if (isReverse) anim.currentFrame--;
               else anim.currentFrame++;
+              anim.normalCurrentFrame = anim.currentFrame + 1;
 
               // determine if this frame is a keyframe/costume
               const thisFrame = anim.frames[anim.currentFrame] ?? "";
@@ -74,10 +75,10 @@
               }
             }
             // complete any unfinished keyframes
-            anim.keyBuffers.forEach((key) => { this.keyframeUpdate(key, anim, false) });
+            anim.keyBuffers.forEach((key) => this.keyframeUpdate(key, anim, false));
 
             const frameCnt = anim.frames.length;
-            const frameCheck = isReverse ? anim.currentFrame <= 1 : anim.currentFrame >= frameCnt - 1;
+            const frameCheck = isReverse ? anim.currentFrame <= 0 : anim.currentFrame >= frameCnt - 1;
             if (frameCheck && anim.keyBuffers.length === 0) {
               this.resetAnimPlayer(anim);
               if (isReverse) anim.currentFrame = frameCnt;
@@ -436,7 +437,8 @@
         playing: false, playType: 0,
         fps: 10, target: util.target,
         frames: [], specialFrames: {},
-        keyBuffers: [], currentFrame: -1
+        keyBuffers: [],
+        currentFrame: -1, normalCurrentFrame: 0
       };
       allAnimations[id][name] = obj;
       if (args.SECRET) return obj;
@@ -566,7 +568,7 @@
 
     currentFrame(args) {
       const anim = this.getAnim(args.NAME, "", true);
-      return anim ? anim.currentFrame + 2 : 0; // + 2 since we start at -1 instead of 0
+      return anim ? anim.normalCurrentFrame : 0;
     }
 
     addPosition(args, util) {
