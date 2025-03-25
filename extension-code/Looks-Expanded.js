@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.02
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -25,21 +25,26 @@
   const drawableKey = Symbol("SPlooksKey");
   const newUniforms = [
     "u_replaceColorFromSP", "u_replaceColorToSP", "u_replaceThresholdSP", "u_numReplacersSP",
-    "u_warpSP", "u_tintColorSP", "u_saturateSP", "u_opaqueSP", "u_contrastSP",
+    "u_warpSP", "u_maskTextureSP", "u_shouldMaskSP",
+    "u_tintColorSP", "u_saturateSP", "u_opaqueSP", "u_contrastSP",
     "u_posterizeSP", "u_sepiaSP", "u_bloomSP"
   ];
+  const defaultNewEffects = {
+    warp: [0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5],
+    tint: [1, 1, 1, 1],
+    replacers: [],
+    maskTexture: "",
+    oldMask: "",
+    shouldMask: 0,
+    newEffects: {
+      saturation: 1, opaque: 0, contrast: 1,
+      posterize: 0, sepia: 0, bloom: 0
+    }
+  };
 
   /* patch for new effects */
   function initDrawable(drawable) {
-    if (!drawable[drawableKey]) drawable[drawableKey] = {
-      warp: [0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5],
-      tint: [1, 1, 1, 1],
-      replacers: [],
-      newEffects: {
-        saturation: 1, opaque: 0, contrast: 1,
-        posterize: 0, sepia: 0, bloom: 0
-      }
-    };
+    if (!drawable[drawableKey]) drawable[drawableKey] = structuredClone(defaultNewEffects);
   }
 
   const ogGetShader = render._shaderManager.getShader;
@@ -105,8 +110,10 @@ void main() {
       args[1][1] = args[1][1].replace(
         `uniform sampler2D u_skin;`,
         `uniform sampler2D u_skin;
+uniform sampler2D u_maskTextureSP;
+uniform float u_shouldMaskSP;
+
 #define MAX_REPLACERS 15
-#define MAX_POINTS 15
 uniform vec3 u_replaceColorFromSP[MAX_REPLACERS];
 uniform vec4 u_replaceColorToSP[MAX_REPLACERS];
 uniform float u_replaceThresholdSP[MAX_REPLACERS];
@@ -140,6 +147,12 @@ vec3 spHSV2RGB(vec3 c) {
 vec3 finalColor = gl_FragColor.rgb;
 float finalAlpha = gl_FragColor.a;
 
+if (u_shouldMaskSP > 0.5 && finalAlpha > 0.0) {
+  vec4 maskColor = texture2D(u_maskTextureSP, texcoord0);
+  maskColor.rgb = clamp(maskColor.rgb / (maskColor.a + epsilon), 0.0, 1.0);
+  finalAlpha *= maskColor.a;
+}
+
 for (int i = 0; i < MAX_REPLACERS; i++) {
   if (i >= u_numReplacersSP) break;
 
@@ -162,9 +175,8 @@ if (u_saturateSP < 0.0) {
 }
 finalColor = spHSV2RGB(hsv);
 finalColor = (finalColor - 0.5) * u_contrastSP + 0.5;
-if (u_posterizeSP > 0.0) {
-  finalColor = floor(finalColor * u_posterizeSP) / u_posterizeSP;
-}
+if (u_posterizeSP > 0.0) finalColor = floor(finalColor * u_posterizeSP) / u_posterizeSP;
+
 if (u_sepiaSP > 0.0) {
   vec3 sepiaColor = vec3(
     dot(finalColor, vec3(0.393, 0.769, 0.189)),
@@ -188,9 +200,7 @@ if (u_bloomSP > 0.0) {
 
 gl_FragColor.rgb = finalColor * u_tintColorSP.rgb;
 float baseAlpha = finalAlpha;
-if (baseAlpha > 0.0 && baseAlpha < 1.0) {
-  baseAlpha = mix(baseAlpha, 1.0, u_opaqueSP);
-}
+if (baseAlpha > 0.0 && baseAlpha < 1.0) baseAlpha = mix(baseAlpha, 1.0, u_opaqueSP);
 gl_FragColor.a = baseAlpha;`
       ).replaceAll(
         // The unpremultiply code will now always run due to palette replacement stuff.
@@ -276,6 +286,13 @@ gl_FragColor.a = baseAlpha;`
         }
       }
 
+      if (effectData.shouldMask) {
+        gl.activeTexture(gl.TEXTURE30);
+        gl.bindTexture(gl.TEXTURE_2D, effectData._maskTexture);
+        gl.uniform1i(currentShader.uniformSetters["u_maskTextureSP"], 30);
+        gl.activeTexture(gl.TEXTURE0);
+      }
+
       const newUniformSetters = {
         u_replaceColorFromSP: { method: "uniform3fv", value: replaceFrom },
         u_replaceColorToSP: { method: "uniform4fv", value: replaceTo },
@@ -283,6 +300,7 @@ gl_FragColor.a = baseAlpha;`
         u_numReplacersSP: { method: "uniform1i", value: replacers ? Math.min(replacers.length, MAX_REPLACERS) : 0 },
         u_tintColorSP: { method: "uniform4fv", value: effectData.tint },
         u_warpSP: { method: "uniform2fv", value: effectData.warp },
+        u_shouldMaskSP: { method: "uniform1f", value: effectData.shouldMask },
         u_saturateSP: { method: "uniform1f", value: effectData.newEffects.saturation },
         u_opaqueSP: { method: "uniform1f", value: effectData.newEffects.opaque },
         u_contrastSP: { method: "uniform1f", value: effectData.newEffects.contrast },
@@ -320,15 +338,7 @@ gl_FragColor.a = baseAlpha;`
   const ogClearEffects = vm.exports.RenderedTarget.prototype.clearEffects;
   vm.exports.RenderedTarget.prototype.clearEffects = function() {
     const drawable = render._allDrawables[this.drawableID];
-    drawable[drawableKey] = {
-      warp: [0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5],
-      tint: [1, 1, 1, 1],
-      replacers: [],
-      newEffects: {
-        saturation: 1, opaque: 0, contrast: 1,
-        posterize: 0, sepia: 0, bloom: 0
-      }
-    };
+    drawable[drawableKey] = structuredClone(defaultNewEffects);
     ogClearEffects.call(this);
   };
 
@@ -487,7 +497,11 @@ gl_FragColor.a = baseAlpha;`
           },
           {
             blockType: Scratch.BlockType.XML,
-            xml: "<sep gap=\"24\"/><label text=\"Warping does NOT affect Collisions\"/><sep gap=\"6\"/>",
+            xml: "<sep gap=\"24\"/><label text=\"Warping and Masking does NOT\"/><sep gap=\"0\"/>",
+          },
+          {
+            blockType: Scratch.BlockType.XML,
+            xml: "<sep gap=\"-12\"/><label text=\" affect Touching Blocks\"/><sep gap=\"6\"/>",
           },
           {
             opcode: "warpSprite",
@@ -503,6 +517,15 @@ gl_FragColor.a = baseAlpha;`
               y3: { type: Scratch.ArgumentType.NUMBER, defaultValue: -100 },
               x4: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               y4: { type: Scratch.ArgumentType.NUMBER, defaultValue: -100 }
+            },
+          },
+          {
+            opcode: "maskSprite",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "mask [TARGET] with image [IMAGE]",
+            arguments: {
+              TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              IMAGE: { type: Scratch.ArgumentType.STRING, defaultValue: "https://extensions.turbowarp.org/dango.png" }
             },
           },
           "---",
@@ -770,6 +793,54 @@ gl_FragColor.a = baseAlpha;`
         Cast.toNumber(args.x3) / -200, Cast.toNumber(args.y3) / -200
       ];
       if (!this.arrayMatches(oldWarp, drawable[drawableKey].warp)) render.dirty = true;
+    }
+
+    maskSprite(args, util) {
+      const target = this.getTarget(args.TARGET, util);
+      if (!target) return;
+
+      const drawable = render._allDrawables[target.drawableID];
+      initDrawable(drawable);
+
+      const url = Cast.toString(args.IMAGE);
+      if (drawable[drawableKey].oldMask === url) return;
+      if (!url || !(url.startsWith("data:image/") || url.startsWith("https://"))) {
+        drawable[drawableKey].maskTexture = "";
+        drawable[drawableKey].oldMask = "";
+        drawable[drawableKey].shouldMask = 0;
+        render.dirty = true;
+        return;
+      }
+      return new Promise((resolve) => {
+        const gl = render._gl;
+        if (!drawable[drawableKey]._maskTexture) {
+          drawable[drawableKey]._maskTexture = gl.createTexture();
+          gl.bindTexture(gl.TEXTURE_2D, drawable[drawableKey]._maskTexture);
+
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+
+        const image = new Image();
+        image.crossOrigin = "Anonymous";
+        image.onload = () => {
+          gl.bindTexture(gl.TEXTURE_2D, drawable[drawableKey]._maskTexture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+          drawable[drawableKey].maskTexture = drawable[drawableKey]._maskTexture;
+          drawable[drawableKey].shouldMask = 1;
+          drawable[drawableKey].oldMask = url;
+          render.dirty = true;
+          resolve();
+        };
+        image.onerror = (e) => {
+          console.warn(e);
+          resolve();
+        };
+        image.src = url;
+      });
     }
 
     showSprite(args, util) {
