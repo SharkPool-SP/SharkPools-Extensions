@@ -11,7 +11,7 @@
       "credits": "Fetch and play Youtube videos and statistics in your project. Made by SharkPool and contributed to by Nekl300",
       "url": "extension-code/YouTube-Operations.js",
       "tags": ".all.fetching",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/18/2025"
     },
     "Time-Calculation": {
@@ -126,8 +126,8 @@
       "credits": "Expansion of the Looks Category. Made by SharkPool and CST",
       "url": "extension-code/Looks-Expanded.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "new",
-      "date": "Last Updated: 03/21/2025"
+      "status": "update",
+      "date": "Last Updated: 03/24/2025"
     },
     "Sprite-Effects": {
       "credits": "Apply new, non-vanilla effects and filters to Sprites and the Canvas! Faster than Image Effects. Made by SharkPool",
@@ -203,7 +203,7 @@
       "credits": "Create temporary variables for sprites, threads, and the project. Made by SharkPool",
       "url": "extension-code/Temporary-Variables.js",
       "tags": ".all.utilities.category",
-      "status": "new",
+      "status": "",
       "date": "Released: 03/18/2025"
     },
     "Monitors-Plus": {
@@ -245,14 +245,14 @@
       "credits": "Create Animations and Keyframes in Your Project. Made by SharkPool. TheShovel helped make this Thumbnail",
       "url": "extension-code/Animations.js",
       "tags": ".all.utilities",
-      "status": "",
-      "date": "Last Updated: 01/26/2025"
+      "status": "update",
+      "date": "Last Updated: 03/24/2025"
     },
     "Pause-Utilities": {
       "credits": "Pause your Project, Scripts, and Make Pause Menus. Made by SharkPool",
       "url": "extension-code/Pause-Utilities.js",
       "tags": ".all.utilities",
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/19/2025"
     },
     "Text-to-Speech": {
@@ -497,7 +497,7 @@
       "credits": "Create Multiple Pen Layers! Made by SharkPool, inspired by ObviousAlex",
       "url": "extension-code/Pen-Papers.js",
       "tags": ".all.utilities.expanded.category",
-      "status": "new",
+      "status": "",
       "date": "Released: 03/18/2025"
     },
     "Example": {
