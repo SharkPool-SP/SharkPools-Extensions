@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -53,6 +53,19 @@
               NAME: { type: Scratch.ArgumentType.STRING, menu: "PAPERS" }
             },
           },
+          {
+            opcode: "paperExists",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "paper [NAME] exists?",
+            arguments: {
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my-paper" }
+            },
+          },
+          {
+            opcode: "allPapers",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "all papers"
+          },
           "---",
           {
             opcode: "switchPaper",
@@ -67,6 +80,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "current paper"
           },
+          "---",
           {
             opcode: "paperDrawing",
             blockType: Scratch.BlockType.REPORTER,
@@ -75,7 +89,6 @@
               NAME: { type: Scratch.ArgumentType.STRING, menu: "PAPERS" }
             },
           },
-          "---",
           {
             opcode: "paperVisibility",
             blockType: Scratch.BlockType.COMMAND,
@@ -128,6 +141,15 @@
         this.switchPaper({ NAME: Object.keys(papers)[0] });
         if (isEditor) runtime.once("BEFORE_EXECUTE", () => runtime.requestBlocksUpdate());
       }
+    }
+
+    paperExists(args) {
+      const name = Scratch.Cast.toString(args.NAME);
+      return papers[name] !== undefined;
+    }
+
+    allPapers() {
+      return JSON.stringify(Object.keys(papers));
     }
 
     switchPaper(args) {
