@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.92
+// Version V.1.0.93
 
 (function (Scratch) {
   "use strict";
@@ -116,7 +116,8 @@
     const ogListener = vm.listeners("MONITORS_UPDATE").find((f) => f.name === "onMonitorsUpdate");
     if (ogListener) vm.removeListener("MONITORS_UPDATE", ogListener);
     vm.on("MONITORS_UPDATE", (monitors) => {
-      monitors._list._tail.array.forEach((entry) => {
+      const iterators = monitors._list?._tail?.array;
+      if (iterators) iterators.forEach((entry) => {
         const data = entry[1]._map._root?.entries || entry[1]._map._root.nodes;
         const valueInd = data.findIndex((e) => { return e.entry && e.entry[0] === "value" });
         if (valueInd === -1) return;
