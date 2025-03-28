@@ -33,7 +33,7 @@ function addBtnBehaviours() {
   /* Donate Button */
   const donateBtn = document.querySelector(`button[class="donateBtn"]`);
   donateBtn.addEventListener("click", (e) => {
-    window.open("https://www.paypal.com/donate?hosted_button_id=...", "_blank");
+    window.open("https://www.paypal.com/donate/?business=AGLGGVQWUBUFE&no_recurring=0&item_name=Help+pay+for+my+College+Education&currency_code=CAD", "_blank");
     e.stopImmediatePropagation();
   });
 
