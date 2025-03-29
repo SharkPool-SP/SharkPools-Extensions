@@ -1,4 +1,4 @@
- // Name: My Blocks+
+// Name: My Blocks+
 // ID: SPmbpCST
 // Description: Create Better Custom Blocks
 // By: SharkPool
@@ -6,27 +6,32 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.1.02
+// Version V.1.2.0
 
-/* TODO
-V1.2
-- block images?
-- branches
+/* V1.2.1
+  - fix custom colors with custom themes
+  - duplicating global sprites
+  - various project load method bugs
 */
 
-(function (Scratch) {
+(function(Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("My Blocks+ must run unsandboxed!");
 
   const menuIconURI =
     "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0Ny45NDgiIGhlaWdodD0iNDcuOTQ4IiB2aWV3Qm94PSIwIDAgNDcuOTQ4IDQ3Ljk0OCI+PHBhdGggZD0iTTAgMjMuOTc0QzAgMTAuNzM0IDEwLjczMyAwIDIzLjk3NCAwczIzLjk3NCAxMC43MzMgMjMuOTc0IDIzLjk3NC0xMC43MzMgMjMuOTc0LTIzLjk3NCAyMy45NzRTMCAzNy4yMTUgMCAyMy45NzQiIGZpbGw9IiNjYzUyNjYiLz48cGF0aCBkPSJNMi4yMTEgMjMuOTc0YzAtMTIuMDIgOS43NDQtMjEuNzYzIDIxLjc2My0yMS43NjNzMjEuNzYzIDkuNzQ0IDIxLjc2MyAyMS43NjMtOS43NDQgMjEuNzYzLTIxLjc2MyAyMS43NjNTMi4yMTEgMzUuOTkzIDIuMjExIDIzLjk3NCIgZmlsbD0iI2ZmNjY4MCIvPjxwYXRoIGQ9Ik0zOS4xNTIgMTQuNDU1djE5LjAzOGExLjEyIDEuMTIgMCAwIDEtLjY1IDEuMDE5bC0xNC41NTggNi43MTlhMS4xMiAxLjEyIDAgMCAxLS45NCAwbC0xNC41NTgtNi43MmExLjEyIDEuMTIgMCAwIDEtLjY1LTEuMDE4VjE0LjQ1NGExLjEyIDEuMTIgMCAwIDEgLjY1LTEuMDE5bDE0LjU1OC02LjcxOWExLjEyIDEuMTIgMCAwIDEgLjk0IDBsMTQuNTU4IDYuNzJjLjM5Ny4xODMuNjUxLjU4LjY1IDEuMDE4bS0yNy41NiAwIDExLjg4MiA1LjQ4OCAxMS44ODItNS40ODgtMTEuODgyLTUuNDg3em0tMS41NTYgMTguMzIxIDEyLjMxOCA1LjY4OVYyMS44OWwtMTIuMzE4LTUuNjg5em0yNi44NzYgMFYxNi4yMDFsLTEyLjMxOCA1LjY5djE2LjU3M3oiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzIuMzQ2IDM2LjE2OXYtMi42NzhoLTIuNjc4Yy0xLjM2NSAwLTIuNDcyLS45NTMtMi40NzItMi4xMjhzMS4xMDctMi4xMjggMi40NzItMi4xMjhoMi42Nzh2LTIuNjc4YzAtMS4zNjUuOTUzLTIuNDcyIDIuMTI4LTIuNDcyczIuMTI4IDEuMTA3IDIuMTI4IDIuNDcydjIuNjc4aDIuNjc4YzEuMzY1IDAgMi40NzIuOTUyIDIuNDcyIDIuMTI4IDAgMS4xNzUtMS4xMDcgMi4xMjgtMi40NzIgMi4xMjhoLTIuNjc4djIuNjc4YzAgMS4zNjUtLjk1MyAyLjQ3Mi0yLjEyOCAyLjQ3MnMtMi4xMjgtMS4xMDctMi4xMjgtMi40NzJ6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjY2ODAiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Ik0zMi4zNDYgMzYuMTY5di0yLjY3OGgtMi42NzhjLTEuMzY1IDAtMi40NzItLjk1My0yLjQ3Mi0yLjEyOHMxLjEwNy0yLjEyOSAyLjQ3Mi0yLjEyOWgyLjY3OHYtMi42NzdjMC0xLjM2NS45NTMtMi40NzIgMi4xMjgtMi40NzJzMi4xMjggMS4xMDcgMi4xMjggMi40NzJ2Mi42NzdoMi42NzhjMS4zNjUgMCAyLjQ3Mi45NTMgMi40NzIgMi4xMjkgMCAxLjE3NS0xLjEwNyAyLjEyOC0yLjQ3MiAyLjEyOGgtMi42Nzh2Mi42NzhjMCAxLjM2NS0uOTUyIDIuNDcyLTIuMTI4IDIuNDcyLTEuMTc1IDAtMi4xMjgtMS4xMDctMi4xMjgtMi40NzIiIGZpbGw9IiNmZmYiLz48L3N2Zz4=";
 
-  const dropdwnURI =
-    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NyIgaGVpZ2h0PSI0OSIgdmlld0JveD0iMCAwIDU3IDQ5Ij48ZyBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik00LjUgNDguNWE0IDQgMCAwIDEtNC00di00MGE0IDQgMCAwIDEgNC00aDQ4YTQgNCAwIDAgMSA0IDR2NDBhNCA0IDAgMCAxLTQgNHoiIGZpbGw9IiNmZjY2ODAiIHN0cm9rZT0iI2YzNSIvPjxwYXRoIGQ9Ik0xMi4xMjMgMzkuODNjLTEuNTA3IDAtMi43My0xLjE0NC0yLjczLTIuNTU1di0yNS41NWMwLTEuNDExIDEuMjIzLTIuNTU1IDIuNzMtMi41NTVoMzIuNzU0YzEuNTA3IDAgMi43MyAxLjE0NCAyLjczIDIuNTU1djI1LjU1YzAgMS40MTEtMS4yMjMgMi41NTUtMi43MyAyLjU1NXoiIGZpbGw9IiNmZjRkNmEiIHN0cm9rZT0iI2YzNSIvPjxwYXRoIGQ9Ik0zNi4wODQgMjIuMTY3YTIuODggMi44OCAwIDAgMS0uODQ4IDIuMDUzbC00LjY3NyA0LjY3N2EyLjkyNCAyLjkyNCAwIDAgMS00LjExOCAwbC00LjY2NS00LjY3N2EyLjkgMi45IDAgMCAxLS44Ni0yLjA1MyAyLjk2IDIuOTYgMCAwIDEgLjg0OC0yLjA2NGMuMzQ2LS4yODcuODU5LS44NDggNi43NDItLjg0OHM2LjQzMi41NSA2LjczLjg0OGMuNTQ2LjU0OC44NSAxLjI5Ljg0OCAyLjA2NCIgZmlsbD0iI2YzNSIvPjxwYXRoIGQ9Ik0yOC41MDYgMjguNTUxYTEuNyAxLjcgMCAwIDEtMS4xOTMtLjVsLTQuNzAyLTQuNjc5YTEuNzIgMS43MiAwIDAgMSAwLTIuMzg2Yy42NjgtLjY2OSAxMS4xMS0uNjY5IDExLjc3OCAwIC42NDMuNjY1LjY0MyAxLjcyIDAgMi4zODZsLTQuNjc4IDQuNjc4Yy0uMzIuMzItLjc1My41LTEuMjA1LjUwMSIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=";
-  const colorPkrURI =
-    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iLTIgLTMgMjAgMjAiPjxwYXRoIGQ9Ik0xMS4wNjQgNS41NjIgOS40MDkgMy45MDhsLTMuOTQgMy45MmMtLjEyLjEzNy0uMjA1LjI3NC0uMjQuNDEtLjE4Ny44NTItLjgxOCAxLjUtMS41MTcgMS43MjJhMSAxIDAgMCAwLS41OC41MTFsLS44MzYgMS43OWMtLjA1MS4xMi0uMDUxLjE4OC0uMDUxLjIwNWwuMjczLjI1NWEuNi42IDAgMCAwIC4xODctLjA1bDEuNzc0LS44MzZjLjI0LS4xMi40Ni0uMzU4LjUzLS41OC4yMDQtLjY5OS44Ny0xLjMzIDEuNTY4LTEuNDgzLjI3My0uMDY4LjQyNy0uMTUzLjU0Ni0uMjl6bTIuMDMtMS43OS4xMzYuMTM2LjU4LjU4YS44ODQuODg0IDAgMCAxIDAgMS4yNDRsLS42NjUuNjQ4YS44NDcuODQ3IDAgMCAxLTEuMTYuMDY4bC0zLjk1OCAzLjkzOGEyLjA3IDIuMDcgMCAwIDEtMS4wMDYuNTk3Yy0uNDEuMDg1LS43MTYuMzc1LS43ODUuNjQ3LS4xNy41NjMtLjY0OCAxLjA5MS0xLjIxIDEuMzY0bC0xLjc5Mi44MzZjLS4yMzkuMTAyLS40OTUuMTctLjcxNi4xN2ExLjIgMS4yIDAgMCAxLS44Ny0uMzRsLS4zNDEtLjM0MmMtLjM3Ni0uMzkyLS40NDQtMS4wMDYtLjE3MS0xLjYwMmwuODM2LTEuNzczYy4yNTYtLjU2My44MDItMS4wNCAxLjM2NC0xLjIxLjI3My0uMDg2LjU2My0uMzc2LjYxNS0uNjMxLjExOS0uNTEyLjMyNC0uODcuNjE0LTEuMTc3bDMuOTU3LTMuOTM3Yy0uMjktLjM0MS0uMjczLS44MzYuMDUxLTEuMTc3bC42NjUtLjY0OGEuODg2Ljg4NiAwIDAgMSAxLjI0NiAwbC41NDYuNTQ2LjE3LjE3TDEyLjY4NC4zOTZhMS4zMyAxLjMzIDAgMCAxIDEuODk0IDBjLjI1Ni4yNTYuMzkyLjU5Ny4zOTIuOTM4cy0uMTM2LjY5OS0uMzkyLjk1NXoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIuMjUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTExLjA2NCA1LjU2MiA5LjQwOSAzLjkwOGwtMy45NCAzLjkyYy0uMTIuMTM3LS4yMDUuMjc0LS4yNC40MS0uMTg3Ljg1Mi0uODE4IDEuNS0xLjUxNyAxLjcyMmExIDEgMCAwIDAtLjU4LjUxMWwtLjgzNiAxLjc5Yy0uMDUxLjEyLS4wNTEuMTg4LS4wNTEuMjA1bC4yNzMuMjU1YS42LjYgMCAwIDAgLjE4Ny0uMDVsMS43NzQtLjgzNmMuMjQtLjEyLjQ2LS4zNTguNTMtLjU4LjIwNC0uNjk5Ljg3LTEuMzMgMS41NjktMS40ODMuMjcyLS4wNjguNDI2LS4xNTMuNTQ1LS4yOXptMi4wMy0xLjc5LjEzNi4xMzYuNTguNThhLjg4NC44ODQgMCAwIDEgMCAxLjI0NGwtLjY2NS42NDhhLjg0Ny44NDcgMCAwIDEtMS4xNi4wNjhsLTMuOTU4IDMuOTM4YTIuMDcgMi4wNyAwIDAgMS0xLjAwNi41OTdjLS40MS4wODUtLjcxNi4zNzUtLjc4NS42NDctLjE3LjU2My0uNjQ4IDEuMDkxLTEuMjEgMS4zNjRsLTEuNzkyLjgzNmMtLjIzOS4xMDItLjQ5NS4xNy0uNzE2LjE3YTEuMiAxLjIgMCAwIDEtLjg3LS4zNDFsLS4zNDEtLjM0Yy0uMzc2LS4zOTMtLjQ0NC0xLjAwNy0uMTcxLTEuNjAzbC44MzYtMS43NzNjLjI1Ni0uNTYzLjgwMi0xLjA0IDEuMzY0LTEuMjEuMjczLS4wODYuNTYzLS4zNzYuNjE1LS42MzEuMTE5LS41MTIuMzI0LS44Ny42MTQtMS4xNzdsMy45NTctMy45MzhjLS4yOS0uMzQtLjI3My0uODM1LjA1MS0xLjE3NmwuNjY2LS42NDhhLjg4Ni44ODYgMCAwIDEgMS4yNDUgMGwuNTQ2LjU0Ni4xNy4xN0wxMi42ODQuMzk2YTEuMzMgMS4zMyAwIDAgMSAxLjg5NCAwYy4yNTYuMjU2LjM5Mi41OTcuMzkyLjkzOHMtLjEzNi42OTktLjM5Mi45NTV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+";
-
+  const guiURIs = (name) => {
+    const start = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI";
+    return start + {
+      "dropdwn": "1NyIgaGVpZ2h0PSI0OSIgdmlld0JveD0iMCAwIDU3IDQ5Ij48ZyBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik00LjUgNDguNWE0IDQgMCAwIDEtNC00di00MGE0IDQgMCAwIDEgNC00aDQ4YTQgNCAwIDAgMSA0IDR2NDBhNCA0IDAgMCAxLTQgNHoiIGZpbGw9IiNmZjY2ODAiIHN0cm9rZT0iI2YzNSIvPjxwYXRoIGQ9Ik0xMi4xMjMgMzkuODNjLTEuNTA3IDAtMi43My0xLjE0NC0yLjczLTIuNTU1di0yNS41NWMwLTEuNDExIDEuMjIzLTIuNTU1IDIuNzMtMi41NTVoMzIuNzU0YzEuNTA3IDAgMi43MyAxLjE0NCAyLjczIDIuNTU1djI1LjU1YzAgMS40MTEtMS4yMjMgMi41NTUtMi43MyAyLjU1NXoiIGZpbGw9IiNmZjRkNmEiIHN0cm9rZT0iI2YzNSIvPjxwYXRoIGQ9Ik0zNi4wODQgMjIuMTY3YTIuODggMi44OCAwIDAgMS0uODQ4IDIuMDUzbC00LjY3NyA0LjY3N2EyLjkyNCAyLjkyNCAwIDAgMS00LjExOCAwbC00LjY2NS00LjY3N2EyLjkgMi45IDAgMCAxLS44Ni0yLjA1MyAyLjk2IDIuOTYgMCAwIDEgLjg0OC0yLjA2NGMuMzQ2LS4yODcuODU5LS44NDggNi43NDItLjg0OHM2LjQzMi41NSA2LjczLjg0OGMuNTQ2LjU0OC44NSAxLjI5Ljg0OCAyLjA2NCIgZmlsbD0iI2YzNSIvPjxwYXRoIGQ9Ik0yOC41MDYgMjguNTUxYTEuNyAxLjcgMCAwIDEtMS4xOTMtLjVsLTQuNzAyLTQuNjc5YTEuNzIgMS43MiAwIDAgMSAwLTIuMzg2Yy42NjgtLjY2OSAxMS4xMS0uNjY5IDExLjc3OCAwIC42NDMuNjY1LjY0MyAxLjcyIDAgMi4zODZsLTQuNjc4IDQuNjc4Yy0uMzIuMzItLjc1My41LTEuMjA1LjUwMSIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=",
+      "colorPkr": "yMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iLTIgLTMgMjAgMjAiPjxwYXRoIGQ9Ik0xMS4wNjQgNS41NjIgOS40MDkgMy45MDhsLTMuOTQgMy45MmMtLjEyLjEzNy0uMjA1LjI3NC0uMjQuNDEtLjE4Ny44NTItLjgxOCAxLjUtMS41MTcgMS43MjJhMSAxIDAgMCAwLS41OC41MTFsLS44MzYgMS43OWMtLjA1MS4xMi0uMDUxLjE4OC0uMDUxLjIwNWwuMjczLjI1NWEuNi42IDAgMCAwIC4xODctLjA1bDEuNzc0LS44MzZjLjI0LS4xMi40Ni0uMzU4LjUzLS41OC4yMDQtLjY5OS44Ny0xLjMzIDEuNTY4LTEuNDgzLjI3My0uMDY4LjQyNy0uMTUzLjU0Ni0uMjl6bTIuMDMtMS43OS4xMzYuMTM2LjU4LjU4YS44ODQuODg0IDAgMCAxIDAgMS4yNDRsLS42NjUuNjQ4YS44NDcuODQ3IDAgMCAxLTEuMTYuMDY4bC0zLjk1OCAzLjkzOGEyLjA3IDIuMDcgMCAwIDEtMS4wMDYuNTk3Yy0uNDEuMDg1LS43MTYuMzc1LS43ODUuNjQ3LS4xNy41NjMtLjY0OCAxLjA5MS0xLjIxIDEuMzY0bC0xLjc5Mi44MzZjLS4yMzkuMTAyLS40OTUuMTctLjcxNi4xN2ExLjIgMS4yIDAgMCAxLS44Ny0uMzRsLS4zNDEtLjM0MmMtLjM3Ni0uMzkyLS40NDQtMS4wMDYtLjE3MS0xLjYwMmwuODM2LTEuNzczYy4yNTYtLjU2My44MDItMS4wNCAxLjM2NC0xLjIxLjI3My0uMDg2LjU2My0uMzc2LjYxNS0uNjMxLjExOS0uNTEyLjMyNC0uODcuNjE0LTEuMTc3bDMuOTU3LTMuOTM3Yy0uMjktLjM0MS0uMjczLS44MzYuMDUxLTEuMTc3bC42NjUtLjY0OGEuODg2Ljg4NiAwIDAgMSAxLjI0NiAwbC41NDYuNTQ2LjE3LjE3TDEyLjY4NC4zOTZhMS4zMyAxLjMzIDAgMCAxIDEuODk0IDBjLjI1Ni4yNTYuMzkyLjU5Ny4zOTIuOTM4cy0uMTM2LjY5OS0uMzkyLjk1NXoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIuMjUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTExLjA2NCA1LjU2MiA5LjQwOSAzLjkwOGwtMy45NCAzLjkyYy0uMTIuMTM3LS4yMDUuMjc0LS4yNC40MS0uMTg3Ljg1Mi0uODE4IDEuNS0xLjUxNyAxLjcyMmExIDEgMCAwIDAtLjU4LjUxMWwtLjgzNiAxLjc5Yy0uMDUxLjEyLS4wNTEuMTg4LS4wNTEuMjA1bC4yNzMuMjU1YS42LjYgMCAwIDAgLjE4Ny0uMDVsMS43NzQtLjgzNmMuMjQtLjEyLjQ2LS4zNTguNTMtLjU4LjIwNC0uNjk5Ljg3LTEuMzMgMS41NjktMS40ODMuMjcyLS4wNjguNDI2LS4xNTMuNTQ1LS4yOXptMi4wMy0xLjc5LjEzNi4xMzYuNTguNThhLjg4NC44ODQgMCAwIDEgMCAxLjI0NGwtLjY2NS42NDhhLjg0Ny44NDcgMCAwIDEtMS4xNi4wNjhsLTMuOTU4IDMuOTM4YTIuMDcgMi4wNyAwIDAgMS0xLjAwNi41OTdjLS40MS4wODUtLjcxNi4zNzUtLjc4NS42NDctLjE3LjU2My0uNjQ4IDEuMDkxLTEuMjEgMS4zNjRsLTEuNzkyLjgzNmMtLjIzOS4xMDItLjQ5NS4xNy0uNzE2LjE3YTEuMiAxLjIgMCAwIDEtLjg3LS4zNDFsLS4zNDEtLjM0Yy0uMzc2LS4zOTMtLjQ0NC0xLjAwNy0uMTcxLTEuNjAzbC44MzYtMS43NzNjLjI1Ni0uNTYzLjgwMi0xLjA0IDEuMzY0LTEuMjEuMjczLS4wODYuNTYzLS4zNzYuNjE1LS42MzEuMTE5LS41MTIuMzI0LS44Ny42MTQtMS4xNzdsMy45NTctMy45MzhjLS4yOS0uMzQtLjI3My0uODM1LjA1MS0xLjE3NmwuNjY2LS42NDhhLjg4Ni44ODYgMCAwIDEgMS4yNDUgMGwuNTQ2LjU0Ni4xNy4xN0wxMi42ODQuMzk2YTEuMzMgMS4zMyAwIDAgMSAxLjg5NCAwYy4yNTYuMjU2LjM5Mi41OTcuMzkyLjkzOHMtLjEzNi42OTktLjM5Mi45NTV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+",
+      "branchStart": "yMC4zOTkiIGhlaWdodD0iMjEuNDIyIiB2aWV3Qm94PSIwIDAgMjAuMzk5IDIxLjQyMiI+PHBhdGggZD0iTTEzLjY1IDE2Ljc0NmMtLjY1NS0uMjgtMS0uOS0xLTEuNXYtMS42Yy0xLjMtLjEtMi41LS41LTMuNi0xLjFsLS4xNDYtLjA3OGMuMDU0LjY0Ni4wODcgMS4wOC4wOTYgMS4yMDRoMS42Yy42IDAgMS4yMTguMzQgMS41IDFzLjA5NiAxLjE4Ni0uMyAxLjhjLS4wNjMuMDk4LTQuNSA0LjUtNC41IDQuNS0uNy42LTEuNy42LTIuNCAwbC00LjQtNC40Yy0uMy0uMy0uNS0uOC0uNS0xLjIgMC0xIC44LTEuNyAxLjctMS43aDEuNWMwLS4xODMuMjU4LTMuOTgzLjQ4LTcuNDE2LjEyMy0xLjkwOC4yMzUtMy43NzIuMjg1LTQuNzY5LjAxMy0uMDY2LjAzLS4yMDEuMDUyLS4yNjQuMTY0LS43MDYuODIyLTEuMjEgMS42Ny0xLjIxLjg4LS4xMjIgMS44ODEuNjE0IDEuOSAxLjY0cS4wMjIuMDQyLjAyOC4wNjVjLjE2NS44NTYuMzIgMS44NTMuNDYyIDIuOS4yNy41MDcuNjQ4Ljk4My45ODEgMS40MjguOCAxLjEgMi4xOTEgMS44IDMuNTkxIDEuOHYtMS41YzAtLjkuNy0xLjcgMS43LTEuNy40IDAgLjkuMiAxLjIuNWw0LjQgNC40Yy42LjcuNiAxLjcgMCAyLjRsLTQuNSA0LjVzLTEuMTQ1LjU4LTEuOC4zIiBmaWxsLW9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQuNjY5IDIuMDc5QzQuNTg1IDEuNDgyIDUuMDk3LjkwNSA1LjgwNy45MDZjLjU5Ni0uMDg0IDEuMjc2LjQyOCAxLjI3NSAxLjEzOCAwIC4wMTMuMTE0IDEuMDY3LjI2IDIuNTgzYTcgNyAwIDAgMCAuOTI1IDEuNzcxYy42LjkgMS41OTIgMS42IDIuNjkyIDIgLjkuMyAxLjguNCAyLjguMnYtMi40YzAtLjQuMy0uNy43LS43LjIgMCAuMy4xLjQuMmw0LjQgNC40Yy4zLjMuMy43IDAgLjlsLTQuNCA0LjRjLS4zLjMtLjQ1OC40MzEtLjgzMi4zNjlzLS4zNjgtLjU2OS0uMzY4LS41Njl2LTIuNmMtMS41IDAtMi45LS4zLTQuMi0xYTguMyA4LjMgMCAwIDEtMS41Ny0xLjAyNGMuMTUxIDIuMTg4LjI1NCAzLjg4Mi4yNTQgNC4xNDhoMi42cy40NjIuMDc2LjUuMyAwIC42LS4zLjlsLTQuNCA0LjRjLS4yLjMtLjYuMy0uOSAwbC00LjQtNC40Yy0uMS0uMS0uMi0uMi0uMi0uNCAwLS40LjMtLjcuNy0uN2gyLjM5OGMuMDU0LTEuNTk3LjE0NS00LjIyLjIzOS02LjY2NC4wMi0uNTkuMDQxLTEuMTg2LjA2My0xLjc3NnEuMDAzLS4wOTkuMDE1LS4xOTJjLjA1LTEuMTgzLjIxLTQuMTExLjIxLTQuMTExIiBmaWxsPSIjZmZmIi8+PC9zdmc+"
+    }[name];
+  };
   const inputURIs = (name) => {
+    if (name === "brc") return "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIxMS41IDE1NS41IDU3IDQ5Ij48cGF0aCBkPSJNMjE2IDIwNGE0IDQgMCAwIDEtNC00di00MGE0IDQgMCAwIDEgNC00bDQ4LjY1MS4wNTNBNCA0IDAgMCAxIDI2OCAxNjB2OC4xMjhjMCAxLjMtMi4xODQgMy4zODMtMy44NzcgMy4zODNoLTEzLjk4MmMtMS4xMDUgMC0xLjY1Ny41NTItMi4yMSAxLjEwNWwtMi4yMDkgMi4yMDljLS41NTIuNTUyLTEuMTA1IDEuMTA1LTIuMjEgMS4xMDVoLTYuNjI3Yy0xLjEwNSAwLTEuNjU3LS41NTMtMi4yMS0xLjEwNWwtMi4yMDktMi4yMWMtLjU1Mi0uNTUyLTEuMTA1LTEuMTA0LTIuMjEtMS4xMDRoLTQuNDE4Yy0xLjIyIDAtMi4yMS45OS0yLjIxIDIuMjF2MTIuNTU0YzAgMS4yMi45OSAyLjIwOCAyLjIxIDIuMjA4aDQuNDE5YzEuMTA0IDAgMS42NTcuNTUzIDIuMjEgMS4xMDVsMi4yMDggMi4yMWMuNTUzLjU1MiAxLjEwNSAxLjEwNCAyLjIxIDEuMTA0aDYuNjI4YzEuMTA0IDAgMS42NTctLjU1MiAyLjIwOS0xLjEwNWwyLjIxLTIuMjA5Yy41NTItLjU1MiAxLjEwNC0xLjEwNSAyLjIwOS0xLjEwNWgxMy45ODJjMS42OTMgMCAzLjg3NyAyLjEwNCAzLjg3NyAzLjUwMlYyMDBhNCA0IDAgMCAxLTQgNHoiIHN0eWxlPSJmaWxsOiNmZjY2ODA7c3Ryb2tlOiNmMzUiLz48L3N2Zz4=";
+    if (name === "bool") return "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NyA0OSI+PHJlY3QgeD0iLjUiIHk9Ii41IiB3aWR0aD0iNTYiIGhlaWdodD0iNDgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9ImZpbGw6I2ZmNjY4MDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2U6I2YzNSIvPjxwYXRoIGQ9Ik0zMi41IDQwLjVoLThsLTE2LTE2aDBsMTYtMTZoOGwxNiAxNmgwWiIgc3R5bGU9InN0cm9rZTojZjM1O2ZpbGw6I2ZmNGQ2YTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQiLz48L3N2Zz4=";
     // lower file size moment
     const start = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NyA0OSI+PHJlY3QgeD0iLjUiIHk9Ii41IiB3aWR0aD0iNTYiIGhlaWdodD0iNDgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9ImZpbGw6I2ZmNjY4MDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2U6I2YzNSIvPjxyZWN0IHg9IjguNSIgeT0iOC41IiB3aWR0aD0iNDAiIGhlaWdodD0iMzIiIHJ4PSIxNiIgcnk9IjE2IiBzdHlsZT0ic3Ryb2tlOiNm";
     return start + {
@@ -49,9 +54,11 @@ V1.2
 
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
+  window.test = storage;
 
   let extensionRemovable = false;
   let ext; // extension object
+  let execute, Thread; // set by exports
 
   function randomColour() {
     const num = Math.floor(Math.random() * Math.pow(2, 24));
@@ -81,6 +88,7 @@ V1.2
     ang: { opcode: "math_angle", fieldName: "NUM", defaultValue: "90" },
     // %n technically already exists but some parts of scratch-blocks replace it with %s so we can't use it
     num: { opcode: "math_number", fieldName: "NUM", defaultValue: "0" },
+    brc: { opcode: "brc", fieldName: "SUBSTACK" },
   };
   function getInputData(input) {
     if (input.isDrop) return { opcode: input.type, fieldName: null, defaultValue: null };
@@ -97,6 +105,9 @@ V1.2
   // used to make the Make a Block dialog scroll to the MB+ category
   let shouldScrollToMBP = false;
 
+  // refresh the block list if true when called, otherwise does nothing
+  let listNeedsRefresh = false, suspendRemoval = false, oldListLength = 0;
+
   // Custom Block Modal
   const returnTypeError = (e) => {
     // used for PenguinMod
@@ -109,6 +120,7 @@ V1.2
 
   function openBlockMaker(workspace, isEditing) {
     if (extensionRemovable) return;
+    listNeedsRefresh = true;
     shouldScrollToMBP = true;
     const isDark = isPM ? document.body.getAttribute("theme") === "dark" : ReduxStore.getState().scratchGui.theme.theme.gui === "dark";
     // Scratch creates a new workspace for Custom Blocks, we need to capture it
@@ -155,6 +167,7 @@ V1.2
     const okBtn = modal.querySelector(`button[class^="custom-procedures_ok-button_"]`);
     okBtn.addEventListener("click", (e) => {
       // prevent proccode conflicts
+      refreshGlobalBlocksCache();
       const existingPrototype = ScratchBlocks.Procedures.getPrototypeBlock(blockEditor.procCode_, workspace);
       const existingCache = globalBlocksCache[blockEditor.procCode_];
       if (
@@ -181,15 +194,36 @@ V1.2
   function attachInputBtns(row, editor, isDark, workspace) {
     // dropdown btn
     const dropBtn = row.childNodes[1].cloneNode(true);
-    dropBtn.childNodes[0].src = dropdwnURI;
+    dropBtn.childNodes[0].src = guiURIs("dropdwn");
     dropBtn.childNodes[2].textContent = "dropdown";
     row.insertBefore(dropBtn, row.childNodes[2]);
     dropBtn.addEventListener("click", () => openMenuSelector(editor, isDark, workspace));
 
+    // branch btn
+    const branchBtn = row.childNodes[1].cloneNode(true);
+    branchBtn.childNodes[0].src = inputURIs("brc");
+    branchBtn.childNodes[2].textContent = "branch";
+    row.insertBefore(branchBtn, row.childNodes[3]);
+    branchBtn.addEventListener("click", (e) => {
+      editor.addStringNumberExternal();
+      e.stopImmediatePropagation();
+
+      const args = editor.argumentIds_;
+      const id = args[args.length - 1];
+      const inputs = tempStore.inputs || {};
+      inputs[id] = { type: "brc", isDrop: false };
+      tempStore.inputs = inputs;
+      cleanupBlockInputs(inputs, args);
+
+      editor.displayNames_[args.length - 1] = "branch";
+      editor.updateDisplay_();
+      editor.focusLastEditor_();
+    });
+
     // dynamic btn
     const paths = {
-      "number or text": "norm", "number": "num", "angle": "ang", 
-      "color": "col", "piano": "note", "matrix": "mat"
+      "number or text": "norm", "number": "num", "boolean": "bool",
+      "angle": "ang", "color": "col", "piano": "note", "matrix": "mat"
     };
     const inpBtn = row.childNodes[1].cloneNode(true);
     const img = inpBtn.childNodes[0], btn = inpBtn.childNodes[2];
@@ -213,6 +247,10 @@ V1.2
     row.replaceChild(inpBtn, row.childNodes[0]);
     inpBtn.addEventListener("click", (e) => {
       if (e.target === drpdown) return;
+      if (drpdown.value === "bool") {
+        editor.addBooleanExternal();
+        return;
+      }
       editor.addStringNumberExternal();
       e.stopImmediatePropagation(); // don't run the old add event
       if (drpdown.value === "norm") return;
@@ -228,6 +266,7 @@ V1.2
       editor.updateDisplay_();
       editor.focusLastEditor_();
     });
+    row.childNodes[1].style.display = "none";
   }
 
   // Clean nonexistent inputs from the inputs object
@@ -319,7 +358,7 @@ V1.2
       colorDiv.appendChild(circle);
       if (color === "red") {
         const innerImg = document.createElement("img");
-        innerImg.src = colorPkrURI;
+        innerImg.src = guiURIs("colorPkr");
         innerImg.setAttribute("style", "width: 25px; height: 25px; position: relative; padding: 2px; left: 50%; top: 50%; transform: translate(-50%, -50%);");
         circle.addEventListener("click", () => {
           bounceAnim(circle);
@@ -427,55 +466,188 @@ V1.2
     });
   }
 
+const sanitize = string => {
+    if (typeof string !== 'string') {
+        console.warn(`sanitize got unexpected type: ${typeof string}`);
+        string = '' + string;
+    }
+    return JSON.stringify(string).slice(1, -1);
+};
+
+
   // Compiler Patches
-  function getCompiler() {
+  function getExports() {
     if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
     else if (vm.exports.JSGenerator && vm.exports.IRGenerator?.exports) return {
       ...vm.exports, ScriptTreeGenerator: vm.exports.IRGenerator.exports.ScriptTreeGenerator
     };
   }
-  const compiler = getCompiler();
-  if (compiler) {
-    const { JSGenerator, ScriptTreeGenerator } = compiler;
+  const exports = getExports();
+  if (exports) {
+    Thread = exports.Thread; execute = exports.execute;
+    const { JSGenerator, ScriptTreeGenerator } = exports;
     const exp = JSGenerator.exports === undefined ? JSGenerator.unstable_exports : JSGenerator.exports;
     const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
-    ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
-      if (block.opcode === "SPmbpCST_setParam") {
-        let paramIndex = this.script.arguments.lastIndexOf(block.fields.PARAM.value);
-        if (paramIndex === -1) {
-          paramIndex = this.script.arguments.length;
-          this.script.arguments.push(block.fields.PARAM.value);
+    ScriptTreeGenerator.prototype.descendStackedBlock = function(block) {
+      switch (block.opcode) {
+        case "procedures_call": {
+          const proc = block.mutation.proccode;
+          const store = storeGet(proc, this.target);
+          if (!this.thread[targetProcData]) this.thread[targetProcData] = {};
+          this.thread[targetProcData][proc] = { block, store }; // attach some data we need
+          if (!store || !store.inputs) return _ogIRdescendStack.call(this, block);
+
+          // ignore branches temporarily
+          const argIds = JSON.parse(block.mutation.argumentids);
+          const appenders = [];
+          const tempBlock = structuredClone(block);
+          for (let i = 0; i < argIds.length; i++) {
+            const input = block.inputs[argIds[i]];
+            if (store.inputs[input?.name]?.type === "brc") {
+              appenders.push([i, input.block]);
+              delete tempBlock.inputs[input.name];
+            }
+          }
+
+          this.thread[targetProcData][proc].appenders = appenders;
+          const node = _ogIRdescendStack.call(this, tempBlock);
+          for (let i = 0; i < appenders.length; i++) {
+            node.arguments[appenders[i][0]] = { kind: "constant", mbpKey: true, value: this.walkStack(appenders[i][1]) };
+          }
+          return node;
         }
-        return {
-          kind: "SPmbpCST.setParam", paramIndex, val: this.descendInputOfBlock(block, "VALUE")
-        };
-      } else return _ogIRdescendStack.call(this, block);
+        case "SPmbpCST_setParam": {
+          let paramIndex = this.script.arguments.lastIndexOf(block.fields.PARAM.value);
+          if (paramIndex === -1) {
+            paramIndex = this.script.arguments.length;
+            this.script.arguments.push(block.fields.PARAM.value);
+          }
+          return {
+            kind: "SPmbpCST.setParam", paramIndex, val: this.descendInputOfBlock(block, "VALUE")
+          };
+        }
+        case "SPmbpCST_evalParam": {
+          const node = { kind: "SPmbpCST.evalParam" };
+          if (!this.thread[targetProcData]) return node;
+          const procData = this.thread[targetProcData][this.script.procedureCode];
+          const procedureBlock = procData?.block;
+          if (procedureBlock) {
+            const paramIndex = this.script.arguments.lastIndexOf(block.fields.PARAM.value);
+            const argIds = JSON.parse(procedureBlock.mutation.argumentids);
+            if (paramIndex > -1) {
+              const arg = procedureBlock.inputs[argIds[paramIndex]];
+              if (arg?.block !== undefined) {
+                const input = this.target.blocks.getBlock(arg.block);
+                node["input"] = this.descendInput(input);
+                node["index"] = paramIndex;
+              }
+            }
+          }
+          return node;
+        }
+        case "SPmbpCST_runBranch": {
+          const node = { kind: "SPmbpCST.runBranch", index: this.descendInputOfBlock(block, "INDEX") };
+          if (!this.thread[targetProcData]) return node;
+          const procData = this.thread[targetProcData][this.script.procedureCode];
+          const procedureBlock = procData?.block;
+          if (procedureBlock) node.appenders = procData.appenders.length;
+          return node;
+        }
+        default: return _ogIRdescendStack.call(this, block);
+      }
     };
     const _ogIRdescendInp = ScriptTreeGenerator.prototype.descendInput;
-    ScriptTreeGenerator.prototype.descendInput = function (block) {
+    ScriptTreeGenerator.prototype.descendInput = function(block) {
       if (block.opcode === "SPmbpCST_getParam") return { kind: "SPmbpCST.getParam", param: this.descendInputOfBlock(block, "PARAM") };
       else return _ogIRdescendInp.call(this, block);
     };
     const _ogJSdescendStack = JSGenerator.prototype.descendStackedBlock;
-    JSGenerator.prototype.descendStackedBlock = function (node) {
-      if (node.kind === "SPmbpCST.setParam") {
-        const val = this.descendInput(node.val);
-        const i = node.paramIndex;
-        if (i !== undefined && i !== -1) this.source += `p${i} = ${val.asSafe()};\n`;
-      } else if (node.kind === "procedures.call") {
-        // This gets Global Procedures to work for some reason
-        return _ogJSdescendStack.call(this, node);
-      } else return _ogJSdescendStack.call(this, node);
+    JSGenerator.prototype.descendStackedBlock = function(node) {
+      switch (node.kind) {
+        case "procedures.call": {
+          // This also gets Global Procedures to work for some reason
+          const argIndexes = [];
+          let forceYield = false;
+          const ogSource = this.source;
+          for (let i = 0; i < node.arguments.length; i++) {
+            const arg = node.arguments[i];
+            if (!arg.value || !arg.mbpKey) continue;
+            this.source = "";
+            this.descendStack(arg.value, new exp.Frame(false));
+            if (this.script.yields) {
+              arg.value = `function* () { ${this.source} }`;
+              forceYield = true;
+            } else arg.value = `() => { ${this.source} }`;
+            argIndexes.push(i);
+          }
+          this.source = ogSource;
+
+          if (argIndexes.length) {
+            // transform the branch string to a function
+            // modified from https://github.com/TurboWarp/scratch-vm/blob/develop/src/compiler/jsgen.js
+            const procedureCode = node.code;
+            const procedureVariant = node.variant;
+            const procedureData = this.ir.procedures[procedureVariant];
+            if (procedureData.stack === null) break;
+
+            const yieldForRecursion = !this.isWarp && procedureCode === this.script.procedureCode;
+            if (yieldForRecursion) this.yieldNotWarp();
+            if (procedureData.yields || forceYield) this.source += "yield* ";
+
+            this.source += `thread.procedures["${sanitize(procedureVariant)}"](`;
+            const args = [];
+            for (let i = 0; i < node.arguments.length; i++) {
+              const input = node.arguments[i];
+              if (argIndexes.indexOf(i) > -1) args.push(input.value);
+              else args.push(this.descendInput(input).asSafe());
+            }
+            this.source += args.join(",") + ");\n";
+            this.resetVariableInputs();
+
+            if (forceYield) this.ir.procedures[procedureVariant].yields = true;
+            break;
+          } else return _ogJSdescendStack.call(this, node);
+        }
+        case "SPmbpCST.setParam": {
+          const val = this.descendInput(node.val);
+          const i = node.paramIndex;
+          if (i !== undefined && i !== -1) this.source += `p${i} = ${val.asSafe()};\n`;
+          break;
+        }
+        case "SPmbpCST.evalParam": {
+          if (node.input === undefined) break;
+          const val = this.descendInput(node.input);
+          this.source += `p${node.index} = ${val.asUnknown()};\n`;
+          break;
+        }
+        case "SPmbpCST.runBranch": {
+          if (this.isProcedure) {
+            const index = this.localVariables.next();
+            this.source += `const ${index} = ${this.descendInput(node.index).asNumber()} - 1;\n`;
+            this.source += `switch (${index}.toString()) {\n`;
+            for (let i = 0; i < node.appenders; i++) {
+              this.source += `case "${i}": {\n`;
+              if (this.script.yields) this.source += `yield* p${i}();\n`;
+              else this.source += `p${i}();\n`;
+              this.source += `break;\n`;
+              this.source += `}\n`;
+            }
+            this.source += `}\n`;
+          }
+          break;
+        }
+        default: return _ogJSdescendStack.call(this, node);
+      }
     };
     const _ogJSdescendInp = JSGenerator.prototype.descendInput;
-    JSGenerator.prototype.descendInput = function (node) {
+    JSGenerator.prototype.descendInput = function(node) {
       if (node.kind === "SPmbpCST.getParam") {
         const val = this.descendInput(node.param).asSafe();
         return new exp.TypedInput(`(() => {
           let a = ${JSON.stringify(this.script.arguments)}, v = ${val};
           if (typeof v !== 'string') v = (v).toString();
           const i = a.indexOf(v);
-          return i > -1 ? arguments[i] : "";
+          return i > -1 ? arguments[i].toString() : "";
         })()`, exp.TYPE_STRING);
       } else if (node.kind === "procedures.call") {
         // This gets Global Procedures to work for some reason
@@ -484,6 +656,7 @@ V1.2
     };
   }
 
+  // ScratchBlocks and Editor Patches
   function syncFieldColors(block) {
     for (const input of block.inputList) {
       for (const field of input?.fieldRow) {
@@ -507,18 +680,18 @@ V1.2
     }
   }
 
-  // ScratchBlocks and Editor Patches
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     const recolorables = [
       "argument_reporter_string_number", "argument_reporter_boolean",
-      "SPmbpCST_setParam", "SPmbpCST_getParam", "procedures_return",
+      "SPmbpCST_setParam", "SPmbpCST_getParam", "SPmbpCST_runBranch",
+      "SPmbpCST_evalParam", "procedures_return",
       // penguinmod
       "procedures_definition_return", "procedures_set"
     ];
 
     let domToBlockXml = null;
     const oldDTBH = SB.Xml.domToBlockHeadless_;
-    SB.Xml.domToBlockHeadless_ = function (...args) {
+    SB.Xml.domToBlockHeadless_ = function(...args) {
       domToBlockXml = args[0];
       const returnValue = oldDTBH.apply(this, args);
       domToBlockXml = null;
@@ -534,15 +707,22 @@ V1.2
       return oldScrollToCategory.call(this, id);
     }
 
+    const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    SB.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
+      if (block[targetProcData] === "branchDrag") return false;
+      return ogCheck(block);
+    }
+
     const utils = SB.ScratchBlocks.ProcedureUtils;
     const ogUpdateDisplay = utils.updateDisplay_;
-    utils.updateDisplay_ = function () {
+    utils.updateDisplay_ = function() {
       if (extensionRemovable) return ogUpdateDisplay.call(this);
       const store = this.SPmbpCST_store || storeGet(this.procCode_);
       if (store.color && !this.isInsertionMarker()) {
         this.setColour(store.color);
         if (this.type === "procedures_prototype") {
           // Recolor argument reporters and the define block to the block color
+          // Disable branch inputs
           this.setColour(store.color);
           // ScratchBlocks ways of getting the parent block won't work while the blocks are being created
           queueMicrotask(() => {
@@ -551,6 +731,19 @@ V1.2
             defineBlock.setColour(store.color);
             syncFieldColors(defineBlock);
             for (const child of defineBlock.getDescendants(false, false)) {
+              if (store.inputs) {
+                const index = this.childBlocks_.findIndex((item) => item.id === child.id);
+                if (store.inputs[this.argumentIds_[index]]?.type === "brc") {
+                  child.setOutputShape(3);
+                  child.setNextStatement(false);
+                  child.setMovable(false);
+                  if (isPM) {
+                    child.setShadow(false);
+                    child.contextMenu = false;
+                  }
+                  child[targetProcData] = "branchDrag";
+                }
+              }
               if (recolorables.includes(child.type)) updateArgumentReporterColor(child, defineBlock);
             }
           });
@@ -593,6 +786,40 @@ V1.2
         if (savedNextConnect) savedNextConnect.connect(defineBlock.nextConnection);
       }
       ogUpdateDisplay.call(this);
+
+      // turn branch inputs into branches
+      // (doing it in attachShadow makes it not work on further updates)
+      if (store?.inputs && this.type !== "procedures_declaration") for (let i = this.inputList.length; i--;) {
+        const input = this.inputList[i];
+        if (input.type !== SB.NEXT_STATEMENT && store.inputs[input.name]?.type === "brc") {
+          // for Prototype blocks we just use a static square block as a visual representation
+          // this is done in 'argumentReporterSetParent'
+          if (this.type === "procedures_prototype") continue;
+          const connection = this.makeConnection_(SB.NEXT_STATEMENT);
+          const newInput = new SB.Input(SB.NEXT_STATEMENT, input.name, this, connection);
+
+          // Remove the old input...
+          if (input.connection && input.connection.isConnected()) {
+            input.connection.setShadowDom(null);
+            var block = input.connection.targetBlock();
+            if (block.isShadow()) block.dispose(); // Destroy any attached shadow block
+            else block.unplug(); // Disconnect any attached normal block
+          }
+          input.dispose();
+          // ...but replace it with the new one in place
+          // (calling removeInput() shifts all elements of inputList which is a bit slower)
+          if (isPM ? this.output_ : this.getReturn()) this.inputList.splice(i, 1);
+          else {
+            if (i) this.inputList[i] = newInput;
+            else {
+              // fix weird visual glitch with a branch as the first input
+              this.inputList[i] = this.appendDummyInput()
+              this.inputList.push(newInput);
+            }
+          }
+        }
+      }
+
       if (savedDefConnect) {
         savedDefConnect = defineBlock.getInput("custom_block").connection;
         (this.previousConnection || this.outputConnection).connect(savedDefConnect);
@@ -618,13 +845,13 @@ V1.2
     }
 
     const ogAttachShadow = utils.attachShadow_;
-    utils.attachShadow_ = function (input, argumentType) {
+    utils.attachShadow_ = function(input, argumentType) {
       if (extensionRemovable) return ogAttachShadow.call(this, input, argumentType);
-      // TODO use stored default values for V 1.2
       const store = this.SPmbpCST_store || storeGet(this.getProcCode());
       if (!store || !store.inputs || !store.inputs[input.name]) return ogAttachShadow.call(this, input, argumentType);
       const { opcode, fieldName, defaultValue } = getInputData(store.inputs[input.name]);
       if (!opcode) return ogAttachShadow.call(this, input, argumentType);
+      if (opcode === "brc") return; // branches are special
 
       // Add custom inputs
       const blockType = opcode;
@@ -646,31 +873,71 @@ V1.2
     };
     SB.Blocks["procedures_call"].attachShadow_ = utils.attachShadow_;
 
+    const ogPopArg = utils.populateArgumentOnCaller_;
+    utils.populateArgumentOnCaller_ = function(type, index, connectionMap, id, input) {
+      // https://github.com/TurboWarp/scratch-blocks/blob/develop/blocks_vertical/procedures.js#L445
+      var oldBlock = null, oldShadow = null;
+      if (connectionMap && (id in connectionMap)) {
+        var saveInfo = connectionMap[id];
+        oldBlock = saveInfo["block"];
+        oldShadow = saveInfo["shadow"];
+      }
+
+      if (connectionMap && oldBlock) {
+        // Reattach the old block and shadow DOM.
+        connectionMap[input.name] = null;
+        if (oldShadow === null && oldBlock.outputConnection === null) {
+          // this is a branch
+          const parent = input.connection.sourceBlock_;
+          if (isPM && this.output_) return;
+          const branchIndex = parent.inputList.indexOf(input);
+          parent.inputList[branchIndex].connection.type = 3;
+          parent.inputList[branchIndex].type = 3;
+          parent.inputList[branchIndex].connection.connect(oldBlock.previousConnection);
+        } else {
+          oldBlock.outputConnection.connect(input.connection);
+          if (type != "b" && this.generateShadows_) {
+            var shadowDom = oldShadow || this.buildShadowDom_(type);
+            input.connection.setShadowDom(shadowDom);
+          }
+        }
+      } else if (this.generateShadows_) {
+        this.attachShadow_(input, type);
+      }
+    };
+    SB.Blocks["procedures_call"].populateArgument_ = utils.populateArgumentOnCaller_;
+
     function updateArgumentReporterColor(block, defineBlock = null) {
       // Just stopped dragging (and dropping), update color according to the top define block
       if (extensionRemovable) return;
       if (!defineBlock) {
         defineBlock = block;
-        while (defineBlock?.getParent()) {
-          defineBlock = defineBlock?.getParent();
-        }
+        while (defineBlock?.getParent()) { defineBlock = defineBlock?.getParent() }
       }
-      if (defineBlock?.type.startsWith("procedures_definition")) block.setColour(defineBlock.getColour());
-      else block.setColour(...Object.values(SB.Colours.more));
+      if (defineBlock?.type.startsWith("procedures_definition")) {
+        if (block[targetProcData] === "branchDrag") {
+          if (isPM) block.setColour(defineBlock.colourSecondary_, defineBlock.colourSecondary_, defineBlock.colourTertiary_);
+          else block.setColour(defineBlock.getColour());
+        } else {
+          block.setColour(defineBlock.getColour());
+        }
+      } else {
+        block.setColour(...Object.values(SB.Colours.more));
+      }
       syncFieldColors(block);
     }
 
     const ogSetDragging = SB.BlockSvg.prototype.setDragging;
-    const argumentReporterSetDragging = function (adding) {
+    const argumentReporterSetDragging = function(adding) {
       if (!adding && !extensionRemovable && this.svgGroup_.classList.contains("blocklyDragging")) {
-        queueMicrotask(() => { updateArgumentReporterColor(this) });
+        queueMicrotask(() => updateArgumentReporterColor(this));
       }
       ogSetDragging.call(this, adding);
     };
     // this would run when the block is added to the workspace
     const ogSetParent = SB.BlockSvg.prototype.setParent;
-    const argumentReporterSetParent = function (newParent) {
-      if (newParent && !extensionRemovable) queueMicrotask(() => { updateArgumentReporterColor(this) });
+    const argumentReporterSetParent = function(newParent) {
+      if (newParent && !extensionRemovable) queueMicrotask(() => updateArgumentReporterColor(this));
       ogSetParent.call(this, newParent);
     };
 
@@ -680,7 +947,7 @@ V1.2
       SB.Blocks[opcode].setParent = argumentReporterSetParent;
     }
     try {
-      SB.Extensions.register("SPmbpCST_defineColored", function () {
+      SB.Extensions.register("SPmbpCST_defineColored", function() {
         this.setDragging = argumentReporterSetDragging;
         this.setParent = argumentReporterSetParent;
         updateArgumentReporterColor(this);
@@ -700,7 +967,7 @@ V1.2
     }
     // For the previous block when starting a drag of the current block
     const ogUnplug = SB.Block.prototype.unplug;
-    const procCallUnplug = function (opt_healStack) {
+    const procCallUnplug = function(opt_healStack) {
       if (extensionRemovable || this.isInsertionMarker() || this.getParent()?.isInsertionMarker()) return ogUnplug.call(this, opt_healStack);
       const parent = this.getParent();
       ogUnplug.call(this, opt_healStack);
@@ -711,32 +978,34 @@ V1.2
 
     // Copy the define block's argument color when dragging an argument reporter
     const oldDuplicateOnDrag_ = SB.Gesture.prototype.duplicateOnDrag_;
-    SB.Gesture.prototype.duplicateOnDrag_ = function () {
+    SB.Gesture.prototype.duplicateOnDrag_ = function() {
       const source = this.targetBlock_;
       oldDuplicateOnDrag_.call(this);
       const duplicated = this.targetBlock_;
-      if (source && duplicated && source.type.startsWith("argument_reporter_")) {
-        duplicated.setColour(source.getColour());
-      }
+      if (source && duplicated && source.type.startsWith("argument_reporter_")) duplicated.setColour(source.getColour());
     };
 
     // Patch Procedure Edit and Create to also open our Modal
     const procs = SB.Procedures;
     const ogCreateCall = procs.createProcedureDefCallback_;
     if (runtime.SPmbpCSTOldStorage === undefined) {
-      procs.createProcedureDefCallback_ = function (workspace) {
+      procs.createProcedureDefCallback_ = function(workspace) {
         const sharedWork = SB.mainWorkspace;
         ogCreateCall.call(this, workspace);
         openBlockMaker(sharedWork, false);
       };
       const ogEditCall = procs.editProcedureCallback_;
-      procs.editProcedureCallback_ = function (block) {
+      procs.editProcedureCallback_ = function(block) {
         if (block.type === "procedures_call") {
           const isGlobal = globalBlocksCache[block.procCode_];
           if (isGlobal && isGlobal.id !== vm.editingTarget.id) {
-            alert("Global Blocks can only be editted in their Sprite of Origin");
+            vm.once("workspaceUpdate", () => {
+              const blockId = vm.editingTarget.blocks.getProcedureDefinition(block.procCode_);
+              block = SB.mainWorkspace.getBlockById(blockId);
+              return procs.editProcedureCallback_.call(this, block);
+            });
             vm.setEditingTarget(isGlobal.id);
-            return;
+            return; 
           }
         }
         const sharedWork = SB.mainWorkspace;
@@ -747,8 +1016,9 @@ V1.2
     }
     // Patch Procedure Flyout to also interact with the extension
     const ogFlyoutCall = procs.flyoutCategory;
-    procs.flyoutCategory = function (workspace) {
+    procs.flyoutCategory = function(workspace) {
       const val = ogFlyoutCall.call(this, workspace);
+      if (val.length !== oldListLength) listNeedsRefresh = true;
       compileProcedures(val, workspace, procs);
       return val;
     }
@@ -761,7 +1031,7 @@ V1.2
 
     const Blocks = target.blocks.constructor;
     const oldGetProcDef = Blocks.prototype.getProcedureDefinition;
-    Blocks.prototype.getProcedureDefinition = function (name) {
+    Blocks.prototype.getProcedureDefinition = function(name) {
       const thisDef = oldGetProcDef.call(this, name);
       if (!thisDef && globalBlocksCache[name] && globalBlocksCache[name].blocks !== this) {
         return globalBlocksCache[name].blocks.getProcedureDefinition(name);
@@ -769,7 +1039,7 @@ V1.2
       return thisDef;
     }
     const oldGetBlock = Blocks.prototype.getBlock;
-    Blocks.prototype.getBlock = function (name) {
+    Blocks.prototype.getBlock = function(name) {
       const thisBlock = oldGetBlock.call(this, name);
       if (thisBlock) return thisBlock;
       for (const target of this.runtime.targets) {
@@ -780,7 +1050,7 @@ V1.2
       return undefined;
     }
     const oldGetBranch = Blocks.prototype.getBranch;
-    Blocks.prototype.getBranch = function (id, branchNum) {
+    Blocks.prototype.getBranch = function(id, branchNum) {
       const thisBlock = oldGetBranch.call(this, id, branchNum);
       if (thisBlock) return thisBlock;
       for (const target of this.runtime.targets) {
@@ -791,7 +1061,7 @@ V1.2
       return undefined;
     }
     const oldPopProcCache = Blocks.prototype.populateProcedureCache;
-    Blocks.prototype.populateProcedureCache = function () {
+    Blocks.prototype.populateProcedureCache = function() {
       if (this._cache.proceduresPopulated) return;
       refreshGlobalBlocksCache();
       oldPopProcCache.call(this);
@@ -803,15 +1073,45 @@ V1.2
         this._cache.procedureParamNames[proccode] = target.blocks._cache.procedureParamNames[proccode];
         this._cache.procedureDefinitions[proccode] = target.blocks._cache.procedureDefinitions[proccode];
       }
+    };
+    const oldGetInputs = Blocks.prototype.getInputs;
+    Blocks.prototype.getInputs = function(block) {
+      if (block.opcode !== "procedures_call") return oldGetInputs.call(this, block);
+
+      if (typeof block === "undefined") return null;
+      let inputs = this._cache.inputs[block.id];
+      if (typeof inputs !== "undefined") {
+          return inputs;
+      }
+
+      let storeTarget = vm.editingTarget;
+      for (const target of this.runtime.targets) {
+        if (!target.isOriginal || target.blocks !== this) continue;
+        storeTarget = target;
+        break;
+      }
+      
+      const store = storeGet(block.mutation.proccode, storeTarget);
+      inputs = {};
+      for (const input in block.inputs) {
+          // Ignore blocks prefixed with branch prefix, and custom branch inputs.
+          if (input.substring(0, Blocks.BRANCH_INPUT_PREFIX.length) !== Blocks.BRANCH_INPUT_PREFIX
+            && !(store.inputs[input] && store.inputs[input].type === "brc")) {
+              inputs[input] = block.inputs[input];
+          }
+      }
+      this._cache.inputs[block.id] = inputs;
+      return inputs;
     }
   }
   patchTarget();
 
   const oldToJSON = vm.constructor.prototype.toJSON;
-  vm.constructor.prototype.toJSON = function (...args) {
+  vm.constructor.prototype.toJSON = function(...args) {
     if (extensionRemovable) return oldToJSON.apply(this, args);
     if (!isPM) {
       // penguinmod automatically does this
+      suspendRemoval = false;
       removeUnusedProcs();
       ext?.serialize();
     }
@@ -831,7 +1131,7 @@ V1.2
   }
 
   const oldGetOpcode = runtime.getOpcodeFunction;
-  runtime.constructor.prototype.getOpcodeFunction = function (opcode) {
+  runtime.constructor.prototype.getOpcodeFunction = function(opcode) {
     if (opcode === "procedures_call") return patchedCallFunc;
     return oldGetOpcode.call(this, opcode);
   }
@@ -842,9 +1142,15 @@ V1.2
     const stackFrame = util.stackFrame;
     const isReporter = !!args.mutation.return;
     if (stackFrame.executed) {
+      const thread = util.thread;
+      if (thread.isMBPPatched) {
+        // patch this function for the thread
+        thread.isMBPPatched = undefined;
+        thread.goToNextBlock = thread[targetProcData].ogNext;
+      }
       if (isReporter) {
         const returnValue = stackFrame.returnValue;
-        const threadStackFrame = util.thread.peekStackFrame();
+        const threadStackFrame = thread.peekStackFrame();
         threadStackFrame.params = null;
         delete stackFrame.returnValue;
         delete stackFrame.executed;
@@ -877,23 +1183,29 @@ V1.2
     }
 
     stackFrame.executed = true;
+    const frame = util.thread.peekStackFrame();
     if (isReporter) {
-      util.thread.peekStackFrame().waitingReporter = true;
+      frame.waitingReporter = true;
       stackFrame.returnValue = "";
     }
+    util.thread[targetProcData] = {
+      ogNext: util.thread.goToNextBlock,
+      block: frame.op, frame,
+      params: paramNamesIdsAndDefaults
+    };
     util.startProcedure({ proc: procedureCode, isGlobal });
   };
 
   const oldStep2Proc = runtime.sequencer.stepToProcedure;
-  runtime.sequencer.constructor.prototype.stepToProcedure = function (thread, procedureCode) {
+  runtime.sequencer.constructor.prototype.stepToProcedure = function(thread, procedureCode) {
     if (procedureCode.isGlobal === undefined) oldStep2Proc.call(this, thread, procedureCode.proc);
     else {
       const target = procedureCode.isGlobal;
       const def = target.blocks.getProcedureDefinition(procedureCode.proc);
       if (!def) return;
-      if (thread.isPatched === undefined) {
+      if (thread.isMBPPatched === undefined) {
         // patch this function for the thread
-        thread.isPatched = true;
+        thread.isMBPPatched = true;
         thread.goToNextBlock = () => {
           thread.reuseStackForNextBlock(target.blocks.getNextBlock(thread.peekStack()));
         };
@@ -919,6 +1231,7 @@ V1.2
   // Internals
   // Remove unused procedures before saving
   function removeUnusedProcs() {
+    if (suspendRemoval) return;
     for (const target of runtime.targets) {
       for (const proccode of Object.keys(storage[target.id] || {})) {
         if (!target.blocks.getProcedureDefinition(proccode)) delete storage[target.id][proccode];
@@ -927,17 +1240,73 @@ V1.2
   }
 
   // Is-in-Editor Checker
-  let startedListenerWorker = false;
-  function startListenerWorker() {
+  let startedEditorWorker = false;
+  function startEditorListener() {
     refreshGlobalBlocksCache();
-    if (startedListenerWorker) return;
-    startedListenerWorker = false;
+    if (startedEditorWorker) return;
+    startedEditorWorker = false;
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const workspace = SB.mainWorkspace;
       if (!isPM) workspace.enableProcedureReturns();
-      vm.on("workspaceUpdate", () => { if (!extensionRemovable) SB.Procedures.flyoutCategory(workspace) });
+      vm.on("workspaceUpdate", () => {
+        if (!extensionRemovable) {
+          listNeedsRefresh = true;
+          SB.Procedures.flyoutCategory(workspace);
+        }
+      });
     });
   }
+
+  // Block Events Handler
+  function initBlockEvents() {
+    if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+      const { Events, mainWorkspace } = SB;
+      let patched = false;
+      const workspaceEvents = (e) => {
+        if (mainWorkspace.id === e.workspaceId) {
+          if (!isPM && !patched) {
+            const ogReturnsWillChange = mainWorkspace.procedureReturnsWillChange;
+            mainWorkspace.procedureReturnsWillChange = function() {
+              ogReturnsWillChange.call(this);
+              listNeedsRefresh = true;
+              patched = true;
+            }
+          }
+          switch (e.type) {
+            case Events.DELETE: {
+              const block = mainWorkspace.getBlockById(e.blockId);
+              if (block && block.type.startsWith("procedures_definition") && !isPM) removeUnusedProcs();
+              break;
+            }
+            case Events.MOVE: {
+              const block = mainWorkspace.getBlockById(e.blockId);
+              const parent = mainWorkspace.getBlockById(e.newParentId);
+              if (
+                e.newInputName && block.category_ === null &&
+                block.inputList[0].fieldRow[0].arrow_ !== undefined &&
+                parent?.type === "procedures_call"
+              ) block.setColour(parent.colour_);
+              break;
+            }
+          }
+        }
+      };
+      mainWorkspace.addChangeListener(workspaceEvents);
+    });
+  }
+  function startBlockListener() {
+    const checkInEditor = () => !ReduxStore.getState().scratchGui.mode.isPlayerOnly;
+    let inEditor = checkInEditor();
+    if (inEditor) initBlockEvents();
+    ReduxStore.subscribe(() => {
+      const currentInEditor = checkInEditor();
+      if (inEditor !== currentInEditor) {
+        inEditor = currentInEditor;
+        if (inEditor) initBlockEvents();
+      }
+    });
+  }
+  if (typeof scaffolding === "undefined") startBlockListener();
 
   // Custom Blocks Internals
   function storeGet(name, target = null) {
@@ -962,18 +1331,22 @@ V1.2
   function deserializeStorage(data) {
     if (isPM) {
       storage = data.SPmbpCST || {};
+      startEditorListener();
       if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
         runtime.once("PROJECT_LOADED", () => SB.Procedures.flyoutCategory(SB.mainWorkspace));
       });
     } else {
+      suspendRemoval = true;
       storage = {}; // target ID's change when saving :(
       for (let i = 0; i < runtime.targets.length; i++) {
         const target = runtime.targets[i];
         const store = target.extensionStorage?.SPmbpCST;
         if (store !== undefined) storage[target.id] = { ...store };
       }
-      runtime.SPmbpCSTOldStorage = storage;
-      startListenerWorker();
+      const tempStore = structuredClone(storage);
+      runtime.SPmbpCSTOldStorage = tempStore;
+      startEditorListener();
+      vm.once("workspaceUpdate", () => { storage = tempStore });
       vm.emitWorkspaceUpdate();
       if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
         SB.Procedures.flyoutCategory(SB.mainWorkspace);
@@ -1008,44 +1381,57 @@ V1.2
   }
 
   function compileProcedures(xmlList, workspace, utils) {
-    xmlList = xmlList.filter(o => o.getAttribute("type") === "procedures_call");
+    if (!listNeedsRefresh) return;
     const returnables = isPM ? {} : utils.getAllProcedureReturnTypes(workspace);
-
     refreshGlobalBlocksCache();
-    const globalProcs = Object.keys(globalBlocksCache);
-    for (let i = xmlList.length; i--;) {
-      const proc = xmlList[i].querySelector("mutation").getAttribute("proccode");
-      if (globalProcs.indexOf(proc) > -1) xmlList.splice(i, 1);
-    }
-    proceduresXML = xmlList.map(o => o.outerHTML).join("");
 
-    if (globalProcs.length > 0) {
+    // get private procedures
+    proceduresXML = "";
+    const globalProcs = new Set(Object.keys(globalBlocksCache));
+    const tempCache = {};
+    oldListLength = xmlList.length;
+    for (let i = 0; i < oldListLength; i++) {
+      const proc = xmlList[i];
+      if (proc.getAttribute("type") === "procedures_call") {
+        const proccode = proc.firstChild.getAttribute("proccode");
+        if (globalProcs.has(proccode)) tempCache[proccode] = proc.outerHTML;
+        else proceduresXML += proc.outerHTML;
+      }
+    }
+
+    if (globalProcs.size > 0) {
       let tempList = `<sep gap="12"/><label text="Global Blocks"/><sep gap="6"/>`;
       for (const proccode of globalProcs) {
         const target = globalBlocksCache[proccode];
+        if (target.id === vm.editingTarget?.id) {
+          tempList += tempCache[proccode];
+          continue;
+        }
+
         if (target[targetProcData] === undefined) target[targetProcData] = {};
         if (target[targetProcData][proccode] === undefined) target[targetProcData][proccode] = {};
         const proto = getBlockPrototype(target, proccode);
         if (proto) {
           const space = target[targetProcData][proccode];
-          const pure = document.createElement("block");
-          pure.setAttribute("type", "procedures_call");
-          pure.setAttribute("gap", "12");
-          pure.innerHTML = target.blocks.mutationToXML(proto.mutation);
+
+          const newMutation = {...proto.mutation};
+          newMutation.generateshadows = true;
           if (!isPM) {
             if (space.return === undefined) space.return = returnables[proccode] ?? 0;
             else {
               if (returnables[proccode] !== undefined && space.return !== returnables[proccode])
                 space.return = returnables[proccode];
             }
+            newMutation.return = space.return;
           }
-          tempList += pure.outerHTML.replace("<mutation", `<mutation generateshadows="true" ${isPM ? "" : `return="${space.return}"`}`);
+          tempList += `<block type="procedures_call" gap="12">${target.blocks.mutationToXML(newMutation)}</block>`;
         }
       }
       tempList += `<sep gap="6"/><label text="Private Blocks"/><sep gap="6"/>`;
       proceduresXML = tempList + proceduresXML;
     }
-    vm.extensionManager.refreshBlocks();
+    vm.extensionManager.refreshBlocks("SPmbpCST");
+    listNeedsRefresh = false;
   }
 
   function removeExtension() {
@@ -1074,7 +1460,7 @@ V1.2
   }
 
   const oldinstallTargets = vm.installTargets;
-  vm.installTargets = function (...args) {
+  vm.installTargets = function(...args) {
     // Remove the dummy block
     if (args[0] && args[0][0]) {
       const tempBlockId = Object.values(args[0][0].blocks._blocks).find(o => o.opcode === TEMP_BLOCK_OPCODE)?.id;
@@ -1084,7 +1470,7 @@ V1.2
   }
 
   class SPmbpCST {
-    constructor() { }
+    constructor() {}
     getInfo() {
       return {
         id: "SPmbpCST",
@@ -1116,6 +1502,16 @@ V1.2
             },
           },
           {
+            opcode: "evalParam",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "reevaluate [PARAM]",
+            extensions: ["SPmbpCST_defineColored"],
+            hideFromPalette: extensionRemovable,
+            arguments: {
+              PARAM: { type: Scratch.ArgumentType.STRING, menu: "procedureParamMenu" }
+            },
+          },
+          {
             opcode: "getParam",
             blockType: Scratch.BlockType.REPORTER,
             text: "get [PARAM]",
@@ -1124,6 +1520,17 @@ V1.2
             hideFromPalette: extensionRemovable,
             arguments: {
               PARAM: { type: Scratch.ArgumentType.STRING, defaultValue: "parameter name" }
+            },
+          },
+          {
+            opcode: "runBranch",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "start branch [INDEX] [ICON]",
+            extensions: ["SPmbpCST_defineColored"],
+            hideFromPalette: extensionRemovable,
+            arguments: {
+              INDEX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
+              ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: guiURIs("branchStart") }
             },
           },
           {
@@ -1148,8 +1555,37 @@ V1.2
     }
 
     removeExt() {
-      if (confirm('Remove this extension? This will remove all "set parameter" and "get parameter" blocks, as well as reset any custom block colors and extra inputs.'))
+      if (confirm("Remove this extension? This will remove all new features attributed to My Blocks+"))
         removeExtension();
+    }
+
+    getProcedureParamMenu() {
+      if (
+        !ScratchBlocks || !ScratchBlocks.selected || ScratchBlocks.selected.isInFlyout ||
+        (ScratchBlocks.selected.type !== "SPmbpCST_setParam" && ScratchBlocks.selected.type !== "SPmbpCST_evalParam")
+      ) return ["parameter name"];
+      let topBlock = ScratchBlocks.selected, parent = null;
+      while ((parent = topBlock?.getParent())) { topBlock = parent }
+      if (!topBlock || !topBlock.type.startsWith("procedures_definition")) return ["(not in a define script!)"];
+      const innerBlock = topBlock.getInput("custom_block")?.connection?.targetBlock();
+      if (!innerBlock || !innerBlock.type == "procedures_prototype") return ["(invalid define block!)"];
+
+      if (innerBlock.displayNames_.length) {
+        const store = storeGet(innerBlock.procCode_);
+        if (!store || !store.inputs) return innerBlock.displayNames_;
+        else {
+          const names = structuredClone(innerBlock.displayNames_);
+          const allInputs = Object.entries(store.inputs);
+          for (let i = 0; i < allInputs.length; i++) {
+            if (allInputs[i][1].type === "brc") {
+              const index = innerBlock.argumentIds_.indexOf(allInputs[i][0]);
+              names.splice(index, 1);
+            }
+          }
+          return names.length ? names : [""];
+        }
+      }
+      return [""];
     }
 
     setParam(args, util) {
@@ -1171,28 +1607,63 @@ V1.2
       thread.stack[0] = "";
     }
 
+    evalParam(args, util) {
+      if (!Thread || !execute) {
+        console.error("My Blocks+ could not access Exports!");
+        return;
+      }
+
+      const thread = util.thread;
+      if (!thread[targetProcData]) return;
+
+      const { params, block, frame } = thread[targetProcData];
+      const param = Scratch.Cast.toString(args.PARAM);
+      const index = params[0].indexOf(param);
+      if (index === -1) return;
+
+      const blockValue = block.inputs[params[1][index]];
+      if (!blockValue) return;
+
+      const tempThread = new Thread;
+      tempThread.topBlock = blockValue.block;
+      tempThread.pushStack(blockValue.block)
+      tempThread.blockContainer = thread.blockContainer;
+      tempThread.target = thread.target;
+      tempThread.pushReportedValue = (value) => { frame.params[param] = value };
+      execute(runtime.sequencer, tempThread);
+    }
+
     getParam(args, util) {
       const param = util.thread.getParam(Scratch.Cast.toString(args.PARAM));
       return param ?? "";
     }
 
-    getProcedureParamMenu() {
-      if (
-        !ScratchBlocks || !ScratchBlocks.selected || ScratchBlocks.selected.isInFlyout || ScratchBlocks.selected.type !== "SPmbpCST_setParam"
-      ) return ["parameter name"];
-      let topBlock = ScratchBlocks.selected, parent = null;
-      while ((parent = topBlock?.getParent())) {
-        topBlock = parent;
+    runBranch(args, util) {
+      const thread = util.thread;
+      if (!util.thread[targetProcData]) return;
+
+      const procBlock = util.thread[targetProcData].block;
+      const store = storeGet(procBlock.mutation.proccode, thread.target);
+      if (!store || !store.inputs) return;
+
+      const allInputs = util.thread[targetProcData].params[1];
+      const branches = [];
+      for (let i = 0; i < allInputs.length; i++) {
+        if (store.inputs[allInputs[i]]?.type === "brc") branches.push(allInputs[i]);
       }
-      if (!topBlock || !topBlock.type.startsWith("procedures_definition")) return ["(not in a define script!)"];
-      const innerBlock = topBlock.getInput("custom_block")?.connection?.targetBlock();
-      if (!innerBlock || !innerBlock.type == "procedures_prototype") return ["(invalid define block!)"];
-      return innerBlock.displayNames_.length ? innerBlock.displayNames_ : [""];
+
+      if (branches.length > 0) {
+        const index = Scratch.Cast.toNumber(args.INDEX) - 1;
+        const realProcBlock = thread.blockContainer.getBlock(procBlock.id);
+        const branch = realProcBlock.inputs[branches[index]]?.block;
+        if (branch) util.thread.pushStack(branch);
+      }
     }
 
     // Storage set/get
     serialize() {
       if (isPM) {
+        suspendRemoval = false;
         removeUnusedProcs();
         return { SPmbpCST: storage };
       } else {
