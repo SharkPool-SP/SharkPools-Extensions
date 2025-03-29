@@ -91,7 +91,7 @@ function addBtnBehaviours() {
 function genTag(type) {
   const tag = document.createElement("img");
   tag.classList.add("ext-tag");
-  tag.rngData = Math.random() * 1.5 + 1.5);
+  tag.rngData = Math.random() * 1.5 + 1.5;
   tag.src = `Gallery%20Files/main-assets/ext-${type}.svg`;
   return tag;
 }
