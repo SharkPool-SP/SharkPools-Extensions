@@ -1,13 +1,14 @@
-let tagUpdateLoop = false;
+let _tagCache = [];
 
 function displayExts(json, optDontFade) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
 
-  let tags = []; shouldSplit = currentTag === "all";
+  let tagsHadCache = _tagCache.length, shouldSplit = currentTag === "all";
   const main = document.createElement("div");
   main.classList.add("ext-div");
 
+  _tagCache = [];
   Object.entries(json).forEach((item) => {
     const name = item[0], info = item[1];
 
@@ -41,7 +42,7 @@ function displayExts(json, optDontFade) {
 
     /* Tag Setup */
     const tag = info.status ? genTag(info.status) : "";
-    if (tag) tags.push(tag);
+    if (tag) _tagCache.push(tag);
 
     const holderDiv = document.createElement("div");
     if (name !== "override404") holderDiv.classList.add("ext-holder");
@@ -77,21 +78,19 @@ function displayExts(json, optDontFade) {
     });
   });
   document.body.appendChild(main);
-  tagUpdateLoop = false;
-  updateTags(tags);
+  if (tagsHadCache) updateTags();
 }
 
-function updateTags(tags) {
+function updateTags() {
   let timer = 0;
   const animate = () => {
-    for (let i = 0; i < tags.length; i++) {
+    for (let i = 0; i < _tagCache.length; i++) {
       const tag = tags[i];
       const rng = tag.rngData;
       tag.style.transform = `scale(${(Math.sin(timer * rng) * .05) + .65}) rotate(${Math.cos(timer * rng) * .15}rad)`;
     }
     timer += 0.02;
-    if (tagUpdateLoop) requestAnimationFrame(animate);
-    else tagUpdateLoop = true;
+    requestAnimationFrame(animate);
   };
   animate();
 }
