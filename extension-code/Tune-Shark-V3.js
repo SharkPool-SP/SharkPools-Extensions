@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.4.25
+// Version V.3.4.26
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -73,6 +73,7 @@
 
   class SPtuneShark3 {
     constructor() {
+      /* Deprecation Marker */
       this.loadStorage = function (storage) {
         if (storage === undefined) return;
         settings = storage.settings;
@@ -151,6 +152,7 @@
           this.loadStorage(runtime.extensionStorage["SPtuneShark3"])
         );
       }
+      /* Marker End */
 
       runtime.on("PROJECT_START", () => {
         if (settings.flagCtrl) this.ctrlSounds({ CONTROL: "stop" });
@@ -242,12 +244,6 @@
             },
           },
           {
-            opcode: "convertSound", blockType: Scratch.BlockType.COMMAND,
-            text: "convert sound [NAME1] from URL to URI and save to [NAME2]",
-            blockIconURI: extraIcons.set, hideFromPalette: true, // deprecated
-            arguments: { NAME1: { type: Scratch.ArgumentType.STRING }, NAME2: { type: Scratch.ArgumentType.STRING } },
-          },
-          {
             opcode: "bindSound",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("[TYPE] sound [NAME2] and sound [NAME]"),
@@ -262,15 +258,6 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: Scratch.translate("MySound2"),
               },
-            },
-          },
-          {
-            opcode: "save2Project",
-            blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("[SAVE] all sounds to project"),
-            blockIconURI: extraIcons.set,
-            arguments: {
-              SAVE: { type: Scratch.ArgumentType.STRING, menu: "saveMenu" },
             },
           },
           {
@@ -552,11 +539,6 @@
           },
           "---",
           {
-            opcode: "setThing", blockType: Scratch.BlockType.COMMAND, hideFromPalette: true, // deprecated
-            text: "set [TYPE] of sound [NAME] to [VALUE]",
-            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" }, TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffects" }, VALUE: { type: Scratch.ArgumentType.NUMBER } },
-          },
-          {
             opcode: "setThingNew",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("set [TYPE] of sound [NAME] to [VALUE]"),
@@ -734,9 +716,30 @@
               CUT_HIGH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
             },
           },
+          /* Deprecation Marker */
+          {
+            opcode: "save2Project", blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[SAVE] all sounds to project"),
+            blockIconURI: extraIcons.set, hideFromPalette: true,
+            arguments: { SAVE: { type: Scratch.ArgumentType.STRING, menu: "saveMenu" } },
+          },
+          {
+            opcode: "convertSound", blockType: Scratch.BlockType.COMMAND,
+            text: "convert sound [NAME1] from URL to URI and save to [NAME2]",
+            blockIconURI: extraIcons.set, hideFromPalette: true,
+            arguments: { NAME1: { type: Scratch.ArgumentType.STRING }, NAME2: { type: Scratch.ArgumentType.STRING } },
+          },
+          {
+            opcode: "setThing", blockType: Scratch.BlockType.COMMAND, hideFromPalette: true,
+            text: "set [TYPE] of sound [NAME] to [VALUE]",
+            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "MySound" }, TYPE: { type: Scratch.ArgumentType.STRING, menu: "singleEffects" }, VALUE: { type: Scratch.ArgumentType.NUMBER } },
+          },
+          /* Marker End */
         ],
         menus: {
-          singleEffects: simpleEffects, // deprecated
+          /* Deprecation Marker */
+          singleEffects: simpleEffects,
+          /* Marker End */
           saveMenu: [
             { text: Scratch.translate("save"), value: "save" },
             { text: Scratch.translate("dont save"), value: "dont save" },
@@ -1105,23 +1108,6 @@
       }
     }
 
-    async convertSound(args, util) {
-      const sound = soundBank[args.NAME1];
-      if (sound === undefined) return;
-      try {
-        const response = await Scratch.fetch(sound.src);
-        const audioBlob = await response.blob();
-        const audioDataURL = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(audioBlob);
-        });
-        await this.importURL({ NAME: args.NAME2, URL: audioDataURL }, util);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
     bindSound(args) {
       const sound1 = soundBank[args.NAME];
       const sound2 = soundBank[args.NAME2];
@@ -1465,7 +1451,6 @@
       this.fixAudioNodes(ctx.sourceNode, sound);
     }
 
-    setThing(args) { this.setThingNew(args) }
     setThingNew(args) {
       const sound = soundBank[args.NAME];
       if (sound === undefined) return;
@@ -1606,6 +1591,24 @@
       this.updateEffect(equalizer, sound, "EQUALIZER", args);
     }
 
+    /* Deprecation Marker */
+    // PenguinMod Storage
+    serialize() {
+      if (settings.canSave) {
+        const convertedBank = {};
+        Object.entries(soundBank).forEach((item) => {
+          const soundData = {};
+          Object.entries(item[1]).forEach((data) => {
+            if (data[0] !== "context") soundData[data[0]] = data[1];
+          });
+          convertedBank[item[0]] = soundData;
+        });
+        return { SPtuneShark3: { bank: convertedBank, settings } };
+      }
+    }
+    deserialize(data) {
+      this.loadStorage(data.SPtuneShark3);
+    }
     save2Project(args) {
       settings.canSave = args.SAVE === "save";
       if (!Scratch.extensions.isPenguinMod) {
@@ -1627,25 +1630,24 @@
         }
       }
     }
-
-    // PenguinMod Storage
-    serialize() {
-      if (settings.canSave) {
-        const convertedBank = {};
-        Object.entries(soundBank).forEach((item) => {
-          const soundData = {};
-          Object.entries(item[1]).forEach((data) => {
-            if (data[0] !== "context") soundData[data[0]] = data[1];
-          });
-          convertedBank[item[0]] = soundData;
+    async convertSound(args, util) {
+      const sound = soundBank[args.NAME1];
+      if (sound === undefined) return;
+      try {
+        const response = await Scratch.fetch(sound.src);
+        const audioBlob = await response.blob();
+        const audioDataURL = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(audioBlob);
         });
-        return { SPtuneShark3: { bank: convertedBank, settings } };
+        await this.importURL({ NAME: args.NAME2, URL: audioDataURL }, util);
+      } catch (e) {
+        console.error(e);
       }
     }
-
-    deserialize(data) {
-      this.loadStorage(data.SPtuneShark3);
-    }
+    setThing(args) { this.setThingNew(args) }
+    /* Marker End */
   }
 
   Scratch.extensions.register(new SPtuneShark3());

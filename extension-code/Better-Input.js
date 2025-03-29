@@ -547,7 +547,7 @@
               INFO: { type: Scratch.ArgumentType.STRING, menu: "boxInfo" }
             },
           },
-          //deprecated
+          /* Deprecation Marker */
           {
             opcode: "setGradient", blockType: Scratch.BlockType.COMMAND,
             text: "set [COLOR_TYPE] color to gradient with [COLOR1] and [COLOR2] with direction [DIR]",
@@ -573,10 +573,12 @@
           }, {
             opcode: "getMaxCount", blockType: Scratch.BlockType.REPORTER, hideFromPalette: true, text: "box limit"
           }
+          /* Marker End */
         ],
         menus: {
+          /* Deprecation Marker */
           enableMenu: { acceptReporters: true, items: ["Button 2", "Button 3", "Button 4", "Textbox Shadow"] },
-          // ^ Old Menu ^ (Needed for V2 Support)
+          /* Marker End */
           fontMenu: { acceptReporters: true, items: "allFonts" },
           buttonMenu: {
             acceptReporters: true,
@@ -1346,12 +1348,13 @@
 
     getUIOrder() { return JSON.stringify(this.uiOrder) }
 
-    // deprecated
+    /* Deprecation Marker */
     setEnable() { throw new Error("This Block has been removed since Better Input V3. Please use the New Powerful Blocks") }
     getBoxCount() { return this.askBoxInfo[0] }
     getMaxCount() { return this.askBoxInfo[1] }
     setGradient(t){if("Input Box"===t.COLOR_TYPE)throw Error("As of Better Input V4, this Option no Longer Works");let i=this.findGradientType(t.COLOR_TYPE),e=`linear-gradient(${t.DIR-90}deg, ${t.COLOR2}, ${t.COLOR1})`;"button"!==i[0]?this[i][0]=e:this.buttonJSON[i[1]].color=e,this.activeOverlays.forEach(t=>{this.updateOverlay(t)})}
     setCircleGradient(t){let i=this.findGradientType(t.COLOR_TYPE),e=[t.X+50,t.Y+50],n=`radial-gradient(circle at ${e[0]}% ${e[1]}%, ${t.COLOR2}, ${t.COLOR1})`;"button"!==i[0]?this[i][0]=n:this.buttonJSON[i[1]].color=n,this.activeOverlays.forEach(t=>{this.updateOverlay(t)})}
+    /* Marker End */
   }
 
   Scratch.extensions.register(new BetterInputSP());

@@ -742,6 +742,7 @@
               },
             },
           },
+          /* Deprecation Marker */
           {
             opcode: "scaleImage",
             blockType: Scratch.BlockType.COMMAND,
@@ -749,6 +750,7 @@
             hideFromPalette: true,
             arguments: { SCALE: { type: Scratch.ArgumentType.NUMBER } }
           },
+          /* Marker End */
           {
             opcode: "borderTypeSet",
             blockType: Scratch.BlockType.COMMAND,
@@ -1307,7 +1309,9 @@
       return selectorOptions[args.THING];
     }
 
+    /* Deprecation Marker */
     scaleImage() { /* deprecated */ }
+    /* Marker End */
     imageSet(args) {
       Scratch.canFetch(encodeURI(args.IMG)).then((canFetch) => {
         if (canFetch) {

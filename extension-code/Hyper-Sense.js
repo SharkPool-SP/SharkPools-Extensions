@@ -2,6 +2,7 @@
 // ID: HyperSenseSP
 // Description: Cool New Sensing Blocks
 // By: SharkPool
+// License: MIT
 
 // Version 3.0.22
 
@@ -393,7 +394,7 @@
               DRAG: { type: Scratch.ArgumentType.STRING, menu: "DRAG_TYPE" }
             },
           },
-          // Depreciated
+          /* Deprecation Marker */
           {
             opcode: "toggleMicrophone", blockType: Scratch.BlockType.COMMAND,
             text: "toggle microphone to [STATE]", hideFromPalette: true,
@@ -404,6 +405,7 @@
             text: "scroll wheel distance limited from [MIN] to [MAX]", hideFromPalette: true,
             arguments: { MIN: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }, MAX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 } },
           }
+          /* Marker End */
         ],
         menus: {
           TARGETS: { acceptReporters: true, items: this._getTargets(true, false) },
@@ -762,9 +764,10 @@
       return false;
     }
 
-    // Depreciated
-    toggleMicrophone() { console.warn("Depreciated Block") }
+    /* Deprecation Marker */
+    toggleMicrophone() { console.warn("Deprecated Block") }
     monitorScrollWheelLimited(args) { return Math.max(Math.min(scrollDist, Scratch.Cast.toNumber(args.MAX)), Scratch.Cast.toNumber(args.MIN)) }
+    /* Marker End */
   }
 
   Scratch.extensions.register(new HyperSenseSP());

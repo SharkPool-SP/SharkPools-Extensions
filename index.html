@@ -9,6 +9,10 @@
         document.head.appendChild(base);
       }
     </script>
+    <script type="module">
+      // Import the Terser Library for Code Compression
+      import("https://cdn.jsdelivr.net/npm/terser@5.30.0/+esm").then(module => window.Terser = module);
+    </script>
     <base href="https://sharkpools-extensions.vercel.app/">
     <meta charset="utf-8">
 
@@ -21,7 +25,7 @@
     <link rel="icon" href="Gallery%20Files/main-assets/SP.svg">
     <link href="pages/css/main.css" rel="stylesheet">
     <link href="pages/css/custom-scroller.css" rel="stylesheet">
-    <link href="pages/css/search-ui.css" rel="stylesheet">
+    <link href="pages/css/panel-ui.css" rel="stylesheet">
 
     <!-- Lilita One Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +44,7 @@
       <img class="toSP" draggable="false" src="Gallery%20Files/main-assets/SP.svg" onclick="window.open('https://www.youtube.com/channel/UC26hvmetqYgNB3oFewV_gtg')">
     </div>
     <div class="innerNav">
-      <img class="navImg" id="fileType" draggable="false" src="Gallery%20Files/main-assets/download.svg">
+      <img class="navImg" id="settings" draggable="false" src="Gallery%20Files/main-assets/settings.svg">
       <div class="tagBar">
         <div class="tag" id="all">All</div>
         <div class="tag" id="expanded">Expanded</div>
@@ -51,6 +55,12 @@
         <div class="tag" id="search"><img width="30" draggable="false" src="Gallery%20Files/main-assets/search.svg"></div>
       </div>
       <img class="navImg" id="contributors" draggable="false" src="Gallery%20Files/main-assets/contributors.svg">
+    </div>
+    <div class="innerNav">
+      <button class="donateBtn">
+        <img src="https://www.paypalobjects.com/marketing/web/logos/paypal-mark-color.svg" width="25px">
+        Donate to SharkPool
+      </button>
     </div>
     <script src="pages/scripts/extension-generator.js" defer=""></script>
     <script src="pages/scripts/contributor-generator.js" defer=""></script>

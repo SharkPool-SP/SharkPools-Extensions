@@ -1,5 +1,6 @@
 let isPenguinMod = false, inCredits = false;
 let currentTag = "all", downloadType = "download";
+let compress = false, eraseDeprecation = false;
 let galleryData = {}, pins = [];
 
 /* Storage */
@@ -14,58 +15,57 @@ function getCleanStorage() {
     localStorage.removeItem("SPgalleryInfo");
   }
   currentTag = store.tag || "all";
-  downloadType = store.downloadType === "download" ? "download" : "clipboard";
-  document.querySelector(`img[class="navImg"]`).src = `Gallery%20Files/main-assets/${downloadType}.svg`;
-  if (store.pinnedExts && store.pinnedExts?.constructor?.name === "Array") pins = store.pinnedExts || [];
+  downloadType = store.downloadType || "download";
+  compress = store.compress ?? false;
+  eraseDeprecation = store.eraseDeprecation ?? false;
+  if (store.pinnedExts && Array.isArray(store.pinnedExts)) pins = store.pinnedExts;
 }
 
 function updateStorage() {
   localStorage.setItem("SPgalleryInfo", JSON.stringify({
-    tag: currentTag, pinnedExts: pins, downloadType
+    tag: currentTag, pinnedExts: pins,
+    downloadType, compress, eraseDeprecation
   }));
 }
 
 /* Button Functionality */
 function addBtnBehaviours() {
-  const navBtns = document.querySelectorAll(`img[class="navImg"]`);
-  const extDwnload = navBtns[0]; // file type
-  extDwnload.addEventListener("click", (e) => {
-    removeText();
-    downloadType = downloadType === "clipboard" ? "download" : "clipboard";
-    extDwnload.src = `Gallery%20Files/main-assets/${downloadType}.svg`;
-    extDwnload.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
-    extDwnload.style.transform = "scale(1.1)";
-    updateStorage();
+  /* Donate Button */
+  const donateBtn = document.querySelector(`button[class="donateBtn"]`);
+  donateBtn.addEventListener("click", (e) => {
+    window.open("https://www.paypal.com/donate/?business=AGLGGVQWUBUFE&no_recurring=0&item_name=Help+pay+for+my+College+Education&currency_code=CAD", "_blank");
     e.stopImmediatePropagation();
   });
-  extDwnload.addEventListener("mouseleave", () => removeText());
-  if (!isPenguinMod) extDwnload.addEventListener("mouseenter", () => genText("center-notif", `Extensions will be ${downloadType === "download" ? "Downloaded" : "Copied to Clipboard"}`));
-  else {
-    extDwnload.style.filter = "brightness(0.3)";
-    extDwnload.addEventListener("mouseenter", () => genText("center-notif", "Extensions are Auto-Loaded to PenguinMod"));
-  }
 
-  const toContribs = navBtns[1]; // to/from contributers
+  const navBtns = document.querySelectorAll(`img[class="navImg"]`);
+  /* Settings Button */
+  const extDwnload = navBtns[0];
+  extDwnload.addEventListener("click", (e) => {
+    openSettingsPanel();
+    e.stopImmediatePropagation();
+  });
+
+  /* Contributers Button */
+  const toContribs = navBtns[1];
   toContribs.addEventListener("click", (e) => {
     inCredits = !inCredits;
     if (inCredits) displayContributors();
     else displayExts(filterExts(galleryData.extensions));
-    toContribs.animate([{ transform: "scale(1.1)" }, { transform: "scale(1.1, 0)" }, { transform: "scale(1.1, 1.1)" }], { duration: 200, easing: "ease-in-out" });
-    toContribs.style.transform = "scale(1.1)";
     e.stopImmediatePropagation();
   });
-  toContribs.addEventListener("mouseleave", () => removeText());
-  toContribs.addEventListener("mouseenter", () => genText("center-notif", `Go to ${inCredits ? "Main" : "Contributors"} Page`));
 
+  /* Tags */
   const tags = document.querySelectorAll(`div[class="tag"]`);
   tags.forEach((item) => {
     if (currentTag === item.id) {
-      item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
+      item.style.backgroundColor = "#003cff";
+      item.style.borderColor = "#001fff";
     }
     item.addEventListener("click", (e) => {
       inCredits = false;
       tags.forEach((i) => i.setAttribute("style", ""));
-      item.style.backgroundColor = "#001fff"; item.style.borderColor = "#001fff";
+      item.style.backgroundColor = "#003cff";
+      item.style.borderColor = "#001fff";
 
       currentTag = item.id;
       let s = new URLSearchParams(location.search);
@@ -87,48 +87,7 @@ function addBtnBehaviours() {
   }
 }
 
-/* Utils */
-function filterExts(json, searchQ) {
-  delete json.Example;
-  const entries = Object.entries(json);
-  let newEntries = [];
-  if (currentTag === "search") {
-    if (searchQ === undefined) searchQ = "";
-    searchQ = searchQ.toLowerCase();
-    // order by query
-    entries.forEach((entry) => {
-      const extData = entry[1];
-      if (
-        entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
-        extData.credits.toLowerCase().includes(searchQ) || extData.date.includes(searchQ)
-      ) newEntries.push(entry);
-    });
-    if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
-    else return Object.fromEntries(newEntries);
-  } else if (currentTag === "all") {
-    // order by newest => updated => old, hide deprecated
-    entries.forEach((entry) => {
-      if (entry[1].status === "update") newEntries.unshift(entry);
-    });
-    entries.forEach((entry) => {
-      if (entry[1].status === "new") newEntries.unshift(entry);
-      else if (!entry[1].isDeprecated) newEntries.push(entry);
-    });
-  } else {
-    // order by tag
-    entries.forEach((entry) => {
-      if (entry[1].tags.includes(currentTag)) newEntries.push(entry);
-    });
-  }
-  // finally order by pins
-  const pinOrder = [];
-  newEntries.forEach((entry) => {
-    if (pins.includes(entry[0])) pinOrder.unshift(entry);
-    else pinOrder.push(entry);
-  });
-  return Object.fromEntries(pinOrder);
-}
-
+/* GUI Utils */
 function genTag(type) {
   const tag = document.createElement("img");
   tag.classList.add("ext-tag");
@@ -165,28 +124,11 @@ function genText(type, text) {
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
   desc.textContent = text;
-  switch (type) {
-    case "ext-desc":
-      desc.style.top = "90%";
-      desc.style.color = "#b7e9ff";
-      break;
-    case "ext-log":
-      desc.style.top = "15%";
-      desc.style.left = "150%";
-      desc.style.color = "#b7e9ff";
-      break;
-    case "center-notif":
-      desc.style.borderColor = "#ebebeb";
-      desc.style.backgroundColor = "rgba(87,87,87,.86)";
-      desc.style.top = "50%";
-      desc.style.fontSize = "25px";
-      break;
-    case "contributor":
-      desc.style.borderColor = "#ebebeb";
-      desc.style.backgroundColor = "rgba(87,87,87,.86)";
-      desc.style.top = "90%";
-      break;
+  if (type === "center-notif") {
+    desc.style.top = "50%";
+    desc.style.fontSize = "25px";
   }
+
   document.body.appendChild(desc);
   const animation = desc.animate([{ left: desc.style.left }, { left: "50%" }], { duration: 400, easing: "ease-in-out" });
   animation.onfinish = () => desc.style.left = "50%";
@@ -197,10 +139,52 @@ function removeText() {
   elements.forEach((element) => {
     const type = element.getAttribute("type");
     const animation = element.animate(
-      [{ left: "50%" }, { left: type === "ext-log" ? "-50%" : "150%" }], { duration: 400, easing: "ease-in-out" }
+      [{ left: "50%" }, { left: "150%" }], { duration: 400, easing: "ease-in-out" }
     );
     animation.onfinish = () => element.remove();
   });
+}
+
+/* Internal Utils */
+function filterExts(json, searchQ) {
+  delete json.Example;
+  const entries = Object.entries(json);
+  let newEntries = [];
+  if (currentTag === "search") {
+    if (searchQ === undefined) searchQ = "";
+    searchQ = searchQ.toLowerCase();
+    // order by query
+    entries.forEach((entry) => {
+      const extData = entry[1];
+      if (
+        entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
+        extData.desc.toLowerCase().includes(searchQ) || extData.creator.includes(searchQ)
+      ) newEntries.push(entry);
+    });
+    if (newEntries.length === 0) return {"override404": { url: "", credits: "", date: "" }};
+    else return Object.fromEntries(newEntries);
+  } else if (currentTag === "all") {
+    // order by newest => updated => old, hide deprecated
+    entries.forEach((entry) => {
+      if (entry[1].status === "update") newEntries.unshift(entry);
+    });
+    entries.forEach((entry) => {
+      if (entry[1].status === "new") newEntries.unshift(entry);
+      else if (!entry[1].isDeprecated) newEntries.push(entry);
+    });
+  } else {
+    // order by tag
+    entries.forEach((entry) => {
+      if (entry[1].tags.includes(currentTag)) newEntries.push(entry);
+    });
+  }
+  // finally order by pins
+  const pinOrder = [];
+  newEntries.forEach((entry) => {
+    if (pins.includes(entry[0])) pinOrder.unshift(entry);
+    else pinOrder.push(entry);
+  });
+  return Object.fromEntries(pinOrder);
 }
 
 async function downloadExt(name, data) {
@@ -211,33 +195,155 @@ async function downloadExt(name, data) {
       loadExt: `https://sharkpools-extensions.vercel.app/${data.url}`
     }, "https://studio.penguinmod.com");
     genText("center-notif", "Copied to PenguinMod! Check the Editor");
-  } else {
-    if (downloadType === "download") {
-      fetch(data.url)
-        .then(response => response.blob())
-        .then(blob => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = name + ".js";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-        }).catch(() => window.open(data.url));
-    } else {
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      if (isSafari) window.open(data.url);
-      else {
-        const text = await (await fetch(data.url)).text();
-        navigator.clipboard.writeText(text)
-          .then(() => {
-            genText("center-notif", "Copied to Clipboard!");
-          })
-          .catch(() => window.open(data.url));
-      }
+    return;
+  }
+
+  if (downloadType === "url") {
+    window.open(data.url);
+    return;
+  }
+
+  let extCode = await (await fetch(data.url)).text();
+  if (eraseDeprecation) {
+    const regex = new RegExp(`\\s*/\\* Deprecation Marker \\*/[\\s\\S]*?/\\* Marker End \\*/`, "g");
+    extCode = extCode.replace(regex, "").replace(/\n{3,}/g, "\n\n");
+  }
+  if (compress) {
+    // compress extCode
+    name += "-minified";
+    try {
+      extCode = (await Terser.minify(extCode)).code;
+    } catch(e) {
+      console.warn("Couldnt Compress Extension: " + name, e);
     }
   }
+
+  if (downloadType === "clipboard") {
+    navigator.clipboard.writeText(extCode)
+      .then(() => genText("center-notif", "Copied to Clipboard!"))
+      .catch(() => window.open(data.url));
+  } else {
+    const url = URL.createObjectURL(new Blob([extCode]));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name + ".js";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+}
+
+/* Settings Panel */
+function genInputBox(opts, message) {
+  const container = document.createElement("div");
+  container.classList.add("setting-div");
+
+  opts.forEach((input) => {
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.checked = input.checked;
+
+    const label = document.createElement("pre");
+    label.textContent = input.text;
+
+    const div = document.createElement("div");
+    div.append(box, label);
+    div.addEventListener("click", (e) => input.func(e, box));
+    container.appendChild(div);
+  });
+  if (message) {
+    const msg = document.createElement("div");
+    msg.classList.add("desc-msg");
+    msg.textContent = message;
+    container.append(msg);
+  }
+  return container;
+}
+
+function openSettingsPanel() {
+  const panelContainer = document.createElement("div");
+  panelContainer.classList.add("search-div");
+
+  const text = document.createElement("div");
+  text.classList.add("panel-txt");
+  text.textContent = "Export Settings";
+
+  const bg = document.createElement("img");
+  bg.classList.add("search-ui");
+  bg.src = "Gallery%20Files/main-assets/panel-bg.svg";
+  bg.setAttribute("draggable", "false");
+
+  const downloadTypeFunc = (e, box, type) => {
+    downloadType = type;
+    if (e.target !== box) box.checked = !box.checked;
+    const otherBoxes = box.parentNode.parentNode.querySelectorAll("input");
+    otherBoxes.forEach((checkbox) => {
+      if (checkbox !== box) checkbox.checked = false;
+    });
+  };
+  const downloadTypeBox = genInputBox(
+    [
+      {
+        checked: downloadType === "download", text: "Download Extensions to My Device",
+        func: (e, box) => downloadTypeFunc(e, box, "download")
+      },
+      {
+        checked: downloadType === "clipboard", text: "Copy Extensions to Clipboard",
+        func: (e, box) => downloadTypeFunc(e, box, "clipboard")
+      },
+      {
+        checked: downloadType === "url", text: "Open Extensions in new Tabs",
+        func: (e, box) => downloadTypeFunc(e, box, "url")
+      }
+    ]
+  );
+  const deprecationBox = genInputBox(
+    [{
+      checked: eraseDeprecation, text: "Remove Deprecated Code",
+      func: (e, box) => {
+        if (e.target !== box) box.checked = !box.checked;
+        eraseDeprecation = box.checked;
+      }
+    }],
+    "Removes unused extension code. Lowers the file size but breaks compatibility with older versions"
+  );
+  const compressBox = genInputBox(
+    [{
+      checked: compress, text: "Compress Code",
+      func: (e, box) => {
+        if (e.target !== box) box.checked = !box.checked;
+        compress = box.checked;
+      }
+    }],
+    "Compresses extension code. Lowers the file size"
+  );
+
+  const settingHolder = document.createElement("div");
+  settingHolder.classList.add("setting-holder");
+  settingHolder.append(downloadTypeBox, deprecationBox, compressBox);
+
+  const leave = document.createElement("img");
+  leave.classList.add("panel-leave");
+  leave.src = "Gallery%20Files/main-assets/search-exit.svg";
+  leave.setAttribute("draggable", "false");
+  leave.addEventListener("click", (e) => {
+    updateStorage();
+    panelContainer.remove();
+    e.stopImmediatePropagation();
+  });
+
+  if (isPenguinMod) {
+    const pmDesc = document.createElement("div");
+    pmDesc.classList.add("pm-descriptor");
+    pmDesc.textContent = "You are browsing the PenguinMod version of the Gallery. Extensions are automatically added to the Editor when clicked"; 
+    const extraStyles = document.createElement("style");
+    extraStyles.innerHTML = `.setting-holder{margin-top:15px;filter:blur(3px) brightness(75%)}.pm-descriptor{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;z-index:99;font-size:16px;font-style:italic;font-weight:600;text-shadow:#000 0 0 15px;color:pink}`;
+    panelContainer.append(extraStyles, pmDesc);
+  }
+
+  panelContainer.append(text, bg, settingHolder, leave);
+  document.body.appendChild(panelContainer);
 }
 
 /* Search UI */
@@ -245,7 +351,7 @@ function openSearch() {
   let query = "";
   const searchContainer = document.createElement("div");
   searchContainer.classList.add("search-div");
-  
+
   const text = document.createElement("div");
   text.classList.add("search-txt");
   text.textContent = "Search for an Extension";
@@ -288,6 +394,7 @@ function openSearch() {
   input.focus();
 }
 
+/* Initializer */
 document.addEventListener("DOMContentLoaded", async () => {
   galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
   if (!galleryData.site["is up"]) window.location.href = "pages/down.html";

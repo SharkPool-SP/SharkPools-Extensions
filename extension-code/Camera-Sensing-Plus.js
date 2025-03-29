@@ -1,7 +1,8 @@
 // Name: Camera Sensing+
 // ID: CameraSensingPlusSP
-// Description: Better Camera Sensing Extension. Apply green screens and more!
+// Description: Expansion of the Video Sensing Blocks
 // By: SharkPool
+// License: MIT
 
 // Version V.2.0.0
 
@@ -9,14 +10,23 @@
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Camera Sensing+ must run unsandboxed");
 
+  const menuIconURI =
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYuNTQ1IiBoZWlnaHQ9IjEwNi41NDUiIHZpZXdCb3g9IjAgMCAxMDYuNTQ1IDEwNi41NDUiPjxwYXRoIGQ9Ik0wIDUzLjI3MkMwIDIzLjg1MSAyMy44NSAwIDUzLjI3MiAwczUzLjI3MiAyMy44NSA1My4yNzIgNTMuMjcyLTIzLjg1IDUzLjI3Mi01My4yNzIgNTMuMjcyUzAgODIuNjk0IDAgNTMuMjcyIiBmaWxsPSIjMDBiMmE0Ii8+PHBhdGggZD0iTTY1LjE0NCA0MC4wMzRjLjE3NS4zNTguMzEuNjc0LjMxLjU4NXYyNC44MjRhMS4yMSAxLjIxIDAgMCAxLTEuMjA1IDEuMjA1LjcuNyAwIDAgMS0uMzUzLS4xM2wtLjIzMi0uMTgtMTUuMDgtOS4wNDl2NS41MDNjMCA0LjY5MS0zLjg1MyA4LjY3Ni04LjQzNiA4LjY3NmgtMjEuNDVjLTQuODU3LS4yMTItOC42NzYtNC4wMzEtOC42NzYtOC42NzZ2LTE5LjA0YzAtNC44NzcgMy43OTktOC42NzYgOC42NzctOC42NzZoMjEuNDVjNC42NjggMCA4LjQzNSAzLjgzMSA4LjQzNSA4LjY3NnY1LjU5MWwxNC44NzQtOS42NGMuNjUtLjM5IDEuMzM2LS4yNTMgMS42ODYuMzMxIiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTg0LjAxIDQ0LjA5MXYxOC4zNjJtOS4xODEtOS4xODFINzQuODI4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iOC41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=";
+  const blockIconURI =
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2Ni42OTIiIGhlaWdodD0iNjYuNjkyIiB2aWV3Qm94PSIwIDAgNjYuNjkyIDY2LjY5MiI+PHBhdGggZD0iTTAgNjYuNjkyVjBoNjYuNjkydjY2LjY5MnoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNTcuNjE2IDIxLjYyM2MuMTU0LjMxNy4yNzQuNTk3LjI3NC41MTh2MjEuOTgzYTEuMDcgMS4wNyAwIDAgMS0xLjA2NyAxLjA2Ny42LjYgMCAwIDEtLjMxMy0uMTE0bC0uMjA1LS4xNi0xMy4zNTUtOC4wMTN2NC44NzJjMCA0LjE1NS0zLjQxMSA3LjY4NC03LjQ3IDcuNjg0SDE2LjQ4NmMtNC4zMDEtLjE4OC03LjY4My0zLjU3LTcuNjgzLTcuNjg0di0xNi44NmMwLTQuMzIgMy4zNjQtNy42ODQgNy42ODMtNy42ODRoMTguOTk1YzQuMTM1IDAgNy40NyAzLjM5MyA3LjQ3IDcuNjg0djQuOTUxbDEzLjE3My04LjUzOGMuNTc1LS4zNDQgMS4xODItLjIyMyAxLjQ5Mi4yOTQiIGZpbGw9IiNmZmYiLz48L3N2Zz4=";
+  const videoSensingURI =
+"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAxMCkiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLW9wYWNpdHk9Ii4xNSI+PGNpcmNsZSBmaWxsPSIjRkZGIiBvcGFjaXR5PSIuMjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY3g9IjMyIiBjeT0iMTYiIHI9IjQuNSIvPjxjaXJjbGUgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY3g9IjMyIiBjeT0iMTIiIHI9IjQuNSIvPjxjaXJjbGUgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iLjc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGN4PSIzMiIgY3k9IjgiIHI9IjQuNSIvPjxjaXJjbGUgZmlsbD0iI0ZGRiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjeD0iMzIiIGN5PSI0IiByPSI0LjUiLz48cGF0aCBkPSJtMjIuNjcyIDQuNDItNi4xNzIgNFY2LjFjMC0yLjAxLTEuNTYzLTMuNi0zLjUtMy42SDQuMUMyLjA3NiAyLjUuNSA0LjA3Ni41IDYuMVYxNGMwIDEuOTI3IDEuNTg0IDMuNTEyIDMuNiAzLjZIMTNjMS45MDIgMCAzLjUtMS42NTMgMy41LTMuNnYtMi4yODNsNi4yNTcgMy43NTQuMDk3LjA3NWMuMDIuMDIuMDk4LjA1NC4xNDYuMDU0LjI2NyAwIC41LS4yMTcuNS0uNVY0LjhjMCAuMDM3LS4wNTYtLjA5NC0uMTI5LS4yNDMtLjE0NS0uMjQyLS40My0uMjk5LS43LS4xMzdaIiBmaWxsPSIjNEQ0RDREIi8+PC9nPjwvc3ZnPg==";
+
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
   if (!Scratch.vm.extensionManager.isExtensionLoaded("videoSensing")) runtime.extensionManager.loadExtensionIdSync("videoSensing");
 
+  /* Deprecation Marker */
   function hexToRgb(hex) {
     return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
   }
+  /* Marker End */
 
   const canvasElement = document.createElement("canvas");
   let canUse = false;
@@ -26,17 +36,10 @@
   }
   hasFrontOrBackCamera();
 
+  /* Deprecation Marker */
   let legacyMode = true;
+  /* Marker End */
   let OGvideoID = -1;
-
-  const menuIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDYuNTQ0NTgiIGhlaWdodD0iMTA2LjU0NDU4IiB2aWV3Qm94PSIwLDAsMTA2LjU0NDU4LDEwNi41NDQ1OCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4Ni43Mjc3MSwtMTI2LjcyNzcxKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0xODYuNzI3NzEsMTgwYzAsLTI5LjQyMTQ3IDIzLjg1MDgyLC01My4yNzIyOSA1My4yNzIyOSwtNTMuMjcyMjljMjkuNDIxNDcsMCA1My4yNzIyOSwyMy44NTA4MiA1My4yNzIyOSw1My4yNzIyOWMwLDI5LjQyMTQ3IC0yMy44NTA4Miw1My4yNzIyOSAtNTMuMjcyMjksNTMuMjcyMjljLTI5LjQyMTQ3LDAgLTUzLjI3MjI5LC0yMy44NTA4MiAtNTMuMjcyMjksLTUzLjI3MjI5eiIgZmlsbD0iIzAwYjJhNCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTI1MS44NzE4NSwxNjYuNzYyMDVjMC4xNzQ4NSwwLjM1NzY2IDAuMzEwMjgsMC42NzM2NSAwLjMxMDI4LDAuNTg1MDR2MjQuODIzODFjMCwwLjY4MDkgLTAuNTYxNTgsMS4yMDUwNCAtMS4yMDUwNCwxLjIwNTA0Yy0wLjExNjgyLDAgLTAuMzA0MTgsLTAuMDgwMzEgLTAuMzUyOTQsLTAuMTI5MDdsLTAuMjMyMTEsLTAuMTgxMjJsLTE1LjA4MDQ3LC05LjA0ODI4djUuNTAyNDRjMCw0LjY5MTMzIC0zLjg1MjExLDguNjc2MjggLTguNDM1MjcsOC42NzYyOGgtMjEuNDQ5NzFjLTQuODU3NTIsLTAuMjEyMzQgLTguNjc2MjgsLTQuMDMxMDkgLTguNjc2MjgsLTguNjc2Mjh2LTE5LjAzOTYyYzAsLTQuODc3NjYgMy43OTg2MSwtOC42NzYyOCA4LjY3NjI4LC04LjY3NjI4aDIxLjQ0OTcxYzQuNjY4NzYsMCA4LjQzNTI3LDMuODMxNDYgOC40MzUyNyw4LjY3NjI4djUuNTkxMThsMTQuODc0OSwtOS42NDExM2MwLjY0OTg3LC0wLjM4OTA5IDEuMzM1MDcsLTAuMjUyMDMgMS42ODUzNywwLjMzMTh6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMjcwLjczNzc2LDE3MC44MTg1NHYxOC4zNjI5TTI3OS45MTkyLDE4MGgtMTguMzYzMjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI4LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+";
-
-  const blockIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI2Ni42OTIxOCIgaGVpZ2h0PSI2Ni42OTIxOCIgdmlld0JveD0iMCwwLDY2LjY5MjE4LDY2LjY5MjE4Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjA2LjY1MzkxLC0xNDYuNjUzOTEpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIwNi42NTM5MSwyMTMuMzQ2MDl2LTY2LjY5MjE4aDY2LjY5MjE4djY2LjY5MjE4eiIgZmlsbD0iIzAwYjJhNCIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTI2NC4yNjkzNywxNjguMjc3YzAuMTU0ODQsMC4zMTY3MyAwLjI3NDc3LDAuNTk2NTYgMC4yNzQ3NywwLjUxODA5djIxLjk4M2MwLDAuNjAyOTggLTAuNDk3MzEsMS4wNjcxNCAtMS4wNjcxNCwxLjA2NzE0Yy0wLjEwMzQ1LDAgLTAuMjY5MzcsLTAuMDcxMTIgLTAuMzEyNTUsLTAuMTE0M2wtMC4yMDU1NSwtMC4xNjA0OGwtMTMuMzU0NjgsLTguMDEyODF2NC44NzI3NWMwLDQuMTU0NDYgLTMuNDExMjgsNy42ODMzOCAtNy40Njk5NSw3LjY4MzM4aC0xOC45OTUwM2MtNC4zMDE2MywtMC4xODgwNCAtNy42ODMzOCwtMy41Njk3OCAtNy42ODMzOCwtNy42ODMzOHYtMTYuODYwNzVjMCwtNC4zMTk0NyAzLjM2MzksLTcuNjgzMzggNy42ODMzOCwtNy42ODMzOGgxOC45OTUwM2M0LjEzNDQ3LDAgNy40Njk5NSwzLjM5Mjk5IDcuNDY5OTUsNy42ODMzOHY0Ljk1MTMzbDEzLjE3MjYzLC04LjUzNzgxYzAuNTc1NSwtMC4zNDQ1NiAxLjE4MjI5LC0wLjIyMzE5IDEuNDkyNSwwLjI5MzgzeiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIi8+PC9nPjwvZz48L3N2Zz4=";
-
-  const videoSensingURI =
-"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAxMCkiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLW9wYWNpdHk9Ii4xNSI+PGNpcmNsZSBmaWxsPSIjRkZGIiBvcGFjaXR5PSIuMjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY3g9IjMyIiBjeT0iMTYiIHI9IjQuNSIvPjxjaXJjbGUgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY3g9IjMyIiBjeT0iMTIiIHI9IjQuNSIvPjxjaXJjbGUgZmlsbD0iI0ZGRiIgb3BhY2l0eT0iLjc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGN4PSIzMiIgY3k9IjgiIHI9IjQuNSIvPjxjaXJjbGUgZmlsbD0iI0ZGRiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjeD0iMzIiIGN5PSI0IiByPSI0LjUiLz48cGF0aCBkPSJtMjIuNjcyIDQuNDItNi4xNzIgNFY2LjFjMC0yLjAxLTEuNTYzLTMuNi0zLjUtMy42SDQuMUMyLjA3NiAyLjUuNSA0LjA3Ni41IDYuMVYxNGMwIDEuOTI3IDEuNTg0IDMuNTEyIDMuNiAzLjZIMTNjMS45MDIgMCAzLjUtMS42NTMgMy41LTMuNnYtMi4yODNsNi4yNTcgMy43NTQuMDk3LjA3NWMuMDIuMDIuMDk4LjA1NC4xNDYuMDU0LjI2NyAwIC41LS4yMTcuNS0uNVY0LjhjMCAuMDM3LS4wNTYtLjA5NC0uMTI5LS4yNDMtLjE0NS0uMjQyLS40My0uMjk5LS43LS4xMzdaIiBmaWxsPSIjNEQ0RDREIi8+PC9nPjwvc3ZnPg==";
 
   class CameraSensingPlus {
     constructor() {
@@ -160,6 +163,7 @@
               W_H: { type: Scratch.ArgumentType.STRING, menu: "widthHeight" }
             }
           },
+          /* Deprecation Marker */
           { blockType: Scratch.BlockType.LABEL, text: "Feed Visuals" },
           {
             func: "enableLegacy",
@@ -288,6 +292,7 @@
             hideFromPalette: legacyMode,
             text: "clipping direction"
           }
+          /* Marker End */
         ],
         menus: {
           onOffMenu: ["on", "off"],
@@ -300,16 +305,17 @@
     }
 
     // Helper Funcs
-
+    /* Deprecation Marker */
     enableLegacy() { legacyMode = false; vm.extensionManager.refreshBlocks() }
+    /* Marker End */
 
     getTargets() {
       const spriteNames = [];
       spriteNames.push({ text: "myself", value: "_myself_" });
       spriteNames.push({ text: "Stage", value: "_stage_" });
-      const targets = Scratch.vm.runtime.targets;
-      for (let index = 1; index < targets.length; index++) {
-        const target = targets[index];
+      const targets = runtime.targets;
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
         if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
       }
       return spriteNames.length > 0 ? spriteNames : [""];
@@ -335,7 +341,6 @@
     }
 
     // Compatible Blocks
-
     vidStatus() { return runtime.ioDevices.video.videoReady }
 
     videoTarget(args, util) {
@@ -372,7 +377,6 @@
     }
 
     // Non-Compatible Blocks
-
     async turnOnCamera(args) {
       if (args.ON_OFF === "on") {
         if (!this.mediaStream) {
@@ -435,8 +439,8 @@
       else return "Camera is Off";
     }
 
+    /* Deprecation Marker */
     // Legacy Blocks
-
     setCutout(args) {
       this.cutSize = [
         Scratch.Cast.toNumber(args.X),
@@ -540,6 +544,7 @@
         mainImage.src = args.MAIN;
       });
     }
+    /* Marker End */
   }
 
   Scratch.extensions.register(new CameraSensingPlus());
