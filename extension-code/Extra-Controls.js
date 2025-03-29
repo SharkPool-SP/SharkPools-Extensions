@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.7.0
+// Version V.1.7.01
 
 (function (Scratch) {
   "use strict";
@@ -263,6 +263,13 @@
             blockType: Scratch.BlockType.REPORTER,
             disableMonitor: true,
             text: "loop index"
+          },
+          {
+            opcode: "loopTimer",
+            extensions: ["colours_control"],
+            blockType: Scratch.BlockType.REPORTER,
+            disableMonitor: true,
+            text: "timer in loop"
           },
           {
             opcode: "continueLoop",
@@ -780,6 +787,11 @@
       if (typeof util.thread.SPloopInd === "undefined" || util.thread.SPloopInd.ID !== ID) util.thread.SPloopInd = { ID, ind: 0 };
       util.thread.SPloopInd.ind++;
       return util.thread.SPloopInd.ind;
+    }
+
+    loopTimer(_, util) {
+      if (typeof util.thread.SPstartTime === "undefined") util.thread.SPstartTime = util.sequencer.timer.startTime;
+      return (Date.now() - util.thread.SPstartTime) / 1000;
     }
 
     continueLoop(_, util) { this.blockLoop("continue", util) }
