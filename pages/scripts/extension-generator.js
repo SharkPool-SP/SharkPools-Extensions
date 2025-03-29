@@ -1,4 +1,4 @@
-let _tagCache = [];
+let _tagCache = [], _tagLoopNeedsInit = true;
 
 function displayExts(json, optDontFade) {
   const oldDiv = document.querySelector(".ext-div");
@@ -78,14 +78,15 @@ function displayExts(json, optDontFade) {
     });
   });
   document.body.appendChild(main);
-  if (tagsHadCache) updateTags();
+  if (_tagLoopNeedsInit) updateTags();
 }
 
 function updateTags() {
+  _tagLoopNeedsInit = false;
   let timer = 0;
   const animate = () => {
     for (let i = 0; i < _tagCache.length; i++) {
-      const tag = tags[i];
+      const tag = _tagCache[i];
       const rng = tag.rngData;
       tag.style.transform = `scale(${(Math.sin(timer * rng) * .05) + .65}) rotate(${Math.cos(timer * rng) * .15}rad)`;
     }
