@@ -1,3 +1,5 @@
+let tagUpdateLoop = false;
+
 function displayExts(json, optDontFade) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
@@ -75,18 +77,21 @@ function displayExts(json, optDontFade) {
     });
   });
   document.body.appendChild(main);
+  tagUpdateLoop = false;
   updateTags(tags);
 }
 
 function updateTags(tags) {
   let timer = 0;
   const animate = () => {
-    tags.forEach((tag) => {
-      const rng = parseFloat(tag.getAttribute("rng"));
+    for (let i = 0; i < tags.length; i++) {
+      const tag = tags[i];
+      const rng = tag.rngData;
       tag.style.transform = `scale(${(Math.sin(timer * rng) * .05) + .65}) rotate(${Math.cos(timer * rng) * .15}rad)`;
-    });
+    }
     timer += 0.02;
-    requestAnimationFrame(animate);
+    if (tagUpdateLoop) requestAnimationFrame(animate);
+    else tagUpdateLoop = true;
   };
   animate();
 }
