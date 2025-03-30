@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.93
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -301,14 +301,34 @@
         case "SPjson.arrSort": {
           const safeObj = this.descendInput(node.array).asUnknown();
           const safeValue = this.descendInput(node.value).asUnknown();
-          return new exp.TypedInput(`(function() {
-            function* generator() {
-              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
-              const sorted = [...p].sort((SParrA, SParrB) => { return ${safeValue}; });
-              for (const item of sorted) yield item;
-            }
-            return [...generator()];
-          })()`, exp.TYPE_UNKNOWN);
+          // this is a rough check, but its the best we can do
+          if (safeValue.includes(`yield* executeInCompat`) && !safeValue.includes(`"yield* executeInCompat`)) {
+            return new exp.TypedInput(`(function() {
+              function* generator() {
+                const stringer = (v) => { return typeof v === "object" ? JSON.stringify(v) : v.toString() };
+                const s = {};
+                const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+                for (let i = 0; i < p.length; i++) {
+                  for (let j = 0; j < p.length; j++) {
+                    const SParrA = p[i], SParrB = p[j];
+                    s[stringer(p[i]) + stringer(p[j])] = ${safeValue};
+                  }
+                }
+                const sorted = [...p].sort((a, b) => { return s[stringer(a) + stringer(b)] ?? 0 });
+                for (const item of sorted) yield item;
+              }
+              return [...generator()];
+            })()`, exp.TYPE_UNKNOWN);
+          } else {
+            return new exp.TypedInput(`(function() {
+              function* generator() {
+                const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+                const sorted = [...p].sort((SParrA, SParrB) => { return ${safeValue}; });
+                for (const item of sorted) yield item;
+              }
+              return [...generator()];
+            })()`, exp.TYPE_UNKNOWN);
+          }
         }
         case "SPjson.filter": {
           const safeObj = this.descendInput(node.obj).asUnknown();
@@ -646,6 +666,7 @@
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]`, exemptFromNormalization: true }
             },
           },
+          "---",
           {
             opcode: "mergeArray",
             blockType: Scratch.BlockType.REPORTER,
@@ -654,6 +675,26 @@
             arguments: {
               ARR1: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
               ARR2: { type: Scratch.ArgumentType.STRING, defaultValue: `["c", "d"]`, exemptFromNormalization: true }
+            },
+          },
+          {
+            opcode: "repeatArray",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "repeat array [ARR] [NUM] times",
+            outputShape: 3,
+            arguments: {
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 }
+            },
+          },
+          {
+            opcode: "fillArray",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "fill array [ARR] to length [NUM]",
+            outputShape: 3,
+            arguments: {
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             },
           },
           {
@@ -1182,6 +1223,17 @@
 
     mergeArray(args) {
       return this.tryParse(args.ARR1, 1).concat(this.tryParse(args.ARR2, 1));
+    }
+
+    repeatArray(args) {
+      const times = Scratch.Cast.toNumber(args.NUM);
+      return Array(times).fill(this.tryParse(args.ARR, 1)).flat();
+    }
+
+    fillArray(args) {
+      const length = Scratch.Cast.toNumber(args.NUM);
+      const arr = this.tryParse(args.ARR, 1);
+      return arr.concat(Array(Math.max(0, length - arr.length)).fill(null));
     }
 
     arrOrder(args) {
