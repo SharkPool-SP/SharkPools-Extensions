@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.7.01
+// Version V.1.7.02
 
 (function (Scratch) {
   "use strict";
@@ -134,6 +134,32 @@
     }
     return ogVisReport.call(this, blockId, value);
   };
+
+  // thread patcher for special threads
+  const expRenderedTarget = new vm.exports.RenderedTarget({ blocks: null }, runtime);
+  const Blocks = expRenderedTarget.blocks.constructor;
+  const ogGetNext = Blocks.prototype.getNextBlock;
+  Blocks.prototype.getNextBlock = function(name) {
+    const thisBlock = ogGetNext.call(this, name);
+    if (thisBlock) return thisBlock;
+    for (const target of this.runtime.targets) {
+      if (!target.isOriginal || target.blocks === this) continue;
+      const targetBlock = ogGetNext.call(target.blocks, name);
+      if (targetBlock) return targetBlock;
+    }
+    return undefined;
+  }
+  const ogGetBranch = Blocks.prototype.getBranch;
+  Blocks.prototype.getBranch = function(id, branchNum) {
+    const thisBlock = ogGetBranch.call(this, id, branchNum);
+    if (thisBlock) return thisBlock;
+    for (const target of this.runtime.targets) {
+      if (!target.isOriginal || target.blocks === this) continue;
+      const targetBlock = ogGetBranch.call(target.blocks, id, branchNum);
+      if (targetBlock) return targetBlock;
+    }
+    return undefined;
+  }
 
   // Thank you to @FurryR for the help
   function getUnsafeExports() {
@@ -640,12 +666,6 @@
       const thread = runtime._pushThread(id, oldT, { stackClick: stack });
       thread.target = newT; thread.ogTarget = oldT;
       if (runtime.compilerOptions.enabled) thread.tryCompile();
-      else {
-        // patch this function for the thread
-        thread.goToNextBlock = () => {
-          thread.reuseStackForNextBlock(oldT.blocks.getNextBlock(thread.peekStack()));
-        }
-      }
       return thread;
     }
 
@@ -658,12 +678,6 @@
         thread.ogTarget = target;
       }
       if (runtime.compilerOptions.enabled) thread.tryCompile();
-      else {
-        // patch this function for the thread
-        thread.goToNextBlock = () => {
-          thread.reuseStackForNextBlock(target.blocks.getNextBlock(thread.peekStack()));
-        }
-      }
       return thread;
     }
 
@@ -680,9 +694,6 @@
         tempThread.target = newTarget;
         tempThread.ogTarget = util.ogTarget ?? util.target;
         tempThread.pushReportedValue = (value) => resolve(value);
-        tempThread.goToNextBlock = () => {
-          tempThread.reuseStackForNextBlock(tempThread.ogTarget.blocks.getNextBlock(tempThread.peekStack()));
-        }
         runtime.threads.push(tempThread);
         if (!tempThread.stackClick && !tempThread.updateMonitor) runtime.threadMap.set(tempThread.getId(), tempThread);
         if (runtime.compilerOptions.enabled) tempThread.tryCompile();
@@ -855,9 +866,10 @@
         tempThread.ogTarget = thread.ogTarget ?? util.target;
         tempThread.pushReportedValue = () => resolve();
         tempThread.stackIndex = 0;
-        tempThread.goToNextBlock = () => {
-          tempThread.stackIndex++;
-          tempThread.reuseStackForNextBlock(stack[tempThread.stackIndex]);
+        const ogPushStack = tempThread.pushStack;
+        tempThread.pushStack = function(blockId) {
+          this.stackIndex++;
+          ogPushStack.call(this, blockId);
         };
         runtime.threads.push(tempThread);
         if (!tempThread.stackClick && !tempThread.updateMonitor) runtime.threadMap.set(tempThread.getId(), tempThread);
@@ -877,9 +889,10 @@
         tempThread.target = util.target;
         tempThread.ogTarget = thread.ogTarget ?? util.target;
         tempThread.pushReportedValue = () => resolve();
-        tempThread.goToNextBlock = () => {
-          tempThread.reuseStackForNextBlock(tempThread.ogTarget.blocks.getNextBlock(tempThread.peekStack()));
+        const ogPushStack = tempThread.pushStack;
+        tempThread.pushStack = function(blockId) {
           runtime.requestRedraw();
+          ogPushStack.call(this, blockId);
         };
         runtime.threads.push(tempThread);
         if (!tempThread.stackClick && !tempThread.updateMonitor) runtime.threadMap.set(tempThread.getId(), tempThread);
@@ -977,21 +990,21 @@
       const thisSprite = util.thread.ogTarget !== undefined ? util.thread.ogTarget : util.target;
       const branch = util.thread.ogTarget !== undefined ? util.thread.ogTarget.blocks.getBranch(util.thread.peekStack(), 1) :
         this.getThisBlock(util, true, 1);
-      let newTarget = args.SPRITE === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(args.SPRITE);
+      const name = Cast.toString(args.SPRITE);
+      let newTarget = name === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(name);
       let targets = runtime.targets, thread;
       if (!branch) return;
-      if (Cast.toString(args.SPRITE).startsWith("_all_")) {
-        if (args.SPRITE.includes("2")) targets = targets.filter(target => target.isOriginal); // Main Sprites
-        if (args.SPRITE.includes("3")) targets = targets.filter(target => !target.isOriginal); // Clones
+      if (name.startsWith("_all_")) {
+        if (name.includes("2")) targets = targets.filter(target => target.isOriginal); // Main Sprites
+        if (name.includes("3")) targets = targets.filter(target => !target.isOriginal); // Clones
         newTarget = targets[0];
       }
       if (newTarget) {
         thread = this.pushThreadTarget(branch, newTarget, thisSprite, false);
         this.addMissKeys(util.thread, thread);
       }
-      if (Cast.toString(args.SPRITE).startsWith("_all_")) {
-        for (let i = 0; i < targets.length; i++) this.addMissKeys(util.thread, this.pushThreadTarget(branch, targets[i], thisSprite, false));
-      }
+      if (name.startsWith("_all_")) for (let i = 0; i < targets.length; i++)
+        this.addMissKeys(util.thread, this.pushThreadTarget(branch, targets[i], thisSprite, false));
       // Branch is the same, no need to wait for all threads to finish when they are the same
       if (args.TYPE === "wait" && thread) {
         await new Promise(resolve => {
