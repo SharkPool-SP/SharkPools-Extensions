@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.01
+// Version V.1.2.02
 
 /* TODO V1.2.1
   - fix custom colors with custom themes
@@ -1285,12 +1285,39 @@
             }
             case Events.MOVE: {
               const block = mainWorkspace.getBlockById(e.blockId);
-              const parent = mainWorkspace.getBlockById(e.newParentId);
+              let parent = mainWorkspace.getBlockById(e.newParentId);
+
+              // fix field colours
               if (
                 e.newInputName && block.category_ === null &&
                 block.inputList[0].fieldRow[0].arrow_ !== undefined &&
                 parent?.type === "procedures_call"
               ) block.setColour(parent.colour_);
+
+              // update global block cache for returns
+              if (!isPM && block.type === "procedures_return") {
+                const changeGlobalReturn = (parent, returns) => {
+                  while (parent !== null) {
+                    if (parent && parent.type === "procedures_definition") {
+                      const proto = parent.getInput("custom_block")?.connection?.targetBlock();
+                      if (!proto) return;
+                      const store = storeGet(proto.procCode_);
+                      if (store.global) {
+                        if (returns) store.return = 1;
+                        else delete store.return;
+                        listNeedsRefresh = true;
+                      }
+                    }
+                    parent = parent.getParent();
+                  }
+                };
+
+                changeGlobalReturn(parent, true); // handle new definition
+                if (e.oldParentId !== undefined) {
+                  const oldParent = mainWorkspace.getBlockById(e.oldParentId);
+                  changeGlobalReturn(oldParent, false); // handle old definition
+                }
+              }
               break;
             }
           }
@@ -1413,21 +1440,13 @@
           continue;
         }
 
-        if (target[targetProcData] === undefined) target[targetProcData] = {};
-        if (target[targetProcData][proccode] === undefined) target[targetProcData][proccode] = {};
         const proto = getBlockPrototype(target, proccode);
         if (proto) {
-          const space = target[targetProcData][proccode];
-
           const newMutation = {...proto.mutation};
           newMutation.generateshadows = true;
           if (!isPM) {
-            if (space.return === undefined) space.return = returnables[proccode] ?? 0;
-            else {
-              if (returnables[proccode] !== undefined && space.return !== returnables[proccode])
-                space.return = returnables[proccode];
-            }
-            newMutation.return = space.return;
+            const store = storeGet(proccode);
+            newMutation.return = store.return ?? 0;
           }
           tempList += `<block type="procedures_call" gap="12">${target.blocks.mutationToXML(newMutation)}</block>`;
         }
