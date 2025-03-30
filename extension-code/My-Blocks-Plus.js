@@ -6,9 +6,9 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.0
+// Version V.1.2.01
 
-/* V1.2.1
+/* TODO V1.2.1
   - fix custom colors with custom themes
   - duplicating global sprites
   - various project load method bugs
@@ -466,15 +466,6 @@
     });
   }
 
-const sanitize = string => {
-    if (typeof string !== 'string') {
-        console.warn(`sanitize got unexpected type: ${typeof string}`);
-        string = '' + string;
-    }
-    return JSON.stringify(string).slice(1, -1);
-};
-
-
   // Compiler Patches
   function getExports() {
     if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
@@ -484,6 +475,14 @@ const sanitize = string => {
   }
   const exports = getExports();
   if (exports) {
+    const sanitize = string => {
+      if (typeof string !== "string") {
+        console.warn(`sanitize got unexpected type: ${typeof string}`);
+        string = "" + string;
+      }
+      return JSON.stringify(string).slice(1, -1);
+    };
+
     Thread = exports.Thread; execute = exports.execute;
     const { JSGenerator, ScriptTreeGenerator } = exports;
     const exp = JSGenerator.exports === undefined ? JSGenerator.unstable_exports : JSGenerator.exports;
@@ -550,7 +549,7 @@ const sanitize = string => {
           if (!this.thread[targetProcData]) return node;
           const procData = this.thread[targetProcData][this.script.procedureCode];
           const procedureBlock = procData?.block;
-          if (procedureBlock) node.appenders = procData.appenders.length;
+          if (procedureBlock) node.appenders = procData.appenders;
           return node;
         }
         default: return _ogIRdescendStack.call(this, block);
@@ -625,10 +624,11 @@ const sanitize = string => {
             const index = this.localVariables.next();
             this.source += `const ${index} = ${this.descendInput(node.index).asNumber()} - 1;\n`;
             this.source += `switch (${index}.toString()) {\n`;
-            for (let i = 0; i < node.appenders; i++) {
+            for (let i = 0; i < node.appenders.length; i++) {
+              const argInd = node.appenders[i][0];
               this.source += `case "${i}": {\n`;
-              if (this.script.yields) this.source += `yield* p${i}();\n`;
-              else this.source += `p${i}();\n`;
+              if (this.script.yields) this.source += `yield* p${argInd}();\n`;
+              else this.source += `p${argInd}();\n`;
               this.source += `break;\n`;
               this.source += `}\n`;
             }
@@ -1139,14 +1139,14 @@ const sanitize = string => {
   const patchedCallFunc = (args, util) => {
     // Patched Block code from:
     // https://github.com/TurboWarp/scratch-vm/blob/develop/src/blocks/scratch3_procedures.js#L28-L82
+    const thread = util.thread;
     const stackFrame = util.stackFrame;
     const isReporter = !!args.mutation.return;
     if (stackFrame.executed) {
-      const thread = util.thread;
       if (thread.isMBPPatched) {
         // patch this function for the thread
         thread.isMBPPatched = undefined;
-        thread.goToNextBlock = thread[targetProcData].ogNext;
+        thread.target.blocks.getNextBlock = thread[targetProcData].ogNext;
       }
       if (isReporter) {
         const returnValue = stackFrame.returnValue;
@@ -1160,7 +1160,8 @@ const sanitize = string => {
     }
 
     const procedureCode = args.mutation.proccode;
-    const isGlobal = globalBlocksCache[procedureCode];
+    let isGlobal = globalBlocksCache[procedureCode];
+    if (isGlobal && isGlobal.id === util.target.sprite.clones[0].id) isGlobal = undefined;
 
     const paramNamesIdsAndDefaults = (isGlobal ? isGlobal.blocks : util).getProcedureParamNamesIdsAndDefaults(procedureCode);
     if (paramNamesIdsAndDefaults === null) {
@@ -1177,19 +1178,19 @@ const sanitize = string => {
 
     const addonBlock = util.runtime.getAddonBlock(procedureCode);
     if (addonBlock) {
-      const result = addonBlock.callback(util.thread.getAllparams(), util);
-      if (util.thread.status === 1) stackFrame.executed = true;
+      const result = addonBlock.callback(thread.getAllparams(), util);
+      if (thread.status === 1) stackFrame.executed = true;
       return result;
     }
 
     stackFrame.executed = true;
-    const frame = util.thread.peekStackFrame();
+    const frame = thread.peekStackFrame();
     if (isReporter) {
       frame.waitingReporter = true;
       stackFrame.returnValue = "";
     }
-    util.thread[targetProcData] = {
-      ogNext: util.thread.goToNextBlock,
+    thread[targetProcData] = {
+      ogNext: thread.target.blocks.getNextBlock,
       block: frame.op, frame,
       params: paramNamesIdsAndDefaults
     };
@@ -1200,22 +1201,26 @@ const sanitize = string => {
   runtime.sequencer.constructor.prototype.stepToProcedure = function(thread, procedureCode) {
     if (procedureCode.isGlobal === undefined) oldStep2Proc.call(this, thread, procedureCode.proc);
     else {
-      const target = procedureCode.isGlobal;
-      const def = target.blocks.getProcedureDefinition(procedureCode.proc);
+      const ogTarget = procedureCode.isGlobal;
+      const def = ogTarget.blocks.getProcedureDefinition(procedureCode.proc);
       if (!def) return;
       if (thread.isMBPPatched === undefined) {
         // patch this function for the thread
         thread.isMBPPatched = true;
-        thread.goToNextBlock = () => {
-          thread.reuseStackForNextBlock(target.blocks.getNextBlock(thread.peekStack()));
-        };
+        const ogGetNext = thread.target.blocks.getNextBlock;
+        thread.target.blocks.getNextBlock = function(id) {
+          const block = ogGetNext.call(this, id);
+          if (block) return block;
+          else return ogTarget.blocks.getNextBlock(id);
+        }
       }
+
       const isRecursive = thread.isRecursiveCall(procedureCode.proc);
       thread.pushStack(def);
       if (thread.peekStackFrame().warpMode && thread.warpTimer.timeElapsed() > Sequencer.WARP_TIME) thread.status = Thread.STATUS_YIELD;
       else {
-        const defBlock = target.blocks.getBlock(def);
-        const innerBlock = target.blocks.getBlock(defBlock.inputs.custom_block.block);
+        const defBlock = ogTarget.blocks.getBlock(def);
+        const innerBlock = ogTarget.blocks.getBlock(defBlock.inputs.custom_block.block);
         let doWarp = false;
         if (innerBlock && innerBlock.mutation) {
           const warp = innerBlock.mutation.warp;
