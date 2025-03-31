@@ -88,6 +88,7 @@
     ang: { opcode: "math_angle", fieldName: "NUM", defaultValue: "90" },
     // %n technically already exists but some parts of scratch-blocks replace it with %s so we can't use it
     num: { opcode: "math_number", fieldName: "NUM", defaultValue: "0" },
+    emp: { opcode: "emp", fieldName: "EMPTY", defaultValue: "0" },
     brc: { opcode: "brc", fieldName: "SUBSTACK" },
   };
   function getInputData(input) {
@@ -223,7 +224,7 @@
     // dynamic btn
     const paths = {
       "number or text": "norm", "number": "num", "boolean": "bool",
-      "angle": "ang", "color": "col", "piano": "note", "matrix": "mat"
+      "angle": "ang", "color": "col", "piano": "note", "matrix": "mat", "empty": "emp",
     };
     const inpBtn = row.childNodes[1].cloneNode(true);
     const img = inpBtn.childNodes[0], btn = inpBtn.childNodes[2];
@@ -852,6 +853,7 @@
       const { opcode, fieldName, defaultValue } = getInputData(store.inputs[input.name]);
       if (!opcode) return ogAttachShadow.call(this, input, argumentType);
       if (opcode === "brc") return; // branches are special
+      if (opcode === "emp") return; // empty inputs too
 
       // Add custom inputs
       const blockType = opcode;
