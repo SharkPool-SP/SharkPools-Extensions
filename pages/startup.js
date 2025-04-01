@@ -365,8 +365,8 @@ function openSearch() {
   input.classList.add("search-input");
   input.type = "text";
   input.addEventListener("change", (e) => query = e.target.value);
+  input.addEventListener("input", (e) => displayExts(filterExts(galleryData.extensions, e.target.value), true));
   input.addEventListener("keydown", (e) => {
-    displayExts(filterExts(galleryData.extensions, e.target.value), true);
     if (e.key === "Enter") searchContainer.remove();
   });
 
