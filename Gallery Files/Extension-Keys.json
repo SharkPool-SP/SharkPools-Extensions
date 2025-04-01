@@ -51,7 +51,7 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/23/2025"
     },
     "Tune-Shark": {
@@ -163,7 +163,7 @@
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "update",
-      "date": "Last Updated: 03/24/2025"
+      "date": "Last Updated: 04/01/2025"
     },
     "Sprite-Effects": {
       "desc": "Apply Effects and Filters to SVGs, Sprites, and the Canvas! Faster than Image Effects",
@@ -315,7 +315,7 @@
       "url": "extension-code/Animations.js",
       "banner": "extension-thumbs/Animations.svg",
       "tags": ["all", "utilities"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/24/2025"
     },
     "Pause-Utilities": {
@@ -639,7 +639,7 @@
       "url": "extension-code/Pen-Papers.js",
       "banner": "extension-thumbs/Pen-Papers.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/24/2025"
     },
     "Example": {
