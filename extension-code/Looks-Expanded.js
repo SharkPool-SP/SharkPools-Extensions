@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.1
+// Version V.1.0.11
 
 (function (Scratch) {
   "use strict";
@@ -231,10 +231,6 @@ gl_FragColor.a = baseAlpha;`
   let scratchUnitWidth = 480, scratchUnitHeight = 360;
 
   render._drawThese = function (drawables, drawMode, projection, opts = {}) {
-    // Clipping and Blending Support
-    active = true;
-    [scratchUnitWidth, scratchUnitHeight] = render.getNativeSize();
-
     const gl = render._gl;
     let currentShader = null;
 
@@ -259,15 +255,20 @@ gl_FragColor.a = baseAlpha;`
       if (!drawable.skin || !drawable.skin.getTexture(drawableScale)) continue;
       if (opts.skipPrivateSkins && drawable.skin.private) continue;
 
-      // Get shader with updated uniforms
-      const newShader = this._shaderManager.getShader(drawMode, drawable.enabledEffects);
-      if (currentShader !== newShader) {
-        this._doExitDrawRegion();
-        currentShader = newShader;
+      const uniforms = {};
 
+      let effectBits = drawable.enabledEffects;
+      effectBits &= Object.prototype.hasOwnProperty.call(opts, "effectMask") ? opts.effectMask : effectBits;
+      const newShader = render._shaderManager.getShader(drawMode, effectBits);
+
+      if (render._regionId !== newShader) {
+        render._doExitDrawRegion();
+        render._regionId = newShader;
+
+        currentShader = newShader;
         gl.useProgram(currentShader.program);
-        twgl.setBuffersAndAttributes(gl, currentShader, this._bufferInfo);
-        twgl.setUniforms(currentShader, { u_projectionMatrix: projection });
+        twgl.setBuffersAndAttributes(gl, currentShader, render._bufferInfo);
+        Object.assign(uniforms, { u_projectionMatrix: projection });
       }
 
       /* handle new effects */
@@ -312,21 +313,19 @@ gl_FragColor.a = baseAlpha;`
       Object.entries(newUniformSetters).forEach(([key, { method, value }]) => {
         if (currentShader.uniformSetters[key]) gl[method](currentShader.uniformSetters[key], value);
       });
-
       /* end of new effects */
-      const uniforms = {};
+
+      Object.assign(uniforms, drawable.skin.getUniforms(drawableScale), drawable.getUniforms());
       if (opts.extraUniforms) Object.assign(uniforms, opts.extraUniforms);
 
-      if (drawable.skin) twgl.setTextureParameters(gl, drawable.skin.getTexture(drawableScale), {
-        minMag: drawable.skin.useNearest(drawableScale, drawable) ? gl.NEAREST : gl.LINEAR
-      });
+      if (uniforms.u_skin) {
+        twgl.setTextureParameters(gl, uniforms.u_skin, { minMag: drawable.skin.useNearest(drawableScale, drawable) ? gl.NEAREST : gl.LINEAR });
+      }
 
-      const drawableUniforms = drawable.getUniforms();
-      if (drawableUniforms) twgl.setUniforms(currentShader, drawableUniforms);
-
-      twgl.drawBufferInfo(gl, this._bufferInfo, gl.TRIANGLES);
+      twgl.setUniforms(currentShader, uniforms);
+      twgl.drawBufferInfo(gl, render._bufferInfo, gl.TRIANGLES);
     }
-    this._regionId = null;
+    render._regionId = null;
 
     // Clipping and Blending Support
     gl.disable(gl.SCISSOR_TEST);
@@ -341,6 +340,69 @@ gl_FragColor.a = baseAlpha;`
     drawable[drawableKey] = structuredClone(defaultNewEffects);
     ogClearEffects.call(this);
   };
+
+  // manipulate bounds for warping
+  const radianConverter = Math.PI / 180;
+  function rotatePoint(x, y, cx, cy, rads) {
+    const cos = Math.cos(rads), sin = Math.sin(rads);
+    const dx = x - cx, dy = y - cy;
+    return {
+      x: cx + dx * cos - dy * sin,
+      y: cy + dx * sin + dy * cos
+    };
+  }
+  function warpBounds(drawable, bounds) {
+    if (!drawable[drawableKey]) return bounds;
+
+    let warpVals = drawable[drawableKey].warp;
+    if (warpVals.join(",") === defaultNewEffects.warp.join(",")) return bounds;
+
+    // original getBounds already accounts for rotation, so we have to make our own system
+    // for getting the non-rotated scale and position
+    warpVals = warpVals.map((v, i) => i > 0 && i < 5 ? v * -1 : v);
+    const angle = (drawable._direction - 90) * radianConverter;
+    const [x, y] = drawable._position;
+    const width = drawable.skin.size[0] * (drawable.scale[0] / 200);
+    const height = drawable.skin.size[1] * (drawable.scale[1] / 200);
+
+    const points = [
+      { x: (warpVals[0] * 2) * -width + x, y: (warpVals[1] * -2) * height - y },
+      { x: (warpVals[2] * 2) * width + x, y: (warpVals[3] * -2) * height - y },
+      { x: (warpVals[4] * 2) * width + x, y: (warpVals[5] * -2) * -height - y },
+      { x: (warpVals[6] * 2) * -width + x, y: (warpVals[7] * -2) * -height - y }
+    ];
+
+    const rotatedPoints = points.map(p => rotatePoint(p.x, p.y, x, -y, angle));
+    const xs = rotatedPoints.map(p => p.x);
+    const ys = rotatedPoints.map(p => p.y);
+
+    bounds.left = Math.min(...xs);
+    bounds.top = -Math.min(...ys);
+    bounds.right = Math.max(...xs);
+    bounds.bottom = -Math.max(...ys);
+    return bounds;
+  }
+
+  const ogGetBounds = render.exports.Drawable.prototype.getBounds;
+  render.exports.Drawable.prototype.getBounds = function() {
+    return warpBounds(this, ogGetBounds.call(this));
+  };
+  const ogGetAABB = render.exports.Drawable.prototype.getAABB;
+  render.exports.Drawable.prototype.getAABB = function() {
+    return warpBounds(this, ogGetAABB.call(this));
+  };
+
+  // update the pen shader
+  if (runtime.ext_pen && runtime.ext_pen._penSkinId > -1) {
+    const penSkin = render._allSkins[runtime.ext_pen._penSkinId];
+    const gl = render.gl;
+    penSkin._lineShader = render._shaderManager.getShader("line", 0);
+    penSkin._drawTextureShader = render._shaderManager.getShader("default", 0);
+    penSkin.a_position_loc = gl.getAttribLocation(penSkin._lineShader.program, "a_position");
+    penSkin.a_lineColor_loc = gl.getAttribLocation(penSkin._lineShader.program, "a_lineColor");
+    penSkin.a_lineThicknessAndLength_loc = gl.getAttribLocation(penSkin._lineShader.program, "a_lineThicknessAndLength");
+    penSkin.a_penPoints_loc = gl.getAttribLocation(penSkin._lineShader.program, "a_penPoints");
+  }
 
   // Clipping and Blending Support
   if (vm.extensionManager._loadedExtensions.has("xeltallivclipblend")) {
