@@ -2,8 +2,9 @@
 // ID: SPyoutubeoperations
 // Description: Fetch and play Youtube videos and statistics in your project.
 // By: SharkPool and Nekl300
+// License: MIT
 
-// Version V.1.7.2
+// Version V.1.7.21
 
 (function (Scratch) {
   "use strict";
@@ -17,17 +18,10 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
-  // For fetching, we use this, its fast and reliable
-  const proxy = "https://corsproxy.io?";
-  // For file fetching, we must use this, its slower but works all the time
-  // We also use it as a backup in case proxy 1 fails to work
-  const proxy2 = "https://api.codetabs.com/v1/proxy?quest=";
+  // For fetching, we use this to bypass cors
+  const proxy = "https://api.codetabs.com/v1/proxy?quest=";
 
-  let player = "window";
-  //let playerOpts = { controls: 1, autoplay: 1, loop: 0 } -- Stopped Working, see L:378
-
-  let ytWindows = {};
-  let iframe = null;
+  let player = "window", ytWindows = Object.create(null), iframe = null;
   const createFrame = (src, args) => {
     // Modified From iFrame (Turbowarp -- Garbomuffin)
     iframe = document.createElement("iframe");
@@ -39,7 +33,7 @@
       `translate(${Scratch.Cast.toNumber(args.LEFT) - 50}%, ${Scratch.Cast.toNumber(args.TOP * -1) - 50}%)`;
     iframe.setAttribute("allowtransparency", "true");
     iframe.setAttribute("src", src);
-    iframe.style.pointerEvents = "auto"; //playerOpts.controls ? "auto" : "none";
+    iframe.style.pointerEvents = "auto";
     vm.renderer.addOverlay(iframe, "scale-centered");
   };
   const closeFrame = () => {
@@ -239,12 +233,12 @@
 
     async vid2MP4(args) {
       const type = args.TYPE === "mp4" ? "getVideo" : "getAudio";
-      const url = `${proxy2}https://youtubeapi.up.railway.app/${type}?videoId=${args.VIDEO_ID}&quality=480p`;
+      const url = `${proxy}https://youtubeapi.up.railway.app/${type}?videoId=${args.VIDEO_ID}&quality=480p`;
       return url;
     }
 
     async fetchUserThing(args) {
-      let url = Scratch.Cast.toString(url);
+      let url = Scratch.Cast.toString(args.URL);
       if (url.split("/").slice(-1)[0].split("/").length > 3) {
         url = url.substring(0, lastIndex) + url.substring(lastIndex + 1);
       }
@@ -260,17 +254,13 @@
               match = text.match(pattern);
               return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
             case "subscriber count":
-              pattern = /"},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+\.[0-9]?\s?[mkbMKB]?)/;
+              pattern = /"metadataParts":\[\{"text":\{"content":"(\d+)[^"]*"/;
               match = text.match(pattern);
-              // this is very case sensitive for some reason...
-              if (!match) match = text.match(/"},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+\s?[mkbMKB]?)/);
-              if (!match) match = text.match(/}},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+\.[0-9]?[0-9]?\s?[mkbMKB]?)/);
-              if (!match) match = text.match(/}},"subscriberCountText":{"accessibility":{"accessibilityData":{"label":"([0-9,]+)/);
               return match && match[1] ? match[1] : "";
             case "video count":
-              pattern = /videosCountText":{"runs":\[{"text":"([^"]*)"/;
+              pattern = /"metadataParts":\[\{"text":\{"content":"(\d+)[^"]*"\}\},\{"text":\{"content":"(\d+)[^"]*"/;
               match = text.match(pattern);
-              return match && match[1] ? match[1] : "";
+              return match && match[2] ? match[2] : "";
             case "total view count":
               pattern = /viewCountText":"([\d\s,]+)[^"]*","joinedDateText"/;
               match = text.match(pattern);
@@ -280,7 +270,7 @@
               match = text.match(pattern);
               return match && match[1] ? match[1].trim() : "";
             case "name":
-              pattern = /"c4TabbedHeaderRenderer":\{"channelId":"[^"]+","title":"([^"]+)",/;
+              pattern = /<meta\s+property="og:title"\s+content="([^"]+)">/;
               match = text.match(pattern);
               return match && match[1] ? match[1] : "";
             case "description":
@@ -301,7 +291,7 @@
     async fetchOthersVideo(args) {
       const url = `https://www.youtube.com/watch?v=${args.VIDEO_ID}`;
       try {
-        const response = await Scratch.fetch(proxy2 + url);
+        const response = await Scratch.fetch(proxy + url);
         if (response.ok) {
           const text = await response.text();
           let pattern, match = "";
@@ -358,12 +348,6 @@
       params += `&height=${Math.max(100, Math.min(Scratch.Cast.toNumber(args.HEIGHT), window.screen.height))}`;
       params += `&left=${Math.max(0, Math.min(Scratch.Cast.toNumber(args.LEFT), window.screen.width))}`;
       params += `&top=${Math.max(0, Math.min(Scratch.Cast.toNumber(args.TOP), window.screen.height))}`;
-      /*
-        params += `&autoplay=${playerOpts.autoplay}`;
-        params += `&controls=${playerOpts.controls}&disablekb=${playerOpts.controls}`;
-        params += `&loop=${playerOpts.loop}`;
-        --These stopped working for some reason. No Idea Why. Keeping it in just in case
-      */
       url += params;
       if (player === "window") {
         const newWindow = window.open(url, "_blank", params.replaceAll("&", ","));
