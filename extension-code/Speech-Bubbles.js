@@ -3,7 +3,7 @@
 // Description: Customizable Speech Bubbles
 // By: SharkPool
 
-// Version V.1.3.0
+// Version V.1.3.01
 
 (function (Scratch) {
   "use strict";
@@ -110,7 +110,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set bubble font size of [SPRITE] to [NUM]",
             arguments: {
-              NUM : { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 15 },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             }
           },
@@ -119,7 +119,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set bubble boldness of [SPRITE] to [NUM]",
             arguments: {
-              NUM : { type: Scratch.ArgumentType.NUMBER, menu: "THICK" },
+              NUM: { type: Scratch.ArgumentType.NUMBER, menu: "THICK" },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             }
           },
@@ -268,9 +268,9 @@
           ELEMENT: ["bubble", "arrow"],
           FOCUS: ["padding", "border radius"],
           THICK: [
-            { text : "thick", value : "900" },
-            { text : "medium", value : "600" },
-            { text : "none", value : "1" },
+            { text: "thick", value: "900" },
+            { text: "medium", value: "600" },
+            { text: "none", value: "1" },
           ]
         },
       };
@@ -282,12 +282,12 @@
     }
 
     getTargets(optAll) {
-      const spriteNames = [{ text : "myself", value: "_myself_" }];
-      if (optAll) spriteNames.push({ text : "all sprites", value: "_all_" });
+      const spriteNames = [{ text: "myself", value: "_myself_" }];
+      if (optAll) spriteNames.push({ text: "all sprites", value: "_all_" });
       const targets = runtime.targets;
-      for (let index = 1; index < targets.length; index++) {
-        const target = targets[index];
-        if (target.isOriginal) spriteNames.push({ text : target.getName(), value : target.id });
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
+        if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
       }
       return spriteNames.length > 0 ? spriteNames : [""];
     }
@@ -652,11 +652,11 @@
       const id = this.getTargetId(args.SPRITE, util, true);
       const reseter = (obj) => {
         for (let i = 0; i < defaultVals.length; i++) {
-          this.setEffect({ TYPE : "bubble", EFFECT: effects[i], NUM: defaultVals[i], SPRITE: obj.id });
-          this.setEffect({ TYPE : "arrow", EFFECT: effects[i], NUM: defaultVals[i], SPRITE: obj.id });
+          this.setEffect({ TYPE: "bubble", EFFECT: effects[i], NUM: defaultVals[i], SPRITE: obj.id });
+          this.setEffect({ TYPE: "arrow", EFFECT: effects[i], NUM: defaultVals[i], SPRITE: obj.id });
         }
-        this.setStretch({ TYPE : "bubble", x: 100, y: 100, SPRITE: obj.id });
-        this.setStretch({ TYPE : "arrow", x: 100, y: 100, SPRITE: obj.id });
+        this.setStretch({ TYPE: "bubble", x: 100, y: 100, SPRITE: obj.id });
+        this.setStretch({ TYPE: "arrow", x: 100, y: 100, SPRITE: obj.id });
       };
       if (id === "_all_") Object.values(allBubbles).forEach(reseter);
       else reseter({ id });
