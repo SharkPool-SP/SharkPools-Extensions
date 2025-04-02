@@ -8,12 +8,7 @@
 
 // Version V.1.2.03
 
-/* TODO 1.2.03
-- other todos lying around
-- PM branch reporters dont delete when editted
-*/
-
-/* TODO V1.2.1
+/* TODO 1.2.1
   - fix custom colors with custom themes
   - duplicating global sprites
   - various project load method bugs
@@ -60,7 +55,6 @@
 
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
-  window.test = storage;
 
   let extensionRemovable = false;
   let ext; // extension object
@@ -173,15 +167,25 @@
     // Attach Okay Button Listener
     const okBtn = modal.querySelector(`button[class^="custom-procedures_ok-button_"]`);
     okBtn.addEventListener("click", (e) => {
-      // TODO perform a manual global check
       // prevent proccode conflicts
-      refreshGlobalBlocksCache();
-      const existingPrototype = ScratchBlocks.Procedures.getPrototypeBlock(blockEditor.procCode_, workspace);
-      const existingCache = globalBlocksCache[blockEditor.procCode_];
-      if (
-        (existingPrototype && (!isEditing || curProc !== blockEditor.procCode_)) ||
-        (existingCache !== undefined && !isEditing)
-      ) {
+      const proc = blockEditor.procCode_;
+      let protoExists = ScratchBlocks.Procedures.getPrototypeBlock(proc, workspace);
+      if (!protoExists) {
+        refreshGlobalBlocksCache();
+        const thisID = vm.editingTarget.id;
+        for (const target of runtime.targets) {
+          protoExists = target.blocks.getProcedureDefinition(proc);
+          if (protoExists) {
+            if (thisID === globalBlocksCache[proc]?.id) {
+              protoExists = undefined;
+              break;
+            } else {
+              if (thisID !== target.id) protoExists = undefined;
+            }
+          }
+        }
+      }
+      if ((protoExists && (!isEditing || curProc !== proc))) {
         alert("A custom block with this text already exists!");
         e.stopImmediatePropagation();
         return;
@@ -716,12 +720,6 @@
       return oldScrollToCategory.call(this, id);
     }
 
-    const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
-    SB.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
-      if (block[targetProcData] === "branchDrag") return false;
-      return ogCheck(block);
-    }
-
     const utils = SB.ScratchBlocks.ProcedureUtils;
     const ogUpdateDisplay = utils.updateDisplay_;
     utils.updateDisplay_ = function() {
@@ -922,8 +920,7 @@
       }
       if (defineBlock?.type.startsWith("procedures_definition")) {
         if (block[targetProcData] === "branchDrag") {
-          if (isPM) block.setColour(defineBlock.colourSecondary_, defineBlock.colourSecondary_, defineBlock.colourTertiary_);
-          else block.setColour(defineBlock.getColour());
+          block.setColour(defineBlock.colourSecondary_, defineBlock.colourSecondary_, defineBlock.colourTertiary_);
         } else {
           block.setColour(defineBlock.getColour());
         }
@@ -989,6 +986,18 @@
       oldDuplicateOnDrag_.call(this);
       const duplicated = this.targetBlock_;
       if (source && duplicated && source.type.startsWith("argument_reporter_")) duplicated.setColour(source.getColour());
+    };
+
+    // Disable branch argument reporter dragging
+    const oldstartDragging_ = SB.Gesture.prototype.startDraggingBlock_;
+    SB.Gesture.prototype.startDraggingBlock_ = function() {
+      const source = this.targetBlock_;
+      if (source[targetProcData] === "branchDrag") {
+        this.isDraggingBlock_ = false;
+        this.dispose();
+        return;
+      }
+      oldstartDragging_.call(this);
     };
 
     // Patch Procedure Edit and Create to also open our Modal
