@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.05
+// Version V.1.2.051
 
 /* TODO 1.2.1
   - fix custom colors with custom themes
@@ -1270,7 +1270,7 @@
       vm.on("workspaceUpdate", () => {
         if (!extensionRemovable) {
           listNeedsRefresh = true;
-          SB.Procedures.flyoutCategory(workspace);
+          if (workspace.rendered) SB.Procedures.flyoutCategory(workspace);
         }
       });
     });
@@ -1280,6 +1280,7 @@
   function initBlockEvents() {
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const { Events, mainWorkspace } = SB;
+      if (!mainWorkspace.rendered) return;
       let patched = false;
       const workspaceEvents = (e) => {
         if (mainWorkspace.id === e.workspaceId) {
@@ -1374,7 +1375,9 @@
       storage = data.SPmbpCST || {};
       startEditorListener();
       if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-        runtime.once("PROJECT_LOADED", () => SB.Procedures.flyoutCategory(SB.mainWorkspace));
+        runtime.once("PROJECT_LOADED", () => {
+          if (SB.mainWorkspace.rendered) SB.Procedures.flyoutCategory(SB.mainWorkspace);
+        });
       });
     } else {
       suspendRemoval = true;
