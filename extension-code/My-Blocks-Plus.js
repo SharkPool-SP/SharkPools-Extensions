@@ -6,12 +6,11 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.03
+// Version V.1.2.04
 
 /* TODO 1.2.1
   - fix custom colors with custom themes
-  - duplicating global sprites
-  - various project load method bugs
+  - duplicating global sprites/blocks
 */
 
 (function(Scratch) {
@@ -1293,15 +1292,6 @@
             }
           }
           switch (e.type) {
-            case Events.DELETE: {
-              const block = mainWorkspace.getBlockById(e.blockId);
-              if (block && block.type.startsWith("procedures_definition")) {
-                if (!isPM) removeUnusedProcs();
-                const proto = block.getInput("custom_block")?.connection?.targetBlock();
-                if (proto) storeDel(proto.procCode_);
-              }
-              break;
-            }
             case Events.MOVE: {
               const block = mainWorkspace.getBlockById(e.blockId);
               let parent = mainWorkspace.getBlockById(e.newParentId);
