@@ -6,11 +6,10 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.051
+// Version V.1.2.06
 
 /* TODO 1.2.1
   - fix custom colors with custom themes
-  - duplicating global sprites/blocks
 */
 
 (function(Scratch) {
@@ -1270,7 +1269,7 @@
       vm.on("workspaceUpdate", () => {
         if (!extensionRemovable) {
           listNeedsRefresh = true;
-          if (workspace.rendered) SB.Procedures.flyoutCategory(workspace);
+          if (workspace?.rendered) SB.Procedures.flyoutCategory(workspace);
         }
       });
     });
@@ -1280,7 +1279,7 @@
   function initBlockEvents() {
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const { Events, mainWorkspace } = SB;
-      if (!mainWorkspace.rendered) return;
+      if (!mainWorkspace?.rendered) return;
       let patched = false;
       const workspaceEvents = (e) => {
         if (mainWorkspace.id === e.workspaceId) {
@@ -1503,6 +1502,18 @@
       if (tempBlockId) delete args[0][0].blocks._blocks[tempBlockId];
     }
     return oldinstallTargets.apply(this, args);
+  }
+
+  const ogDupSprite = vm.duplicateSprite;
+  vm.duplicateSprite = function(targetId) {
+    return ogDupSprite.call(this, targetId).then(() => {
+        const newTarget = this.runtime.targets[this.runtime.targets.length - 1];
+        if (!storage[newTarget.id]) {
+          storage[newTarget.id] = structuredClone(storage[targetId]);
+          this.emitWorkspaceUpdate();
+        }
+        return newTarget;
+    });
   }
 
   class SPmbpCST {
