@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.04
+// Version V.1.2.05
 
 /* TODO 1.2.1
   - fix custom colors with custom themes
@@ -179,7 +179,7 @@
               protoExists = undefined;
               break;
             } else {
-              if (thisID !== target.id) protoExists = undefined;
+              if (thisID === target.id && isEditing) protoExists = undefined;
             }
           }
         }
