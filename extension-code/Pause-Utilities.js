@@ -4,23 +4,24 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.8.01
+// Version V.1.8.1
 
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Pause Utilities must run unsandboxed!");
-
-  const vm = Scratch.vm;
-  const runtime = vm.runtime;
-  const Cast = Scratch.Cast;
-  const isPM = Scratch.extensions.isPenguinMod;
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTgiIHdpZHRoPSIxOCI+PHBhdGggZD0iTTIzMS40MjkgMTg4LjkyOVYxNzEuMDdoNC4yODV2MTcuODU4em0xMi4xNDIgMFYxNzEuMDdoNC4yODZ2MTcuODU4eiIgdHJhbnNmb3JtPSJtYXRyaXgoMS4wMzMwOSAwIDAgLjk1NDI3IC0yMzguNTczIC0xNjIuNzY5KSIgZmlsbD0iI2ZmYWUwMCIgc3Ryb2tlPSIjZDg5NDAwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiLz48L3N2Zz4=";
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMS40NzciIGhlaWdodD0iMzEuNDc3IiB2aWV3Qm94PSIwIDAgMzEuNDc3IDMxLjQ3NyI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMCAzMS40NzhWLS4wMDFoMzEuNDc4djMxLjQ3OHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNy4yNjcgMjQuMjM5VjcuMTk2aDQuNDI3djE3LjA0MXptMTIuNTQ0IDBWNy4xOTZoNC40Mjh2MTcuMDQxeiIgZmlsbD0iI2ZmYWUwMCIgc3Ryb2tlPSIjZDg5NDAwIi8+PC9nPjwvc3ZnPg==";
 
+  const vm = Scratch.vm;
+  const runtime = vm.runtime;
+  const Cast = Scratch.Cast;
+  const isPM = Scratch.extensions.isPenguinMod;
+
   let storedScripts = Object.create(null);
+  let pausedSprites = new Map();
 
   // Inject Packager Pause Module (minified)
   // https://github.com/TurboWarp/packager/blob/master/src/addons/pause.js
@@ -29,6 +30,22 @@
 
   // check if the pause button exists, we will use that if availiable
   const pauseButton = document.querySelector(typeof scaffolding !== "undefined" ? `[class*="pause-button"]` : "img.pause-btn.addons-display-none-pause");
+
+  const ogStepThreads = runtime.sequencer.stepThreads;
+  runtime.sequencer.stepThreads = function() {
+    pausedSprites.forEach((data, id) => {
+      const thread = data.thread;
+      if (thread.status === 4) {
+        pausedSprites.delete(id);
+        return;
+      }
+
+      if (thread.status !== 5) data.ogStatus = thread.status;
+      thread.status = data.newStatus;
+      if (data.canDelete) pausedSprites.delete(id);
+    });
+    return ogStepThreads.call(this);
+  };
 
   /* Deprecation Marker */
   const pauseHandler = () => {
@@ -40,7 +57,10 @@
   };
   /* Marker End */
 
-  runtime.on("PROJECT_STOP_ALL", () => { storedScripts = Object.create(null) });
+  runtime.on("PROJECT_STOP_ALL", () => {
+    storedScripts = Object.create(null);
+    pausedSprites = new Map();
+  });
   runtime.on("RUNTIME_PAUSED", () => {
     runtime.once("BEFORE_EXECUTE", () => runtime.allScriptsByOpcodeDo("SPPause_whenProjectPausedNew", (script, target) => runtime._pushThread(script.blockId, target)));
     /* Deprecation Marker */
@@ -219,10 +239,17 @@
       return spriteNames.length > 0 ? spriteNames : [""];
     }
 
-    searchThreads(target, cntrl) {
-      const thread = runtime.threads;
-      thread.forEach(t => {
-        if (t.target.id === target && t.status !== cntrl) t.status = cntrl;
+    searchThreads(id, cntrl) {
+      runtime.threads.forEach((thread) => {
+        if (thread.target.id === id) {
+          const oldData = pausedSprites.get(thread.getId());
+          if (!oldData && cntrl) pausedSprites.set(thread.getId(), {
+            thread, ogStatus: thread.status, newStatus: 5
+          });
+          else if (!cntrl && oldData) pausedSprites.set(thread.getId(), {
+            thread, canDelete: true, newStatus: oldData.ogStatus
+          });
+        }
       });
     }
 
@@ -231,11 +258,15 @@
       if (target) {
         const clones = target.sprite.clones;
         const varName = Cast.toString(args.VAR);
-        const varValue = args.NUM;
-        for (let i = 1; i < clones.length; i++) {
-          const variable = clones[i].lookupVariableByNameAndType(varName, "");
-          if (variable && variable.value === varValue) this.searchThreads(clones[i].id, cntrl);
+        if (!varName) for (let i = 1; i < clones.length; i++) this.searchThreads(clones[i].id, cntrl);
+        else {
+          const varValue = args.NUM;
+          for (let i = 1; i < clones.length; i++) {
+            const variable = clones[i].lookupVariableByNameAndType(varName, "");
+            if (variable && variable.value === varValue) this.searchThreads(clones[i].id, cntrl);
+          }
         }
+        if (cntrl) runtime.sequencer.stepThreads();
       }
     }
 
@@ -264,12 +295,15 @@
     pauseSprite(args, util) {
       const target = args.SPRITE === "_stage_" ? runtime.getTargetForStage() :
         args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
-      if (target) this.searchThreads(target.id, 1);
+      if (!target) return;
+      this.searchThreads(target.id, 1);
+      runtime.sequencer.stepThreads();
     }
     unpauseSprite(args, util) {
       const target = args.SPRITE === "_stage_" ? runtime.getTargetForStage() :
         args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
-      if (target) this.searchThreads(target.id, 0);
+      if (!target) return;
+      this.searchThreads(target.id, 0);
     }
 
     pauseClones(args, util) { this.modifyClones(args, util, 1) }
