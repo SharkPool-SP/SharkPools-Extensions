@@ -324,8 +324,8 @@
       "url": "extension-code/Pause-Utilities.js",
       "banner": "extension-thumbs/Pause-Utilities.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 03/19/2025"
+      "status": "update",
+      "date": "Last Updated: 04/04/2025"
     },
     "Text-to-Speech": {
       "desc": "Better Text to Speech using the TikTok API",
