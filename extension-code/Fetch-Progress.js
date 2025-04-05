@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.01
+// Version V.2.0.02
 
 (function (Scratch) {
   "use strict";
@@ -142,10 +142,12 @@
       fetchInfo.progress = 0;
       fetchQueue++;
       try {
+        let fileSize;
         const headResponse = await Scratch.fetch(url, { method: "HEAD" });
-        if (!headResponse.ok) throw new Error("Failed to get HEAD response");
-        const contentLength = headResponse.headers.get("Content-Length");
-        const fileSize = contentLength ? parseInt(contentLength, 10) : 0;
+        if (headResponse.ok) {
+          const contentLength = headResponse.headers.get("Content-Length");
+          fileSize = contentLength ? parseInt(contentLength, 10) : 0;
+        }
 
         const response = await Scratch.fetch(url);
         fetchInfo.status = response.status;
@@ -174,10 +176,12 @@
       fetchInfo.progress = 0;
       fetchQueue++;
       try {
+        let fileSize;
         const headResponse = await Scratch.fetch(url, { method: "HEAD" });
-        if (!headResponse.ok) throw new Error("Failed to get HEAD response");
-        const contentLength = headResponse.headers.get("Content-Length");
-        const fileSize = contentLength ? parseInt(contentLength, 10) : Scratch.Cast.toNumber(args.SIZE);
+        if (headResponse.ok) {
+          const contentLength = headResponse.headers.get("Content-Length");
+          fileSize = contentLength ? parseInt(contentLength, 10) : Scratch.Cast.toNumber(args.SIZE);
+        }
         const xhr = new XMLHttpRequest();
         xhr.responseType = "blob";
         xhr.onload = () => {
