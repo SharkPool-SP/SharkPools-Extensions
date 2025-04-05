@@ -15,7 +15,7 @@
       "url": "extension-code/YouTube-Operations.js",
       "banner": "extension-thumbs/YouTube-Operations.svg",
       "tags": ["all", "fetching"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/01/2025"
     },
     "Time-Calculation": {
@@ -162,7 +162,7 @@
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/01/2025"
     },
     "Sprite-Effects": {
@@ -360,8 +360,8 @@
       "url": "extension-code/Fetch-Progress.js",
       "banner": "extension-thumbs/Fetch-Plus.svg",
       "tags": ["all", "fetching", "expanded"],
-      "status": "",
-      "date": "Last Updated: 09/12/2024"
+      "status": "update",
+      "date": "Last Updated: 04/04/2025"
     },
     "Geolocation": {
       "desc": "Get users' Location and calculate Real-World Distances",
@@ -387,8 +387,8 @@
       "url": "extension-code/SoundCloud-API.js",
       "banner": "extension-thumbs/SoundCloud-API.svg",
       "tags": ["all", "fetching"],
-      "status": "",
-      "date": "Last Updated: 07/12/2024"
+      "status": "update",
+      "date": "Last Updated: 04/04/2025"
     },
     "Google-Spreadsheets": {
       "desc": "Read and Write Google Spreadsheets",
@@ -406,7 +406,7 @@
       "banner": "extension-thumbs/Money-Utilities.svg",
       "tags": ["all", "fetching", "utilities"],
       "status": "",
-      "date": "Last Updated: 03/13/2024"
+      "date": "Last Updated: 04/04/2025"
     },
     "Display-Text": {
       "desc": "Display Advanced Text in your Projects",
@@ -513,7 +513,7 @@
       "url": "extension-code/Extra-Controls.js",
       "banner": "extension-thumbs/Extra-Controls.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 03/30/2025"
     },
     "More-Operators": {
