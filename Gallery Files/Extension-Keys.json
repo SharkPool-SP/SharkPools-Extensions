@@ -351,8 +351,8 @@
       "url": "extension-code/Advanced-Messages.js",
       "banner": "extension-thumbs/Advanced-Messages.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "",
-      "date": "Last Updated: 03/23/2025"
+      "status": "update",
+      "date": "Last Updated: 04/05/2025"
     },
     "Fetch-Plus": {
       "desc": "Fetch and Encode Content from URLs while viewing the Progress and Status of the Fetch",
