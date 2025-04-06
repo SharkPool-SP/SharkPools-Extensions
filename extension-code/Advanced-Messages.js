@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.0
+// Version V.2.0.01
 
 (function (Scratch) {
   "use strict";
@@ -17,12 +17,22 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  let messageBank = {};
+  let messageBank = Object.create(null);
 
   class SPmessages {
     constructor() {
-      runtime.on("PROJECT_START", () => { messageBank = {} });
-      runtime.on("PROJECT_STOP_ALL", () => { messageBank = {} });
+      runtime.on("PROJECT_START", () => { messageBank = Object.create(null) });
+      runtime.on("PROJECT_STOP_ALL", () => { messageBank = Object.create(null) });
+      runtime.on("AFTER_EXECUTE", () => {
+        // clear finished broadcasts
+        const msgData = Object.values(messageBank);
+        for (const msg of msgData) {
+          for (var i = msg.threads.length; i--; ) {
+            const thread = msg.threads[i];
+            if (thread.status === 4) msg.threads.splice(i, 1);
+          }
+        }
+      });
     }
     getInfo() {
       return {
@@ -224,7 +234,7 @@
             ...this.sendMessage("SPmessages_whenReceive1", name, data, target),
             ...this.sendMessage("SPmessages_whenReceiveData1", name, data, target)
           ];
-          if (util.stackFrame.newThreads.length === 0) return;
+          if (util.stackFrame.newThreads.length === 0) return "";
         }
         const waiting = util.stackFrame.newThreads.some((thread) => runtime.threads.indexOf(thread) !== -1);
         for (const thread of util.stackFrame.newThreads) {
@@ -238,6 +248,7 @@
           else util.yield();
         }
       }
+      console.log(messageBank);
       return response ? response : "";
     }
 
