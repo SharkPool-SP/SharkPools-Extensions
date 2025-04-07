@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -156,7 +156,7 @@
 
     castType(value) {
       if (value === "") return "";
-      if (Array.isArray(value)) return value;
+      if (typeof value === "object") return value;
       if (isNaN(Number(value))) return value;
       return Scratch.Cast.toNumber(value);
     }
@@ -164,10 +164,9 @@
     // Block Funcs
     setVar(args, util) {
       const name = Scratch.Cast.toString(args.NAME);
-      const value = this.castType(args.VALUE);
-      if (args.TYPE === "global") projectVars[name] = value;
-      else if (args.TYPE === "sprite") this.initSprite(util.target)[name] = value;
-      else this.initThread(util.thread)[name] = value;
+      if (args.TYPE === "global") projectVars[name] = args.VALUE;
+      else if (args.TYPE === "sprite") this.initSprite(util.target)[name] = args.VALUE;
+      else this.initThread(util.thread)[name] = args.VALUE;
     }
 
     changeVar(args, util) {
@@ -175,13 +174,13 @@
       const value = this.castType(args.VALUE);
       const defaultValue = value?.constructor?.name === "String" ? "" : 0;
       if (args.TYPE === "global") {
-        projectVars[name] = (projectVars[name] ?? defaultValue) + value;
+        projectVars[name] = this.castType(projectVars[name] ?? defaultValue) + value;
       } else if (args.TYPE === "sprite") {
         const obj = this.initSprite(util.target);
-        obj[name] = (obj[name] ?? defaultValue) + value;
+        obj[name] = this.castType(obj[name] ?? defaultValue) + value;
       } else {
         const obj = this.initThread(util.thread);
-        obj[name] = (obj[name] ?? defaultValue) + value;
+        obj[name] = this.castType(obj[name] ?? defaultValue) + value;
       }
     }
 
