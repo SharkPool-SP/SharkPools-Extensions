@@ -261,8 +261,8 @@
       "url": "extension-code/Temporary-Variables.js",
       "banner": "extension-thumbs/Temporary-Variables.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "",
-      "date": "Released: 03/18/2025"
+      "status": "update",
+      "date": "Last Updated: 04/06/2025"
     },
     "Variables-Expanded": {
       "desc": "New Variable Blocks and New Variable Monitors",
