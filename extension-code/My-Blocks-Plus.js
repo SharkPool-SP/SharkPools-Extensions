@@ -6,11 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.06
-
-/* TODO 1.2.1
-  - fix custom colors with custom themes
-*/
+// Version V.1.2.1
 
 (function(Scratch) {
   "use strict";
@@ -28,10 +24,11 @@
     }[name];
   };
   const inputURIs = (name) => {
-    if (name === "brc") return "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIxMS41IDE1NS41IDU3IDQ5Ij48cGF0aCBkPSJNMjE2IDIwNGE0IDQgMCAwIDEtNC00di00MGE0IDQgMCAwIDEgNC00bDQ4LjY1MS4wNTNBNCA0IDAgMCAxIDI2OCAxNjB2OC4xMjhjMCAxLjMtMi4xODQgMy4zODMtMy44NzcgMy4zODNoLTEzLjk4MmMtMS4xMDUgMC0xLjY1Ny41NTItMi4yMSAxLjEwNWwtMi4yMDkgMi4yMDljLS41NTIuNTUyLTEuMTA1IDEuMTA1LTIuMjEgMS4xMDVoLTYuNjI3Yy0xLjEwNSAwLTEuNjU3LS41NTMtMi4yMS0xLjEwNWwtMi4yMDktMi4yMWMtLjU1Mi0uNTUyLTEuMTA1LTEuMTA0LTIuMjEtMS4xMDRoLTQuNDE4Yy0xLjIyIDAtMi4yMS45OS0yLjIxIDIuMjF2MTIuNTU0YzAgMS4yMi45OSAyLjIwOCAyLjIxIDIuMjA4aDQuNDE5YzEuMTA0IDAgMS42NTcuNTUzIDIuMjEgMS4xMDVsMi4yMDggMi4yMWMuNTUzLjU1MiAxLjEwNSAxLjEwNCAyLjIxIDEuMTA0aDYuNjI4YzEuMTA0IDAgMS42NTctLjU1MiAyLjIwOS0xLjEwNWwyLjIxLTIuMjA5Yy41NTItLjU1MiAxLjEwNC0xLjEwNSAyLjIwOS0xLjEwNWgxMy45ODJjMS42OTMgMCAzLjg3NyAyLjEwNCAzLjg3NyAzLjUwMlYyMDBhNCA0IDAgMCAxLTQgNHoiIHN0eWxlPSJmaWxsOiNmZjY2ODA7c3Ryb2tlOiNmMzUiLz48L3N2Zz4=";
-    if (name === "bool") return "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NyA0OSI+PHJlY3QgeD0iLjUiIHk9Ii41IiB3aWR0aD0iNTYiIGhlaWdodD0iNDgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9ImZpbGw6I2ZmNjY4MDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2U6I2YzNSIvPjxwYXRoIGQ9Ik0zMi41IDQwLjVoLThsLTE2LTE2aDBsMTYtMTZoOGwxNiAxNmgwWiIgc3R5bGU9InN0cm9rZTojZjM1O2ZpbGw6I2ZmNGQ2YTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQiLz48L3N2Zz4=";
-    // lower file size moment
-    const start = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NyA0OSI+PHJlY3QgeD0iLjUiIHk9Ii41IiB3aWR0aD0iNTYiIGhlaWdodD0iNDgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9ImZpbGw6I2ZmNjY4MDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2U6I2YzNSIvPjxyZWN0IHg9IjguNSIgeT0iOC41IiB3aWR0aD0iNDAiIGhlaWdodD0iMzIiIHJ4PSIxNiIgcnk9IjE2IiBzdHlsZT0ic3Ryb2tlOiNm";
+    let start = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ij";
+    if (name === "brc") return start + "IxMS41IDE1NS41IDU3IDQ5Ij48cGF0aCBkPSJNMjE2IDIwNGE0IDQgMCAwIDEtNC00di00MGE0IDQgMCAwIDEgNC00bDQ4LjY1MS4wNTNBNCA0IDAgMCAxIDI2OCAxNjB2OC4xMjhjMCAxLjMtMi4xODQgMy4zODMtMy44NzcgMy4zODNoLTEzLjk4MmMtMS4xMDUgMC0xLjY1Ny41NTItMi4yMSAxLjEwNWwtMi4yMDkgMi4yMDljLS41NTIuNTUyLTEuMTA1IDEuMTA1LTIuMjEgMS4xMDVoLTYuNjI3Yy0xLjEwNSAwLTEuNjU3LS41NTMtMi4yMS0xLjEwNWwtMi4yMDktMi4yMWMtLjU1Mi0uNTUyLTEuMTA1LTEuMTA0LTIuMjEtMS4xMDRoLTQuNDE4Yy0xLjIyIDAtMi4yMS45OS0yLjIxIDIuMjF2MTIuNTU0YzAgMS4yMi45OSAyLjIwOCAyLjIxIDIuMjA4aDQuNDE5YzEuMTA0IDAgMS42NTcuNTUzIDIuMjEgMS4xMDVsMi4yMDggMi4yMWMuNTUzLjU1MiAxLjEwNSAxLjEwNCAyLjIxIDEuMTA0aDYuNjI4YzEuMTA0IDAgMS42NTctLjU1MiAyLjIwOS0xLjEwNWwyLjIxLTIuMjA5Yy41NTItLjU1MiAxLjEwNC0xLjEwNSAyLjIwOS0xLjEwNWgxMy45ODJjMS42OTMgMCAzLjg3NyAyLjEwNCAzLjg3NyAzLjUwMlYyMDBhNCA0IDAgMCAxLTQgNHoiIHN0eWxlPSJmaWxsOiNmZjY2ODA7c3Ryb2tlOiNmMzUiLz48L3N2Zz4=";
+    else if (name === "img") return start + "AgMCA1NyA0OSI+PHBhdGggZD0iTTQuNSA0OC41YTQgNCAwIDAgMS00LTR2LTQwYTQgNCAwIDAgMSA0LTRoNDhhNCA0IDAgMCAxIDQgNHY0MGE0IDQgMCAwIDEtNCA0eiIgZmlsbD0iI2ZmNjY4MCIgc3Ryb2tlPSIjZjM1Ii8+PHBhdGggZD0iTTM5LjMyIDE2LjM0MnYxMC40MjRjMCAuNDUzLS4xMTMuNzkzLS40NTMgMS4wMi0zLjE3MiAyLjYwNi03LjgxOCAyLjYwNi0xMS4xMDMgMGE2LjE1IDYuMTUgMCAwIDAtMy44NTMtMS4zNmMtMS40NzMuMTEzLTIuNzE5LjY4LTMuODUyIDEuNDczdjcuMjUxYzAgLjU2Ny0uNTY3IDEuMTMzLTEuMTMzIDEuMTMzaC0uMTEzYy0uNTY3IDAtMS4xMzMtLjU2Ni0xLjEzMy0xLjEzM3YtMjEuM2MwLS42OC41NjYtMS4xMzQgMS4xMzMtMS4xMzQuNTY2IDAgMS4xMzMuNDU0IDEuMTMzIDEuMTM0di40NTNjMy4wNTktMS40NzMgNi43OTgtMS4wMiA5LjQwNCAxLjEzM2E2LjE0IDYuMTQgMCAwIDAgNy43MDQgMGMuMzQtLjM0LjkwNy0uNDUzIDEuMzYtLjIyNy41NjYuMTEzLjkwNi41NjcuOTA2IDEuMTMzbS0xLjEzMyAwLS4xMTMtLjExM2gtLjIyN2MtMi43MTkgMi4xNTMtNi40NTggMi4xNTMtOS4xNzcgMC0yLjQ5My0xLjkyNi01Ljg5Mi0yLjI2Ni04LjcyNC0uNjh2MTAuOTljMS4yNDYtLjY4IDIuNDkyLTEuMTMzIDMuODUyLTEuMjQ2IDEuNyAwIDMuMjg2LjU2NyA0LjUzMiAxLjU4NmE3LjY4NSA3LjY4NSAwIDAgMCA5Ljc0NC0uMTEzeiIgZmlsbD0iIzQ1OTkzZCIvPjxwYXRoIGQ9Im0zOC4xODcgMTYuNDU1LS4xMTMgMTAuMzExdi4xMTNjLTIuODMyIDIuMjY2LTYuOTExIDIuMjY2LTkuNzQ0IDAtMS4yNDYtMS4wMi0yLjgzMy0xLjU4Ni00LjUzMi0xLjU4Ni0xLjM2LjExMy0yLjYwNi41NjctMy44NTIgMS4yNDZ2LTEwLjk5YzIuODMyLTEuNTg2IDYuMjMxLTEuMjQ2IDguNzI0LjY4IDIuNzIgMi4xNTMgNi40NTggMi4xNTMgOS4xNzcgMGguMjI3YzAgLjExMy4xMTMuMTEzLjExMy4yMjYiIGZpbGw9IiM0Y2JmNTYiLz48L3N2Zz4=";
+
+    start += "AgMCA1NyA0OSI+PHJlY3QgeD0iLjUiIHk9Ii41IiB3aWR0aD0iNTYiIGhlaWdodD0iNDgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9ImZpbGw6I2ZmNjY4MDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2U6I2YzNSIvPjxyZWN0IHg9IjguNSIgeT0iOC41IiB3aWR0aD0iNDAiIGhlaWdodD0iMzIiIHJ4PSIxNiIgcnk9IjE2IiBzdHlsZT0ic3Ryb2tlOiNm";
     return start + {
       "norm": "MzU7ZmlsbDojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjx0ZXh0IHN0eWxlPSJmb250LXNpemU6MTJweDtmaWxsOiM2ZTc0ODg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhTmV1ZS1Cb2xkLCBIZWx2ZXRpY2EgTmV1ZSwgc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7bGV0dGVyLXNwYWNpbmc6MGVtOyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTcuNSAyOSkiPnRleHQ8L3RleHQ+PC9zdmc+",
       "num": "MzU7ZmlsbDojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZCIvPjx0ZXh0IHN0eWxlPSJmb250LXNpemU6MTJweDtmaWxsOiM2ZTc0ODg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhTmV1ZS1Cb2xkLEhlbHZldGljYSBOZXVlLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6NzAwO2xldHRlci1zcGFjaW5nOjAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1IDI5KSI+MDwvdGV4dD48L3N2Zz4=",
@@ -53,15 +50,12 @@
 
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
+  
+  let imgStorage = {}, imgStoreSize = 0;
 
   let extensionRemovable = false;
   let ext; // extension object
   let execute, Thread; // set by exports
-
-  function randomColour() {
-    const num = Math.floor(Math.random() * Math.pow(2, 24));
-    return `#${num.toString(16).padStart(6, "0")}`;
-  }
 
   function colorDarken(hex, amt) {
     const hex2Rgb = (h) => {
@@ -79,8 +73,16 @@
     }).join(""));
   }
 
+  function themeifyColor(hex) {
+    if (isPM) return [hex];
+    const themeObj = ReduxStore.getState().scratchGui.theme.theme.getCustomExtensionColors();
+    return Object.keys(themeObj).length === 0 ? [hex] : [
+      themeObj.primary(hex), themeObj.secondary(hex), themeObj.tertiary(hex)
+    ];
+  }
+
   const inputTypes = {
-    col: { opcode: "colour_picker", fieldName: "COLOUR", defaultValue: randomColour },
+    col: { opcode: "colour_picker", fieldName: "COLOUR", defaultValue: (() => `#${Math.floor(Math.random() * Math.pow(2, 24)).toString(16).padStart(6, "0")}`) },
     note: { opcode: "note", fieldName: "NOTE", defaultValue: "60" },
     mat: { opcode: "matrix", fieldName: "MATRIX", defaultValue: isPM ? "1111001010011100100011000" : "1111110101001000010001110" },
     ang: { opcode: "math_angle", fieldName: "NUM", defaultValue: "90" },
@@ -88,13 +90,14 @@
     num: { opcode: "math_number", fieldName: "NUM", defaultValue: "0" },
     emp: { opcode: "emp", fieldName: "EMPTY"},
     brc: { opcode: "brc", fieldName: "SUBSTACK" },
+    img: { opcode: "img", fieldName: "IMAGE" }
   };
   function getInputData(input) {
     if (input.isDrop) return { opcode: input.type, fieldName: null, defaultValue: null };
     if (!Object.prototype.hasOwnProperty.call(inputTypes, input.type)) return {};
     return inputTypes[input.type];
   }
-  // Used for setting dropdowns to the correct block color. Update when adding new input types
+  // Used for setting inputs to the correct block color
   function isNormalInput(opcode) {
     return opcode === "note" || opcode === "matrix" || opcode === "colour_picker"
       || opcode === "math_angle" || opcode === "math_number" || opcode === "text";
@@ -116,6 +119,13 @@
       modal.querySelector(`[class^="close-button_close-button_"]`).click();
     }
   };
+
+  // Clean nonexistent inputs from the inputs object
+  function cleanupBlockInputs(inputs, args) {
+    for (const inputId in inputs) {
+      if (!args.includes(inputId)) delete inputs[inputId];
+    }
+  }
 
   function openBlockMaker(workspace, isEditing) {
     if (extensionRemovable) return;
@@ -201,7 +211,35 @@
     });
   }
 
+  function genDrpButton(container, opts, defaultValue, isDark, isLabel, changeFunc, setFunc) {
+    const img = container.childNodes[0], btn = container.childNodes[2];
+    img.src = defaultValue;
+    if (isLabel) container.childNodes[1].firstChild.textContent = "Add a label";
+
+    // replace text with dropdown input
+    let drpdown = document.createElement("select");
+    drpdown.setAttribute("style", `${isLabel ? "width: 100%; " : ""} border-radius: 5px; text-align: center; background: ${isDark ? "#1e1e1e" : "#fff"}; border: 2px solid var(--ui-black-transparent, rgba(0, 0, 0, 0.15));`);
+    for (const [txt, val] of opts) {
+      let opt = document.createElement("option");
+      opt.text = txt; opt.value = val;
+      drpdown.appendChild(opt);
+    };
+    btn.replaceChild(drpdown, btn.querySelector("span"));
+
+    // on Firefox, the "click" event will propagate to the button, which will add another input. don't do that
+    drpdown.addEventListener("click", (e) => e.stopPropagation());
+    drpdown.addEventListener("change", (e) => {
+      changeFunc(e.target.value, img);
+      container.click();
+    });
+    container.addEventListener("click", (e) => setFunc(e, drpdown));
+    return container;
+  }
+
   function attachInputBtns(row, editor, isDark, workspace) {
+    const oldBoolURL = row.childNodes[1].childNodes[0].src;
+    const oldLabelURL = row.childNodes[isPM ? 3 : 2].childNodes[0].src;
+
     // dropdown btn
     const dropBtn = row.childNodes[1].cloneNode(true);
     dropBtn.childNodes[0].src = guiURIs("dropdwn");
@@ -230,61 +268,53 @@
       editor.focusLastEditor_();
     });
 
-    // dynamic btn
-    const paths = {
-      "number or text": "norm", "number": "num", "boolean": "bool",
-      "angle": "ang", "color": "col", "piano": "note", "matrix": "mat",
-      "empty": "emp",
-    };
-    const inpBtn = row.childNodes[1].cloneNode(true);
-    const img = inpBtn.childNodes[0], btn = inpBtn.childNodes[2];
-    img.src = inputURIs("norm");
-    // replace text with dropdown input
-    let drpdown = document.createElement("select");
-    drpdown.setAttribute("style", `border-radius: 5px; text-align: center; background: ${isDark ? "#1e1e1e" : "#fff"}; border: 2px solid var(--ui-black-transparent, rgba(0, 0, 0, 0.15));`);
-    for (const [txt, val] of Object.entries(paths)) {
-      let opt = document.createElement("option");
-      opt.text = txt; opt.value = val;
-      drpdown.appendChild(opt);
-    };
-    btn.replaceChild(drpdown, btn.querySelector("span"));
-    drpdown.addEventListener("change", (e) => {
-      img.src = inputURIs(e.target.value)
-      inpBtn.click();
-    });
-    // on Firefox, the "click" event will propagate to the button, which will add another input. don't do that
-    drpdown.addEventListener("click", (e) => { e.stopPropagation() });
+    // dynamic btns
+    const labPaths = [["text", "text"], ["image", "img"]];
+    const inpPaths = [
+      ["number or text", "norm"], ["number", "num"], ["boolean", "bool"], ["angle", "ang"],
+      ["color", "col"], ["piano", "note"], ["matrix", "mat"], ["empty", "emp"]
+    ];
 
-    row.replaceChild(inpBtn, row.childNodes[0]);
-    inpBtn.addEventListener("click", (e) => {
-      if (e.target === drpdown) return;
-      if (drpdown.value === "bool") {
-        editor.addBooleanExternal();
-        return;
+    const tempBtn = row.childNodes[1];
+    row.replaceChild(genDrpButton(
+      tempBtn.cloneNode(true), inpPaths, inputURIs("norm"), isDark, false,
+      (value, img) => {
+        img.src = value === "bool" ? oldBoolURL : inputURIs(value);
+      },
+      (e, drpdown) => {
+        if (e.target === drpdown) return;
+        if (drpdown.value === "bool") {
+          editor.addBooleanExternal();
+          return;
+        }
+        editor.addStringNumberExternal();
+        e.stopImmediatePropagation(); // don't run the old add event
+        if (drpdown.value === "norm") return;
+
+        const args = editor.argumentIds_;
+        const id = args[args.length - 1];
+        const inputs = tempStore.inputs || {};
+        inputs[id] = { type: drpdown.value, isDrop: false };
+        tempStore.inputs = inputs;
+        cleanupBlockInputs(inputs, args);
+
+        editor.displayNames_[args.length - 1] = drpdown.selectedOptions[0].textContent;
+        editor.updateDisplay_();
+        editor.focusLastEditor_();
       }
-      editor.addStringNumberExternal();
-      e.stopImmediatePropagation(); // don't run the old add event
-      if (drpdown.value === "norm") return;
-
-      const args = editor.argumentIds_;
-      const id = args[args.length - 1];
-      const inputs = tempStore.inputs || {};
-      inputs[id] = { type: drpdown.value, isDrop: false };
-      tempStore.inputs = inputs;
-      cleanupBlockInputs(inputs, args);
-
-      editor.displayNames_[args.length - 1] = drpdown.selectedOptions[0].textContent;
-      editor.updateDisplay_();
-      editor.focusLastEditor_();
-    });
+    ), row.childNodes[0]);
+    row.replaceChild(genDrpButton(
+      tempBtn.cloneNode(true), labPaths, oldLabelURL, isDark, true,
+      (value, img) => {
+        img.src = value === "text" ? oldLabelURL : inputURIs(value);
+      },
+      (e, drpdown) => {
+        if (e.target === drpdown) return;
+        if (drpdown.value === "text") editor.addLabelExternal();
+        else openImgSelector(editor, isDark, workspace);
+      }
+    ), row.childNodes[isPM ? 5 : 4]);
     row.childNodes[1].style.display = "none";
-  }
-
-  // Clean nonexistent inputs from the inputs object
-  function cleanupBlockInputs(inputs, args) {
-    for (const inputId in inputs) {
-      if (!args.includes(inputId)) delete inputs[inputId];
-    }
   }
 
   function attachCheckboxes(modal, editor, isEditing, ogProcode) {
@@ -344,7 +374,7 @@
       tempStore.color = col;
       if (isPM) editor.setColor(col, colorDarken(col, 0.1), colorDarken(col, 0.2));
       else {
-        editor.setColour(col);
+        editor.setColour(...themeifyColor(col));
         editor.updateDisplay_();
       }
     };
@@ -354,12 +384,12 @@
     if (isPM) colorDiv.style.marginBottom = "15px";
     colorDiv.style.border = `solid ${isDark ? "#343434" : "#D9D9D9"} 2.5px`;
 
-    const mainColors = ScratchBlocks.Colours;
+    const colorList = isPM ? ScratchBlocks.Colours : ReduxStore.getState().scratchGui.theme.theme.getStageBlockColors();
     const colors = [
-      mainColors.motion.primary, mainColors.looks.primary, mainColors.sounds.primary,
-      mainColors.event.primary, mainColors.control.primary, mainColors.sensing.primary,
-      mainColors.operators.primary, mainColors.data.primary, mainColors.data_lists.primary,
-      mainColors.more.primary, mainColors.pen.primary, "red",
+      colorList.motion.primary, colorList.looks.primary, colorList.sounds.primary,
+      colorList.event.primary, colorList.control.primary, colorList.sensing.primary,
+      colorList.operators.primary, colorList.data.primary, colorList.data_lists.primary,
+      colorList.more.primary, colorList.pen.primary, "red",
     ];
     colors.forEach(color => {
       const circle = document.createElement("div");
@@ -395,19 +425,24 @@
     row.parentNode.insertBefore(colorDiv, row.parentNode.lastChild.previousSibling);
   }
 
-  // Menu Modal
-  function openMenuSelector(editor, isDark, ogWorkspace) {
-    const arrowIcon = isPM ? "static/blocks-media/dropdown-arrow" : "/static/blocks-media/default/dropdown-arrow";
-    const workspace = ScratchBlocks.mainWorkspace;
-    ScratchBlocks.Variables.createVariable(workspace, null, "list");
+  // Custom Mini Modals
+  function openModal(titleName, workerFn, callbackFn) {
+    const modalStorage = {};
+    ScratchBlocks.prompt(
+      "", "", () => callbackFn(modalStorage.value),
+      titleName, "broadcast_msg"
+    );
+
     let modal = document.querySelectorAll(`div[class="ReactModalPortal"]`);
     modal = modal[modal.length - 1];
     modal.style.position = "relative"; modal.style.zIndex = "99999";
+    const boxModal = modal.querySelector("input").parentNode;
+    boxModal.previousSibling.remove(); boxModal.firstChild.remove();
+    workerFn(boxModal, modalStorage);
+  }
 
-    modal.querySelector(`div[class*="modal_header-item-title"]`).textContent = "Select a Dropdown";
-    const body = modal.querySelector(`div[class*="prompt_body_"]`);
-    const childs = body.childNodes;
-    for (let i = childs.length - 1; i--;) childs[i].remove();
+  function openMenuSelector(editor, isDark, ogWorkspace) {
+    const arrowIcon = isPM ? "static/blocks-media/dropdown-arrow" : "/static/blocks-media/default/dropdown-arrow";
 
     // Get All Dropdowns
     const avoid = ["looks_costumenumbername", "extension_wedo_tilt_menu", "lmsMoreEvents_menu_state"];
@@ -420,61 +455,119 @@
         allBlocks.splice(i + 1, 1);
       }
     });
-    let selectedMenu = allBlocks[0];
 
-    const dropDiv = document.createElement("div");
-    dropDiv.setAttribute("style", "width: 100%; height: 200px; margin-bottom: 15px; overflow: scroll; border-radius: 10px;");
-    dropDiv.style.border = `solid ${isDark ? "#343434" : "#D9D9D9"} 2px`;
+    openModal(
+      "Select a Dropdown",
+      (modal, modalStorage) => {
+        modalStorage.value = allBlocks[0];
+        const dropDiv = document.createElement("div");
+        dropDiv.setAttribute("style", `width: 100%; height: 200px; margin-bottom: 15px; overflow: scroll; border: solid ${isDark ? "#343434" : "#D9D9D9"} 2px; border-radius: 10px;`);
+        for (let i = 0; i < allBlocks.length; i++) {
+          const dropItem = document.createElement("div"), text = document.createElement("div"), prev = document.createElement("div");
+          dropItem.setAttribute("style", `cursor: pointer; padding: 8px; width: 100%; height: max-content; display: flex; flex-direction: column; align-items: center; justify-content: center;`);
+          dropItem.append(prev, text);
+          text.textContent = allBlocks[i].replace(CUSTOM_MENU_ID, "");
 
-    for (let i = 0; i < allBlocks.length; i++) {
-      const dropItem = document.createElement("div");
-      const text = document.createElement("div");
-      const prev = document.createElement("div");
-      dropItem.setAttribute("style", "cursor: pointer; padding: 8px; width: 100%; height: max-content; display: flex; flex-direction: column; align-items: center; justify-content: center;");
-      dropItem.append(prev, text);
-      text.textContent = allBlocks[i].replace(CUSTOM_MENU_ID, "");
+          const isCustom = allBlocks[i].includes(CUSTOM_MENU_ID);
+          const block = ogWorkspace.getBlockById(allBlocks[i]);
+          let prevTxt = block ? block.inputList[0].fieldRow[0].text_.substring(0, 17) : "";
+          if (prevTxt.length === 17) prevTxt += "...";
+          prev.outerHTML = `
+            <div style="color: #fff; background: ${isCustom ? "#FF6680" : block ? block.colour_ : "#505050"}; border-radius: ${block ? 50 : 5}px; width: max-content; text-align: center; margin-bottom: 5px; padding: 5px 10px 5px 10px; font-weight: 500; border: solid 1px rgba(0,0,0,0.3)">
+              <span>${block ? prevTxt : "???"}</span><img style="margin-left: 5px;" src="${arrowIcon}.svg">
+            </div>
+          `;
 
-      const isCustom = allBlocks[i].includes(CUSTOM_MENU_ID);
-      const block = ogWorkspace.getBlockById(allBlocks[i]);
-      let prevTxt = block ? block.inputList[0].fieldRow[0].text_.substring(0, 17) : "";
-      if (prevTxt.length === 17) prevTxt += "...";
-      prev.outerHTML =  `
-        <div style="color: #fff; background: ${isCustom ? "#FF6680" : block ? block.colour_ : "#505050"}; border-radius: ${block ? 50 : 5}px; width: max-content; text-align: center; margin-bottom: 5px; padding: 5px 10px 5px 10px; font-weight: 500; border: solid 1px rgba(0,0,0,0.3)">
-          <span>${block ? prevTxt : "???"}</span><img style="margin-left: 5px;" src="${arrowIcon}.svg">
-        </div>
-      `;
+          const bgColor = i % 2 === 0 ? isCustom ? "#cc526640" : "#aaa3" : isCustom ? "#cc526680" : "transparent";
+          dropItem.style.backgroundColor = `var(--selected-color, ${bgColor})`;
+          if (i === 0) dropItem.style.setProperty("--selected-color", isCustom ? "#f7889a99" : "#aaaa");
+          dropDiv.appendChild(dropItem);
+          dropItem.addEventListener("click", () => {
+            Array.from(dropDiv.children).forEach(c => c.style.removeProperty("--selected-color"));
+            dropItem.style.setProperty("--selected-color", isCustom ? "#f7889a99" : "#aaaa");
+            modalStorage.value = allBlocks[i];
+          });
+        }
+        modal.insertBefore(dropDiv, modal.lastChild);
+      },
+      (value) => {
+        editor.addStringNumberExternal();
+        const args = editor.argumentIds_;
+        const id = args[args.length - 1];
+        editor.displayNames_[args.length - 1] = value.replace(CUSTOM_MENU_ID, "");
+        editor.updateDisplay_();
+        editor.focusLastEditor_();
 
-      const bgColor = i % 2 === 0 ? isCustom ? "#cc526640" : "#aaa3" : isCustom ? "#cc526680" : "transparent";
-      dropItem.style.backgroundColor = `var(--selected-color, ${bgColor})`;
-      if (i === 0) dropItem.style.setProperty("--selected-color", isCustom ? "#f7889a99" : "#aaaa");
-      dropDiv.appendChild(dropItem);
-      dropItem.addEventListener("click", () => {
-        Array.from(dropDiv.children).forEach(c => { c.style.removeProperty("--selected-color"); });
-        dropItem.style.setProperty("--selected-color", isCustom ? "#f7889a99" : "#aaaa");
-        selectedMenu = allBlocks[i];
-      });
-    }
-    body.insertBefore(dropDiv, body.lastChild);
+        const inputs = tempStore.inputs || {};
+        inputs[id] = { type: value, isDrop: true };
+        tempStore.inputs = inputs;
+        cleanupBlockInputs(inputs, args);
+      }
+    );
+  }
 
-    // Override "OK" Button
-    const okBtn = modal.querySelector(`button[class^="prompt_ok-button_"]`);
-    const clone = okBtn.cloneNode(true);
-    okBtn.replaceWith(clone);
-    clone.addEventListener("click", () => {
-      editor.addStringNumberExternal();
-      const args = editor.argumentIds_;
-      const id = args[args.length - 1];
-      editor.displayNames_[args.length - 1] = selectedMenu.replace(CUSTOM_MENU_ID, "");
-      editor.updateDisplay_();
-      editor.focusLastEditor_();
+  // Image Modal
+  function openImgSelector(editor, isDark, ogWorkspace) {
+    // Get All Images
+    const images = new Set();
+    const extractImage = (block) => {
+      if (!block.init) return;
+      let json = {};
+      const jsonInit = (json0) => { json = json0; };
+      try {
+        block.init.call({ jsonInit });
+      } catch { return }
 
-      const inputs = tempStore.inputs || {};
-      inputs[id] = { type: selectedMenu, isDrop: true };
-      tempStore.inputs = inputs;
-      cleanupBlockInputs(inputs, args);
+      for (const key in json) {
+        if (key.startsWith("args")) for (const arg of json[key]) {
+          if (arg.type === "field_image" && arg.src) images.add(arg.src);
+        }
+      }
+    };
+    Object.values(ScratchBlocks.Blocks).forEach(extractImage);
 
-      modal.querySelector(`div[class^="close-button_close-button_"]`).click();
-    });
+    openModal(
+      "Select a Image",
+      (modal, modalStorage) => {
+        const flexConst = "display: flex; flex-wrap: wrap; align-items: center; justify-content: center;";
+        const borderConst = `border: solid var(--default-border) 2px; border-radius: 10px;`;
+        const dropDiv = document.createElement("div");
+        dropDiv.setAttribute("style", `width: 100%; height: 200px; ${flexConst} overflow: hidden scroll; margin-bottom: 15px; ${borderConst} --default-border: ${isDark ? "#343434" : "#D9D9D9"};`);
+        images.forEach((image) => {
+          const dropItem = document.createElement("div");
+          dropItem.setAttribute("style", `cursor: pointer; width: 75px; height: 75px; ${flexConst} padding: 5px; background-color: var(--default-bg); margin: 7px; ${borderConst} --default-border: ${isDark ? "#343434" : "#D9D9D9"}; --default-bg: ${isDark ? "#1f1f1f" : "#f5f5f5"};`);
+          const img = document.createElement("img");
+          img.setAttribute("style", `width: 100%; height: 100%;`);
+          img.src = image;
+          dropItem.appendChild(img);
+
+          dropDiv.appendChild(dropItem);
+          dropItem.addEventListener("click", () => {
+            Array.from(dropDiv.children).forEach(c => {
+              c.style.backgroundColor = "var(--default-bg)";
+              c.style.border = "solid var(--default-border) 2px";
+            });
+            dropItem.style.backgroundColor = "var(--looks-transparent, hsla(194, 100%, 50%, 0.35))";
+            dropItem.style.border = "solid var(--looks-secondary, hsl(194, 100%, 50%)) 2px";
+            modalStorage.value = image;
+          });
+        });
+        modal.insertBefore(dropDiv, modal.lastChild);
+      },
+      (value) => {
+        editor.addStringNumberExternal();
+        const args = editor.argumentIds_;
+        const id = args[args.length - 1];
+        editor.displayNames_[args.length - 1] = "image";
+        editor.updateDisplay_();
+        editor.focusLastEditor_();
+
+        const inputs = tempStore.inputs || {};
+        inputs[id] = { type: "img", isDrop: false, src: storeImage(value) };
+        tempStore.inputs = inputs;
+        cleanupBlockInputs(inputs, args);
+      }
+    );
   }
 
   // Compiler Patches
@@ -724,21 +817,24 @@
       if (extensionRemovable) return ogUpdateDisplay.call(this);
       const store = this.SPmbpCST_store || storeGet(this.procCode_);
       if (store.color && !this.isInsertionMarker()) {
-        this.setColour(store.color);
+        this.setColour(...themeifyColor(store.color));
         if (this.type === "procedures_prototype") {
           // Recolor argument reporters and the define block to the block color
           // Disable branch inputs
-          this.setColour(store.color);
+          this.setColour(...themeifyColor(store.color));
           // ScratchBlocks ways of getting the parent block won't work while the blocks are being created
           queueMicrotask(() => {
             const defineBlock = this.getParent();
             if (!defineBlock) return;
-            defineBlock.setColour(store.color);
+            defineBlock.setColour(...themeifyColor(store.color));
             syncFieldColors(defineBlock);
-            for (const child of defineBlock.getDescendants(false, false)) {
+            const children = this.inputList.filter((item, i) => item.connection !== null);
+            for (let i = 0; i < children.length; i++) {
+              if (!children[i].connection) continue;
+              const child = children[i].connection.targetBlock();
               if (store.inputs) {
-                const index = this.childBlocks_.findIndex((item) => item.id === child.id);
-                if (store.inputs[this.argumentIds_[index]]?.type === "brc") {
+                const type = store.inputs[this.argumentIds_[i]]?.type;
+                if (type === "brc") {
                   child.setOutputShape(3);
                   child.setNextStatement(false);
                   child.setMovable(false);
@@ -753,7 +849,7 @@
         if (this.type === "procedures_call") {
           queueMicrotask(() => {
             for (const child of this.getChildren()) {
-              if (child.isShadow() && child.outputConnection && !isNormalInput(child.type)) child.setColour(store.color);
+              if (child.isShadow() && child.outputConnection && !isNormalInput(child.type)) child.setColour(...themeifyColor(store.color));
             }
           });
         }
@@ -788,16 +884,26 @@
       }
       ogUpdateDisplay.call(this);
 
-      // turn branch inputs into branches
+      // turn branch and image inputs into branches and images
       // (doing it in attachShadow makes it not work on further updates)
       if (store?.inputs && this.type !== "procedures_declaration") for (let i = this.inputList.length; i--;) {
         const input = this.inputList[i];
-        if (input.type !== SB.NEXT_STATEMENT && store.inputs[input.name]?.type === "brc") {
+        const type = store.inputs[input.name]?.type;
+        if (
+          (input.type !== SB.NEXT_STATEMENT && type === "brc") || (input.type !== SB.DUMMY_INPUT && type === "img")
+        ) {
           // for Prototype blocks we just use a static square block as a visual representation
-          // this is done in 'argumentReporterSetParent'
-          if (this.type === "procedures_prototype") continue;
-          const connection = this.makeConnection_(SB.NEXT_STATEMENT);
-          const newInput = new SB.Input(SB.NEXT_STATEMENT, input.name, this, connection);
+          // for branch inputs, this is done in 'updateDisplay_'
+          if (type === "brc" && this.type === "procedures_prototype") continue;
+          let connection, newInput;
+          if (type === "brc") {
+            connection = this.makeConnection_(SB.NEXT_STATEMENT);
+            newInput = new SB.Input(SB.NEXT_STATEMENT, input.name, this, connection);
+          } else {
+            const imageURL = getStoredImage(store.inputs[input.name].src);
+            newInput = new SB.Input(SB.DUMMY_INPUT, "", this);
+            newInput.appendField(new ScratchBlocks.FieldImage(imageURL, 25, 25));
+          }
 
           // Remove the old input...
           if (input.connection && input.connection.isConnected()) {
@@ -809,12 +915,12 @@
           input.dispose();
           // ...but replace it with the new one in place
           // (calling removeInput() shifts all elements of inputList which is a bit slower)
-          if (isPM ? this.output_ : this.getReturn()) this.inputList.splice(i, 1);
+          if (type === "brc" && (isPM ? this.output_ : this.getReturn())) this.inputList.splice(i, 1);
           else {
-            if (i) this.inputList[i] = newInput;
+            if (i || type === "img") this.inputList[i] = newInput;
             else {
               // fix weird visual glitch with a branch as the first input
-              this.inputList[i] = this.appendDummyInput()
+              this.inputList[i] = this.appendDummyInput();
               this.inputList.push(newInput);
             }
           }
@@ -852,8 +958,7 @@
       if (!store || !store.inputs || !store.inputs[input.name]) return ogAttachShadow.call(this, input, argumentType);
       const { opcode, fieldName, defaultValue } = getInputData(store.inputs[input.name]);
       if (!opcode) return ogAttachShadow.call(this, input, argumentType);
-      if (opcode === "brc") return; // branches are special
-      if (opcode === "emp") return; // empty inputs too
+      if (opcode === "brc" || opcode === "emp" || opcode === "img") return; // these are special
 
       // Add custom inputs
       const blockType = opcode;
@@ -920,7 +1025,7 @@
         if (block[targetProcData] === "branchDrag") {
           block.setColour(defineBlock.colourSecondary_, defineBlock.colourSecondary_, defineBlock.colourTertiary_);
         } else {
-          block.setColour(defineBlock.getColour());
+          block.setColour(defineBlock.colour_, defineBlock.colourSecondary_, defineBlock.colourTertiary_);
         }
       } else {
         block.setColour(...Object.values(SB.Colours.more));
@@ -983,7 +1088,8 @@
       const source = this.targetBlock_;
       oldDuplicateOnDrag_.call(this);
       const duplicated = this.targetBlock_;
-      if (source && duplicated && source.type.startsWith("argument_reporter_")) duplicated.setColour(source.getColour());
+      if (source && duplicated && source.type.startsWith("argument_reporter_"))
+        duplicated.setColour(source.colour_, source.colourSecondary_, source.colourTertiary_);
     };
 
     // Disable branch argument reporter dragging
@@ -1126,6 +1232,7 @@
       // penguinmod automatically does this
       suspendRemoval = false;
       removeUnusedProcs();
+      removeUnusedImages();
       ext?.serialize();
     }
 
@@ -1257,6 +1364,36 @@
     }
   }
 
+  // Remove unused images before saving
+  function removeUnusedImages() {
+    if (suspendRemoval) return;
+    const usedIds = new Set();
+    Object.values(storage).forEach(proc => Object.values(proc).forEach(data => {
+      if (!data.inputs) return;
+      Object.values(data.inputs).forEach(input => {
+        if (input.type === "img") usedIds.add(input.src);
+      });
+    }));
+
+    for (let i = 1; i < imgStoreSize; i++) {
+      if (!usedIds.has(i)) delete imgStorage[i];
+    }
+  }
+
+  // reset the compiled code cache for global blocks that get changed
+  function resetGlobalCompilerCache(proccode) {
+    for (const target of runtime.targets) {
+      const blocks = target.blocks;
+      const compiledProcs = Object.keys(blocks._cache.compiledProcedures);
+      for (let i = 0; i < compiledProcs.length; i++) {
+        if (compiledProcs[i].includes(proccode)) {
+          blocks.resetCache();
+          return;
+        }
+      }
+    }
+  }
+
   // Is-in-Editor Checker
   let startedEditorWorker = false;
   function startEditorListener() {
@@ -1292,19 +1429,32 @@
             }
           }
           switch (e.type) {
+            case Events.CHANGE: {
+              let block = mainWorkspace.getBlockById(e.blockId);
+              while (block !== null) {
+                if (block && block.type === "procedures_definition") {
+                  const proto = block.getInput("custom_block")?.connection?.targetBlock();
+                  if (!proto) return;
+                  const store = storeGet(proto.procCode_);
+                  if (store.global) resetGlobalCompilerCache(proto.procCode_);
+                }
+                block = block.getParent();
+              }
+              break;
+            }
             case Events.MOVE: {
               const block = mainWorkspace.getBlockById(e.blockId);
               let parent = mainWorkspace.getBlockById(e.newParentId);
 
               // fix field colours
               if (
-                e.newInputName && block.category_ === null &&
+                e.newInputName && block?.category_ === null &&
                 block.inputList[0].fieldRow[0].arrow_ !== undefined &&
                 parent?.type === "procedures_call"
               ) block.setColour(parent.colour_);
 
               // update global block cache for returns
-              if (!isPM && block?.type === "procedures_return") {
+              if (!isPM) {
                 const changeGlobalReturn = (parent, returns) => {
                   while (parent !== null) {
                     if (parent && parent.type === "procedures_definition") {
@@ -1312,9 +1462,12 @@
                       if (!proto) return;
                       const store = storeGet(proto.procCode_);
                       if (store.global) {
-                        if (returns) store.return = 1;
-                        else delete store.return;
-                        listNeedsRefresh = true;
+                        if (block?.type === "procedures_return") {
+                          if (returns) store.return = 1;
+                          else delete store.return;
+                          listNeedsRefresh = true;
+                        }
+                        resetGlobalCompilerCache(proto.procCode_);
                       }
                     }
                     parent = parent.getParent();
@@ -1336,6 +1489,22 @@
     });
   }
   function startBlockListener() {
+    runtime.on("BLOCK_DRAG_END", (newStack, oldID) => {
+      // append old data to new blocks
+      if (newStack[0].opcode !== "procedures_definition") return;
+      const proccode = newStack[1].mutation.proccode;
+      const thisTarget = vm.editingTarget;
+      const copyStore = storeGet(proccode, thisTarget);
+      if (copyStore) setTimeout(() => {
+        // timeout works better than queueMicrotask for this?
+        for (const target of runtime.targets) {
+          if (!target.isOriginal || target.id === thisTarget.id) continue;
+          const def = target.blocks.getProcedureDefinition(proccode);
+          if (def) storeSet(proccode, structuredClone(copyStore), target);
+        }
+      }, 10);
+    });
+
     const checkInEditor = () => !ReduxStore.getState().scratchGui.mode.isPlayerOnly;
     let inEditor = checkInEditor();
     if (inEditor) initBlockEvents();
@@ -1369,9 +1538,23 @@
     runtime.SPmbpCSTOldStorage = storage;
   }
 
+  function storeImage(url) {
+    const urlExists = Object.values(imgStorage).indexOf(url);
+    if (urlExists > -1) return urlExists + 1;
+
+    imgStoreSize++;
+    imgStorage[imgStoreSize] = url;
+    return imgStoreSize;
+  }
+  function getStoredImage(index) {
+    return imgStorage[index] ?? "";
+  }
+
   function deserializeStorage(data) {
     if (isPM) {
       storage = data.SPmbpCST || {};
+      imgStorage = data.SPmbpCST.imgStorage ?? {};
+      imgStoreSize = Object.keys(imgStorage).length;
       startEditorListener();
       if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
         runtime.once("PROJECT_LOADED", () => {
@@ -1380,6 +1563,9 @@
       });
     } else {
       suspendRemoval = true;
+
+      imgStorage = runtime.extensionStorage["SPmbpCST"].imgStorage ?? {};
+      imgStoreSize = Object.keys(imgStorage).length;
       storage = {}; // target ID's change when saving :(
       for (let i = 0; i < runtime.targets.length; i++) {
         const target = runtime.targets[i];
@@ -1406,7 +1592,7 @@
     for (const targetId of Object.keys(storage)) {
       const target = runtime.getTargetById(targetId);
       if (!target) continue;
-      for (const proccode of Object.keys(storage[targetId])) {
+      for (const proccode of Object.keys(storage[targetId] ?? {})) {
         if (storage[targetId][proccode]?.global) globalBlocksCache[proccode] = target;
       }
     }
@@ -1712,10 +1898,11 @@
       if (isPM) {
         suspendRemoval = false;
         removeUnusedProcs();
-        return { SPmbpCST: storage };
+        removeUnusedImages();
+        return { SPmbpCST: { ...storage, imgStorage } };
       } else {
         // target ID's change when saving :(
-        runtime.extensionStorage["SPmbpCST"] = { loaded: true };
+        runtime.extensionStorage["SPmbpCST"] = { loaded: true, imgStorage };
         for (const [id, procs] of Object.entries(storage)) {
           const target = runtime.getTargetById(id);
           if (!target) continue;
