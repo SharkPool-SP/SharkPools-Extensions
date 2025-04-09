@@ -127,6 +127,7 @@
         const drawable = render.createDrawable("pen");
         papers[name] = { skin, drawable };
         render.updateDrawableSkinId(drawable, skin);
+        render._allDrawables[drawable].customDrawableName = "Pen Paper: " + name;
         if (isEditor) runtime.once("BEFORE_EXECUTE", () => runtime.requestBlocksUpdate());
       }
     }

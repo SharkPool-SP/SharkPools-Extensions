@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.11
+// Version V.1.0.2
 
 (function (Scratch) {
   "use strict";
@@ -414,6 +414,20 @@ gl_FragColor.a = baseAlpha;`
     function setupModes(e,n,a){if(e){gl.enable(gl.SCISSOR_TEST);let E=(e.x_min/scratchUnitWidth+.5)*width|0,S=(e.y_min/scratchUnitHeight+.5)*height|0,N=(e.x_max/scratchUnitWidth+.5)*width|0,b,l=((e.y_max/scratchUnitHeight+.5)*height|0)-S;a&&(S=(-e.y_max/scratchUnitHeight+.5)*height|0),gl.scissor(E,S,N-E,l)}else gl.disable(gl.SCISSOR_TEST);switch(n){case"additive":gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.ONE,gl.ONE);break;case"subtract":gl.blendEquation(gl.FUNC_REVERSE_SUBTRACT),gl.blendFunc(gl.ONE,gl.ONE);break;case"multiply":gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.DST_COLOR,gl.ONE_MINUS_SRC_ALPHA);break;case"invert":gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.ONE_MINUS_DST_COLOR,gl.ONE_MINUS_SRC_COLOR);break;default:gl.blendEquation(gl.FUNC_ADD),gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA)}}
     render.exports.Drawable.prototype.getUniforms=function(){return active&&toCorrectThing&&setupModes(this.clipbox,this.blendMode,flipY),ogGetUniforms.call(this)};
   }
+
+  // this will allow clones to inherit parent effects
+  const ogInitDrawable = vm.exports.RenderedTarget.prototype.initDrawable;
+  vm.exports.RenderedTarget.prototype.initDrawable = function(layerGroup) {
+    ogInitDrawable.call(this, layerGroup);
+    if (this.isOriginal) return;
+ 
+    const parentSprite = this.sprite.clones[0]; // clone[0] is always the original
+    const parentDrawable = render._allDrawables[parentSprite.drawableID];
+    if (!parentDrawable[drawableKey]) return;
+
+    const drawable = render._allDrawables[this.drawableID];
+    drawable[drawableKey] = structuredClone(parentDrawable[drawableKey]);
+  };
 
   /* patch for "when costume switches" event */
   const ogSetCoreCostume = looksCore.constructor.prototype._setCostume;
