@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.0
+// Version V.1.1.01
 
 (function (Scratch) {
   "use strict";
@@ -1175,6 +1175,9 @@
       const arr = this.tryParse(args.ARR, 1);
       const ind1 = this.toArrInd(args.IND1);
       const ind2 = this.toArrInd(args.IND2);
+      const maxInd = Math.max(ind1, ind2);
+      while (arr.length <= maxInd) arr.push("");
+
       [arr[ind1], arr[ind2]] = [arr[ind2], arr[ind1]];
       return arr;
     }
@@ -1233,7 +1236,7 @@
     fillArray(args) {
       const length = Scratch.Cast.toNumber(args.NUM);
       const arr = this.tryParse(args.ARR, 1);
-      return arr.concat(Array(Math.max(0, length - arr.length)).fill(null));
+      return arr.concat(Array(Math.max(0, length - arr.length)).fill(""));
     }
 
     arrOrder(args) {
