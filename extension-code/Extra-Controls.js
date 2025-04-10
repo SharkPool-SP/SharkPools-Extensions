@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.7.02
+// Version V.1.7.03
 
 (function (Scratch) {
   "use strict";
@@ -795,14 +795,17 @@
 
     loopInd(_, util) {
       const ID = this.getThisBlock(util)?.id;
-      if (typeof util.thread.SPloopInd === "undefined" || util.thread.SPloopInd.ID !== ID) util.thread.SPloopInd = { ID, ind: 0 };
-      util.thread.SPloopInd.ind++;
-      return util.thread.SPloopInd.ind;
+      if (typeof util.thread.SPloopReader === "undefined") util.thread.SPloopReader = {};
+      if (util.thread.SPloopReader[ID] === undefined) util.thread.SPloopReader[ID] = 0;
+      util.thread.SPloopReader[ID]++;
+      return util.thread.SPloopReader[ID];
     }
 
     loopTimer(_, util) {
-      if (typeof util.thread.SPstartTime === "undefined") util.thread.SPstartTime = util.sequencer.timer.startTime;
-      return (Date.now() - util.thread.SPstartTime) / 1000;
+      const ID = this.getThisBlock(util)?.id;
+      if (typeof util.thread.SPloopReader === "undefined") util.thread.SPloopReader = {};
+      if (util.thread.SPloopReader[ID] === undefined) util.thread.SPloopReader[ID] = util.sequencer.timer.startTime;
+      return (Date.now() - util.thread.SPloopReader[ID]) / 1000;
     }
 
     continueLoop(_, util) { this.blockLoop("continue", util) }
