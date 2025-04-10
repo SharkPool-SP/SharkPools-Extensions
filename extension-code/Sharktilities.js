@@ -2,8 +2,9 @@
 // ID: SharkPoolSharktilities
 // Description: Various Utility Blocks for Various Operations
 // By: SharkPool
+// License: MIT
 
-// Version V.3.4.13
+// Version V.3.4.14
 
 (function (Scratch) {
   "use strict";
@@ -14,20 +15,16 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  const regeneratedReporters = ["SharkPoolSharktilities_changeV"];
+  const regenReporters = ["SharkPoolSharktilities_changeV"];
   var lastValues = {};
-
-  function rgbToHsl(e,n,t){e/=255,n/=255,t/=255;let r=Math.max(e,n,t),o=Math.min(e,n,t),l=r-o,u,$,_=(r+o)/2;if(0===l)u=$=0;else{switch($=_>.5?l/(2-r-o):l/(r+o),r){case e:u=(n-t)/l+(n<t?6:0);break;case n:u=(t-e)/l+2;break;case t:u=(e-n)/l+4}u/=6}return[u,$,_]}
-  function hslToRgb(e,n,t){let r,o,l;if(0===n)r=o=l=t;else{let u=(e,n,t)=>(t<0&&(t+=1),t>1&&(t-=1),t<1/6)?e+(n-e)*6*t:t<.5?n:t<2/3?e+(n-e)*(2/3-t)*6:e,$=t<.5?t*(1+n):t+n-t*n,_=2*t-$;r=u(_,$,e+1/3),o=u(_,$,e),l=u(_,$,e-1/3)}return[Math.round(255*r),Math.round(255*o),Math.round(255*l)]}
-  function componentToHex(e){let n=e.toString(16);return 1===n.length?"0"+n:n}
 
   runtime.on("BEFORE_EXECUTE", () => runtime.startHats("SharkPoolSharktilities_whenChanged"));
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-    const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
     SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-      const result = originalCheck(block);
+      const result = ogCheck(block);
       if (result) return true;
-      return block.isShadow() && regeneratedReporters.includes(block.type);
+      return block.isShadow() && regenReporters.includes(block.type);
     };
   });
 
@@ -428,7 +425,8 @@
 
     isChanged(args, util) {
       const input = args.INPUT;
-      const con = util.thread.stackFrames[0].oldVal !== input;
+      const oldVal = util.thread.stackFrames[0].oldVal;
+      const con = oldVal !== input && oldVal !== undefined;
       util.thread.stackFrames[0].oldVal = input;
       return con;
     }
@@ -473,14 +471,15 @@
     }
 
     hexBrightness(args) {
-      const [r, g, b] = args.COLOR.replace(/^#/, "").match(/.{1,2}/g).map(channel => parseInt(channel, 16));
-      const hslColor = rgbToHsl(r, g, b);
-      const newLightness = Math.min(1, Math.max(0, hslColor[2] + (args.CHANGE / 100)));
-      const newRgbColor = hslToRgb(hslColor[0], hslColor[1], newLightness);
-      return `#${newRgbColor.map(channel => componentToHex(channel)).join("")}`;
+      const brightness = Scratch.Cast.toNumber(args.CHANGE);
+      let rgb = Scratch.Cast.toRgbColorList(args.COLOR).map((channel) => {
+        return Math.min(255, channel + brightness);
+      });
+      return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
     }
 
     smooth(spd, lim, type, num) {
+      type = type === "sin" ? "sin" : type === "cos" ? "cos" : "tan";
       const speed = Scratch.Cast.toNumber(spd) / 10;
       const limit = Scratch.Cast.toNumber(lim);
       return Math[type](num * speed) * limit || 0;
@@ -536,7 +535,10 @@
       return target._customState["Scratch.looks"].text;
     }
 
-    cloudCode(args) { return args.CODE === "encode" ? this.encodeText(args.TEXT) : this.decodeText(args.TEXT) }
+    cloudCode(args) {
+      const txt = Scratch.Cast.toString(args.TEXT);
+      return args.CODE === "encode" ? this.encodeText(txt) : this.decodeText(txt);
+    }
     encodeText(txt) { return txt.split("").map(char => char.charCodeAt(0)).map(value => value.toString().padStart(3, "0")).join("") }
     decodeText(txt) {
       const decodedString = [];
