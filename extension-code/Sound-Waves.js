@@ -4,11 +4,10 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.1.1
+// Version V.2.1.2
 
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) throw new Error("Sound Waves must run unsandboxed");
 
   const menuIconURI =
@@ -16,6 +15,10 @@
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTEuNDI5IiBoZWlnaHQ9Ijc4IiB2aWV3Qm94PSIwIDAgMTExLjQyOSA3OCI+PHBhdGggZD0iTTI2Ny4xNiAyMTloLTI2LjQ2NGE2LjI3IDYuMjcgMCAwIDEtNi4yNjctNi4yNjh2LTYwLjU5aC0xNi43MTV2MjcuMTYyYTYuMjcgNi4yNyAwIDAgMS02LjI2OCA2LjI2N2gtMjQuMzc1YTIuNzg2IDIuNzg2IDAgMCAxLTIuNzg1LTIuNzg1di01LjU3MmEyLjc4NiAyLjc4NiAwIDAgMSAyLjc4NS0yLjc4NWgxOS41di0yNy4xNjFBNi4yNyA2LjI3IDAgMCAxIDIxMi44NCAxNDFoMjYuNDY1YTYuMjcgNi4yNyAwIDAgMSA2LjI2NyA2LjI2OHY2MC41OWgxNi43MTV2LTI3LjE2MmE2LjI3IDYuMjcgMCAwIDEgNi4yNjgtNi4yNjdoMjQuMzc1YTIuNzg2IDIuNzg2IDAgMCAxIDIuNzg1IDIuNzg1djUuNTcyYTIuNzg2IDIuNzg2IDAgMCAxLTIuNzg1IDIuNzg1aC0xOS41djI3LjE2MWE2LjI3IDYuMjcgMCAwIDEtNi4yNyA2LjI2OCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4NC4yODYgLTE0MSkiIGZpbGw9IiNmZmYiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTpub3JtYWwiLz48L3N2Zz4=";
 
+  const vm = Scratch.vm;
+  const runtime = vm.runtime;
+
+  const waves = ["triangle", "sine", "square", "sawtooth"];
   const notes = [
     "C", "C#", "D", "D#", "E", "F",
     "F#", "G", "G#", "A", "A#", "B"
@@ -23,8 +26,8 @@
 
   class SPsoundWaves {
     constructor() {
-      this.audioContext = Scratch.vm.runtime.audioEngine.audioContext;
-      this.audioNode = Scratch.vm.runtime.audioEngine.inputNode;
+      this.audioContext = runtime.audioEngine.audioContext;
+      this.audioNode = runtime.audioEngine.inputNode;
       this.gainNode = this.audioContext.createGain();
       this.gainNode.gain.value = 1;
       this.gainNode.connect(this.audioNode);
@@ -37,9 +40,7 @@
       this.gainNodes = new Map();
       this.playingStatus = new Map();
       this.registerKeyEvents();
-      Scratch.vm.runtime.on("PROJECT_STOP_ALL", () => {
-        this.stopNote();
-      });
+      runtime.on("PROJECT_STOP_ALL", () => this.stopNote());
     }
     getInfo() {
       return {
@@ -91,31 +92,6 @@
               },
             },
           },
-          /* Deprecation Marker */
-          {
-            opcode: "playNote",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "play [WAVE] note [NOTE] for [DURATION] seconds with ID [ID]",
-            hideFromPalette: true,
-            arguments: {
-              WAVE: { type: Scratch.ArgumentType.STRING, menu: "WAVES2" },
-              NOTE: { type: Scratch.ArgumentType.NOTE, defaultValue: 60 },
-              DURATION: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0.5 },
-              ID: { type: Scratch.ArgumentType.STRING, defaultValue: 1 }
-            },
-          },
-          {
-            opcode: "playNoteContinuously",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "play [WAVE] note [NOTE] continuously with ID [ID]",
-            hideFromPalette: true,
-            arguments: {
-              WAVE: { type: Scratch.ArgumentType.STRING, menu: "WAVES2" },
-              NOTE: { type: Scratch.ArgumentType.NOTE, defaultValue: 60 },
-              ID: { type: Scratch.ArgumentType.STRING, defaultValue: 1 }
-            },
-          },
-          /* Marker End */
           {
             opcode: "stopID",
             blockType: Scratch.BlockType.COMMAND,
@@ -229,66 +205,47 @@
             opcode: "getKeyPressedDuration",
             blockType: Scratch.BlockType.REPORTER,
             text: "pressed key duration"
-          }
+          },
+          /* Deprecation Marker */
+          {
+            opcode: "playNote",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "play [WAVE] note [NOTE] for [DURATION] seconds with ID [ID]",
+            hideFromPalette: true,
+            arguments: {
+              WAVE: { type: Scratch.ArgumentType.STRING, menu: "WAVES2" },
+              NOTE: { type: Scratch.ArgumentType.NOTE, defaultValue: 60 },
+              DURATION: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0.5 },
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: 1 }
+            },
+          },
+          {
+            opcode: "playNoteContinuously",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "play [WAVE] note [NOTE] continuously with ID [ID]",
+            hideFromPalette: true,
+            arguments: {
+              WAVE: { type: Scratch.ArgumentType.STRING, menu: "WAVES2" },
+              NOTE: { type: Scratch.ArgumentType.NOTE, defaultValue: 60 },
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: 1 }
+            },
+          },
+          /* Marker End */
         ],
         menus: {
-          WAVES2: ["triangle", "sine", "square", "sawtooth"],
-          WAVES: {
-            acceptReporters: true,
-            items: ["triangle", "sine", "square", "sawtooth"]
-          }
+          /* Deprecation Marker */
+          WAVES2: waves,
+          /* Marker End */
+          WAVES: { acceptReporters: true, items: waves }
         },
       };
     }
 
-    getVol({ ID }) {
-      const gainNode = this.gainNodes.get(ID);
-      if (gainNode) return gainNode.gain.value * 100;
-      return 100;
-    }
-
-    isPlaying({ ID }) { return this.playingStatus.get(ID) !== undefined && this.playingStatus.get(ID) }
-
+    // Helper Funcs
     convertScratchNoteToRealNote(scratchNote) {
       const octave = Math.floor(scratchNote / 12) - 1;
       const noteName = notes[scratchNote % 12];
       return `${noteName}${octave}`;
-    }
-
-    playNoteV2(args) { this.playNote(args) }
-    playNote({ WAVE, NOTE, DURATION, ID }) {
-      this.stopID({ ID });
-      const realNote = this.convertScratchNoteToRealNote(Math.round(NOTE));
-      const frequency = this.noteToFrequency(realNote);
-      this.playSound(frequency, DURATION, WAVE, ID);
-    }
-
-    playNoteContinuouslyV2(args) { this.playNoteContinuously(args) }
-    playNoteContinuously({ WAVE, NOTE, ID }) {
-      this.stopID({ ID });
-      const realNote = this.convertScratchNoteToRealNote(Math.round(NOTE));
-      const frequency = this.noteToFrequency(realNote);
-      this.playingNote = true;
-      this.noteStopTime = Infinity;
-      this.playSound(frequency, this.noteStopTime, WAVE, ID);
-    }
-
-    stopNote() {
-      this.oscillators.forEach((oscillator) => { oscillator.stop() });
-      this.oscillators.clear();
-      this.playingNote = false;
-      this.playingStatus.forEach((value, key) => {
-        this.playingStatus.set(key, false);
-      });
-    }
-
-    stopID({ ID }) {
-      const oscillator = this.oscillators.get(ID);
-      if (oscillator) {
-        oscillator.stop();
-        this.oscillators.delete(ID);
-        this.playingStatus.set(ID, false);
-      }
     }
 
     noteToFrequency(note) {
@@ -301,58 +258,10 @@
       return notes.indexOf(noteName) + (octave + 1) * 12;
     }
 
-    setVolume({ ID, VOLUME }) {
-      const gainNode = this.gainNodes.get(ID);
-      if (gainNode) {
-        gainNode.gain.setValueAtTime(
-          VOLUME / 100, this.audioContext.currentTime
-        );
-      }
-    }
-
-    setAllVolume({ VOLUME }) {
-      let gainNode = "";
-      this.gainNodes.forEach((value, key) => {
-        gainNode = this.gainNodes.get(key);
-        if (gainNode) {
-          gainNode.gain.setValueAtTime(
-            VOLUME / 100, this.audioContext.currentTime
-          );
-        }
-      });
-    }
-
-    setPitch({ ID, PITCH }) {
-      const oscillator = this.oscillators.get(ID);
-      if (oscillator) {
-        const pitchFactor = Math.pow(2, PITCH / 12);
-        const newFrequency = 440 * pitchFactor;
-        oscillator.frequency.setValueAtTime(newFrequency, this.audioContext.currentTime);
-      }
-    }
-
-    setAllPitch({ PITCH }) {
-      const pitchFactor = Math.pow(2, PITCH / 12);
-      this.oscillators.forEach((oscillator, ID) => {
-        const newFrequency = 440 * pitchFactor;
-        oscillator.frequency.setValueAtTime(newFrequency, this.audioContext.currentTime);
-      });
-    }
-
-    getPitch({ ID }) {
-      const oscillator = this.oscillators.get(ID);
-      if (oscillator) {
-        const currentFrequency = oscillator.frequency.value;
-        const pitchFactor = currentFrequency / 440;
-        return Math.round(12 * Math.log2(pitchFactor));
-      }
-      return 0;
-    }
-
     playSound(frequency, duration, waveform, ID) {
       const oscillator = this.audioContext.createOscillator();
       const gainNode = this.audioContext.createGain();
-      oscillator.type = waveform;
+      oscillator.type = waves.includes(waveform) ? waveform : "square";
       oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
       gainNode.gain.setValueAtTime(1.0, this.audioContext.currentTime);
 
@@ -407,7 +316,100 @@
       return note;
     }
 
-    convertPressedKeyToNote() { return this.keyPressed ? this.currentNote : 0; }
+    // Block Funcs
+    playNoteV2(args) { this.playNote(args) }
+    playNote({ WAVE, NOTE, DURATION, ID }) {
+      this.stopID({ ID });
+      const realNote = this.convertScratchNoteToRealNote(Math.round(NOTE));
+      const frequency = this.noteToFrequency(realNote);
+      this.playSound(frequency, DURATION, WAVE, ID);
+    }
+
+    playNoteContinuouslyV2(args) { this.playNoteContinuously(args) }
+    playNoteContinuously({ WAVE, NOTE, ID }) {
+      this.stopID({ ID });
+      const realNote = this.convertScratchNoteToRealNote(Math.round(NOTE));
+      const frequency = this.noteToFrequency(realNote);
+      this.playingNote = true;
+      this.noteStopTime = Infinity;
+      this.playSound(frequency, this.noteStopTime, WAVE, ID);
+    }
+
+    stopID({ ID }) {
+      const oscillator = this.oscillators.get(ID);
+      if (oscillator) {
+        oscillator.stop();
+        this.oscillators.delete(ID);
+        this.playingStatus.set(ID, false);
+      }
+    }
+
+    stopNote() {
+      this.oscillators.forEach((oscillator) => { oscillator.stop() });
+      this.oscillators.clear();
+      this.playingNote = false;
+      this.playingStatus.forEach((value, key) => {
+        this.playingStatus.set(key, false);
+      });
+    }
+
+    getVol({ ID }) {
+      const gainNode = this.gainNodes.get(ID);
+      if (gainNode) return gainNode.gain.value * 100;
+      return 100;
+    }
+
+    setVolume({ ID, VOLUME }) {
+      const gainNode = this.gainNodes.get(ID);
+      if (gainNode) {
+        gainNode.gain.setValueAtTime(
+          VOLUME / 100, this.audioContext.currentTime
+        );
+      }
+    }
+
+    setAllVolume({ VOLUME }) {
+      let gainNode = "";
+      this.gainNodes.forEach((value, key) => {
+        gainNode = this.gainNodes.get(key);
+        if (gainNode) {
+          gainNode.gain.setValueAtTime(
+            VOLUME / 100, this.audioContext.currentTime
+          );
+        }
+      });
+    }
+
+    setPitch({ ID, PITCH }) {
+      const oscillator = this.oscillators.get(ID);
+      if (oscillator) {
+        const pitchFactor = Math.pow(2, PITCH / 12);
+        const newFrequency = 440 * pitchFactor;
+        oscillator.frequency.setValueAtTime(newFrequency, this.audioContext.currentTime);
+      }
+    }
+
+    setAllPitch({ PITCH }) {
+      const pitchFactor = Math.pow(2, PITCH / 12);
+      this.oscillators.forEach((oscillator, ID) => {
+        const newFrequency = 440 * pitchFactor;
+        oscillator.frequency.setValueAtTime(newFrequency, this.audioContext.currentTime);
+      });
+    }
+
+    getPitch({ ID }) {
+      const oscillator = this.oscillators.get(ID);
+      if (oscillator) {
+        const currentFrequency = oscillator.frequency.value;
+        const pitchFactor = currentFrequency / 440;
+        return Math.round(12 * Math.log2(pitchFactor));
+      }
+      return 0;
+    }
+
+    isPlaying({ ID }) { return this.playingStatus.get(ID) !== undefined && this.playingStatus.get(ID) }
+
+    convertPressedKeyToNote() { return this.keyPressed ? this.currentNote : 0 }
 
     getKeyPressedDuration() {
       return this.keyPressed ? this.audioContext.currentTime - this.keyPressedTime : 0;
