@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.0
+// Version V.2.0.01
 
 (function(Scratch) {
   "use strict";
@@ -310,9 +310,7 @@
     /* Marker End */
 
     getTargets() {
-      const spriteNames = [];
-      spriteNames.push({ text: "myself", value: "_myself_" });
-      spriteNames.push({ text: "Stage", value: "_stage_" });
+      const spriteNames = [{ text: "myself", value: "_myself_" }, { text: "Stage", value: "_stage_" }];
       const targets = runtime.targets;
       for (let i = 1; i < targets.length; i++) {
         const target = targets[i];
@@ -368,6 +366,7 @@
 
     captureVideo() {
       const imageData = runtime.ioDevices.video.getFrame({});
+      if (imageData === null) return "";
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
       canvas.width = imageData.width;

@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version 3.0.3
+// Version 3.0.31
 
 (function (Scratch) {
   "use strict";
@@ -36,13 +36,13 @@
           e.clientX, e.clientY, runtime.ioDevices.mouse.getScratchX(), runtime.ioDevices.mouse.getScratchY()
         ]
       });
-      window.addEventListener("keydown", (event) => {
-        const name = this.toProperKey(event.key, false);
+      window.addEventListener("keydown", (e) => {
+        const name = this.toProperKey(e.key, false);
         if (pressedKeys[name] === undefined) pressedKeys[name] = 0;
         curPressKey = name;
       });
-      window.addEventListener("keyup", (event) => {
-        delete pressedKeys[this.toProperKey(event.key, false)];
+      window.addEventListener("keyup", (e) => {
+        delete pressedKeys[this.toProperKey(e.key, false)];
         curPressKey = Object.keys(pressedKeys).pop() || "";
       });
     }
@@ -464,8 +464,8 @@
       if (mouse) { spriteNames.push({ text: "mouse-pointer", value: "_mouse_" }) }
       if (myself) { spriteNames.push({ text: "myself", value: "_myself_" }) }
       const targets = runtime.targets;
-      for (let index = 1; index < targets.length; index++) {
-        const target = targets[index];
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
         if (target.isOriginal) {
           const targetName = target.getName();
           spriteNames.push({ text: targetName, value: targetName });
@@ -477,7 +477,7 @@
     getLists() {
       try {
         const globalLists = Object.values(runtime.getTargetForStage().variables).filter((x) => x.type == "list");
-        const localLists = Object.values(vm.editingTarget.variables).filter((x) => x.type == "list");
+        const localLists = Object.values(vm.editingTarget?.variables ?? []).filter((x) => x.type == "list");
         const listMenu = [...new Set([...globalLists, ...localLists])];
         if (listMenu.length === 0) return [{ text: "make a list", value: "make a list" }];
         return listMenu.map((i) => ({ text: i.name, value: i.id }));
@@ -585,7 +585,7 @@
       const target = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
       if (!target) return false;
       const oldDir = target.direction;
-      runtime.ext_scratch3_motion.pointTowards({ TOWARDS: args.SPRITE2 }, { ...util, target, ioQuery : util.ioQuery });
+      runtime.ext_scratch3_motion.pointTowards({ TOWARDS: args.SPRITE2 }, { ...util, target, ioQuery: util.ioQuery });
       const newDir = target.direction;
       target.setDirection(oldDir);
       return Math.round(newDir) === Math.round(oldDir);
@@ -629,8 +629,8 @@
       const list = [];
       const thisSprite = args.SPRITE === "_mouse_" ? "_mouse_" : args.SPRITE === "_myself_" ? util.target.getName() : args.SPRITE;
       const targets = runtime.targets;
-      for (let index = 1; index < targets.length; index++) {
-        const target = targets[index];
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
         const name = `${target.getName()}${target.isOriginal ? "" : " (Clone)"}`;
         if (target.isTouchingObject(thisSprite) && name !== thisSprite) list.push(name);
       }
@@ -648,8 +648,8 @@
         pos = [nameTarget.x, nameTarget.y, nameTarget.id];
       }
       const targets = runtime.targets;
-      for (let index = 1; index < targets.length; index++) {
-        const target = targets[index];
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
         const dx = pos[0] - target.x;
         const dy = pos[1] - target.y;
         if (Math.sqrt((dx * dx) + (dy * dy)) <= circ && target.id !== pos[2]) list.push(`${target.getName()}${target.isOriginal ? "" : " (Clone)"}`);
@@ -680,7 +680,7 @@
         case "special characters": {regex = /[A-Za-z0-9]/g; break }
         default: regex = /[^A-Za-z]/g;
       }
-      return args.STRING.replace(regex, "");
+      return Scratch.Cast.toString(args.STRING).replace(regex, "");
     }
 
     advancedAsk(args, util) {
@@ -693,7 +693,7 @@
         if (publicVars.askStuff) this.setAtt(publicVars.askStuff);
         if (publicVars.askType) this.setAskType(publicVars.askType);
         if (args.WAIT === "continue") resolve();
-        else runtime.once("ANSWER", () => { resolve() });
+        else runtime.once("ANSWER", () => resolve());
       });
     }
     advancedAskReporter(args, util) {
@@ -716,8 +716,9 @@
       let box = document.querySelector(`div[class*="question"]`);
       if (!box) return publicVars.askStuff = args;
       const canvas = getComputedStyle(render.canvas);
-      if (args.width) box.style.width = `${args.width * (parseInt(canvas.width) / 480)}px`;
-      const x = Scratch.Cast.toNumber(args.x) + (parseInt(canvas.width) / 2) - (args.width * (parseInt(canvas.width) / 480) / 2);
+      const width = Scratch.Cast.toNumber(args.width);
+      if (width) box.style.width = `${width * (parseInt(canvas.width) / 480)}px`;
+      const x = Scratch.Cast.toNumber(args.x) + (parseInt(canvas.width) / 2) - (width * (parseInt(canvas.width) / 480) / 2);
       const y = Scratch.Cast.toNumber(args.y) + (parseInt(canvas.height) / 2) - (askAs === "stage" ? 53 : 39);
       box.style.transform = `translate(${x}px, ${y * -1}px)`;
     }
@@ -751,11 +752,11 @@
         box.style.display = "block";
       }
     }
-    setAskType2(args, util) { this.setAskType({...args, TYPE : "dropdown", LIST : this.look4List(args.TYPE, util) }) }
+    setAskType2(args, util) { this.setAskType({...args, TYPE: "dropdown", LIST: this.look4List(args.TYPE, util) }) }
     setAskType3(args, util) {
       try {
         const array = JSON.parse(args.TYPE);
-        if (array.length > 0) this.setAskType({...args, TYPE : "dropdown", LIST : array })
+        if (array.length > 0) this.setAskType({...args, TYPE: "dropdown", LIST: array })
       } catch {}
     }
 

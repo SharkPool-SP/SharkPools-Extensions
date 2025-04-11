@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.1
+// Version V.2.0.11
 
 (function (Scratch) {
   "use strict";
@@ -20,8 +20,8 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-
   const isPM = Scratch.extensions.isPenguinMod;
+
   const markdownConsts = {
     "**": "b", "*/": "i", "~~": "s", "#1": "h1", "#2": "h2",
     "@c": `span style="color: ---"`, "@h": `span style="background-color: ---"`, "@f": `span style="font-family: ---"`,
@@ -361,17 +361,17 @@
     }
     path.insertAdjacentElement("beforebegin", btn1);
     path.insertAdjacentElement("beforebegin", btn2);
-    btn1.addEventListener("click", () => { colorListen(commentSVG, comment) });
-    btn2.addEventListener("click", () => { txtListen(comment.textarea_, comment) });
+    btn1.addEventListener("click", () => colorListen(commentSVG, comment));
+    btn2.addEventListener("click", () => txtListen(comment.textarea_, comment));
     comment.SPbuttons = [btn1, btn2];
 
     if (commentStore[comment.id] === undefined) {
       commentStore[comment.id] = {
-        ID : comment.id, XY : comment.getXY(),
-        colorBtn : btn1, textBtn : btn2, commentSVG : commentSVG,
-        color : "#fff099", color2: "#b8af37", opacity : 100,
-        txtColor: "#000000", font : "Arial", textAlign : "left",
-        fontSize : 16, bold : false, italic : false
+        ID: comment.id, XY: comment.getXY(),
+        colorBtn: btn1, textBtn: btn2, commentSVG: commentSVG,
+        color: "#fff099", color2: "#b8af37", opacity: 100,
+        txtColor: "#000000", font: "Arial", textAlign: "left",
+        fontSize: 16, bold: false, italic: false
       };
     }
   }
@@ -430,8 +430,9 @@
   }
 
   function updateAllComments() {
-    const allComments = ScratchBlocks.mainWorkspace.commentDB_;
-    Object.values(allComments).forEach(comment => {
+    const workspace = ScratchBlocks.mainWorkspace;
+    if (!workspace?.rendered) return;
+    Object.values(workspace.commentDB_).forEach(comment => {
       redoComment(comment);
       updateComment(comment);
     });
@@ -466,6 +467,7 @@
   function attachEvents() {
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const { Events, mainWorkspace } = SB;
+      if (!mainWorkspace?.rendered) return;
       const comments = mainWorkspace.commentDB_;
       const workspaceEvents = (event) => {
         if (mainWorkspace.id === event.workspaceId) {

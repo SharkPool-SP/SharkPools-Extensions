@@ -7,7 +7,7 @@
       "banner": "extension-thumbs/Sharktilities.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 03/23/2025"
+      "date": "Last Updated: 04/10/2025"
     },
     "YouTube-Operations": {
       "desc": "Fetch and play Youtube videos and statistics in your Project",
@@ -16,7 +16,7 @@
       "banner": "extension-thumbs/YouTube-Operations.svg",
       "tags": ["all", "fetching"],
       "status": "",
-      "date": "Last Updated: 04/01/2025"
+      "date": "Last Updated: 04/10/2025"
     },
     "Time-Calculation": {
       "desc": "Blocks for calculating Time differences",
@@ -80,7 +80,7 @@
       "banner": "extension-thumbs/Geometry-Dash-API.svg",
       "tags": ["all", "fetching"],
       "status": "",
-      "date": "Last Updated: 12/20/2023"
+      "date": "Last Updated: 04/10/2025"
     },
     "Sound-Waves": {
       "desc": "Play various Oscillators in your Project",
@@ -89,7 +89,7 @@
       "banner": "extension-thumbs/Sound-Waves.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 03/23/2025"
+      "date": "Last Updated: 04/10/2025"
     },
     "Hyper-Sense": {
       "desc": "New Sensing Blocks",
@@ -98,7 +98,7 @@
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "update",
-      "date": "Last Updated: 04/07/2025"
+      "date": "Last Updated: 04/10/2025"
     },
     "Keys-Plus-V2": {
       "desc": "Powerful and flexible Key detection Blocks with some additional features",
@@ -134,8 +134,8 @@
       "url": "extension-code/Camera-Sensing-Plus.js",
       "banner": "extension-thumbs/Camera-Sensing-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 03/23/2025"
+      "status": "update",
+      "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
       "desc": "Create Highly Customizable Particle Engines with NO Clones",
@@ -144,7 +144,7 @@
       "banner": "extension-thumbs/Particle-Engine.svg",
       "tags": ["all", "utilities", "expanded"],
       "status": "",
-      "date": "Last Updated: 02/22/2025"
+      "date": "Last Updated: 04/10/2025"
     },
     "Particle-Tools": {
       "desc": "Tools that make creating Particle Systems easy",
@@ -180,8 +180,8 @@
       "url": "extension-code/Image-Effects.js",
       "banner": "extension-thumbs/Image-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 03/23/2025"
+      "status": "update",
+      "date": "Last Updated: 04/10/2025"
     },
     "Image-Editor": {
       "desc": "Create and Edit the Pixel Data of Images",
@@ -189,8 +189,8 @@
       "url": "extension-code/Image-Editor.js",
       "banner": "extension-thumbs/Image-Editor.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 11/05/2024"
+      "status": "update",
+      "date": "Last Updated: 04/10/2025"
     },
     "Pixel-Utilities": {
       "desc": "Some Utility Blocks that Roltycore 2's Developer made for some reason",
@@ -261,7 +261,7 @@
       "url": "extension-code/Temporary-Variables.js",
       "banner": "extension-thumbs/Temporary-Variables.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/06/2025"
     },
     "Variables-Expanded": {
@@ -369,8 +369,8 @@
       "url": "extension-code/Geolocation.js",
       "banner": "extension-thumbs/Geolocation.svg",
       "tags": ["all", "fetching"],
-      "status": "",
-      "date": "Last Updated: 11/??/2023"
+      "status": "update",
+      "date": "Last Updated: 04/10/2025"
     },
     "Spotify": {
       "desc": "Fetch Statistics, Information, and Play Songs from Spotify",
@@ -540,8 +540,8 @@
       "url": "extension-code/Better-Comments.js",
       "banner": "extension-thumbs/Better-Comments.svg",
       "tags": ["all", "expanded", "addon"],
-      "status": "",
-      "date": "Last Updated: 11/14/2024"
+      "status": "update",
+      "date": "Last Updated: 04/10/2025"
     },
     "Sprite-Panel": {
       "desc": "Addon for viewing and managing Sprites and Clones",
@@ -594,8 +594,8 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
-      "date": "Last Updated: 03/30/2025"
+      "status": "update",
+      "date": "Last Updated: 04/10/2025"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",

@@ -4,7 +4,7 @@
 // By: SharkPool and Nekl300
 // License: MIT
 
-// Version V.1.7.21
+// Version V.1.7.22
 
 (function (Scratch) {
   "use strict";
@@ -323,7 +323,9 @@
     }
 
     async getResults(args) {
-      const query = encodeURIComponent(args.QUERY.replace(/ /g, "+")).replaceAll("%2B", "+");
+      const query = encodeURIComponent(
+        Scratch.Cast.toString(args.QUERY).replace(/ /g, "+")
+      ).replaceAll("%2B", "+");
       try {
         const response = await Scratch.fetch(proxy + `https://www.youtube.com/results?search_query=${query}`);
         if (response.ok) {

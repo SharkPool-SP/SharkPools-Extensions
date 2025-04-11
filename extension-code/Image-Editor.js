@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.21
+// Version V.1.1.22
 
 (function (Scratch) {
   "use strict";
@@ -15,7 +15,7 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  let imageBank = {};
+  let imageBank = Object.create(null);
 
   const regenReporters = ["SPimgEditor_pixelHex", "SPimgEditor_pixelIndex", "SPimgEditor_setPixel"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
@@ -267,12 +267,17 @@
       return canvas.toDataURL();
     }
 
+    parseColor(hex) {
+      if (/^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(hex)) return hex;
+      else return "#000000";
+    }
+
     // Block Funcs (Bank Manager)
     makeImg(args) {
       const width = Scratch.Cast.toNumber(args.W);
       const height = Scratch.Cast.toNumber(args.H);
       const { canvas, ctx } = this.createCanvasCtx(width, height);
-      ctx.fillStyle = args.COLOR;
+      ctx.fillStyle = this.parseColor(args.COLOR);
       ctx.fillRect(0, 0, width, height);
       imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false }
     }
@@ -322,7 +327,7 @@
           ctx.drawImage(storedImg.canvas, width < 0 ? -Math.abs(width) : 0, height < 0 ? -Math.abs(height) : 0, Math.abs(width), Math.abs(height));
           ctx.restore();
         } else {
-          ctx.fillStyle = args.COLOR;
+          ctx.fillStyle = this.parseColor(args.COLOR);
           ctx.fillRect(0, 0, width, height);
           const xOffset = (width - storedImg.canvas.width) / 2;
           const yOffset = (height - storedImg.canvas.height) / 2;
@@ -354,7 +359,7 @@
     allImgs() { return JSON.stringify(Object.keys(imageBank)) }
 
     deleteImg(args) { delete imageBank[args.NAME] }
-    deleteAllImgs() { imageBank = {} }
+    deleteAllImgs() { imageBank = Object.create(null) }
 
     // Block Funcs (Editing)
     callImgEdit(args, util) {
@@ -365,7 +370,7 @@
         let newThreads = [];
         // We shouldnt rely on runtime.startHats since we WANT to have multiple threads for pixel manipulation
         for (var index = 0; index < storedImg.pixels.length; index++) {
-          newThreads = [...newThreads, ...this.callEditor({ name : args.NAME, index, hex : storedImg.pixels[index] })];
+          newThreads = [...newThreads, ...this.callEditor({ name: args.NAME, index, hex: storedImg.pixels[index] })];
         }
         util.stackFrame.newThreads = newThreads;
         util.yield();
@@ -387,7 +392,7 @@
         util.stackFrame.loopCounter = storedImg.pixels.length;
       }
       const index = Math.abs(util.stackFrame.loopCounter - storedImg.pixels.length);
-      util.thread.SPimgData = { name : args.NAME, index, hex : storedImg.pixels[index] }
+      util.thread.SPimgData = { name: args.NAME, index, hex: storedImg.pixels[index] }
       util.stackFrame.loopCounter--;
       if (util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
       else {
@@ -403,7 +408,7 @@
     setPixel(args, util) {
       const data = util.thread.SPimgData;
       if (data !== undefined) {
-        this.setHex({ REFRESH : false, NAME : data.name, COLOR : args.COLOR, INDEX : data.index + 1 });
+        this.setHex({ REFRESH: false, NAME: data.name, COLOR: args.COLOR, INDEX: data.index + 1 });
         util.thread.stopThisScript();
       }
     }
@@ -411,7 +416,7 @@
       const storedImg = imageBank[args.NAME];
       if (storedImg === undefined) return;
       if (storedImg.pixels.length === 0) storedImg.pixels = this.getPixelData(storedImg);
-      storedImg.pixels[Scratch.Cast.toNumber(args.INDEX) - 1] = args.COLOR;
+      storedImg.pixels[Scratch.Cast.toNumber(args.INDEX) - 1] = this.parseColor(args.COLOR);
       if (args.REFRESH === undefined) storedImg.needsRefresh = true;
     }
     getHex(args) {
@@ -432,7 +437,7 @@
         tempData.ctx.drawImage(canvas, 0, 0);
 
         ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = args.COLOR;
+        ctx.fillStyle = this.parseColor(args.COLOR);
         ctx.fillRect(0, 0, width, height);
         ctx.save();
         ctx.translate(width / 2, height / 2);

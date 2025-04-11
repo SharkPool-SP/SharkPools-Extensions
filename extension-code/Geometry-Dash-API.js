@@ -3,19 +3,19 @@
 // Description: Fetch Geometry Dash statistics and information
 // By: SharkPool & GDColon (https://gdcolon.com)
 
-// Version V.1.5.2
-
-// Thank you RobTop for Geometry Dash
+// Version V.1.5.21
+// Thank you RobTop for Geometry Dash :)
 
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Geometry Dash API must run unsandboxed");
 
   const menuIconURI = 
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI5MCIgaGVpZ2h0PSI5MCIgdmlld0JveD0iMCwwLDkwLDkwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgY3g9IjIzNy41NzY1IiBjeT0iMTgwLjc1OTE3IiByPSI1NS41MjkwMyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjb2xvci0xIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMGM3ZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMGM3ZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGN4PSIyMjYuOTk0MDciIGN5PSIxODQuODY3OSIgcj0iMzMuNDc4MiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjb2xvci0yIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMGRlZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMGRlZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGN4PSIyMjYuOTk0MDciIGN5PSIxODQuODY3OSIgcj0iMzMuNDc4MiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjb2xvci0zIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMGRlZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMGRlZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xOTkuNTEyMzgsLTEzMi41KSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTE5OS41MTIzOSwxNzcuNWMwLC0yNC44NTI4MiAyMC4xNDcxOCwtNDUgNDUsLTQ1YzI0Ljg1MjgyLDAgNDUsMjAuMTQ3MTggNDUsNDVjMCwyNC44NTI4MiAtMjAuMTQ3MTgsNDUgLTQ1LDQ1Yy0yNC44NTI4MiwwIC00NSwtMjAuMTQ3MTggLTQ1LC00NXoiIGZpbGw9IiMwMDRkZTgiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiLz48cGF0aCBkPSJNMjMzLjA3MDQyLDE1Ny43MzcwOWMzMC4zMzExMywtMTAuMDM2NTkgMjcuNDI2MjcsMzIuOTU2MDEgMTUuMDY5MDUsMzcuMDQ1MDNjLTguMTk3NDEsMi43MTI1MyAtMTkuMTIyOTksMTEuNDIyMjggLTI3LjE5OTk5LDIwLjEzNzY0Yy0wLjk1NjIxLDEuMDMxNzggLTkuMzIzNDIsLTUuOTk2ODIgLTE1LjM5OTM2LC0xNS4yNDc1NGMtNi4wMDIwOSwtOS4xMzgyNyAtNS45NTg0LC0yMi4xNTkzMyAtNS45OTgwNywtMjMuMzg1NDFjMTAuNzQ5MDksLTguMzQ1MjYgMjAuNjE2MzIsLTE0LjI3NzEyIDMzLjUyODM4LC0xOC41NDk3MnoiIGZpbGw9InVybCgjY29sb3ItMSkiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiLz48cGF0aCBkPSJNMjI0LjI3NzM3LDE3MC45ODc5NmMxOC4yODY1MSwtNi4wNTEwMSAxNi41MzUxOCwxOS44NjkwMyA5LjA4NTA2LDIyLjMzNDI4Yy03LjQ4OTc5LDIuNDc4MzggLTE0LjgxMTY2LDcuNzkwNTEgLTE5Ljg5OTUzLDE2LjY5MjU4Yy0xLjcyNDk5LC0xLjg3MzE2IC01LjY1MTY2LC02LjYyODI3IC04LjI5NDMzLC0xMS41MzIzMmMtMi43NDMwMiwtNS4wOTAyNiAtNC4xNzczMywtMTAuMzQwOTggLTQuNDkxODgsLTEyLjY5NTg0YzcuNzE0MDksLTcuNzgxMjkgMTQuMjE1MiwtMTEuNjkzMDMgMjMuNjAwNjcsLTE0Ljc5ODY5eiIgZmlsbD0idXJsKCNjb2xvci0yKSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIvPjxwYXRoIGQ9IiIgZmlsbD0idXJsKCNjb2xvci0zKSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIvPjxwYXRoIGQ9Ik0yNzguMjMwMDgsMTY2LjUzMzAzbC0yMS44OTk2Nyw0Mi45MTg1OWwtNDIuNzQyMjQsLTIyLjI0NTA4bDIxLjkwMTY1LC00Mi45MTkyMnoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBmaWxsPSIjZmRjYzAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjAiLz48cGF0aCBkPSJNMjQyLjQ0NDk1LDE4MC45MzEwMWM0LjEyMzE3LDEyLjgyNjQ1IDEyLjQxNTE0LDI2LjI0MDk0IDEyLjQxNTE0LDI2LjI0MDk0bC0zOS43NzYxOCwtMjAuMzIxNjVsMjAuNDg0NTgsLTM5LjY5MDk4YzAsMCAyLjc1MzI4LDIwLjk0NTI0IDYuODc2NDUsMzMuNzcxNjh6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0iI2ZmYTYwMCIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbWl0ZXJsaW1pdD0iMCIvPjxwYXRoIGQ9Ik0yNjMuODgyNzQsMTY5LjY3NDM1bC0zLjU3NDc1LDYuOTM2MzlsLTYuOTM2MzgsLTMuNTc0NzVsMy41NzQ3NSwtNi45MzYzOXoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBmaWxsPSIjNTlmYWZhIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1taXRlcmxpbWl0PSIwIi8+PHBhdGggZD0iTTI0OC4yNzcxOSwxNjEuNjMxODNsLTMuNTc1MzksNi45MzQ0MWwtNi45MzU3NCwtMy41NzI3OGwzLjU3NDc1LC02LjkzNjM4ek0yNTkuNzcwODksMTg0Ljg5MTk5bC0zLjU3NDc1LDYuOTM2MzlsLTI4LjQzNzU5LC0xNC42NTU2OGwzLjU3NDc1LC02LjkzNjM4eiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGZpbGw9IiM1OWZhZmEiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjAiLz48L2c+PC9nPjwvc3ZnPg==";
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MCIgaGVpZ2h0PSI5MCIgdmlld0JveD0iMCAwIDkwIDkwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgY3g9IjIzNy41NzciIGN5PSIxODAuNzU5IiByPSI1NS41MjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iYSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDBjN2ZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDBjN2ZmIiBzdG9wLW9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBjeD0iMjI2Ljk5NCIgY3k9IjE4NC44NjgiIHI9IjMzLjQ3OCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJiIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMGRlZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMGRlZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0wIDQ1QzAgMjAuMTQ3IDIwLjE0OCAwIDQ1IDBjMjQuODUzIDAgNDUgMjAuMTQ3IDQ1IDQ1UzY5Ljg1MyA5MCA0NSA5MEMyMC4xNDggOTAgMCA2OS44NTMgMCA0NSIgZmlsbD0iIzAwNGRlOCIvPjxwYXRoIGQ9Ik0yMzMuMDcgMTU3LjczN2MzMC4zMzItMTAuMDM2IDI3LjQyNyAzMi45NTYgMTUuMDcgMzcuMDQ1LTguMTk4IDIuNzEzLTE5LjEyNCAxMS40MjItMjcuMiAyMC4xMzgtLjk1NyAxLjAzMi05LjMyNC01Ljk5Ny0xNS40LTE1LjI0OC02LjAwMi05LjEzOC01Ljk1OC0yMi4xNi01Ljk5OC0yMy4zODUgMTAuNzUtOC4zNDUgMjAuNjE2LTE0LjI3NyAzMy41MjgtMTguNTUiIGZpbGw9InVybCgjYSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xOTkuNTEyIC0xMzIuNSkiLz48cGF0aCBkPSJNMjI0LjI3NyAxNzAuOTg4YzE4LjI4Ny02LjA1MSAxNi41MzYgMTkuODY5IDkuMDg1IDIyLjMzNC03LjQ5IDIuNDc5LTE0LjgxMSA3Ljc5LTE5LjkgMTYuNjkzLTEuNzI0LTEuODczLTUuNjUtNi42MjgtOC4yOTMtMTEuNTMyLTIuNzQzLTUuMDktNC4xNzgtMTAuMzQxLTQuNDkyLTEyLjY5NiA3LjcxNC03Ljc4MiAxNC4yMTUtMTEuNjkzIDIzLjYtMTQuNzk5IiBmaWxsPSJ1cmwoI2IpIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTk5LjUxMiAtMTMyLjUpIi8+PHBhdGggZD0ibTc4LjcxOCAzNC4wMzMtMjEuOSA0Mi45MTktNDIuNzQyLTIyLjI0NSAyMS45MDItNDIuOTJ6IiBmaWxsPSIjZmRjYzAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjAiLz48cGF0aCBkPSJNNDIuOTMzIDQ4LjQzMWM0LjEyMyAxMi44MjYgMTIuNDE1IDI2LjI0IDEyLjQxNSAyNi4yNGwtMzkuNzc2LTIwLjMyIDIwLjQ4NC0zOS42OTJzMi43NTQgMjAuOTQ2IDYuODc3IDMzLjc3MiIgZmlsbD0iI2ZmYTYwMCIgZmlsbC1ydWxlPSJldmVub2RkIi8+PHBhdGggZD0ibTY0LjM3MSAzNy4xNzQtMy41NzUgNi45MzctNi45MzYtMy41NzUgMy41NzQtNi45MzZ6bS0xNS42MDYtOC4wNDItMy41NzUgNi45MzQtNi45MzYtMy41NzMgMy41NzUtNi45MzZ6bTExLjQ5NCAyMy4yNi0zLjU3NSA2LjkzNi0yOC40MzctMTQuNjU1IDMuNTc0LTYuOTM3eiIgZmlsbD0iIzU5ZmFmYSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbWl0ZXJsaW1pdD0iMCIvPjwvc3ZnPg==";
+  const blockIconURI =
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3Ny4zMzMiIGhlaWdodD0iNzcuMzMzIiB2aWV3Qm94PSIwIDAgNzcuMzMzIDc3LjMzMyI+PHBhdGggZD0iTTAgMzguNjY3QzAgMTcuMzEyIDE3LjMxMiAwIDM4LjY2NyAwczM4LjY2NyAxNy4zMTIgMzguNjY3IDM4LjY2Ny0xNy4zMTIgMzguNjY3LTM4LjY2NyAzOC42NjdTMCA2MC4wMjIgMCAzOC42NjciIGZpbGw9IiMwMDRkZTgiLz48cGF0aCBkPSJNNzAuOTg3IDI4LjMzMSA0OS4wODggNzEuMjQ5IDYuMzQ2IDQ5LjAwNGwyMS45MDItNDIuOTJ6IiBmaWxsPSIjZmRjYzAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjAiLz48cGF0aCBkPSJNMzUuMjAzIDQyLjcyOWM0LjEyMyAxMi44MjYgMTIuNDE1IDI2LjI0IDEyLjQxNSAyNi4yNEw3Ljg0MiA0OC42NDggMjguMzI2IDguOTU3czIuNzU0IDIwLjk0NSA2Ljg3NyAzMy43NzIiIGZpbGw9IiNmZmE2MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjxwYXRoIGQ9Im01Ni42NDEgMzEuNDcyLTMuNTc1IDYuOTM2LTYuOTM3LTMuNTc0IDMuNTc1LTYuOTM3em0tMTUuNjA2LTguMDQzLTMuNTc1IDYuOTM1LTYuOTM2LTMuNTczIDMuNTc1LTYuOTM2em0xMS40OTQgMjMuMjYtMy41NzUgNi45MzdMMjAuNTE2IDM4Ljk3bDMuNTc1LTYuOTM2eiIgZmlsbD0iIzU5ZmFmYSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbWl0ZXJsaW1pdD0iMCIvPjwvc3ZnPg==";
 
-	const blockIconURI =
-"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3Ny4zMzMzMyIgaGVpZ2h0PSI3Ny4zMzMzMyIgdmlld0JveD0iMCwwLDc3LjMzMzMzLDc3LjMzMzMzIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgY3g9IjIyNi45OTQwNyIgY3k9IjE4NC44Njc5IiByPSIzMy40NzgyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNvbG9yLTEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzAwZGVmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwZGVmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMS4zMzMzMywtMTQxLjMzMzMzKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PHBhdGggZD0iTTIwMS4zMzMzMywxODBjMCwtMjEuMzU1MDIgMTcuMzExNjUsLTM4LjY2NjY3IDM4LjY2NjY3LC0zOC42NjY2N2MyMS4zNTUwMiwwIDM4LjY2NjY3LDE3LjMxMTY1IDM4LjY2NjY3LDM4LjY2NjY3YzAsMjEuMzU1MDIgLTE3LjMxMTY1LDM4LjY2NjY3IC0zOC42NjY2NywzOC42NjY2N2MtMjEuMzU1MDIsMCAtMzguNjY2NjcsLTE3LjMxMTY1IC0zOC42NjY2NywtMzguNjY2Njd6IiBmaWxsPSIjMDA0ZGU4IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIi8+PHBhdGggZD0iIiBmaWxsPSJ1cmwoI2NvbG9yLTEpIiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIi8+PHBhdGggZD0iTTI3Mi4zMjA5NSwxNjkuNjYzNTZsLTIxLjg5OTY3LDQyLjkxODU5bC00Mi43NDIyNCwtMjIuMjQ1MDhsMjEuOTAxNjUsLTQyLjkxOTIyeiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGZpbGw9IiNmZGNjMDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbWl0ZXJsaW1pdD0iMCIvPjxwYXRoIGQ9Ik0yMzYuNTM1ODMsMTg0LjA2MTU0YzQuMTIzMTcsMTIuODI2NDUgMTIuNDE1MTQsMjYuMjQwOTQgMTIuNDE1MTQsMjYuMjQwOTRsLTM5Ljc3NjE4LC0yMC4zMjE2NWwyMC40ODQ1OCwtMzkuNjkwOThjMCwwIDIuNzUzMjgsMjAuOTQ1MjQgNi44NzY0NSwzMy43NzE2OHoiIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2luZGV4JnF1b3Q7Om51bGx9IiBmaWxsPSIjZmZhNjAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1taXRlcmxpbWl0PSIwIi8+PHBhdGggZD0iTTI1Ny45NzM2MiwxNzIuODA0ODhsLTMuNTc0NzUsNi45MzYzOWwtNi45MzYzOCwtMy41NzQ3NWwzLjU3NDc1LC02LjkzNjM5eiIgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aW5kZXgmcXVvdDs6bnVsbH0iIGZpbGw9IiM1OWZhZmEiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjAiLz48cGF0aCBkPSJNMjQyLjM2ODA3LDE2NC43NjIzNmwtMy41NzUzOSw2LjkzNDQxbC02LjkzNTc0LC0zLjU3Mjc4bDMuNTc0NzUsLTYuOTM2Mzh6TTI1My44NjE3NywxODguMDIyNTJsLTMuNTc0NzUsNi45MzYzOWwtMjguNDM3NTksLTE0LjY1NTY4bDMuNTc0NzUsLTYuOTM2Mzh6IiBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpbmRleCZxdW90OzpudWxsfSIgZmlsbD0iIzU5ZmFmYSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbWl0ZXJsaW1pdD0iMCIvPjwvZz48L2c+PC9zdmc+";
+  const Cast = Scratch.Cast;
 
   const gamemodesGD = [
     "cube", "ship", "ball", "ufo", "wave",
@@ -294,17 +294,17 @@
       };
     }
 
-    createSearchURL(args) { return `https://gdbrowser.com/search/${args.input.replace("&","?")}` }
+    createSearchURL(args) { return `https://gdbrowser.com/search/${Cast.toString(args.input).replace("&","?")}` }
 
     buildURL(args) { return args.query }
 
     levelLength(args) {
       const sizeMapping = {
-        tiny: 0, short: 1, medium: 2,
-        long: 3, XL: 4, platformer: 5
+        "tiny": 0, "short": 1, "medium": 2,
+        "long": 3, "XL": 4, "platformer": 5
       };
-      const start = sizeMapping[args.size1] || 0;
-      const end = sizeMapping[args.size2] || 0;
+      const start = sizeMapping[Cast.toString(args.size1)] || 0;
+      const end = sizeMapping[Cast.toString(args.size2)] || 0;
       return `&length=${Array.from({ length: end - start + 1 }, (_, i) => start + i).join(",")}`;
     }
 
@@ -314,25 +314,25 @@
         "Easy": 1, "Normal": 2, "Hard": 3,
         "Harder": 4, "Insane": 5, "Demon": -2
       };
-      const start = difficultyMapping[args.difficulty1.split(" ")[0]] || 0;
-      const end = difficultyMapping[args.difficulty2.split(" ")[0]] || 0;
+      const start = difficultyMapping[Cast.toString(args.difficulty1).split(" ")[0]] || 0;
+      const end = difficultyMapping[Cast.toString(args.difficulty2).split(" ")[0]] || 0;
       return `&diff=${Array.from({ length: end - start + 1 }, (_, i) => start + i).join(",")}`;
     }
 
     demonDifficulty(args) {
       const demonMapping = {"Easy": 1, "Medium": 2, "Hard": 3, "Insane": 4, "Extreme": 5 };
-      return `&demonFilter=${demonMapping[args.demon] || 0}`;
+      return `&demonFilter=${demonMapping[Cast.toString(args.demon)] || 0}`;
     }
 
-    rating(args) { return `&${args.rating.replaceAll(" ", "")}` }
+    rating(args) { return `&${Cast.toString(args.rating).replaceAll(" ", "")}` }
 
-    enableTag(args) { return `&${args.tag === "two player" ? "twoPlayer" : args.tag.replaceAll(" ", "")}` }
+    enableTag(args) { return `&${args.tag === "two player" ? "twoPlayer" : Cast.toString(args.tag).replaceAll(" ", "")}` }
 
-    enableTypeTag(args) { return `&type=${args.typeTag.replaceAll(" ", "")}` }
+    enableTypeTag(args) { return `&type=${Cast.toString(args.typeTag).replaceAll(" ", "")}` }
 
     addSongFromID(args) {
       let url = `&songID=${args.id}`;
-      if (args.menu.toLowerCase() === "custom") url += "&customSong";
+      if (Cast.toString(args.menu).toLowerCase() === "custom") url += "&customSong";
       return url;
     }
 
@@ -364,12 +364,13 @@
     }
 
     fetchAsset(args) {
+      const site = Cast.toString(args.site);
       let menu;
-      if (args.site === "Main" || args.site === "Insert Custom URL Ending Here") menu = "";
-      else if (args.site === "Garage") menu = "iconkit/";
-      else if (args.site === "Lists") menu = "lists/*";
-      else if (args.site === "User Profile") menu = "u/RobTop";
-      else menu = args.site.toLowerCase().replaceAll(" ", "");
+      if (site === "Main" || site === "Insert Custom URL Ending Here") menu = "";
+      else if (site === "Garage") menu = "iconkit/";
+      else if (site === "Lists") menu = "lists/*";
+      else if (site === "User Profile") menu = "u/RobTop";
+      else menu = site.toLowerCase().replaceAll(" ", "");
       menu = "https://gdbrowser.com/" + menu;
       return fetch(menu)
         .then((response) => { return response.text() })
@@ -389,10 +390,11 @@
     }
 
     fetchIcon(args) {
-      const gamemode = args.gm.toLowerCase() === "cube" ? "icon" : args.gm.toLowerCase();
-      const type = args.type === "2.2" || args.gm === "swing" || args.gm === "jetpack" ? "newpremade" : "premade";
-      if (args.id < 1) args.id = 1;
-      return `https://gdbrowser.com/iconkit/${type}/${gamemode}_${args.id}.png`;
+      let gamemode = Cast.toString(args.gm).toLowerCase();
+      gamemode = gamemode === "cube" ? "icon" : gamemode;
+      const type = args.type === "2.2" || gamemode === "swing" || gamemode === "jetpack" ? "newpremade" : "premade";
+      const ID = Math.max(1, Cast.toNumber(args.id));
+      return `https://gdbrowser.com/iconkit/${type}/${gamemode}_${ID}.png`;
     }
 
     featuredLvl(args) {
@@ -433,7 +435,7 @@
     }
 
     fetchDifficulty(args) {
-      let type = args.type.toLowerCase();
+      let type = Cast.toString(args.type).toLowerCase();
       type = type.replace(" ", "-");
       type = type === "na" ? "unrated" : type;
       if (type.includes("demon")) {
@@ -441,7 +443,7 @@
         parts.push(parts.shift());
         type = parts.join("-");
       }
-      const rating = args.menu === "rated" ? "" : "-" + args.menu.toLowerCase();
+      const rating = args.menu === "rated" ? "" : "-" + Cast.toString(args.menu).toLowerCase();
       let url = "https://gdbrowser.com/assets/difficulties/$#.png"
       return url.replace("#", rating).replace("$", type);
     }
@@ -479,7 +481,7 @@
     }
 
     fetchIconFromUser(args) {
-      let gamemode = args.gamemode.toLowerCase();
+      let gamemode = Cast.toString(args.gamemode).toLowerCase();
       if (gamemode === "cube") gamemode = "icon";
       return fetch("https://gdbrowser.com/u/" + args.user)
         .then((response) => response.text())
@@ -511,13 +513,12 @@
     }
 
     fetchPostsJSON(args) {
-      args.page = args.page - 1;
-      if (args.page < 0) args.page = 0
+      const page = Math.max(0, Cast.toNumber(args.page) - 1);
       return fetch("https://gdbrowser.com/u/" + args.user)
         .then((response) => response.text())
         .then((data) => {
           const userID = data.match(/Fetch\(`\.\.\/api\/comments\/(\d+)\?type=profile&page=\${page}`\)/)?.[1] || "";
-          const newURL = `https://gdbrowser.com/api/comments/${userID}?type=profile&page=${args.page}`;
+          const newURL = `https://gdbrowser.com/api/comments/${userID}?type=profile&page=${page}`;
           return fetch(newURL)
             .then((response) => response.text())
             .then((data) => { return JSON.stringify(JSON.parse(data)) })
@@ -543,12 +544,12 @@
     }
 
     reportResults(args) {
-      args.page = args.page - 1;
-      if (args.page < 0) args.page = 0
-      if (args.url.includes("https://gdbrowser.com/")) args.url = args.url.replace("https://gdbrowser.com/", "");
-      if (!args.url.includes("search/")) args.url = "search/" + args.url;
+      let url = Cast.toString(args.url);
+      const page = Math.max(0, Cast.toNumber(args.page) - 1);
+      if (url.includes("https://gdbrowser.com/")) url = url.replace("https://gdbrowser.com/", "");
+      if (!url.includes("search/")) url = "search/" + url;
 
-      let url = "https://gdbrowser.com/api/" + args.url + `&page=${args.page}`;
+      url = "https://gdbrowser.com/api/" + url + `&page=${page}`;
       url = url.replace("&","?");
       return fetch(url)
         .then((response) => response.text())
