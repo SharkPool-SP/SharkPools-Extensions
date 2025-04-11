@@ -6,7 +6,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // License: MIT AND LGPLv3
 
-// Version V.1.0.01
+// Version V.1.0.02
 
 (function (Scratch) {
   "use strict";
@@ -52,7 +52,7 @@
       const menuBlock = `SP0zMenuMaker_menu_${xmlEscape(menuName)}`;
       return `<block type="${menuBlock}" id="${menuBlock}"></block>`;
     }).join("") || `<label text="Try creating some menus!" />`;
-    vm.extensionManager.refreshBlocks().then(() => vm.refreshWorkspace());
+    vm.extensionManager.refreshBlocks("SP0zMenuMaker").then(() => vm.refreshWorkspace());
   }
 
   function patchDivColor(container, isDark) {
@@ -122,7 +122,7 @@
     // Block Text input Doesnt show immediately :(
     const element = document.querySelector(selector);
     if (element) element.style.opacity = 0;
-    else setTimeout(() => { ghostInputRemove(selector) }, 5);
+    else setTimeout(() => ghostInputRemove(selector), 5);
   }
 
   function makeMenuNameRow(name, namesArray, isDark, contain) {
@@ -268,9 +268,9 @@
     okBtn.replaceWith(clonedOkBtn);
     clonedOkBtn.addEventListener("click", () => {
       // All Menus should Have At least 1 in a Menu
- 			for (const [key, menu] of Object.entries(customMenus)) {
-  			if (menu.items.length === 0) menu.items = [{ text: "foo", value: "bar" }];
-			}
+      for (const [key, menu] of Object.entries(customMenus)) {
+  	if (menu.items.length === 0) menu.items = [{ text: "foo", value: "bar" }];
+      }
       document.querySelector(`[class^="close-button_close-button_"]`).click();
       refreshMagic();
 
@@ -280,7 +280,7 @@
         if (block.type.startsWith("SP0zMenuMaker_menu_")) {
           if (menuNames.indexOf(block.type.replace("SP0zMenuMaker_menu_", "")) === -1) block.dispose();
         }
-		  }
+      }
     });
   }
 
@@ -314,6 +314,7 @@
   function attachEvents() {
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const mainWorkspace = SB.mainWorkspace;
+      if (!mainWorkspace?.rendered) return;
       const workspaceEvents = (e) => {
         if (e.type == SB.Events.END_DRAG && Object.hasOwn(e, "blockId")) {
           if (mainWorkspace.id === e.workspaceId) updateMenuColor(e.blockId, mainWorkspace, true);
@@ -325,7 +326,7 @@
       };
       vm.on("workspaceUpdate", updateAllBlocks);
       updateAllBlocks();
-	  });
+    });
   }
   function startListenerWorker() {
     if (typeof ReduxStore === "undefined") return;
@@ -348,7 +349,7 @@
       const oldToJSON = vm.constructor.prototype.toJSON;
       vm.constructor.prototype.toJSON = function (...args) {
         if (extRevmovable) return oldToJSON.apply(this, args);
-        if (!isPM) vm.runtime.extensionStorage.SP0zMenuMaker = self.serialize().SP0zMenuMaker;
+        if (!isPM) runtime.extensionStorage.SP0zMenuMaker = self.serialize().SP0zMenuMaker;
 
         // Make the extension stay by adding a dummy block
         const blocks = runtime.targets[0].blocks;
@@ -380,14 +381,14 @@
         const refreshWorkspace = vm.refreshWorkspace;
         vm.refreshWorkspace = () => {};
         this.refreshStorage();
-        vm.extensionManager.refreshBlocks();
+        vm.extensionManager.refreshBlocks("SP0zMenuMaker");
         vm.refreshWorkspace = refreshWorkspace;
         vm.once("BEFORE_EXECUTE", () => vm.refreshWorkspace());
-    	});
+      });
     }
 
     refreshStorage() { // TurboWarp support
-      if (!isPM) this.deserialize(vm.runtime.extensionStorage);
+      if (!isPM) this.deserialize(runtime.extensionStorage);
     }
     getInfo() {
       // Used to Load the Menus
@@ -445,7 +446,7 @@
           if (block.opcode.startsWith("SP0zMenuMaker_")) deleteBlock(target, block.id);
         }
       }
-      vm.extensionManager.refreshBlocks();
+      vm.extensionManager.refreshBlocks("SP0zMenuMaker");
       alert("Save and reload the project for the extension to fully be removed.");
     }
 
