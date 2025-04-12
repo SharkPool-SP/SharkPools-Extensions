@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.11
+// Version V.2.0.12
 
 (function (Scratch) {
   "use strict";
@@ -467,27 +467,28 @@
   function attachEvents() {
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const { Events, mainWorkspace } = SB;
-      if (!mainWorkspace?.rendered) return;
-      const comments = mainWorkspace.commentDB_;
-      const workspaceEvents = (event) => {
-        if (mainWorkspace.id === event.workspaceId) {
-          const comment = comments[event.commentId];
-          if (event.type === Events.COMMENT_MOVE) redoComment(comment);
-          else if (event.type === Events.COMMENT_CREATE) {
-            redoComment(comment);
-            updateComment(comment);
-          } else if (event.type === Events.COMMENT_CHANGE) {
-            const isMin = event.newContents_.minimized
-            if (isMin !== undefined) {
-              comment.SPbuttons[0].style.display = isMin ? "none" : "inline";
-              comment.SPbuttons[1].style.display = isMin ? "none" : "inline";
+      if (mainWorkspace?.rendered) {
+        const comments = mainWorkspace.commentDB_;
+        const workspaceEvents = (event) => {
+          if (mainWorkspace.id === event.workspaceId) {
+            const comment = comments[event.commentId];
+            if (event.type === Events.COMMENT_MOVE) redoComment(comment);
+            else if (event.type === Events.COMMENT_CREATE) {
+              redoComment(comment);
+              updateComment(comment);
+            } else if (event.type === Events.COMMENT_CHANGE) {
+              const isMin = event.newContents_.minimized
+              if (isMin !== undefined) {
+                comment.SPbuttons[0].style.display = isMin ? "none" : "inline";
+                comment.SPbuttons[1].style.display = isMin ? "none" : "inline";
+              }
+              if (!isMin) convert2Md(comment, comment.getText());
             }
-            if (!isMin) convert2Md(comment, comment.getText());
           }
-        }
-      };
-      mainWorkspace.addChangeListener(workspaceEvents);
-      updateAllComments();
+        };
+        mainWorkspace.addChangeListener(workspaceEvents);
+        updateAllComments();
+      }
       runtime.once("PROJECT_LOADED", () => {
         fixStorage(mainWorkspace); // Comment IDs are different upon project load
         updateAllComments();
