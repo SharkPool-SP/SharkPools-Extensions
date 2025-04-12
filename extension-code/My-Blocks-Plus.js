@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.1
+// Version V.1.2.11
 
 (function(Scratch) {
   "use strict";
@@ -527,7 +527,7 @@
     Object.values(ScratchBlocks.Blocks).forEach(extractImage);
 
     openModal(
-      "Select a Image",
+      "Select an Image",
       (modal, modalStorage) => {
         const flexConst = "display: flex; flex-wrap: wrap; align-items: center; justify-content: center;";
         const borderConst = `border: solid var(--default-border) 2px; border-radius: 10px;`;
@@ -1693,13 +1693,47 @@
   const ogDupSprite = vm.duplicateSprite;
   vm.duplicateSprite = function(targetId) {
     return ogDupSprite.call(this, targetId).then(() => {
-        const newTarget = this.runtime.targets[this.runtime.targets.length - 1];
-        if (!storage[newTarget.id]) {
-          storage[newTarget.id] = structuredClone(storage[targetId]);
-          this.emitWorkspaceUpdate();
-        }
-        return newTarget;
+      const newTarget = this.runtime.targets[this.runtime.targets.length - 1];
+      if (!storage[newTarget.id]) {
+        storage[newTarget.id] = structuredClone(storage[targetId]);
+        this.emitWorkspaceUpdate();
+      }
+      return newTarget;
     });
+  }
+
+  const ogExportBlocks = vm.exportStandaloneBlocks;
+  vm.exportStandaloneBlocks = function(blockObjects) {
+    const exported = ogExportBlocks.call(this, blockObjects);
+    let stack;
+
+    // append custom block data for importing if theres a definition
+    if (exported.constructor?.name === "Object") stack = exported.blocks;
+    else stack = exported;
+    for (const block of stack) {
+      if (block.opcode !== "procedures_prototype") continue;
+      const store = storeGet(block.mutation.proccode);
+      if (!store) continue;
+      block.MyBlocksPlusData = store;
+    }
+    return exported;
+  }
+
+  const ogShareBlocks = vm.shareBlocksToTarget;
+  vm.shareBlocksToTarget = function(blocks, targetId, optFromTargetId) {
+    // load potential custom block data
+    let realBlocks;
+    if (blocks.constructor?.name === "Object") realBlocks = blocks.blocks;
+    else realBlocks = blocks;
+
+    for (const block of realBlocks) {
+      if (block.opcode !== "procedures_prototype") continue;
+      if (block.MyBlocksPlusData) {
+        const target = runtime.getTargetById(targetId);
+        storeSet(block.mutation.proccode, block.MyBlocksPlusData, target);
+      }
+    }
+    return ogShareBlocks.call(this, blocks, targetId, optFromTargetId);
   }
 
   class SPmbpCST {
