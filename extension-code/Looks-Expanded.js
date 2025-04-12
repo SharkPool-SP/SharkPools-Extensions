@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.2
+// Version V.1.0.21
 
 (function (Scratch) {
   "use strict";
@@ -451,7 +451,7 @@ gl_FragColor.a = baseAlpha;`
     getInfo() {
       return {
         id: "SPlooksExpanded",
-        name: "Looks Expanded",
+        name: Scratch.translate("Looks Expanded"),
         color1: "#9966FF",
         color2: "#855CD6",
         color3: "#774DCB",
@@ -461,7 +461,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "getSpeech",
             blockType: Scratch.BlockType.REPORTER,
             extensions: ["colours_looks"],
-            text: "speech from [TARGET]",
+            text: Scratch.translate("speech from [TARGET]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             }
@@ -471,7 +471,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "costumeCnt",
             blockType: Scratch.BlockType.REPORTER,
             extensions: ["colours_looks"],
-            text: "# of costumes in [TARGET]",
+            text: Scratch.translate("# of costumes in [TARGET]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             }
@@ -480,7 +480,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "costumeInfo",
             blockType: Scratch.BlockType.REPORTER,
             extensions: ["colours_looks"],
-            text: "[INFO] of costume # [NUM] in [TARGET]",
+            text: Scratch.translate("[INFO] of costume # [NUM] in [TARGET]"),
             arguments: {
               INFO: { type: Scratch.ArgumentType.STRING, menu: "COSTUME_DATA" },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
@@ -491,7 +491,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "setTargetCostume",
             blockType: Scratch.BlockType.COMMAND,
             extensions: ["colours_looks"],
-            text: "switch costume of [TARGET] to [VALUE]",
+            text: Scratch.translate("switch costume of [TARGET] to [VALUE]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               VALUE: { type: Scratch.ArgumentType.STRING, defaultValue: "..." },
@@ -502,7 +502,7 @@ gl_FragColor.a = baseAlpha;`
             blockType: Scratch.BlockType.EVENT,
             extensions: ["colours_event"],
             isEdgeActivated: false,
-            text: "when costume switches to [COSTUME]",
+            text: Scratch.translate("when costume switches to [COSTUME]"),
             arguments: {
               COSTUME: { type: Scratch.ArgumentType.STRING, menu: "COSTUMES" },
             }
@@ -512,7 +512,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "setSpriteEffect",
             blockType: Scratch.BlockType.COMMAND,
             extensions: ["colours_looks"],
-            text: "set [EFFECT] of [TARGET] to [VALUE]",
+            text: Scratch.translate("set [EFFECT] of [TARGET] to [VALUE]"),
             arguments: {
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "EFFECT_MENU" },
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
@@ -523,7 +523,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "effectValue",
             blockType: Scratch.BlockType.REPORTER,
             extensions: ["colours_looks"],
-            text: "[EFFECT] effect of [TARGET]",
+            text: Scratch.translate("[EFFECT] effect of [TARGET]"),
             arguments: {
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "EFFECT_MENU" },
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
@@ -533,7 +533,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "tintSprite",
             blockType: Scratch.BlockType.COMMAND,
             extensions: ["colours_looks"],
-            text: "set tint of [TARGET] to [COLOR]",
+            text: Scratch.translate("set tint of [TARGET] to [COLOR]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               COLOR: { type: Scratch.ArgumentType.COLOR }
@@ -544,7 +544,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "replaceColor",
             blockType: Scratch.BlockType.COMMAND,
             extensions: ["colours_looks"],
-            text: "replace [COLOR1] with [COLOR2] in [TARGET] softness [VALUE]",
+            text: Scratch.translate("replace [COLOR1] with [COLOR2] in [TARGET] softness [VALUE]"),
             arguments: {
               COLOR1: { type: Scratch.ArgumentType.COLOR },
               COLOR2: { type: Scratch.ArgumentType.COLOR },
@@ -556,7 +556,7 @@ gl_FragColor.a = baseAlpha;`
             opcode: "resetColor",
             blockType: Scratch.BlockType.COMMAND,
             extensions: ["colours_looks"],
-            text: "reset [COLOR1] replacer in [TARGET]",
+            text: Scratch.translate("reset [COLOR1] replacer in [TARGET]"),
             arguments: {
               COLOR1: { type: Scratch.ArgumentType.COLOR },
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
@@ -566,23 +566,23 @@ gl_FragColor.a = baseAlpha;`
             opcode: "resetReplacers",
             blockType: Scratch.BlockType.COMMAND,
             extensions: ["colours_looks"],
-            text: "reset color replacers in [TARGET]",
+            text: Scratch.translate("reset color replacers in [TARGET]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             }
           },
           {
             blockType: Scratch.BlockType.XML,
-            xml: "<sep gap=\"24\"/><label text=\"Warping and Masking does NOT\"/><sep gap=\"0\"/>",
+            xml: `<sep gap=\"24\"/><label text=\"${Scratch.translate("Warping and Masking does NOT")}\"/><sep gap=\"0\"/>`,
           },
           {
             blockType: Scratch.BlockType.XML,
-            xml: "<sep gap=\"-12\"/><label text=\" affect Touching Blocks\"/><sep gap=\"6\"/>",
+            xml: `<sep gap=\"-12\"/><label text=\" ${Scratch.translate("affect Touching Blocks")}\"/><sep gap=\"6\"/>`,
           },
           {
             opcode: "warpSprite",
             blockType: Scratch.BlockType.COMMAND,
-            text: "warp [TARGET] to x1: [x1] y1: [y1] x2: [x2] y2: [y2] x3: [x3] y3: [y3] x4: [x4] y4: [y4]",
+            text: Scratch.translate("warp [TARGET] to x1: [x1] y1: [y1] x2: [x2] y2: [y2] x3: [x3] y3: [y3] x4: [x4] y4: [y4]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               x1: { type: Scratch.ArgumentType.NUMBER, defaultValue: -100 },
@@ -598,7 +598,7 @@ gl_FragColor.a = baseAlpha;`
           {
             opcode: "maskSprite",
             blockType: Scratch.BlockType.COMMAND,
-            text: "mask [TARGET] with image [IMAGE]",
+            text: Scratch.translate("mask [TARGET] with image [IMAGE]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               IMAGE: { type: Scratch.ArgumentType.STRING, defaultValue: "https://extensions.turbowarp.org/dango.png" }
@@ -608,7 +608,7 @@ gl_FragColor.a = baseAlpha;`
           {
             opcode: "showSprite",
             blockType: Scratch.BlockType.COMMAND,
-            text: "show [TARGET]",
+            text: Scratch.translate("show [TARGET]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             },
@@ -616,7 +616,7 @@ gl_FragColor.a = baseAlpha;`
           {
             opcode: "hideSprite",
             blockType: Scratch.BlockType.COMMAND,
-            text: "hide [TARGET]",
+            text: Scratch.translate("hide [TARGET]"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
             },
@@ -624,7 +624,7 @@ gl_FragColor.a = baseAlpha;`
           {
             opcode: "spriteShowing",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "[TARGET] [TYPE] ?",
+            text: Scratch.translate("[TARGET] [TYPE] ?"),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "DISPLAY_TYPES" }
@@ -634,7 +634,7 @@ gl_FragColor.a = baseAlpha;`
           {
             opcode: "spriteProperty",
             blockType: Scratch.BlockType.REPORTER,
-            text: "[PROP] of [TARGET]",
+            text: Scratch.translate("[PROP] of [TARGET]"),
             arguments: {
               PROP: { type: Scratch.ArgumentType.STRING, menu: "SPRITE_PROPS" },
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" }
@@ -645,19 +645,32 @@ gl_FragColor.a = baseAlpha;`
           COSTUMES: { acceptReporters: false, items: "getCostumes" },
           TARGETS: { acceptReporters: true, items: "getTargets" },
           EFFECT_MENU: { acceptReporters: true, items: "getEffects" },
-          DISPLAY_TYPES: ["showing", "visible"],
+          DISPLAY_TYPES: {
+            acceptReporters: false,
+            items: [
+              { text: Scratch.translate("showing"), value: "showing" },
+              { text: Scratch.translate("visible"), value: "visible" }
+            ]
+          },
           COSTUME_DATA: {
             acceptReporters: true,
             items: [
-              "name", "type", "width", "height",
-              "rotation center x", "rotation center y",
-              "content", "data.uri"
+              { text: Scratch.translate("name"), value: "name" },
+              { text: Scratch.translate("type"), value: "type" },
+              { text: Scratch.translate("width"), value: "width" },
+              { text: Scratch.translate("height"), value: "height" },
+              { text: Scratch.translate("rotation center x"), value: "rotation center x" },
+              { text: Scratch.translate("rotation center y"), value: "rotation center y" },
+              { text: Scratch.translate("content"), value: "content" },
+              { text: Scratch.translate("data.uri"), value: "data.uri" }
             ]
           },
           SPRITE_PROPS: {
             acceptReporters: true,
             items: [
-              "width", "height", "layer #"
+              { text: Scratch.translate("width"), value: "width" },
+              { text: Scratch.translate("height"), value: "height" },
+              { text: Scratch.translate("layer #"), value: "layer #" }
             ]
           },
         },
@@ -667,8 +680,8 @@ gl_FragColor.a = baseAlpha;`
     // Helper Funcs
     getTargets() {
       const spriteNames = [
-        { text: "myself", value: "_myself_" },
-        { text: "Stage", value: "_stage_" }
+        { text: Scratch.translate("myself"), value: "_myself_" },
+        { text: Scratch.translate("Stage"), value: "_stage_" }
       ];
       const targets = runtime.targets;
       for (let i = 1; i < targets.length; i++) {
@@ -688,6 +701,9 @@ gl_FragColor.a = baseAlpha;`
       const effects = Object.keys(vm.editingTarget?.effects || {});
       if (!isPM) effects.push("saturation", "opaque");
       effects.push("contrast", "posterize", "sepia", "bloom");
+      effects.map((effect) => {
+        return { text: Scratch.translate(effect), value: effect };
+      });
       return effects.length > 0 ? effects : [""];
     }
 
