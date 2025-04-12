@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.11
+// Version V.1.2.12
 
 (function(Scratch) {
   "use strict";
@@ -1368,7 +1368,7 @@
   function removeUnusedImages() {
     if (suspendRemoval) return;
     const usedIds = new Set();
-    Object.values(storage).forEach(proc => Object.values(proc).forEach(data => {
+    Object.values(storage).forEach(proc => Object.values(proc ?? {}).forEach(data => {
       if (!data.inputs) return;
       Object.values(data.inputs).forEach(input => {
         if (input.type === "img") usedIds.add(input.src);
