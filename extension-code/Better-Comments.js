@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.12
+// Version V.2.0.13
 
 (function (Scratch) {
   "use strict";
@@ -27,7 +27,7 @@
     "@c": `span style="color: ---"`, "@h": `span style="background-color: ---"`, "@f": `span style="font-family: ---"`,
     "<i": "img", "<a": "audio", "<v": "video",
   };
-  let commentStore = {};
+  let commentListenerCtx, twStorageNeedsInit = true, commentStore = {};
 
   // utils
   const xmlEscape = function (unsafe) {
@@ -329,7 +329,7 @@
         font: values.font, bold: values.bold, italic: values.italic,
         textAlign: values.alignment, fontSize, txtColor: values.txtColor
       };
-      if (isPM) runtime.extensionStorage["SPcomments"] = { storage: commentStore };
+      if (!isPM) runtime.extensionStorage["SPcomments"] = { storage: commentStore };
       convert2Md(comment, comment.getText());
     }
   }
@@ -429,70 +429,64 @@
     });
   }
 
-  function updateAllComments() {
-    const workspace = ScratchBlocks.mainWorkspace;
+  function updateAllComments(SB) {
+    const workspace = SB.mainWorkspace;
     if (!workspace?.rendered) return;
-    Object.values(workspace.commentDB_).forEach(comment => {
+    Object.values(workspace.commentDB_).forEach((comment) => {
       redoComment(comment);
       updateComment(comment);
     });
   }
 
   // Patches and Storage
-  if (!isPM) {
-    const storage = runtime.extensionStorage["SPcomments"];
-    if (storage !== undefined) commentStore = storage.storage;
-  }
-
-  function fixStorage(ws) {
-    const storePos = {}, interPos = {};
+  function checkCommentStorage(commentEvent) {
     const storedComments = Object.values(commentStore);
-    storedComments.forEach((i) => {
-      const key = `{"x":${Math.floor(i.XY.x)},"y":${Math.floor(i.XY.y)}}`;
-      storePos[key] = i;
+    const stored = storedComments.find((c) => {
+      const {x, y} = commentEvent.xy;
+      return Math.floor(c.XY.x) === Math.floor(x) && Math.floor(c.XY.y) === Math.floor(y);
     });
-    const internalComments = Object.values(ws.commentDB_);
-    internalComments.forEach((i) => { interPos[JSON.stringify(i.getXY())] = i });
 
-    const interPosKeys = Object.keys(interPos);
-    const newStorage = {};
-    for (let i = 0; i < interPosKeys.length; i++) {
-      const comment = interPos[interPosKeys[i]];
-      const stored = storePos[interPosKeys[i]];
-      if (stored) newStorage[comment.id] = { ...stored, ID: comment.id };
+    if (stored) {
+      const ID = commentEvent.commentId;
+      if (ID === stored.ID) return;
+      commentStore[ID] = { ...commentStore[stored.ID], ID };
+      delete commentStore[stored.ID];
     }
-    commentStore = newStorage;
   }
 
+  function commentListener(event, mainWorkspace, Events) {
+    if (!isPM && twStorageNeedsInit) {
+      const storage = runtime.extensionStorage["SPcomments"];
+      if (storage !== undefined) commentStore = storage.storage;
+      twStorageNeedsInit = false;
+    }
+    const comments = mainWorkspace.commentDB_;
+    if (mainWorkspace.id === event.workspaceId) {
+      const comment = comments[event.commentId];
+      if (event.type === Events.COMMENT_MOVE) redoComment(comment);
+      else if (event.type === Events.COMMENT_CREATE) {
+        checkCommentStorage(event);
+        redoComment(comment);
+        updateComment(comment);
+      } else if (event.type === Events.COMMENT_CHANGE) {
+        const isMin = event.newContents_.minimized
+        if (isMin !== undefined) {
+          comment.SPbuttons[0].style.display = isMin ? "none" : "inline";
+          comment.SPbuttons[1].style.display = isMin ? "none" : "inline";
+        }
+        if (!isMin) convert2Md(comment, comment.getText());
+      }
+    }
+  }
   function attachEvents() {
     if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
       const { Events, mainWorkspace } = SB;
-      if (mainWorkspace?.rendered) {
-        const comments = mainWorkspace.commentDB_;
-        const workspaceEvents = (event) => {
-          if (mainWorkspace.id === event.workspaceId) {
-            const comment = comments[event.commentId];
-            if (event.type === Events.COMMENT_MOVE) redoComment(comment);
-            else if (event.type === Events.COMMENT_CREATE) {
-              redoComment(comment);
-              updateComment(comment);
-            } else if (event.type === Events.COMMENT_CHANGE) {
-              const isMin = event.newContents_.minimized
-              if (isMin !== undefined) {
-                comment.SPbuttons[0].style.display = isMin ? "none" : "inline";
-                comment.SPbuttons[1].style.display = isMin ? "none" : "inline";
-              }
-              if (!isMin) convert2Md(comment, comment.getText());
-            }
-          }
-        };
-        mainWorkspace.addChangeListener(workspaceEvents);
-        updateAllComments();
-      }
-      runtime.once("PROJECT_LOADED", () => {
-        fixStorage(mainWorkspace); // Comment IDs are different upon project load
-        updateAllComments();
-      });
+      if (!mainWorkspace?.rendered) return;
+
+      if (commentListenerCtx) mainWorkspace.removeChangeListener(commentListenerCtx);
+      else updateAllComments(SB);
+      commentListenerCtx = (event) => commentListener(event, mainWorkspace, Events);
+      mainWorkspace.addChangeListener(commentListenerCtx);
     });
   }
 
@@ -502,10 +496,8 @@
     if (inEditor) attachEvents();
     ReduxStore.subscribe(() => {
       const currentlyInEditor = checkInEditor();
-      if (inEditor !== currentlyInEditor) {
-        inEditor = currentlyInEditor;
-        if (inEditor) attachEvents();
-      }
+      if (inEditor !== currentlyInEditor) inEditor = currentlyInEditor;
+      if (inEditor) attachEvents();
     });
   }
   if (typeof scaffolding === "undefined") startListenerWorker();
