@@ -1801,6 +1801,14 @@
             },
           },
           {
+            opcode: "stopCallerScript",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "stop caller script",
+            extensions: ["SPmbpCST_defineColored"],
+            hideFromPalette: extensionRemovable,
+            isTerminal: true,
+          },
+          {
             blockType: Scratch.BlockType.XML,
             hideFromPalette: extensionRemovable,
             xml: `<block type="procedures_return"><value name="${isPM ? "return" : "VALUE"}"><shadow type="text"><field name="TEXT"></field></shadow></value></block>`,
@@ -1903,6 +1911,10 @@
     getParam(args, util) {
       const param = util.thread.getParam(Scratch.Cast.toString(args.PARAM));
       return param ?? "";
+    }
+
+    stopCallerScript(args, util) {
+      util.thread.status = 4
     }
 
     runBranch(args, util) {
