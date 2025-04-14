@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.12
+// Version V.1.2.2
 
 (function(Scratch) {
   "use strict";
@@ -1801,6 +1801,14 @@
             },
           },
           {
+            opcode: "stopCallerScript",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "stop caller script",
+            extensions: ["SPmbpCST_defineColored"],
+            isTerminal: true,
+            hideFromPalette: extensionRemovable
+          },
+          {
             blockType: Scratch.BlockType.XML,
             hideFromPalette: extensionRemovable,
             xml: `<block type="procedures_return"><value name="${isPM ? "return" : "VALUE"}"><shadow type="text"><field name="TEXT"></field></shadow></value></block>`,
@@ -1903,6 +1911,12 @@
     getParam(args, util) {
       const param = util.thread.getParam(Scratch.Cast.toString(args.PARAM));
       return param ?? "";
+    }
+
+    stopCallerScript(_, util) {
+      // stops threads entirely, including custom blocks contexts
+      // more powerful than 'util.stopThisScript()'
+      util.thread.status = 4;
     }
 
     runBranch(args, util) {
