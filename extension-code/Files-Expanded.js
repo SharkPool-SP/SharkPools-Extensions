@@ -7,7 +7,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT AND MPL-2.0
 
-// Version: 1.7.1
+// Version: 1.7.11
 
 (function (Scratch) {
   "use strict";
@@ -1151,21 +1151,29 @@
       try {
         const picker = await showFilePrompt("Folder", "", "folder");
         if (!picker) return;
-        const entries = picker.entries();
-        const folderN = args.NAME ? args.NAME : picker.name;
-        let thisFile = "";
-        while (thisFile !== undefined) {
-          const outerData = await entries.next();
-          thisFile = outerData.value;
-          if (thisFile !== undefined) {
-            const innerData = thisFile[1];
-            const name = `${folderN}/${innerData.name}`;
-            storedFiles[name] = { file: innerData, data: {} };
-            const metaData = await innerData.getFile();
-            const encodedData = await this.encodeData(metaData, args.TYPE);
-            this.updateStore(name, encodedData, metaData);
+
+        const createExtFile = async (folderN, data) => {
+          const name = `${folderN}/${data.name}`;
+          storedFiles[name] = { file: data, data: {} };
+          const metaData = await data.getFile();
+          const encodedData = await this.encodeData(metaData, args.TYPE);
+          this.updateStore(name, encodedData, metaData);
+        };
+        const digThroughFolder = async (folderCtx) => {
+          const entries = folderCtx.entries();
+          const folderN = args.NAME ? args.NAME : folderCtx.name;
+          let thisFile = "";
+          while (thisFile !== undefined) {
+            const outerData = await entries.next();
+            thisFile = outerData.value;
+            if (thisFile !== undefined) {
+              const innerData = thisFile[1];
+              if (innerData.kind === "directory") await digThroughFolder(innerData);
+              else await createExtFile(folderN, innerData);
+            }
           }
-        }
+        };
+        await digThroughFolder(picker);
       } catch (e) {
         console.warn(e);
       }
