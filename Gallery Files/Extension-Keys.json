@@ -97,7 +97,7 @@
       "url": "extension-code/Hyper-Sense.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Keys-Plus-V2": {
@@ -134,7 +134,7 @@
       "url": "extension-code/Camera-Sensing-Plus.js",
       "banner": "extension-thumbs/Camera-Sensing-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
@@ -162,7 +162,7 @@
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/07/2025"
     },
     "Sprite-Effects": {
@@ -180,7 +180,7 @@
       "url": "extension-code/Image-Effects.js",
       "banner": "extension-thumbs/Image-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Image-Editor": {
@@ -189,7 +189,7 @@
       "url": "extension-code/Image-Editor.js",
       "banner": "extension-thumbs/Image-Editor.svg",
       "tags": ["all", "utilities"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Pixel-Utilities": {
@@ -279,7 +279,7 @@
       "url": "extension-code/Sty-Lists.js",
       "banner": "extension-thumbs/Sty-Lists.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/12/2025"
     },
     "Gamepad-Expanded": {
@@ -369,7 +369,7 @@
       "url": "extension-code/Geolocation.js",
       "banner": "extension-thumbs/Geolocation.svg",
       "tags": ["all", "fetching"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Spotify": {
@@ -513,7 +513,7 @@
       "url": "extension-code/Extra-Controls.js",
       "banner": "extension-thumbs/Extra-Controls.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/09/2025"
     },
     "More-Operators": {
@@ -540,7 +540,7 @@
       "url": "extension-code/Better-Comments.js",
       "banner": "extension-thumbs/Better-Comments.svg",
       "tags": ["all", "expanded", "addon"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/11/2025"
     },
     "Sprite-Panel": {
@@ -594,7 +594,7 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "My-Blocks-Plus": {
@@ -603,7 +603,7 @@
       "url": "extension-code/My-Blocks-Plus.js",
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 04/11/2025"
     },
     "Dropdown-Maker": {
