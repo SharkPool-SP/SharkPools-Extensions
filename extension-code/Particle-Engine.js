@@ -926,7 +926,6 @@ void main() {
             }
             emitter.opts = rawOpts;
             emitter.tintCache = new Map();
-            console.log("Set!")
           } catch {}
         }
       }
