@@ -4,7 +4,7 @@
 // By: SharkPool and Nekl300
 // License: MIT
 
-// Version V.1.7.22
+// Version V.1.7.23
 
 (function (Scratch) {
   "use strict";
@@ -254,9 +254,14 @@
               match = text.match(pattern);
               return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
             case "subscriber count":
-              pattern = /"metadataParts":\[\{"text":\{"content":"(\d+)[^"]*"/;
-              match = text.match(pattern);
-              return match && match[1] ? match[1] : "";
+              pattern = /"metadataParts":\[\{"text":\{"content":"([^"]+)"/g;
+              match = [...text.matchAll(pattern)];
+              if (match && match[1]) {
+                let count = match[1][1];
+                count = count.split(/\s+/);
+                return count.length > 2 ? `${count[0]} ${count[1]}` : count[0];
+              }
+              return "";
             case "video count":
               pattern = /"metadataParts":\[\{"text":\{"content":"(\d+)[^"]*"\}\},\{"text":\{"content":"(\d+)[^"]*"/;
               match = text.match(pattern);
@@ -301,15 +306,11 @@
               match = text.match(pattern);
               return match[1].replace(/\\n/g, "\n");
             case "length":
-              pattern = /"endTimeMs":"([^"]+)"/;
+              pattern = /"approxDurationMs":"(\d+)"\s*,\s*"audioSampleRate"/;
+              console.log(text);
               match = text.match(pattern);
-              if (match && match[1]) match = match[1];
-              else {
-                console.warn("error finding length, finding failsafe...");
-                pattern = /"lengthSeconds":"([^"]+)"/;
-                match = text.match(pattern)[1] * 1000;
-              }
-              const totalSecs = Math.floor(match / 1000);
+              if (!match || !match[1]) return "";
+              const totalSecs = match[1];
               const hrs = Math.floor(totalSecs / 3600).toString().padStart(2, "0");
               const secsLeft = totalSecs % 3600;
               const mins = Math.floor(secsLeft / 60).toString().padStart(2, "0");
@@ -323,9 +324,7 @@
     }
 
     async getResults(args) {
-      const query = encodeURIComponent(
-        Scratch.Cast.toString(args.QUERY).replace(/ /g, "+")
-      ).replaceAll("%2B", "+");
+      const query = encodeURIComponent(Scratch.Cast.toString(args.QUERY).replace(/ /g, "+"));
       try {
         const response = await Scratch.fetch(proxy + `https://www.youtube.com/results?search_query=${query}`);
         if (response.ok) {
