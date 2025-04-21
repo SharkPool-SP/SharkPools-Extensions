@@ -69,7 +69,7 @@
           {
             opcode: "fetchStats",
             blockType: Scratch.BlockType.REPORTER,
-            text: "fetch [STAT] count of video [VIDEO_ID]",
+            text: "get [STAT] count of video [VIDEO_ID]",
             arguments: {
               STAT: { type: Scratch.ArgumentType.STRING, menu: "STAT_OPTIONS" },
               VIDEO_ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" }
@@ -78,7 +78,7 @@
           {
             opcode: "fetchtitle", //made with Nekl300
             blockType: Scratch.BlockType.REPORTER,
-            text: "fetch [STAT] of video [VIDEO_ID]",
+            text: "get [STAT] of video [VIDEO_ID]",
             arguments: {
               STAT: { type: Scratch.ArgumentType.STRING, menu: "STAT_OPTION" },
               VIDEO_ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" }
@@ -106,7 +106,7 @@
           {
             opcode: "fetchUserThing",
             blockType: Scratch.BlockType.REPORTER,
-            text: "fetch [THING] from channel [URL]",
+            text: "get [THING] from channel [URL]",
             arguments: {
               URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://www.youtube.com/@SharkPool_SP" },
               THING: { type: Scratch.ArgumentType.STRING, menu: "USER_STUFF" }
@@ -294,9 +294,9 @@
     }
 
     async fetchOthersVideo(args) {
-      const url = `https://www.youtube.com/watch?v=${args.VIDEO_ID}`;
+      const url = encodeURIComponent(`https://www.youtube.com/watch?v=${args.VIDEO_ID}`);
       try {
-        const response = await Scratch.fetch(proxy + url);
+        const response = await Scratch.fetch("https://corsproxy.io?url=" + url);
         if (response.ok) {
           const text = await response.text();
           let pattern, match = "";
@@ -307,10 +307,10 @@
               return match[1].replace(/\\n/g, "\n");
             case "length":
               pattern = /"approxDurationMs":"(\d+)"\s*,\s*"audioSampleRate"/;
-              console.log(text);
               match = text.match(pattern);
               if (!match || !match[1]) return "";
-              const totalSecs = match[1];
+
+              const totalSecs = parseInt(match[1]) / 1000;
               const hrs = Math.floor(totalSecs / 3600).toString().padStart(2, "0");
               const secsLeft = totalSecs % 3600;
               const mins = Math.floor(secsLeft / 60).toString().padStart(2, "0");
