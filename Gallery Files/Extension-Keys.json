@@ -138,13 +138,13 @@
       "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
-      "desc": "Create Highly Customizable Particle Engines with NO Clones",
+      "desc": "Create customizable and powerful Particle Engines with NO Clones",
       "creator": "SharkPool",
       "url": "extension-code/Particle-Engine.js",
       "banner": "extension-thumbs/Particle-Engine.svg",
-      "tags": ["all", "utilities", "expanded"],
-      "status": "",
-      "date": "Last Updated: 04/10/2025"
+      "tags": ["all", "utilities"],
+      "status": "update",
+      "date": "Last Updated: 04/21/2025"
     },
     "Particle-Tools": {
       "desc": "Tools that make creating Particle Systems easy",
