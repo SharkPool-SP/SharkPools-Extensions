@@ -197,7 +197,7 @@ void main() {
       canvas, gl, programInfo, bufferInfo, projection,
       emitters: Object.create(null),
       data: new Map(),
-      interpolate: false, paused: false
+      interpolate: false, paused: false, noTrails: true
     };
     target[engineTag] = engine;
     allEngines.set(targetName, engine);
@@ -227,7 +227,8 @@ void main() {
     const {
       canvas, gl, programInfo,
       bufferInfo, projection,
-      emitters, data, interpolate
+      emitters, data,
+      interpolate, noTrails
     } = engine;
     const { width, height } = canvas;
     const delta = interpolate ? 1 + deltaTime : 1;
@@ -235,8 +236,10 @@ void main() {
     // Clear canvas
     twgl.bindFramebufferInfo(gl, null);
     gl.viewport(0, 0, width, height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    if (noTrails) {
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
 
     for (const key in emitters) {
       const emitter = emitters[key];
@@ -636,36 +639,23 @@ void main() {
           BEHAVIOURS: { acceptReporters: true, items: this.getBehaviours(false) },
           ALL_BEHAVIOURS: { acceptReporters: true, items: this.getBehaviours(true) },
           POS: ["x", "y"],
-          BEHAVE_VAL: {
-            acceptReporters: false,
-            items: [
-              { text: Scratch.translate("value"), value: "value" }, { text: Scratch.translate("randomizer"), value: "randomizer" }
-            ]
-          },
-          ACTION: {
-            acceptReporters: false,
-            items: [
+          BEHAVE_VAL: [
+            { text: Scratch.translate("value"), value: "value" }, { text: Scratch.translate("randomizer"), value: "randomizer" }
+          ],
+          ACTION: [
               { text: Scratch.translate("created"), value: "created" }, { text: Scratch.translate("visible"), value: "visible" }
-            ]
-          },
-          VISIBLE: {
-            acceptReporters: false,
-            items: [
+          ],
+          VISIBLE: [
               { text: Scratch.translate("show"), value: "show" }, { text: Scratch.translate("hide"), value: "hide" }
-            ]
-          },
-          ENGINE_OPS: {
-            acceptReporters: false,
-            items: [
-              { text: Scratch.translate("interpolation"), value: "interpolation" }, { text: Scratch.translate("freeze"), value: "freeze" }
-            ]
-          },
-          TOGGLER: {
-            acceptReporters: true,
-            items: [
-              { text: Scratch.translate("on"), value: "on" }, { text: Scratch.translate("off"), value: "off" }
-            ]
-          },
+          ],
+          ENGINE_OPS: [
+            { text: Scratch.translate("interpolation"), value: "interpolation" },
+            { text: Scratch.translate("freeze"), value: "freeze" },
+            { text: Scratch.translate("particle trails"), value: "trails" },
+          ],
+          TOGGLER: [
+            { text: Scratch.translate("on"), value: "on" }, { text: Scratch.translate("off"), value: "off" }
+          ],
           TEXTURES: {
             acceptReporters: true,
             items: [
@@ -801,6 +791,9 @@ void main() {
             break;
           case "freeze":
             target[engineTag].paused = toggle;
+            break;
+          case "trails":
+            target[engineTag].noTrails = !toggle;
             break;
         }
       }
