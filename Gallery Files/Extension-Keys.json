@@ -594,8 +594,8 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
-      "date": "Last Updated: 04/10/2025"
+      "status": "update",
+      "date": "Last Updated: 04/21/2025"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
