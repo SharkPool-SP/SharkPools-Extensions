@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.02
+// Version V.1.1.03
 
 (function (Scratch) {
   "use strict";
@@ -109,7 +109,10 @@
   const ogVisReport = runtime.visualReport;
   if (isPM) {
     runtime.visualReport = function (blockId, value) {
-      if (typeof value === "object") value = JSON.stringify(value);
+      if (value.constructor?.name === "Object" || value.constructor?.name === "Array") {
+        // PM custom return constructors have a different name
+        value = JSON.stringify(value);
+      }
       return ogVisReport.call(this, blockId, value);
     }
   } else {
