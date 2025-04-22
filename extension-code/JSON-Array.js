@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.01
+// Version V.1.1.02
 
 (function (Scratch) {
   "use strict";
@@ -18,6 +18,7 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
+  const isPM = Scratch.extensions.isPenguinMod;
 
   const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
   let extClass;
@@ -106,10 +107,17 @@
 
   // Modify Visual Report to stringify JSON
   const ogVisReport = runtime.visualReport;
-  runtime.visualReport = function (blockId, value) {
-    if (typeof value === "object") value = JSON.stringify(value);
-    return ogVisReport.call(this, blockId, value);
-  };
+  if (isPM) {
+    runtime.visualReport = function (blockId, value) {
+      if (typeof value === "object") value = JSON.stringify(value);
+      return ogVisReport.call(this, blockId, value);
+    }
+  } else {
+    runtime.visualReport = function (target, blockId, value) {
+      if (typeof value === "object") value = JSON.stringify(value);
+      return ogVisReport.call(this, target, blockId, value);
+    }
+  }
 
   // Modify Monitors to stringify JSON
   if (typeof scaffolding === "undefined") {
