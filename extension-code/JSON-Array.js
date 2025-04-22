@@ -134,7 +134,7 @@
         if (valueInd === -1) return;
 
         if (data[0]?.entry && data[0]?.entry[1] === "list") {
-          data[valueInd].entry[1] = data[valueInd].entry[1].map((item) => {
+          data[valueInd].entry[1] = data[valueInd]?.entry[1]?.map((item) => {
             if (typeof item === "object") item = JSON.stringify(item);
             return item;
           });
