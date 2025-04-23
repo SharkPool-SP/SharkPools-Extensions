@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.2.0.01
+// Version V.2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -85,17 +85,46 @@
     }
   }
 
-  // Patch to allow opacity in our engine
-  const DrawableProto = Drawable.__proto__;
-  const gu = DrawableProto.getUniforms;
-  DrawableProto.getUniforms = function() {
-    if (this[engineTag]) {
-      const gl = this._renderer.gl;
+  function applyBlends(gl, type) {
+    switch (type) {
+      case "additive":
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFuncSeparate(gl.ONE, gl.ONE, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        break;
+      case "subtract":
+        gl.blendEquation(gl.FUNC_REVERSE_SUBTRACT);
+        gl.blendFuncSeparate(gl.ONE, gl.ONE, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        break;
+      case "multiply":
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFuncSeparate(gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        break;
+      case "screen":
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_COLOR, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        break;
+      case "invert":
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFuncSeparate(gl.ONE_MINUS_DST_COLOR, gl.ONE_MINUS_SRC_COLOR, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        break;
+      default:
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    }
+  }
+
+  // Patch to allow opacity and blends in our engine
+  const gu = Drawable.prototype.getUniforms;
+  Drawable.prototype.getUniforms = function() {
+    const gl = this._renderer.gl;
+    if (this[engineTag]) applyBlends(gl, this[engineTag]);
+    else {
+      if (vm.extensionManager._loadedExtensions.has("xeltallivclipblend")) return gu.call(this);
       gl.blendEquation(gl.FUNC_ADD);
-      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); 
     }
     return gu.call(this);
-  }
+  };
 
   // Constants
   const radianConvert = Math.PI / 180;
@@ -203,13 +232,14 @@ void main() {
     allEngines.set(targetName, engine);
     render.updateDrawableSkinId(drawableId, skinId);
     drawable.customDrawableName = `${targetName} Particle Engine (SP)`;
-    drawable[engineTag] = true;
+    drawable[engineTag] = "default";
     drawable.stageSZChange = (() => {
       const size = [runtime.stageWidth || 480, runtime.stageHeight || 360];
       skin.size = size;
       canvas.width = size[0]; canvas.height = size[1];
     }).bind(this);
     vm.on("STAGE_SIZE_CHANGED", drawable.stageSZChange);
+    runtime.requestRedraw();
   };
 
   const disposeEngine = (target) => {
@@ -506,6 +536,15 @@ void main() {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "TOGGLER" }
             },
           },
+          {
+            opcode: "setEngineBlend",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set blend mode of engine [TARGET] to [TYPE]"),
+            arguments: {
+              TARGET: { type: Scratch.ArgumentType.STRING, menu: "ALL_TARG" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "BLENDING" }
+            },
+          },
           { blockType: Scratch.BlockType.LABEL, text: Scratch.translate("Emitters") },
           {
             opcode: "createEmitter",
@@ -669,6 +708,17 @@ void main() {
               { text: Scratch.translate("start"), value: "sCol" },
               { text: Scratch.translate("end"), value: "eCol" }
             ]
+          },
+          BLENDING: {
+            acceptReporters: true,
+            items: [
+              { text: Scratch.translate("default"), value: "default" },
+              { text: Scratch.translate("additive"), value: "additive" },
+              { text: Scratch.translate("subtract"), value: "subtract" },
+              { text: Scratch.translate("screen"), value: "screen" },
+              { text: Scratch.translate("multiply"), value: "multiply" },
+              { text: Scratch.translate("invert"), value: "invert" }
+            ]
           }
         },
       };
@@ -783,20 +833,27 @@ void main() {
 
     setEngineOpt(args) {
       const target = this.getSprite(args.TARGET);
-      if (target && target[engineTag]) {
+      const engine = target?.[engineTag];
+      if (target && engine) {
         const toggle = args.TYPE === "on";
         switch (args.OPT) {
           case "interpolation":
-            target[engineTag].interpolate = toggle;
+            engine.interpolate = toggle;
             break;
           case "freeze":
-            target[engineTag].paused = toggle;
+            engine.paused = toggle;
             break;
           case "trails":
-            target[engineTag].noTrails = !toggle;
+            engine.noTrails = !toggle;
             break;
         }
       }
+    }
+
+    setEngineBlend(args) {
+      const target = this.getSprite(args.TARGET);
+      const engine = target?.[engineTag];
+      if (target && engine) engine.drawable[engineTag] = Cast.toString(args.TYPE);
     }
 
     createEmitter(args) {
@@ -810,6 +867,7 @@ void main() {
       newTexture(shapes.sqr, engine.gl, (t) => {
         engine.emitters[args.NAME].texture = t;
       });
+      runtime.requestRedraw();
     }
 
     deleteEmitter(args) {
@@ -847,7 +905,10 @@ void main() {
       if (target && target[engineTag]) {
         const engine = target[engineTag];
         const space = engine.emitters[args.NAME];
-        if (space) newTexture(args.IMG, engine.gl, (texture) => { space.texture = texture });
+        if (space) {
+          newTexture(args.IMG, engine.gl, (texture) => { space.texture = texture });
+          runtime.requestRedraw();
+        }
       }
     }
 
