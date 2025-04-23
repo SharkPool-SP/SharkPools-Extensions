@@ -302,12 +302,12 @@
     },
     "Since-2000": {
       "desc": "Expansion of the 'since 2000' Blocks",
-      "creator": "ION, 0znzw (contributor)",
+      "creator": "ION, 0znzw",
       "url": "extension-code/Since-2000.js",
       "banner": "extension-thumbs/Since-2000.svg",
       "tags": ["all", "expanded"],
-      "status": "",
-      "date": "Last Updated: 04/26/2024"
+      "status": "update",
+      "date": "Last Updated: 04/22/2025"
     },
     "Animations": {
       "desc": "Create Animations and Keyframes in your Project",
