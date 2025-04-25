@@ -3,7 +3,7 @@
 // Description: Display Text in Your Projects!
 // By: SharkPool
 
-// Version V.1.5.0
+// Version V.1.5.01
 
 (function (Scratch) {
   "use strict";
@@ -413,6 +413,15 @@
           },
           "---",
           {
+            opcode: "toggleWrap",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "toggle text wrap for ID [ID] [TYPE]",
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-text" },
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "TOGGLE" }
+            },
+          },
+          {
             opcode: "toggleSelect",
             blockType: Scratch.BlockType.COMMAND,
             text: "toggle highlighting for ID [ID] [TYPE]",
@@ -592,6 +601,8 @@
       txtElement.id = `SP_Text-Ext-${ID}`;
       txtElement.classList.add(ID);
       txtElement.style.userSelect = "none";
+      txtElement.style.overflowWrap = "break-word";
+      txtElement.style.textWrap = "nowrap";
       txtElement.setAttribute("sptxtpos", "120|-10");
       txtElement.setAttribute("txtContent", args.TXT);
       textDiv.appendChild(txtElement);
@@ -1019,6 +1030,12 @@
         element.style.userSelect = type; element.style.webkitUserSelect = type; element.style.mozUserSelect = type;
         element.style.pointerEvents = type;
       });
+    }
+
+    toggleWrap(args) {
+      const type = args.TYPE === "on" ? "wrap" : "nowrap";
+      const elements = document.querySelectorAll(`div[id="SP_Text-Ext-${this.fixID(args.ID)}"]`);
+      elements.forEach((element) => { element.style.textWrap = type });
     }
 
     makeClick(args) {
