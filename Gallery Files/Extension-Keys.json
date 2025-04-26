@@ -513,8 +513,8 @@
       "url": "extension-code/Extra-Controls.js",
       "banner": "extension-thumbs/Extra-Controls.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 04/09/2025"
+      "status": "update",
+      "date": "Last Updated: 04/26/2025"
     },
     "More-Operators": {
       "desc": "New Powerful Operator Blocks",
