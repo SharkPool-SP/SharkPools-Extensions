@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.7.03
+// Version V.1.7.04
 
 (function (Scratch) {
   "use strict";
@@ -26,6 +26,8 @@
 
   const { vm, Cast } = Scratch;
   const runtime = vm.runtime;
+  const isPM = Scratch.extensions.isPenguinMod;
+
   const keysMenu = [
     { text: "space", value: "space" }, { text: "up arrow", value: "up arrow" }, { text: "down arrow", value: "down arrow" },
     { text: "right arrow", value: "right arrow" }, { text: "left arrow", value: "left arrow" },
@@ -126,14 +128,25 @@
 
   // override needed for "get from sprite" blocks
   const ogVisReport = runtime.visualReport;
-  runtime.visualReport = function (blockId, value) {
-    if (overrideCalls[blockId]) {
-      overrideCalls[blockId].pushReportedValue(value);
-      delete overrideCalls[blockId];
-      return;
+  if (isPM) {
+    runtime.visualReport = function (blockId, value) {
+      if (overrideCalls[blockId]) {
+        overrideCalls[blockId].pushReportedValue(value);
+        delete overrideCalls[blockId];
+        return;
+      }
+      return ogVisReport.call(this, blockId, value);
     }
-    return ogVisReport.call(this, blockId, value);
-  };
+  } else {
+    runtime.visualReport = function (target, blockId, value) {
+      if (overrideCalls[blockId]) {
+        overrideCalls[blockId].pushReportedValue(value);
+        delete overrideCalls[blockId];
+        return;
+      }
+      return ogVisReport.call(this, target, blockId, value);
+    }
+  }
 
   // thread patcher for special threads
   const expRenderedTarget = new vm.exports.RenderedTarget({ blocks: null }, runtime);
