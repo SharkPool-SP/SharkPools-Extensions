@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.2
+// Version V.1.2.3
 
 (function(Scratch) {
   "use strict";
@@ -20,7 +20,8 @@
     return start + {
       "dropdwn": "1NyIgaGVpZ2h0PSI0OSIgdmlld0JveD0iMCAwIDU3IDQ5Ij48ZyBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik00LjUgNDguNWE0IDQgMCAwIDEtNC00di00MGE0IDQgMCAwIDEgNC00aDQ4YTQgNCAwIDAgMSA0IDR2NDBhNCA0IDAgMCAxLTQgNHoiIGZpbGw9IiNmZjY2ODAiIHN0cm9rZT0iI2YzNSIvPjxwYXRoIGQ9Ik0xMi4xMjMgMzkuODNjLTEuNTA3IDAtMi43My0xLjE0NC0yLjczLTIuNTU1di0yNS41NWMwLTEuNDExIDEuMjIzLTIuNTU1IDIuNzMtMi41NTVoMzIuNzU0YzEuNTA3IDAgMi43MyAxLjE0NCAyLjczIDIuNTU1djI1LjU1YzAgMS40MTEtMS4yMjMgMi41NTUtMi43MyAyLjU1NXoiIGZpbGw9IiNmZjRkNmEiIHN0cm9rZT0iI2YzNSIvPjxwYXRoIGQ9Ik0zNi4wODQgMjIuMTY3YTIuODggMi44OCAwIDAgMS0uODQ4IDIuMDUzbC00LjY3NyA0LjY3N2EyLjkyNCAyLjkyNCAwIDAgMS00LjExOCAwbC00LjY2NS00LjY3N2EyLjkgMi45IDAgMCAxLS44Ni0yLjA1MyAyLjk2IDIuOTYgMCAwIDEgLjg0OC0yLjA2NGMuMzQ2LS4yODcuODU5LS44NDggNi43NDItLjg0OHM2LjQzMi41NSA2LjczLjg0OGMuNTQ2LjU0OC44NSAxLjI5Ljg0OCAyLjA2NCIgZmlsbD0iI2YzNSIvPjxwYXRoIGQ9Ik0yOC41MDYgMjguNTUxYTEuNyAxLjcgMCAwIDEtMS4xOTMtLjVsLTQuNzAyLTQuNjc5YTEuNzIgMS43MiAwIDAgMSAwLTIuMzg2Yy42NjgtLjY2OSAxMS4xMS0uNjY5IDExLjc3OCAwIC42NDMuNjY1LjY0MyAxLjcyIDAgMi4zODZsLTQuNjc4IDQuNjc4Yy0uMzIuMzItLjc1My41LTEuMjA1LjUwMSIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=",
       "colorPkr": "yMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iLTIgLTMgMjAgMjAiPjxwYXRoIGQ9Ik0xMS4wNjQgNS41NjIgOS40MDkgMy45MDhsLTMuOTQgMy45MmMtLjEyLjEzNy0uMjA1LjI3NC0uMjQuNDEtLjE4Ny44NTItLjgxOCAxLjUtMS41MTcgMS43MjJhMSAxIDAgMCAwLS41OC41MTFsLS44MzYgMS43OWMtLjA1MS4xMi0uMDUxLjE4OC0uMDUxLjIwNWwuMjczLjI1NWEuNi42IDAgMCAwIC4xODctLjA1bDEuNzc0LS44MzZjLjI0LS4xMi40Ni0uMzU4LjUzLS41OC4yMDQtLjY5OS44Ny0xLjMzIDEuNTY4LTEuNDgzLjI3My0uMDY4LjQyNy0uMTUzLjU0Ni0uMjl6bTIuMDMtMS43OS4xMzYuMTM2LjU4LjU4YS44ODQuODg0IDAgMCAxIDAgMS4yNDRsLS42NjUuNjQ4YS44NDcuODQ3IDAgMCAxLTEuMTYuMDY4bC0zLjk1OCAzLjkzOGEyLjA3IDIuMDcgMCAwIDEtMS4wMDYuNTk3Yy0uNDEuMDg1LS43MTYuMzc1LS43ODUuNjQ3LS4xNy41NjMtLjY0OCAxLjA5MS0xLjIxIDEuMzY0bC0xLjc5Mi44MzZjLS4yMzkuMTAyLS40OTUuMTctLjcxNi4xN2ExLjIgMS4yIDAgMCAxLS44Ny0uMzRsLS4zNDEtLjM0MmMtLjM3Ni0uMzkyLS40NDQtMS4wMDYtLjE3MS0xLjYwMmwuODM2LTEuNzczYy4yNTYtLjU2My44MDItMS4wNCAxLjM2NC0xLjIxLjI3My0uMDg2LjU2My0uMzc2LjYxNS0uNjMxLjExOS0uNTEyLjMyNC0uODcuNjE0LTEuMTc3bDMuOTU3LTMuOTM3Yy0uMjktLjM0MS0uMjczLS44MzYuMDUxLTEuMTc3bC42NjUtLjY0OGEuODg2Ljg4NiAwIDAgMSAxLjI0NiAwbC41NDYuNTQ2LjE3LjE3TDEyLjY4NC4zOTZhMS4zMyAxLjMzIDAgMCAxIDEuODk0IDBjLjI1Ni4yNTYuMzkyLjU5Ny4zOTIuOTM4cy0uMTM2LjY5OS0uMzkyLjk1NXoiIGZpbGw9Im5vbmUiIHN0cm9rZS1vcGFjaXR5PSIuMjUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTExLjA2NCA1LjU2MiA5LjQwOSAzLjkwOGwtMy45NCAzLjkyYy0uMTIuMTM3LS4yMDUuMjc0LS4yNC40MS0uMTg3Ljg1Mi0uODE4IDEuNS0xLjUxNyAxLjcyMmExIDEgMCAwIDAtLjU4LjUxMWwtLjgzNiAxLjc5Yy0uMDUxLjEyLS4wNTEuMTg4LS4wNTEuMjA1bC4yNzMuMjU1YS42LjYgMCAwIDAgLjE4Ny0uMDVsMS43NzQtLjgzNmMuMjQtLjEyLjQ2LS4zNTguNTMtLjU4LjIwNC0uNjk5Ljg3LTEuMzMgMS41NjktMS40ODMuMjcyLS4wNjguNDI2LS4xNTMuNTQ1LS4yOXptMi4wMy0xLjc5LjEzNi4xMzYuNTguNThhLjg4NC44ODQgMCAwIDEgMCAxLjI0NGwtLjY2NS42NDhhLjg0Ny44NDcgMCAwIDEtMS4xNi4wNjhsLTMuOTU4IDMuOTM4YTIuMDcgMi4wNyAwIDAgMS0xLjAwNi41OTdjLS40MS4wODUtLjcxNi4zNzUtLjc4NS42NDctLjE3LjU2My0uNjQ4IDEuMDkxLTEuMjEgMS4zNjRsLTEuNzkyLjgzNmMtLjIzOS4xMDItLjQ5NS4xNy0uNzE2LjE3YTEuMiAxLjIgMCAwIDEtLjg3LS4zNDFsLS4zNDEtLjM0Yy0uMzc2LS4zOTMtLjQ0NC0xLjAwNy0uMTcxLTEuNjAzbC44MzYtMS43NzNjLjI1Ni0uNTYzLjgwMi0xLjA0IDEuMzY0LTEuMjEuMjczLS4wODYuNTYzLS4zNzYuNjE1LS42MzEuMTE5LS41MTIuMzI0LS44Ny42MTQtMS4xNzdsMy45NTctMy45MzhjLS4yOS0uMzQtLjI3My0uODM1LjA1MS0xLjE3NmwuNjY2LS42NDhhLjg4Ni44ODYgMCAwIDEgMS4yNDUgMGwuNTQ2LjU0Ni4xNy4xN0wxMi42ODQuMzk2YTEuMzMgMS4zMyAwIDAgMSAxLjg5NCAwYy4yNTYuMjU2LjM5Mi41OTcuMzkyLjkzOHMtLjEzNi42OTktLjM5Mi45NTV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+",
-      "branchStart": "yMC4zOTkiIGhlaWdodD0iMjEuNDIyIiB2aWV3Qm94PSIwIDAgMjAuMzk5IDIxLjQyMiI+PHBhdGggZD0iTTEzLjY1IDE2Ljc0NmMtLjY1NS0uMjgtMS0uOS0xLTEuNXYtMS42Yy0xLjMtLjEtMi41LS41LTMuNi0xLjFsLS4xNDYtLjA3OGMuMDU0LjY0Ni4wODcgMS4wOC4wOTYgMS4yMDRoMS42Yy42IDAgMS4yMTguMzQgMS41IDFzLjA5NiAxLjE4Ni0uMyAxLjhjLS4wNjMuMDk4LTQuNSA0LjUtNC41IDQuNS0uNy42LTEuNy42LTIuNCAwbC00LjQtNC40Yy0uMy0uMy0uNS0uOC0uNS0xLjIgMC0xIC44LTEuNyAxLjctMS43aDEuNWMwLS4xODMuMjU4LTMuOTgzLjQ4LTcuNDE2LjEyMy0xLjkwOC4yMzUtMy43NzIuMjg1LTQuNzY5LjAxMy0uMDY2LjAzLS4yMDEuMDUyLS4yNjQuMTY0LS43MDYuODIyLTEuMjEgMS42Ny0xLjIxLjg4LS4xMjIgMS44ODEuNjE0IDEuOSAxLjY0cS4wMjIuMDQyLjAyOC4wNjVjLjE2NS44NTYuMzIgMS44NTMuNDYyIDIuOS4yNy41MDcuNjQ4Ljk4My45ODEgMS40MjguOCAxLjEgMi4xOTEgMS44IDMuNTkxIDEuOHYtMS41YzAtLjkuNy0xLjcgMS43LTEuNy40IDAgLjkuMiAxLjIuNWw0LjQgNC40Yy42LjcuNiAxLjcgMCAyLjRsLTQuNSA0LjVzLTEuMTQ1LjU4LTEuOC4zIiBmaWxsLW9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQuNjY5IDIuMDc5QzQuNTg1IDEuNDgyIDUuMDk3LjkwNSA1LjgwNy45MDZjLjU5Ni0uMDg0IDEuMjc2LjQyOCAxLjI3NSAxLjEzOCAwIC4wMTMuMTE0IDEuMDY3LjI2IDIuNTgzYTcgNyAwIDAgMCAuOTI1IDEuNzcxYy42LjkgMS41OTIgMS42IDIuNjkyIDIgLjkuMyAxLjguNCAyLjguMnYtMi40YzAtLjQuMy0uNy43LS43LjIgMCAuMy4xLjQuMmw0LjQgNC40Yy4zLjMuMy43IDAgLjlsLTQuNCA0LjRjLS4zLjMtLjQ1OC40MzEtLjgzMi4zNjlzLS4zNjgtLjU2OS0uMzY4LS41Njl2LTIuNmMtMS41IDAtMi45LS4zLTQuMi0xYTguMyA4LjMgMCAwIDEtMS41Ny0xLjAyNGMuMTUxIDIuMTg4LjI1NCAzLjg4Mi4yNTQgNC4xNDhoMi42cy40NjIuMDc2LjUuMyAwIC42LS4zLjlsLTQuNCA0LjRjLS4yLjMtLjYuMy0uOSAwbC00LjQtNC40Yy0uMS0uMS0uMi0uMi0uMi0uNCAwLS40LjMtLjcuNy0uN2gyLjM5OGMuMDU0LTEuNTk3LjE0NS00LjIyLjIzOS02LjY2NC4wMi0uNTkuMDQxLTEuMTg2LjA2My0xLjc3NnEuMDAzLS4wOTkuMDE1LS4xOTJjLjA1LTEuMTgzLjIxLTQuMTExLjIxLTQuMTExIiBmaWxsPSIjZmZmIi8+PC9zdmc+"
+      "branchStart": "yMC4zOTkiIGhlaWdodD0iMjEuNDIyIiB2aWV3Qm94PSIwIDAgMjAuMzk5IDIxLjQyMiI+PHBhdGggZD0iTTEzLjY1IDE2Ljc0NmMtLjY1NS0uMjgtMS0uOS0xLTEuNXYtMS42Yy0xLjMtLjEtMi41LS41LTMuNi0xLjFsLS4xNDYtLjA3OGMuMDU0LjY0Ni4wODcgMS4wOC4wOTYgMS4yMDRoMS42Yy42IDAgMS4yMTguMzQgMS41IDFzLjA5NiAxLjE4Ni0uMyAxLjhjLS4wNjMuMDk4LTQuNSA0LjUtNC41IDQuNS0uNy42LTEuNy42LTIuNCAwbC00LjQtNC40Yy0uMy0uMy0uNS0uOC0uNS0xLjIgMC0xIC44LTEuNyAxLjctMS43aDEuNWMwLS4xODMuMjU4LTMuOTgzLjQ4LTcuNDE2LjEyMy0xLjkwOC4yMzUtMy43NzIuMjg1LTQuNzY5LjAxMy0uMDY2LjAzLS4yMDEuMDUyLS4yNjQuMTY0LS43MDYuODIyLTEuMjEgMS42Ny0xLjIxLjg4LS4xMjIgMS44ODEuNjE0IDEuOSAxLjY0cS4wMjIuMDQyLjAyOC4wNjVjLjE2NS44NTYuMzIgMS44NTMuNDYyIDIuOS4yNy41MDcuNjQ4Ljk4My45ODEgMS40MjguOCAxLjEgMi4xOTEgMS44IDMuNTkxIDEuOHYtMS41YzAtLjkuNy0xLjcgMS43LTEuNy40IDAgLjkuMiAxLjIuNWw0LjQgNC40Yy42LjcuNiAxLjcgMCAyLjRsLTQuNSA0LjVzLTEuMTQ1LjU4LTEuOC4zIiBmaWxsLW9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQuNjY5IDIuMDc5QzQuNTg1IDEuNDgyIDUuMDk3LjkwNSA1LjgwNy45MDZjLjU5Ni0uMDg0IDEuMjc2LjQyOCAxLjI3NSAxLjEzOCAwIC4wMTMuMTE0IDEuMDY3LjI2IDIuNTgzYTcgNyAwIDAgMCAuOTI1IDEuNzcxYy42LjkgMS41OTIgMS42IDIuNjkyIDIgLjkuMyAxLjguNCAyLjguMnYtMi40YzAtLjQuMy0uNy43LS43LjIgMCAuMy4xLjQuMmw0LjQgNC40Yy4zLjMuMy43IDAgLjlsLTQuNCA0LjRjLS4zLjMtLjQ1OC40MzEtLjgzMi4zNjlzLS4zNjgtLjU2OS0uMzY4LS41Njl2LTIuNmMtMS41IDAtMi45LS4zLTQuMi0xYTguMyA4LjMgMCAwIDEtMS41Ny0xLjAyNGMuMTUxIDIuMTg4LjI1NCAzLjg4Mi4yNTQgNC4xNDhoMi42cy40NjIuMDc2LjUuMyAwIC42LS4zLjlsLTQuNCA0LjRjLS4yLjMtLjYuMy0uOSAwbC00LjQtNC40Yy0uMS0uMS0uMi0uMi0uMi0uNCAwLS40LjMtLjcuNy0uN2gyLjM5OGMuMDU0LTEuNTk3LjE0NS00LjIyLjIzOS02LjY2NC4wMi0uNTkuMDQxLTEuMTg2LjA2My0xLjc3NnEuMDAzLS4wOTkuMDE1LS4xOTJjLjA1LTEuMTgzLjIxLTQuMTExLjIxLTQuMTExIiBmaWxsPSIjZmZmIi8+PC9zdmc+",
+      "addImg": "yMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0ibTE2LjE0NCAxMi43OC0yLjQ1OC0yLjUzMWEuOTcuOTcgMCAwIDAtMS4zNDctLjA2TDkuMjk1IDEyLjY2Yy0uNDY5LjM2Mi0xLjExMy4zMDItMS40NjQtLjE4bC0uMjkzLS4zNjNjLS4zNS0uNDgyLTEuMDUzLS41NDMtMS40NjMtLjE4TDMuODUgMTMuODA1aDBjMCAuODUyLjY5IDEuNTQzIDEuNTQzIDEuNTQzaDguODFhMiAyIDAgMCAwIDItMnYtLjU2OHoiIGZpbGw9IiNGRkYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMTYuMjAzIDguMTh2NS4yOTRjMCAuOTc0LS43OSAxLjc2NC0xLjc2NSAxLjc2NEg1LjYxNWMtLjk3NSAwLTEuNzY1LS43OS0xLjc2NS0xLjc2NHYtNy4wNmMwLS45NzQuNzktMS43NjQgMS43NjUtMS43NjRoNy4wNTkiLz48L2c+PHBhdGggZD0iTTE2Ljg5NyAzLjk4NWguNjYyYS42NjIuNjYyIDAgMSAxIDAgMS4zMjRoLS42NjJ2LjY2MmEuNjYyLjY2MiAwIDEgMS0xLjMyMyAwdi0uNjYyaC0uNjYyYS42NjIuNjYyIDAgMCAxIDAtMS4zMjRoLjY2MnYtLjY2MWEuNjYyLjY2MiAwIDAgMSAxLjMyMyAweiIgZmlsbD0iI0ZGRiIvPjxwYXRoIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIuMiIgZD0iTTE2Ljk0NyAzLjkzNWguNjEyYS43MTIuNzEyIDAgMSAxIDAgMS40MjRsLS42MTItLjA1di42NjJhLjcxMi43MTIgMCAxIDEtMS40MjMgMGwuMDUtLjYxMmgtLjY2MmEuNzEyLjcxMiAwIDEgMSAwLTEuNDI0bC42MTIuMDV2LS42NjFhLjcxMi43MTIgMCAxIDEgMS40MjMgMHoiLz48L2c+PC9zdmc+"
     }[name];
   };
   const inputURIs = (name) => {
@@ -57,6 +58,7 @@
   let ext; // extension object
   let execute, Thread; // set by exports
 
+  // TODO remove these when 'goog' is exposed on TurboWarp Desktop
   function colorDarken(hex, amt) {
     const hex2Rgb = (h) => {
       h = h.replace("#", "");
@@ -526,35 +528,63 @@
     };
     Object.values(ScratchBlocks.Blocks).forEach(extractImage);
 
+    const selectBtn = (dropDiv, btn) => {
+      Array.from(dropDiv.children).forEach(c => {
+        c.style.backgroundColor = "var(--default-bg)";
+        c.style.border = "solid var(--default-border) 2px";
+      });
+      btn.style.backgroundColor = "var(--looks-transparent, hsla(194, 100%, 50%, 0.35))";
+      btn.style.border = "solid var(--looks-secondary, hsl(194, 100%, 50%)) 2px";
+    };
+
     openModal(
       "Select an Image",
       (modal, modalStorage) => {
         const flexConst = "display: flex; flex-wrap: wrap; align-items: center; justify-content: center;";
         const borderConst = `border: solid var(--default-border) 2px; border-radius: 10px;`;
+        const itemCSS = `cursor: pointer; width: 75px; height: 75px; ${flexConst} padding: 5px; background-color: var(--default-bg); margin: 7px; ${borderConst} --default-border: ${isDark ? "#343434" : "#D9D9D9"}; --default-bg: ${isDark ? "#1f1f1f" : "#f5f5f5"};`;
+
         const dropDiv = document.createElement("div");
         dropDiv.setAttribute("style", `width: 100%; height: 200px; ${flexConst} overflow: hidden scroll; margin-bottom: 15px; ${borderConst} --default-border: ${isDark ? "#343434" : "#D9D9D9"};`);
-        images.forEach((image) => {
+
+        const dropItem = document.createElement("div");
+        dropItem.setAttribute("style", itemCSS);
+        const img = document.createElement("img");
+        img.setAttribute("style", "width: 75%; height: 75%;");
+        img.src = guiURIs("addImg");
+        
+        const text = document.createElement("div");
+        text.setAttribute("style", "text-wrap: nowrap; font-size: 60%;");
+        text.textContent = "Custom Image";
+        dropItem.append(img, text);
+
+        dropDiv.appendChild(dropItem);
+        dropItem.addEventListener("click", () => {
+          const src = prompt("Enter the URL or Data.URI of your image:");
+          if (src) {
+            modalStorage.value = src;
+            selectBtn(dropDiv, dropItem);
+          }
+        });
+
+        images.forEach((image, i, d) => {
           const dropItem = document.createElement("div");
-          dropItem.setAttribute("style", `cursor: pointer; width: 75px; height: 75px; ${flexConst} padding: 5px; background-color: var(--default-bg); margin: 7px; ${borderConst} --default-border: ${isDark ? "#343434" : "#D9D9D9"}; --default-bg: ${isDark ? "#1f1f1f" : "#f5f5f5"};`);
+          dropItem.setAttribute("style", itemCSS);
           const img = document.createElement("img");
-          img.setAttribute("style", `width: 100%; height: 100%;`);
+          img.setAttribute("style", "width: 100%; height: 100%;");
           img.src = image;
           dropItem.appendChild(img);
 
           dropDiv.appendChild(dropItem);
           dropItem.addEventListener("click", () => {
-            Array.from(dropDiv.children).forEach(c => {
-              c.style.backgroundColor = "var(--default-bg)";
-              c.style.border = "solid var(--default-border) 2px";
-            });
-            dropItem.style.backgroundColor = "var(--looks-transparent, hsla(194, 100%, 50%, 0.35))";
-            dropItem.style.border = "solid var(--looks-secondary, hsl(194, 100%, 50%)) 2px";
+            selectBtn(dropDiv, dropItem);
             modalStorage.value = image;
           });
         });
         modal.insertBefore(dropDiv, modal.lastChild);
       },
       (value) => {
+        if (!value) return;
         editor.addStringNumberExternal();
         const args = editor.argumentIds_;
         const id = args[args.length - 1];
