@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.4.26
+// Version V.3.4.27
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -1595,16 +1595,11 @@
     // PenguinMod Storage
     serialize() {
       if (settings.canSave) {
-        const convertedBank = {};
-        Object.entries(soundBank).forEach((item) => {
-          const soundData = {};
-          Object.entries(item[1]).forEach((data) => {
-            if (data[0] !== "context") soundData[data[0]] = data[1];
-          });
-          convertedBank[item[0]] = soundData;
-        });
+        const convertedBank = JSON.parse(JSON.stringify(soundBank));
+        Object.values(convertedBank).forEach(item => delete item.context);
         return { SPtuneShark3: { bank: convertedBank, settings } };
       }
+      return {};
     }
     deserialize(data) {
       this.loadStorage(data.SPtuneShark3);
@@ -1613,14 +1608,8 @@
       settings.canSave = args.SAVE === "save";
       if (!Scratch.extensions.isPenguinMod) {
         if (settings.canSave) {
-          const convertedBank = {};
-          Object.entries(soundBank).forEach((item) => {
-            const soundData = {};
-            Object.entries(item[1]).forEach((data) => {
-              if (data[0] !== "context") soundData[data[0]] = data[1];
-            });
-            convertedBank[item[0]] = soundData;
-          });
+          const convertedBank = JSON.parse(JSON.stringify(soundBank));
+          Object.values(convertedBank).forEach(item => delete item.context);
           runtime.extensionStorage["SPtuneShark3"] = {
             bank: convertedBank,
             settings,
