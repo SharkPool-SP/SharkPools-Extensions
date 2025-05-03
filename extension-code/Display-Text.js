@@ -3,7 +3,7 @@
 // Description: Display Text in Your Projects!
 // By: SharkPool
 
-// Version V.1.5.01
+// Version V.1.5.1
 
 (function (Scratch) {
   "use strict";
@@ -177,7 +177,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set boldness of ID [ID] to [NUM]",
             arguments: {
-              NUM : { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "my-text" }
             }
           },
@@ -475,9 +475,9 @@
           ALIGNMENTS: { acceptReporters: true, items: ["left", "right", "center"] },
           GRADIENTS: { acceptReporters: true, items: ["linear", "radial"] },
           THICK: [
-            { text : "thick", value : "900" },
-            { text : "medium", value : "600" },
-            { text : "none", value : "1" },
+            { text: "thick", value: "900" },
+            { text: "medium", value: "600" },
+            { text: "none", value: "1" },
           ],
           FORMATS: {
             acceptReporters: true,
@@ -558,6 +558,20 @@
       }
     }
 
+    getMaxLineWidth(element) {
+      const range = document.createRange();
+      const textNode = element.firstChild;
+      if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return 0;
+      range.selectNodeContents(textNode);
+
+      const rects = Array.from(range.getClientRects());
+      let maxWidth = 0;
+      for (const rect of rects) {
+        maxWidth = Math.max(maxWidth, rect.width);
+      }
+      return maxWidth;
+    }
+
     // Block Funcs
     tutorial() {
       alert([
@@ -600,16 +614,14 @@
       txtElement.innerHTML = txt2md(args.TXT);
       txtElement.id = `SP_Text-Ext-${ID}`;
       txtElement.classList.add(ID);
-      txtElement.style.userSelect = "none";
-      txtElement.style.overflowWrap = "break-word";
-      txtElement.style.textWrap = "nowrap";
-      txtElement.setAttribute("sptxtpos", "120|-10");
+      txtElement.setAttribute("style", "user-select: none; text-wrap: nowrap; overflow-wrap: break-word; left: 50%; top: 50%; transform: translate(calc(-50% + 0px), calc(-50% + 0px));")
+      txtElement.setAttribute("sptxtpos", "0|0");
       txtElement.setAttribute("txtContent", args.TXT);
       textDiv.appendChild(txtElement);
       render.addOverlay(textDiv, "scale-centered");
       allText.push(`#SP_Text-Ext-${ID}`);
       const box = txtElement.getBoundingClientRect();
-      if (settings.textMAR === undefined) this.setMargins({ ID, WIDTH : box.width / 2, HEIGHT : box.height });
+      if (settings.textMAR === undefined) this.setMargins({ ID, WIDTH: box.width / 2, HEIGHT: box.height });
       this.updateStyles(settings); // add formatting (if any)
     }
 
@@ -785,18 +797,12 @@
         runtime.once("AFTER_EXECUTE", () => {
           const elements = document.querySelectorAll(`div[id="SP_Text-Ext-${ID}"]`);
           const element = elements[elements.length - 1];
-          const centerW = parseFloat(element.style.width) / 2;
-          const computedStyle = window.getComputedStyle(element);
-          const lineHeight = computedStyle.getPropertyValue("line-height");
-          const fontSize = computedStyle.getPropertyValue("font-size");
-          const centerH = (lineHeight === "normal" ? parseFloat(fontSize) * 1.2 : parseFloat(lineHeight)) / 2;
 
           let transform = element.style.transform;
-          const string = `translate(${pos[0] - centerW}px, ${(pos[1] * -1) - centerH}px)`;
-          if (transform.includes("translate")) transform = transform.replace(/translate\([^)]*\)/, string);
+          const string = `translate(calc(-50% + ${pos[0]}px), calc(-50% + ${(pos[1] * -1)}px))`;
+          if (transform.includes("translate")) transform = transform.replace(/translate\((?:[^()]+|\((?:[^()]+|\([^()]*\))*\))*\)/, string);
           else transform += ` ${string}`;
           element.style.transform = transform.trim();
-          element.style.position = "absolute";
           element.setAttribute("sptxtpos", `${pos[0]}|${pos[1]}`);
         });
       }
@@ -806,19 +812,11 @@
       const elements = document.querySelectorAll(`div[id="SP_Text-Ext-${this.fixID(args.ID)}"]`);
       const pos = [Scratch.Cast.toNumber(args.X), Scratch.Cast.toNumber(args.Y)];
       elements.forEach((element) => {
-        let centerW = parseFloat(element.style.width) / 2;
-        if (isNaN(centerW)) centerW = (element.getBoundingClientRect().width ?? 0 ) / 2;
-        const computedStyle = window.getComputedStyle(element);
-        const lineHeight = computedStyle.getPropertyValue("line-height");
-        const fontSize = computedStyle.getPropertyValue("font-size");
-        const centerH = (lineHeight === "normal" ? parseFloat(fontSize) * 1.2 : parseFloat(lineHeight)) / 2;
-
         let transform = element.style.transform;
-        const string = `translate(${pos[0] - centerW}px, ${(pos[1] * -1) - centerH}px)`;
-        if (transform.includes("translate")) transform = transform.replace(/translate\([^)]*\)/, string);
+        const string = `translate(calc(-50% + ${pos[0]}px), calc(-50% + ${(pos[1] * -1)}px))`;
+        if (transform.includes("translate")) transform = transform.replace(/translate\((?:[^()]+|\((?:[^()]+|\([^()]*\))*\))*\)/, string);
         else transform += ` ${string}`;
         element.style.transform = transform.trim();
-        element.style.position = "absolute";
         element.setAttribute("sptxtpos", `${pos[0]}|${pos[1]}`);
       });
     }
@@ -835,24 +833,25 @@
 
     attOfText(args) {
       const elements = document.querySelectorAll(`div[id="SP_Text-Ext-${this.fixID(args.ID)}"]`);
+      const attrib = Scratch.Cast.toString(args.ATT);
       let value;
-      if (args.ATT.includes("box2")) {
+      if (attrib.includes("box2")) {
         const calcs = [];
         elements.forEach((element) => {
-          const tempSpan = document.createElement("span");
-          tempSpan.innerHTML = element.textContent;
-          tempSpan.style.fontSize = element.style.fontSize;
-          tempSpan.style.fontFamily = getComputedStyle(element).fontFamily;
-          tempSpan.style.display = "inline";
-          document.body.appendChild(tempSpan);
-          calcs.push(tempSpan[`offset${args.ATT.includes("w") ? "Width" : "Height"}`]);
-          document.body.removeChild(tempSpan);
+          if (attrib.includes("w")) calcs.push(this.getMaxLineWidth(element));
+          else {
+            const tempH = element.style.height;
+            element.style.height = "min-content";
+            void element.offsetWidth;
+            calcs.push(element.getBoundingClientRect().height);
+            element.style.height = tempH;
+          }
         });
         return JSON.stringify(calcs);
       } else {
-        elements.forEach((element) => { value = element.style[args.ATT] });
-        value = args.ATT === "fontFamily" || args.ATT === "textAlign" || args.ATT === "overflow" ? value : parseFloat(value);
-        value = args.ATT === "fontWeight" ? value / 9 : value;
+        elements.forEach((element) => { value = element.style[attrib] });
+        value = attrib === "fontFamily" || attrib === "textAlign" || attrib === "overflow" ? value : parseFloat(value);
+        value = attrib === "fontWeight" ? value / 9 : value;
         return value || "";
       }
     }
@@ -969,8 +968,8 @@
             textPathFill.textContent = element.textContent;
 
             const textStroke = existingSvg.querySelector("text");
-            textStroke.setAttribute("fill", outline ? outline.inputs.COLOR ?? "#00000000" : "#00000000");
-            textStroke.setAttribute("stroke", outline ? outline.inputs.COLOR ?? "#00000000" : "#00000000");
+            textStroke.setAttribute("fill", outline ? outline.inputs.COLOR : "#00000000");
+            textStroke.setAttribute("stroke", outline ? outline.inputs.COLOR : "#00000000");
             textStroke.setAttribute("stroke-width", outline ? outline.inputs.THICKNESS ?? 1 : 1);
             const textPathStroke = existingSvg.querySelector("textPath");
             textPathStroke.setAttribute("href", `#MyPath-${ID}`);
