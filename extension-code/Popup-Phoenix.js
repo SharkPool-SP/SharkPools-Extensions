@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.01
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -26,6 +26,7 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   const render = vm.renderer;
+  const keyUtil = runtime.ioDevices.keyboard;
 
   const defaultFonts = [
     "Sans Serif", "Serif", "Handwriting",
@@ -486,8 +487,15 @@
       popupPanel.appendChild(element)
 
       // add event listeners
-      if (item.type === "input") element.addEventListener("change", compileInputValues);
-      else if (item.type === "buttonRow") {
+      if (item.type === "input") {
+        element.addEventListener("change", compileInputValues);
+        if (boxInfo.forceKey !== undefined) element.addEventListener("keydown", (e) => {
+          if (boxInfo.forceKey === keyUtil._keyStringToScratchKey(e.key)) {
+            handleClose();
+            e.preventDefault();
+          }
+        });
+      } else if (item.type === "buttonRow") {
         element.addEventListener("click", (e) => {
           if (e.target.tagName === "BUTTON") handleClose(e);
           e.stopPropagation();
@@ -692,7 +700,7 @@
           {
             opcode: "deletePopInput",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("delete popup with ID [ID]"),
+            text: Scratch.translate("delete input with ID [ID]"),
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: translatedInputs.input }
             },
