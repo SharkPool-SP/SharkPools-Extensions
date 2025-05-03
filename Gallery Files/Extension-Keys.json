@@ -414,8 +414,8 @@
       "url": "extension-code/Display-Text.js",
       "banner": "extension-thumbs/Display-Text.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
-      "date": "Last Updated: 04/24/2025"
+      "status": "update",
+      "date": "Last Updated: 05/02/2025"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
