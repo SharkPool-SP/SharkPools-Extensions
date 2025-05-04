@@ -3,7 +3,7 @@
 // Description: Display Text in Your Projects!
 // By: SharkPool
 
-// Version V.1.5.1
+// Version V.1.5.11
 
 (function (Scratch) {
   "use strict";
@@ -559,15 +559,17 @@
     }
 
     getMaxLineWidth(element) {
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
       const range = document.createRange();
-      const textNode = element.firstChild;
-      if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return 0;
-      range.selectNodeContents(textNode);
 
-      const rects = Array.from(range.getClientRects());
       let maxWidth = 0;
-      for (const rect of rects) {
-        maxWidth = Math.max(maxWidth, rect.width);
+      while (walker.nextNode()) {
+        const textNode = walker.currentNode;
+        if (!textNode.textContent.trim()) continue;
+
+        range.selectNodeContents(textNode);
+        const rects = range.getClientRects();
+        for (const rect of rects) { maxWidth = Math.max(maxWidth, rect.width) }
       }
       return maxWidth;
     }
