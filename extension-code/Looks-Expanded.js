@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.21
+// Version V.1.0.22
 
 (function (Scratch) {
   "use strict";
@@ -231,6 +231,10 @@ gl_FragColor.a = baseAlpha;`
   let scratchUnitWidth = 480, scratchUnitHeight = 360;
 
   render._drawThese = function (drawables, drawMode, projection, opts = {}) {
+    // Clipping and Blending Support
+    active = true;
+    [scratchUnitWidth, scratchUnitHeight] = render.getNativeSize();
+
     const gl = render._gl;
     let currentShader = null;
 
@@ -245,7 +249,7 @@ gl_FragColor.a = baseAlpha;`
       if (opts.filter && !opts.filter(drawableID)) continue;
 
       const drawable = render._allDrawables[drawableID];
-      if (!drawable.getVisible() && !opts.ignoreVisibility) continue;
+      if (!drawable || !drawable.getVisible() && !opts.ignoreVisibility) continue;
 
       const drawableScale = framebufferSpaceScaleDiffers ? [
         drawable.scale[0] * opts.framebufferWidth / render._nativeSize[0],
@@ -714,11 +718,41 @@ gl_FragColor.a = baseAlpha;`
       return runtime.getSpriteTargetByName(name);
     }
 
-    exportCostume(data, type, keepBase64) {
-      if (type === "svg") type = "svg+xml";
-      const binary = data.reduce((str, byte) => str + String.fromCharCode(byte), "");
-      if (keepBase64) return `data:image/${type};base64,${btoa(binary)}`;
-      else return binary;
+    exportCostume(costume, keepBase64) {
+      const asset = costume.asset;
+      if (runtime.isPackaged) {
+        const skin = render._allSkins[costume.skinId];
+        let type = costume.dataFormat;
+        if (type === "svg") {
+          const svgText = decodeURIComponent(skin._svgImage.src.split(",")[1]);
+          if (keepBase64) return `data:image/svg+xml;base64,${btoa(svgText)}`;
+          else return svgText;
+        } else {
+          // always return base 64, theres literally no point
+          const gl = render.gl;
+          const width = skin.size[0] * 2;
+          const height = skin.size[1] * 2;
+
+          const fbo = twgl.createFramebufferInfo(
+            gl, [{ attachment: skin._texture }],
+            width, height
+          );
+          twgl.bindFramebufferInfo(gl, fbo);
+          const pixels = new Uint8Array(width * height * 4);
+          gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          const imageData = ctx.createImageData(width, height);
+          imageData.data.set(pixels);
+          ctx.putImageData(imageData, 0, 0);
+          return canvas.toDataURL("image/png");
+        }
+      } else {
+        if (keepBase64) return asset.encodeDataURI();
+        else return asset.decodeText();
+      }
     }
 
     hex2Vec4(hex) {
@@ -766,8 +800,8 @@ gl_FragColor.a = baseAlpha;`
         case "type": return costume.dataFormat;
         case "rotation center x": return costume.rotationCenterX;
         case "rotation center y": return costume.rotationCenterY;
-        case "content": return this.exportCostume(costume.asset.data, costume.dataFormat, false);
-        case "data.uri": return this.exportCostume(costume.asset.data, costume.dataFormat, true);
+        case "content": return this.exportCostume(costume, false);
+        case "data.uri": return this.exportCostume(costume, true);
         default: return "";
       }
     }
