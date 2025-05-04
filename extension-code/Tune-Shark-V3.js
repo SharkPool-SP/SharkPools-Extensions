@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.4.27
+// Version V.3.4.3
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -790,6 +790,7 @@
                 value: "estimated bpm",
               },
               { text: Scratch.translate("channels"), value: "channels" },
+              { text: Scratch.translate("fft data"), value: "fft" },
               { text: Scratch.translate("binds"), value: "binds" },
               { text: Scratch.translate("volume"), value: "volume" },
             ].concat(simpleEffects, complexEffects),
@@ -817,10 +818,6 @@
     }
 
     // Helper Funcs
-    getSound(name) {
-      return soundBank[name];
-    }
-
     startHats(data) {
       let newThreads = [];
       runtime.allScriptsByOpcodeDo(
@@ -1042,44 +1039,58 @@
       }
     }
 
-    // Block Funcs
-    importURL(args, util) {
-      return new Promise((resolve) => {
-        this.deleteSound(args);
-        if (!args.URL) return resolve();
-        const engine = new Pizzicato.Sound(
-          {
-            source: "file",
-            options: { path: args.URL, attack: 0 },
-          },
-          () => {
-            try {
-              engine.sourceNode = engine.getSourceNode();
-              const bank = (soundBank[args.NAME] = this.generateData(
-                args.NAME,
-                args.URL,
-                engine,
-                false
-              ));
-              engine.on("stop", () => {
-                bank.currentTime =
-                  engine.loop && bank.loopParm[1]
-                    ? bank.loopParm[1]
-                    : engine.sourceNode.buffer.duration;
-              });
-              resolve();
-            } catch {
-              alert(
-                Scratch.translate(
-                  "Tune Shark V3 can't import this sound, file may be corrupted or non-existent."
-                )
-              );
-              resolve();
-            }
-          }
-        );
-      });
+    attachAnalyser(bank, engine) {
+      bank.analyser = Pizzicato.context.createAnalyser();
+      bank.analyser.fftSize = 2048;
+      bank.analyser.smoothingTimeConstant = 0.8;
+      bank.waveformAnalyser = Pizzicato.context.createAnalyser();
+      bank.waveformAnalyser.fftSize = 2048;
+
+      engine.connect(bank.analyser);
+      engine.connect(bank.waveformAnalyser);
     }
+
+    trackEndFn(bank, engine) {
+      bank.currentTime = engine.loop && bank.loopParm[1]
+        ? bank.loopParm[1] : engine.sourceNode.buffer.duration;
+    }
+
+    importURL(args, util) {
+  return new Promise((resolve) => {
+    this.deleteSound(args);
+    if (!args.URL) return resolve();
+    
+    const engine = new Pizzicato.Sound(
+      {
+        source: "file",
+        options: { path: args.URL, attack: 0 },
+      },
+      () => {
+        try {
+          engine.sourceNode = engine.getSourceNode();
+          const bank = (soundBank[args.NAME] = this.generateData(
+            args.NAME,
+            args.URL,
+            engine,
+            false
+          ));
+
+          this.attachAnalyser(bank, engine);
+          engine.on("stop", () => this.trackEndFn(bank, engine));
+          resolve();
+        } catch (e) {
+          console.error("Sound load error:", e);
+          alert(
+            Scratch.translate(
+              "Tune Shark V3 can't import this sound, file may be corrupted or non-existent."
+            )
+          );
+          resolve();
+        }
+      }
+    );
+  });
+}
 
     importMenu(args, util) {
       const name = Cast.toString(args.SOUND);
@@ -1099,12 +1110,8 @@
         engine.sourceNode = engine.getSourceNode();
         const bank = this.generateData(args.NAME, sourceURL, engine, true);
         soundBank[args.NAME] = bank;
-        engine.on("stop", () => {
-          bank.currentTime =
-            engine.loop && bank.loopParm[1]
-              ? bank.loopParm[1]
-              : engine.sourceNode.buffer.duration;
-        });
+        this.attachAnalyser(bank, engine);
+        engine.on("stop", () => this.trackEndFn(bank, engine));
       }
     }
 
@@ -1295,7 +1302,8 @@
       const sound = soundBank[args.NAME];
       if (sound === undefined) return 0;
       const src = sound.context.sourceNode;
-      switch (args.PROP) {
+      const prop = Cast.toString(args.PROP);
+      switch (prop) {
         case "length":
           return src.buffer.duration;
         case "current time":
@@ -1307,6 +1315,10 @@
           );
         case "channels":
           return src.buffer.numberOfChannels;
+        case "fft":
+          const dataArray = new Uint8Array(sound.analyser.frequencyBinCount);
+          sound.analyser.getByteFrequencyData(dataArray);
+          return JSON.stringify(Array.from(dataArray));
         case "source":
           return sound.src;
         case "binds":
@@ -1322,17 +1334,17 @@
         case "gain":
           return sound.gain * 100;
         case "pan":
-          return sound.effects[args.PROP.toUpperCase()]?.options.pan * 100 || 0;
+          return sound.effects[prop.toUpperCase()]?.options.pan * 100 || 0;
         case "distortion":
           return (
-            sound.effects[args.PROP.toUpperCase()]?.options.gain * 100 || 0
+            sound.effects[prop.toUpperCase()]?.options.gain * 100 || 0
           );
         case "attack":
           return sound.context.attack * 100;
         case "release":
           return sound.context.release * 100;
         default: {
-          const effect = sound.effects[args.PROP.toUpperCase()];
+          const effect = sound.effects[prop.toUpperCase()];
           if (effect === undefined) return "";
           return JSON.stringify(effect.arguments);
         }
