@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.3
+// Version V.1.2.31
 
 (function(Scratch) {
   "use strict";
@@ -1473,8 +1473,7 @@
               break;
             }
             case Events.MOVE: {
-              const block = mainWorkspace.getBlockById(e.blockId);
-              let parent = mainWorkspace.getBlockById(e.newParentId);
+              let block = mainWorkspace.getBlockById(e.blockId), parent = mainWorkspace.getBlockById(e.newParentId);
 
               // fix field colours
               if (
@@ -1485,20 +1484,26 @@
 
               // update global block cache for returns
               if (!isPM) {
+                if (parent?.type === "procedures_return") {
+                  block = parent;
+                  parent = block.getParent();
+                }
+
                 const changeGlobalReturn = (parent, returns) => {
                   while (parent !== null) {
                     if (parent && parent.type === "procedures_definition") {
                       const proto = parent.getInput("custom_block")?.connection?.targetBlock();
                       if (!proto) return;
                       const store = storeGet(proto.procCode_);
-                      if (store.global) {
-                        if (block?.type === "procedures_return") {
-                          if (returns) store.return = 1;
-                          else delete store.return;
-                          listNeedsRefresh = true;
-                        }
-                        resetGlobalCompilerCache(proto.procCode_);
+                      if (block?.type === "procedures_return") {
+                        const vmProto = vm.editingTarget.blocks.getBlock(proto.id);
+                        if (returns) vmProto.mutation.return = SB.Procedures.getBlockReturnType(parent);
+                        else vmProto.mutation.return = 0;
+
+                        listNeedsRefresh = true;
+                        if (store.global) store.return = vmProto.mutation.return;
                       }
+                      if (store.global) resetGlobalCompilerCache(proto.procCode_);
                     }
                     parent = parent.getParent();
                   }
@@ -1669,12 +1674,9 @@
 
         const proto = getBlockPrototype(target, proccode);
         if (proto) {
+          if (proto.mutation.return === undefined) proto.mutation.return = storeGet(proccode).return;
           const newMutation = {...proto.mutation};
           newMutation.generateshadows = true;
-          if (!isPM) {
-            const store = storeGet(proccode);
-            newMutation.return = store.return ?? 0;
-          }
           tempList += `<block type="procedures_call" gap="12">${target.blocks.mutationToXML(newMutation)}</block>`;
         }
       }
