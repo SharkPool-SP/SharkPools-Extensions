@@ -162,8 +162,8 @@
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 04/07/2025"
+      "status": "update",
+      "date": "Last Updated: 05/03/2025"
     },
     "Sprite-Effects": {
       "desc": "Apply Effects and Filters to SVGs, Sprites, and the Canvas! Faster than Image Effects",
