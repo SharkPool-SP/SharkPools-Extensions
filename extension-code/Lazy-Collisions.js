@@ -3,7 +3,7 @@
 // Description: Easy and Simple To Use Collision System for Sprites
 // By: SharkPool, food
 
-// Version V.2.0.1
+// Version V.2.0.11
 
 (function (Scratch) {
   "use strict";
@@ -225,7 +225,7 @@
       let newTarget = [];
       for (let i = 1; i < clones.length; i++) {
         if (clones[i]) {
-          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
+          const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", true);
           const value = Scratch.Cast.toString(args.VAL);
           if (variable && Scratch.Cast.toString(variable.value) === value) newTarget.push(clones[i]);
         }
