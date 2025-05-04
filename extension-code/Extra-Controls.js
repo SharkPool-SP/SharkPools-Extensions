@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.7.04
+// Version V.1.7.05
 
 (function (Scratch) {
   "use strict";
@@ -1051,7 +1051,7 @@
         if (!varName) for (var i = 1; i < clones.length; i++) pushThread(clones[i]);
         else {
           for (var i = 1; i < clones.length; i++) {
-            const variable = clones[i].lookupVariableByNameAndType(varName, "", clones[i]);
+            const variable = clones[i].lookupVariableByNameAndType(varName, "", true);
             if (variable && Cast.toString(variable.value) === Cast.toString(args.VAL)) pushThread(clones[i]);
           }
         }
@@ -1076,7 +1076,7 @@
       if (!varName) newTarget = clones[Cast.toNumber(args.ID) - 1];
       else {
         for (let i = 1; i < clones.length; i++) {
-          const variable = clones[i]?.lookupVariableByNameAndType(varName, "", clones[i]);
+          const variable = clones[i]?.lookupVariableByNameAndType(varName, "", true);
           if (variable && Cast.toString(variable.value) === Cast.toString(args.VAL)) newTarget.push(clones[i]);
         }
         newTarget = newTarget[Cast.toNumber(args.ID) - 1];
