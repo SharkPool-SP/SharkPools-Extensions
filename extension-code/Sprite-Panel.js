@@ -4,7 +4,7 @@
 // Licence: MIT AND LGPLv3 License
 // By: SharkPool & FurryR
 
-// Version V.1.1.11
+// Version V.1.1.12
 
 (function (Scratch) {
   "use strict";
@@ -200,6 +200,10 @@
     const closeBtn = document.querySelector(`div[class^="close-button_close-button_"]`);
     const bgScreen = document.querySelector(`div[class^="ReactModal__Overlay ReactModal__Overlay--after-open modal_modal-overlay_"]`);
     closeBtn.addEventListener("click", () => { vm.refreshWorkspace() });
+    // Set default styling to fit our stuffz, this is to fix the compact editor addon
+    const contentScreen = bgScreen.querySelector(`div[class*="custom-procedures_modal-content_"]`);
+    contentScreen.style.width = '700px';
+    contentScreen.style.margin = '50px auto';
     bgScreen.addEventListener("click", () => { vm.refreshWorkspace() });
 
     guiInfo = {
