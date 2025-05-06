@@ -549,8 +549,8 @@
       "url": "extension-code/Sprite-Panel.js",
       "banner": "extension-thumbs/Sprite-Panel.svg",
       "tags": ["all", "expanded", "addon"],
-      "status": "",
-      "date": "Last Updated: 07/22/2024"
+      "status": "update",
+      "date": "Last Updated: 05/06/2025"
     },
     "DOM-Selector": {
       "desc": "Read Elements and Create Events from the website HTML",
