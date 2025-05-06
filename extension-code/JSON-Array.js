@@ -1417,8 +1417,8 @@
 
     convert(args) {
       switch (args.TYPE) {
-        case "array": return Object.entries(this.tryParse(args.OBJ, 0));
-        case "JSON": return Object.assign({}, this.tryParse(args.OBJ, 0));
+        case "array": return Object.entries(this.tryParse(args.OBJ));
+        case "JSON": return Object.assign({}, this.tryParse(args.OBJ));
         default: return JSON.stringify(this.tryParse(args.OBJ));
       }
     }
