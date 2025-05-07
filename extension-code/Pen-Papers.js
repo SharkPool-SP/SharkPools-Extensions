@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.1
+// Version V.1.0.2
 
 (function (Scratch) {
   "use strict";
@@ -106,8 +106,18 @@
               NAME: { type: Scratch.ArgumentType.STRING, menu: "PAPERS" }
             },
           },
+          {
+            opcode: "touchingPaper",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is [TARGET] touching paper [NAME] ?",
+            arguments: {
+              TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              NAME: { type: Scratch.ArgumentType.STRING, menu: "PAPERS" }
+            },
+          },
         ],
         menus: {
+          TARGETS: { acceptReporters: true, items: "getTargets" },
           PAPERS: { acceptReporters: true, items: "getPapers" },
           VISIBILITY: ["show", "hide"]
         },
@@ -117,6 +127,23 @@
     // Helper Funcs
     getPapers() {
       return Object.keys(papers);
+    }
+
+    getTarget(name, util) {
+      if (name === "_myself_") return util.target;
+      if (name === "_stage_") return runtime.getTargetForStage();
+      return runtime.getSpriteTargetByName(name);
+    }
+
+    getTargets() {
+      const spriteNames = [{ text: "myself", value: "_myself_" }, { text: "Stage", value: "_stage_" }];
+      const targets = runtime.targets;
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
+        const name = target.getName();
+        if (target.isOriginal) spriteNames.push({ text: name, value: name });
+      }
+      return spriteNames.length > 0 ? spriteNames : [""];
     }
 
     // Block Funcs
@@ -192,6 +219,15 @@
         const drawable = render._allDrawables[papers[name].drawable];
         return drawable._visible;
       }
+      return false;
+    }
+
+    touchingPaper(args, util) {
+      const target = this.getTarget(args.TARGET, util);
+      if (!target) return false;
+
+      const name = Scratch.Cast.toString(args.NAME);
+      if (papers[name] !== undefined) return render.isTouchingDrawables(target.drawableID, [papers[name].drawable]);
       return false;
     }
   }
