@@ -6,7 +6,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // License: MIT AND LGPLv3
 
-// Version V.1.0.02
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -475,14 +475,16 @@
         }
         customMenus = menus;
         refreshMagic();
-        // Remove Menu Blocks that no Longer Exist
-        const allBlocks = ScratchBlocks.mainWorkspace.blockDB_;
-        const menuNames = Object.keys(customMenus);
-        for (const [key, block] of Object.entries(allBlocks)) {
-  	      if (block.type.startsWith("SP0zMenuMaker_menu_")) {
-  	     	  if (menuNames.indexOf(block.type.replace("SP0zMenuMaker_menu_", "")) === -1) block.dispose();
-  	      }
-		    }
+        if (typeof scaffolding === "undefined") {
+          // Remove Menu Blocks that no Longer Exist
+          const allBlocks = ScratchBlocks.mainWorkspace.blockDB_;
+          const menuNames = Object.keys(customMenus);
+          for (const [key, block] of Object.entries(allBlocks)) {
+            if (block.type.startsWith("SP0zMenuMaker_menu_")) {
+              if (menuNames.indexOf(block.type.replace("SP0zMenuMaker_menu_", "")) === -1) block.dispose();
+            }
+          }
+        }
       } catch { alert("Couldnt Parse Imported Custom Menu JSON") }
     }
 
