@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.03
+// Version V.1.1.04
 
 (function (Scratch) {
   "use strict";
@@ -667,6 +667,16 @@
             },
           },
           {
+            opcode: "arrContainers",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "# of items containing [TESTER] in [ARR]",
+            outputShape: 3,
+            arguments: {
+              TESTER: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "ab", "ba", "bb"]`, exemptFromNormalization: true }
+            },
+          },
+          {
             opcode: "itemIndex",
             blockType: Scratch.BlockType.REPORTER,
             text: "index # [IND] of item [ITEM] in [ARR]",
@@ -1218,6 +1228,11 @@
     arrMatches(args) {
       const arr = this.tryParse(args.ARR, 1);
       return arr.filter((item) => item == this.toSafe(args.ITEM)).length;
+    }
+
+    arrContainers(args) {
+      const arr = this.tryParse(args.ARR, 1);
+      return arr.filter((item) => Scratch.Cast.toString(item).includes(this.toSafe(args.TESTER))).length;
     }
 
     itemIndex(args) {
