@@ -51,7 +51,7 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/04/2025"
     },
     "Tune-Shark": {
@@ -162,7 +162,7 @@
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/03/2025"
     },
     "Sprite-Effects": {
@@ -414,7 +414,7 @@
       "url": "extension-code/Display-Text.js",
       "banner": "extension-thumbs/Display-Text.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/02/2025"
     },
     "Color-Master": {
@@ -468,7 +468,7 @@
       "url": "extension-code/Script-Control.js",
       "banner": "extension-thumbs/Script-Control.svg",
       "tags": ["all", "utilities"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/04/2025"
     },
     "Layer-Control": {
@@ -549,7 +549,7 @@
       "url": "extension-code/Sprite-Panel.js",
       "banner": "extension-thumbs/Sprite-Panel.svg",
       "tags": ["all", "expanded", "addon"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/06/2025"
     },
     "DOM-Selector": {
@@ -603,7 +603,7 @@
       "url": "extension-code/My-Blocks-Plus.js",
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/04/2025"
     },
     "Dropdown-Maker": {
@@ -612,8 +612,8 @@
       "url": "extension-code/Dropdown-Maker.js",
       "banner": "extension-thumbs/Dropdown-Maker.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Released: 11/21/2024"
+      "status": "update",
+      "date": "Last Updated: 12/05/2025"
     },
     "Turbo-Skins": {
       "desc": "Improved Skins extension, inspired by LilyMakesThings",
@@ -639,7 +639,7 @@
       "url": "extension-code/Pen-Papers.js",
       "banner": "extension-thumbs/Pen-Papers.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/06/2025"
     },
     "Example": {
