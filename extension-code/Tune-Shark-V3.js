@@ -70,7 +70,6 @@
     prevFrameTime = 0;
   let soundBank = Object.create(null);
   let settings = { flagCtrl: false, canSave: false };
-  window.test = soundBank;
 
   class SPtuneShark3 {
     constructor() {
