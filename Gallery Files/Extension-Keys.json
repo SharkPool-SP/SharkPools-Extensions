@@ -613,7 +613,7 @@
       "banner": "extension-thumbs/Dropdown-Maker.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 12/05/2025"
+      "date": "Last Updated: 05/12/2025"
     },
     "Turbo-Skins": {
       "desc": "Improved Skins extension, inspired by LilyMakesThings",
@@ -621,8 +621,8 @@
       "url": "extension-code/Turbo-Skins.js",
       "banner": "extension-thumbs/Turbo-Skins.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
-      "date": "Released: 11/02/2024"
+      "status": "update",
+      "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
       "desc": "Create Scenes, like Unity, in your Project",
