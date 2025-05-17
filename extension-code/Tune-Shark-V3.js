@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.4.3
+// Version V.3.4.31
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -70,6 +70,7 @@
     prevFrameTime = 0;
   let soundBank = Object.create(null);
   let settings = { flagCtrl: false, canSave: false };
+  window.test = soundBank;
 
   class SPtuneShark3 {
     constructor() {
@@ -982,8 +983,11 @@
           clone.play(0, atTime);
           clone.sourceNode.playbackRate.value = con.pitch;
           clone.sourceNode.gainSuccessor.gain.value = con.gain;
+          const overlayIndex = con.overlays.length;
           con.overlays.push(clone);
           clone.on("end", () => {
+            clone.masterVolume.disconnect();
+            con.overlays.splice(overlayIndex, 1);
             delete soundBank[newName];
           });
         } else {
