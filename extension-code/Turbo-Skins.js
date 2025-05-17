@@ -5,7 +5,7 @@
 // Licence: MIT
 // Inspired by Lily's Skins Extension!
 
-// Version V.1.0.01
+// Version V.1.0.02
 
 (function (Scratch) {
   "use strict";
@@ -90,14 +90,14 @@
     for (const item of Object.entries(skinsInUse)) {
       const obj = item[1];
       const skin = allSkins[obj.name];
-      render.updateDrawableSkinId(obj.target.drawableID, skin[skinTag].hitbox);
+      if (skin && skin[skinTag]) render.updateDrawableSkinId(obj.target.drawableID, skin[skinTag].hitbox);
     }
   });
   runtime.on("AFTER_EXECUTE", () => {
     for (const item of Object.entries(skinsInUse)) {
       const obj = item[1];
       const skin = allSkins[obj.name];
-      render.updateDrawableSkinId(obj.target.drawableID, skin._id);
+      if (skin && skin[skinTag]) render.updateDrawableSkinId(obj.target.drawableID, skin._id);
     }
   });
 
