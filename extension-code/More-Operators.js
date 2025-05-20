@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.2.1
+// Version V.1.2.2
 
 (function (Scratch) {
   "use strict";
@@ -13,6 +13,7 @@
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3Ny4yMjIiIGhlaWdodD0iNzcuMjIyIiB2aWV3Qm94PSIwIDAgNzcuMjIyIDc3LjIyMiI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMiAzOC42MTFDMiAxOC4zOTEgMTguMzkxIDIgMzguNjExIDJzMzYuNjExIDE2LjM5MSAzNi42MTEgMzYuNjExLTE2LjM5MSAzNi42MTEtMzYuNjExIDM2LjYxMVMyIDU4LjgzMSAyIDM4LjYxMXoiIGZpbGw9IiM1OWMwNTkiIHN0cm9rZT0iIzQ3OWE0NyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHBhdGggZD0iTTEgMWg3NC4yMjJ2NzQuMjIySDF6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTQ0LjM1NiAxNS40NDVjLTMuMjkxLS4yOTktNi4xOTQgMi4xMjUtNi40OTMgNS40NDZsLS43NDggOC42NDhoOC40Mzh2NS45ODRoLTguOTc3bC0xLjMxNiAxNS4xN2ExMS45MjcgMTEuOTI3IDAgMCAxLTEyLjk1NyAxMC44NjMgMTEuOTkgMTEuOTkgMCAwIDEtOS4xNTYtNS41OTZsNC40ODgtNC40ODhjLjcxOCAyLjIxNCAyLjY5MyAzLjkyIDUuMTc3IDQuMTI5IDMuMjkxLjMgNi4xOTQtMi4xMjQgNi40OTMtNS40NDZsMS4yODctMTQuNjMyaC04Ljk3N3YtNS45ODRIMzEuMWwuODA4LTkuMTg3Yy41NjktNi41ODIgNi4zNzQtMTEuNDYgMTIuOTU3LTEwLjg2MSAzLjkyLjMyOSA3LjIxMSAyLjUxMyA5LjE1NiA1LjU5NWwtNC40ODggNC40ODljLS43MTktMi4yMTUtMi42OTMtMy45Mi01LjE3Ny00LjEzbTguMDg5IDQ1Ljg2MWEyLjY0IDIuNjQgMCAwIDEtMi42NC0yLjY0di01LjM2MmgtNS4zNjJhMi42NCAyLjY0IDAgMCAxLTIuNjM5LTIuNjM5di0yLjQyN2EyLjY0IDIuNjQgMCAwIDEgMi42NC0yLjY0aDUuMzYydi01LjM2MWEyLjY0IDIuNjQgMCAwIDEgMi42MzktMi42NGgyLjQyN2EyLjY0IDIuNjQgMCAwIDEgMi42MzkgMi42NHY1LjM2Mmg1LjM2MmEyLjY0IDIuNjQgMCAwIDEgMi42NCAyLjY0djIuNDI2YTIuNjQgMi42NCAwIDAgMS0yLjY0IDIuNjRoLTUuMzYydjUuMzYyYTIuNjQgMi42NCAwIDAgMS0yLjY0IDIuNjM5eiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=";
 
   const vm = Scratch.vm;
+  const Cast = Scratch.Cast;
   const regenReporters = ["SPmoreOPs_getLetter", "SPmoreOPs_getIndex"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
@@ -132,7 +133,7 @@
             func: "tryAddSolve",
             blockType: Scratch.BlockType.BUTTON,
             hideFromPalette: isSolverAdded,
-            text: "Import 'eval' & 'solve for x'"
+            text: "Import Special Math Blocks"
           },
           {
             opcode: "evalNum",
@@ -157,6 +158,24 @@
                 defaultValue: "x"
               },
               STRING: { type: Scratch.ArgumentType.STRING, defaultValue : "x + 1 = 2" }
+            }
+          },
+          {
+            opcode: "derivativeOf",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.REPORTER,
+            hideFromPalette: !isSolverAdded,
+            text: "derivative of [STRING] with respect to [VAR]",
+            arguments: {
+              STRING: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "x^2 + 3*x"
+              },
+              VAR: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "VARIABLES",
+                defaultValue: "x"
+              }
             }
           },
           "---",
@@ -490,8 +509,8 @@
     }
 
     bitLogic(args) {
-      const con1 = Scratch.Cast.toBoolean(args.CON1);
-      const con2 = Scratch.Cast.toBoolean(args.CON2);
+      const con1 = Cast.toBoolean(args.CON1);
+      const con2 = Cast.toBoolean(args.CON2);
       switch (args.TYPE) {
         case "and" : return con1 && con2;
         case "nand": return !(con1 && con2);
@@ -502,7 +521,7 @@
     }
 
     with(args) {
-      const string = Scratch.Cast.toString(args.STRING1)
+      const string = Cast.toString(args.STRING1)
       if (args.TYPE === "starts") return string.startsWith(args.STRING2);
       if (args.TYPE === "ends") return string.endsWith(args.STRING2);
       return string.startsWith(args.STRING2) && string.endsWith(args.STRING2);
@@ -514,7 +533,7 @@
       const id = util.thread.blockContainer.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id)?.id;
       if (util.thread.stackFrames[0][id + "startTime"] !== undefined) return Date.now() > util.thread.stackFrames[0][id + "startTime"];
       else {
-        util.thread.stackFrames[0][id + "startTime"] = Date.now() + (Scratch.Cast.toNumber(args.NUM) * 1000);
+        util.thread.stackFrames[0][id + "startTime"] = Date.now() + (Cast.toNumber(args.NUM) * 1000);
         return false;
       }
     }
@@ -525,13 +544,13 @@
     }
 
     evenOdd(args) {
-      const n = Scratch.Cast.toNumber(args.NUM);
+      const n = Cast.toNumber(args.NUM);
       if (args.TYPE === "even") return n % 2 === 0
       else return n % 2 !== 0
     }
 
     isPrime(args) {
-      const n = Math.abs(Scratch.Cast.toNumber(args.NUM));
+      const n = Math.abs(Cast.toNumber(args.NUM));
       if (n <= 1) return false;
       if (n <= 3) return true;
       if (n % 2 === 0 || n % 3 === 0) return false;
@@ -549,22 +568,37 @@
       } catch { return "undefined" }
     }
     solveFor(args) {
+      const expr = Cast.toString(args.STRING);
       try {
-        const solution = nerdamer.solveEquations(args.STRING.replace(/\s+/g, ""), args.VAR);
+        const solution = nerdamer.solveEquations(expr.replace(/\s+/g, ""), args.VAR);
         const decimalSols = solution.map(sol => nerdamer(sol).evaluate().text());
         return decimalSols.length > 0 ? JSON.stringify(decimalSols) : "No solution found";
       } catch { return "undefined" }
     }
+    derivativeOf(args) {
+      const expr = Cast.toString(args.STRING);
+      try {
+        const solution = nerdamer(expr.replace(/\s+/g, "")).evaluate().text();
+        return solution ? `["${solution.toString()}"]` : "No solution found"; // Create an Array for Compatibility
+      } catch { return "undefined" }
+    }
+    derivativeOf(args) {
+      const expr = Cast.toString(args.STRING);
+      try {
+        const result = nerdamer(`diff(${expr}, ${args.VAR})`).toString();
+        return result;
+      } catch { return "undefined" }
+    }
 
-    root(args) { return Math.pow(Scratch.Cast.toNumber(args.NUM), 1 / Scratch.Cast.toNumber(args.N)) }
+    root(args) { return Math.pow(Cast.toNumber(args.NUM), 1 / Cast.toNumber(args.N)) }
 
-    exponent(args) { return Math.pow(Scratch.Cast.toNumber(args.NUM), Scratch.Cast.toNumber(args.N)) }
+    exponent(args) { return Math.pow(Cast.toNumber(args.NUM), Cast.toNumber(args.N)) }
 
-    percent(args) { return Scratch.Cast.toNumber(args.NUM2) * (Scratch.Cast.toNumber(args.NUM1) * 0.01) }
+    percent(args) { return Cast.toNumber(args.NUM2) * (Cast.toNumber(args.NUM1) * 0.01) }
 
     simplifyFrac(args) {
-      const numerator = Scratch.Cast.toNumber(args.NUM);
-      const denominator = Scratch.Cast.toNumber(args.DENOM);
+      const numerator = Cast.toNumber(args.NUM);
+      const denominator = Cast.toNumber(args.DENOM);
       const gcd = (a, b) => (b ? gcd(b, a % b) : a);
       const gcdValue = gcd(numerator, denominator);
       const result = JSON.stringify([numerator / gcdValue, denominator / gcdValue]);
@@ -572,8 +606,8 @@
     }
 
     gcd(args) {
-      let num1 = Scratch.Cast.toNumber(args.NUM1);
-      let num2 = Scratch.Cast.toNumber(args.NUM2);
+      let num1 = Cast.toNumber(args.NUM1);
+      let num2 = Cast.toNumber(args.NUM2);
       while (num2 !== 0) {
         let t = num2;
         num2 = num1 % num2;
@@ -583,45 +617,45 @@
     }
 
     lcm(args) {
-      const num1 = Scratch.Cast.toNumber(args.NUM1);
-      const num2 = Scratch.Cast.toNumber(args.NUM2);
+      const num1 = Cast.toNumber(args.NUM1);
+      const num2 = Cast.toNumber(args.NUM2);
       return Math.abs(num1 * num2) / this.gcd({ NUM1 : num1, NUM2 : num2 });
     }
 
-    negaAbs({ NUMBER }) { return -Math.abs(Scratch.Cast.toNumber(NUMBER)) }
+    negaAbs({ NUMBER }) { return -Math.abs(Cast.toNumber(NUMBER)) }
 
     roundNear(args) {
-      const precision = Math.max(0, Math.round(Scratch.Cast.toNumber(args.ROUND_TYPE)));
+      const precision = Math.max(0, Math.round(Cast.toNumber(args.ROUND_TYPE)));
       const multiplier = Math.pow(10, precision);
       return Math.round(args.NUMBER * multiplier) / multiplier;
     }
 
     tripleOperator(args) {
-      const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2), Scratch.Cast.toNumber(args.NUM3)];
+      const nums = [Cast.toNumber(args.NUM1), Cast.toNumber(args.NUM2), Cast.toNumber(args.NUM3)];
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`);
     }
 
     quadrupleOperator(args) {
-      const nums = [Scratch.Cast.toNumber(args.NUM1), Scratch.Cast.toNumber(args.NUM2),
-        Scratch.Cast.toNumber(args.NUM3), Scratch.Cast.toNumber(args.NUM4)];
+      const nums = [Cast.toNumber(args.NUM1), Cast.toNumber(args.NUM2),
+        Cast.toNumber(args.NUM3), Cast.toNumber(args.NUM4)];
       return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
     }
 
     trim(args) {
-      return Scratch.Cast.toString(args.STRING)[args.TYPE === "start" ? "trimStart" : args.TYPE === "end" ? "trimEnd" : "trim"]();
+      return Cast.toString(args.STRING)[args.TYPE === "start" ? "trimStart" : args.TYPE === "end" ? "trimEnd" : "trim"]();
     }
 
     padding(args) {
-      const length = Scratch.Cast.toNumber(args.NUM), string = Scratch.Cast.toString(args.STRING1);
+      const length = Cast.toNumber(args.NUM), string = Cast.toString(args.STRING1);
       if (args.TYPE === "start") return string.padStart(length, args.STRING2);
       if (args.TYPE === "end") return string.padEnd(length, args.STRING2);
       return string.padStart(string.length + ((length - string.length) / 2), args.STRING2).padEnd(length, args.STRING2);
     }
 
     insertString(args) {
-      const string1 = Scratch.Cast.toString(args.STRING1);
-      const string2 = Scratch.Cast.toString(args.STRING2);
-      const n = Scratch.Cast.toNumber(args.NUM);
+      const string1 = Cast.toString(args.STRING1);
+      const string2 = Cast.toString(args.STRING2);
+      const n = Cast.toNumber(args.NUM);
       const string1Array = string1.split("");
       string1Array.splice(n, 0, ...string2.split(""));
       return string1Array.join("");
@@ -636,30 +670,30 @@
     replaceKey(args) {
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
-      return Scratch.Cast.toString(args.STRING).replace(regex, (match) => {
+      return Cast.toString(args.STRING).replace(regex, (match) => {
         index++;
-        return index === Scratch.Cast.toNumber(args.ORDER) ? args.REPLACE : match;
+        return index === Cast.toNumber(args.ORDER) ? args.REPLACE : match;
       });
     }
 
     replaceKeys(args) {
       const regex = new RegExp(args.KEY, "g");
       let index = 0;
-      const ord1 = Scratch.Cast.toNumber(args.ORDER);
-      const ord2 = Scratch.Cast.toNumber(args.ORDER2);
+      const ord1 = Cast.toNumber(args.ORDER);
+      const ord2 = Cast.toNumber(args.ORDER2);
       const order2 = ord1 > ord2 ? ord1 : ord2;
-      return Scratch.Cast.toString(args.STRING).replace(regex, (match) => {
+      return Cast.toString(args.STRING).replace(regex, (match) => {
         index++;
         return index >= ord1 && index <= order2 ? args.REPLACE : match;
       });
     }
 
-    setReplacer(args) { txtReplacers[Scratch.Cast.toString(args.TEXT)] = Scratch.Cast.toString(args.VALUE) }
+    setReplacer(args) { txtReplacers[Cast.toString(args.TEXT)] = Cast.toString(args.VALUE) }
 
     resetReplacers() { txtReplacers = {} }
 
     applyReplacers(args) {
-      let text = Scratch.Cast.toString(args.TEXT);
+      let text = Cast.toString(args.TEXT);
       for (const replacer in txtReplacers) {
         const replacerVal = txtReplacers[replacer];
         text = text.replaceAll(replacer, replacerVal);
@@ -668,8 +702,8 @@
     }
 
     randomCharRange(args) { 
-      let ONE = Scratch.Cast.toString(args.ONE).charCodeAt(0);
-      let TWO = Scratch.Cast.toString(args.TWO).charCodeAt(0);
+      let ONE = Cast.toString(args.ONE).charCodeAt(0);
+      let TWO = Cast.toString(args.TWO).charCodeAt(0);
       return String.fromCharCode(Math.floor(Math.random() * (TWO - ONE + 1) + ONE));
     }
 
@@ -680,7 +714,7 @@
     fiveJoin({ STRING1, STRING2, STRING3, STRING4, STRING5 }) { return `${STRING1}${STRING2}${STRING3}${STRING4}${STRING5}` }
 
     forLetter(args, util) {
-      const string = Scratch.Cast.toString(args.STRING);
+      const string = Cast.toString(args.STRING);
       if (util.stackFrame.index === undefined) util.stackFrame.index = 0;
       if (util.thread.stackFrames[0].SPletter === undefined) util.thread.stackFrames[0].SPletter = "";
       if (util.stackFrame.index < string.length) {
