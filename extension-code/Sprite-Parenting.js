@@ -3,7 +3,7 @@
 // Description: Link sprites together and make them follow the parent.
 // By: SharkPool
 
-// Version 2.0.0
+// Version 2.0.01
 
 (function (Scratch) {
   "use strict";
@@ -260,14 +260,18 @@
         const newLink = this.links[link];
         if (newLink.SPlinkMaster !== undefined) {
           const target = runtime.getTargetById(newLink.SPlinkMaster.id);
-          newLink.SPlinkMaster = {
-            sprite: target.getName(),
-            id: target.id,
-            direction: target.direction,
-            size: target.size,
-            show: target.visible,
-            effects: target.effects
-          };
+          if (target) {
+            newLink.SPlinkMaster = {
+              sprite: target.getName(),
+              id: target.id,
+              direction: target.direction,
+              size: target.size,
+              show: target.visible,
+              effects: target.effects
+            };
+          } else {
+            newLink.SPlinkMaster = undefined;
+          }
         }
       }
     }
@@ -317,29 +321,19 @@
       if (link) {
         const master = link.SPlinkMaster;
         const sprites = Object.keys(link).filter(key => key !== "SPlinkMaster");
-        if (!master) throw new Error("No parent was assigned to this family");
+        if (!master) return console.warn("No parent was assigned to this family");
         const masTarget = runtime.getTargetById(master.id);
         for (let i = 0; i < sprites.length; i++) {
           const target = link[sprites[i]][0];
           if (target) {
-            if (TYPE === "everything" || TYPE === "direction") {
-              target.setDirection(master.direction);
-            }
-            if (TYPE === "everything" || TYPE === "size") {
-              target.setSize(master.size);
-            }
-            if (TYPE === "everything" || TYPE === "visibility") {
-              target.setVisible(master.show);
-            }
+            if (TYPE === "everything" || TYPE === "direction") target.setDirection(master.direction);
+            if (TYPE === "everything" || TYPE === "size") target.setSize(master.size);
+            if (TYPE === "everything" || TYPE === "visibility") target.setVisible(master.show);
             if (TYPE === "everything" || TYPE === "effects") {
               let value = master.effects;
-              for (const effect in value) {
-                target.setEffect(effect, value[effect]);
-              }
+              for (const effect in value) target.setEffect(effect, value[effect]);
             }
-            if (TYPE === "everything" || TYPE === "x and y") {
-              target.setXY(link[sprites[i]][1] + masTarget.x, link[sprites[i]][2] + masTarget.y);
-            }
+            if (TYPE === "everything" || TYPE === "x and y") target.setXY(link[sprites[i]][1] + masTarget.x, link[sprites[i]][2] + masTarget.y);
           }
         }
       }
@@ -349,10 +343,10 @@
     _getTargets() {
       const spriteNames = [];
       spriteNames.push({ text : "myself", value: "_myself_" });
-      const targets = Scratch.vm.runtime.targets;
-      for (let index = 1; index < targets.length; index++) {
-        const target = targets[index];
-        if (target.isOriginal) spriteNames.push({ text : target.getName(), value : target.getName() });
+      const targets = runtime.targets;
+      for (let i = 1; i < targets.length; i++) {
+        const target = targets[i];
+        if (target.isOriginal) spriteNames.push({ text: target.getName(), value: target.getName() });
       }
       return spriteNames.length > 0 ? spriteNames : [""];
     }
