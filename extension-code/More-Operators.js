@@ -356,6 +356,18 @@
           },
           "---",
           {
+            opcode: "wordIndex",
+            extensions: ["colours_operators"],
+            blockType: Scratch.BlockType.REPORTER,
+            text: "index #[ORDER] of [SEARCH] in [STRING]",
+            arguments: {
+              ORDER: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
+              SEARCH: { type: Scratch.ArgumentType.STRING, defaultValue: "banana" },
+              STRING: { type: Scratch.ArgumentType.STRING, defaultValue: "apple banana banana" }
+            }
+          },
+          "---",
+          {
             opcode: "replaceKey",
             extensions: ["colours_operators"],
             blockType: Scratch.BlockType.REPORTER,
@@ -665,6 +677,21 @@
       let letters = "abcdefghijklmnopqrstuvwxyz";
       if (args.LETTER_TYPE === "uppercase") letters = letters.toUpperCase();
       return letters.charAt(Math.floor(Math.random() * 26));
+    }
+
+    wordIndex(args) {
+      const order = Cast.toNumber(args.ORDER);
+      const search = Cast.toString(args.SEARCH);
+      const original = Cast.toString(args.STRING);
+      let index = -1, fromIndex = 0;
+
+      if (order < 1 || !search) return 0;
+      for (let i = 0; i < order; i++) {
+        index = original.indexOf(search, fromIndex);
+        if (index === -1) return 0;
+        fromIndex = index + search.length;
+      }
+      return index + 1;
     }
 
     replaceKey(args) {
