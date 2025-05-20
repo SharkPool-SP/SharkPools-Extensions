@@ -225,8 +225,8 @@
       "url": "extension-code/Sprite-Parenting.js",
       "banner": "extension-thumbs/Sprite-Parenting.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 02/29/2024"
+      "status": "update",
+      "date": "Last Updated: 05/19/2025"
     },
     "Rigidbodies": {
       "desc": "Fast, math-based Collision detections using Rigidbodies",
@@ -522,8 +522,8 @@
       "url": "extension-code/More-Operators.js",
       "banner": "extension-thumbs/More-Operators.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 11/20/2024"
+      "status": "update",
+      "date": "Last Updated: 05/19/2025"
     },
     "Captchas": {
       "desc": "Simple Client-Based Captchas, this does not promise 100% security",
