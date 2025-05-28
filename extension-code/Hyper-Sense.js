@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version 3.0.31
+// Version 3.0.32
 
 (function (Scratch) {
   "use strict";
@@ -13,6 +13,7 @@
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDUuMjkzIiBoZWlnaHQ9IjE0NS4yOTMiIHZpZXdCb3g9IjAgMCAxNDUuMjkzIDE0NS4yOTMiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTAgNzIuNjQ3QzAgMzIuNTI1IDMyLjUyNSAwIDcyLjY0NyAwczcyLjY0NyAzMi41MjUgNzIuNjQ3IDcyLjY0Ny0zMi41MjUgNzIuNjQ3LTcyLjY0NyA3Mi42NDdTMCAxMTIuNzY5IDAgNzIuNjQ3IiBmaWxsPSIjNDI3Zjk5Ii8+PHBhdGggZD0iTTguMDkxIDcyLjY0N2MwLTM1LjY1MyAyOC45MDMtNjQuNTU2IDY0LjU1Ni02NC41NTZzNjQuNTU2IDI4LjkwMyA2NC41NTYgNjQuNTU2LTI4LjkwMyA2NC41NTYtNjQuNTU2IDY0LjU1NlM4LjA5MSAxMDguMyA4LjA5MSA3Mi42NDciIGZpbGw9IiM1Y2IxZDYiLz48cGF0aCBkPSJNMTA2LjIxNSAxMDguODg0YTIuNjcgMi42NyAwIDAgMS0xLjg4Ni0uNzhMMzcuNzUgNDEuNTIyYTIuNjcgMi42NyAwIDAgMSAwLTMuNzcyIDIuNjcgMi42NyAwIDAgMSAzLjc3MiAwbDY2LjU4IDY2LjU4YTIuNjY5IDIuNjY5IDAgMCAxLTEuODg3IDQuNTU0IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTY1Ljc1NCA1MS4wODNjMCA4LjEwMy02LjU2OCAxNC42NzEtMTQuNjcxIDE0LjY3MXMtMTQuNjcxLTYuNTY4LTE0LjY3MS0xNC42N2MwLTguMTA0IDYuNTY4LTE0LjY3MiAxNC42Ny0xNC42NzIgOC4xMDQgMCAxNC42NzIgNi41NjggMTQuNjcyIDE0LjY3MSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik02My43MiA4MS4zNzFjLTcuODg1LTEuODYyLTEyLjc2OS05Ljc2NC0xMC45MDYtMTcuNjVzOS43NjQtMTIuNzY5IDE3LjY1LTEwLjkwNyAxMi43NjkgOS43NjUgMTAuOTA3IDE3LjY1Yy0xLjg2MiA3Ljg4Ni05Ljc2NSAxMi43Ny0xNy42NSAxMC45MDciIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNOTcuNzY3IDgzLjA5NGMwIDguMTAyLTYuNTcgMTQuNjczLTE0LjY3MyAxNC42NzNzLTE0LjY3Mi02LjU3LTE0LjY3Mi0xNC42NzMgNi41NjktMTQuNjcxIDE0LjY3Mi0xNC42NzFjOC4xMDIgMCAxNC42NzMgNi41NyAxNC42NzMgMTQuNjciIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTA2LjIxNSAxMDguODg0YTIuNjcgMi42NyAwIDAgMS0xLjg4Ni0uNzhsLTE2LjM0LTE2LjM0YTIuNjY1IDIuNjY1IDAgMCAxIDAtMy43NzMgMi42NyAyLjY3IDAgMCAxIDMuNzcyIDBsMTYuMzQgMTYuMzRhMi42NyAyLjY3IDAgMCAxIDAgMy43NzMgMi42OCAyLjY4IDAgMCAxLTEuODg2Ljc4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE1LjMxNSA3Mi42NDcgMjguMTIyIDU5Ljg0djI1LjYxNHptNzAuMTM5LTQ0LjUyNUg1OS44NGwxMi44MDctMTIuODA3em00NC41MjUgNDQuNTI1LTEyLjgwNyAxMi44MDdWNTkuODR6TTU5Ljg0IDExNy4xNzJoMjUuNjE0bC0xMi44MDcgMTIuODA3eiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvZz48L3N2Zz4=";
 
+  const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   const render = vm.renderer;
@@ -34,7 +35,7 @@
       document.addEventListener("mousemove", (e) => {
         mousePos = [
           e.clientX, e.clientY, runtime.ioDevices.mouse.getScratchX(), runtime.ioDevices.mouse.getScratchY()
-        ]
+        ];
       });
       window.addEventListener("keydown", (e) => {
         const name = this.toProperKey(e.key, false);
@@ -214,7 +215,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE1] touching [TYPE] of [SPRITE2]?",
             arguments: {
-              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" },
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "TARGET_TYPE" },
               SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS4" }
             }
@@ -224,7 +225,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [SPRITE1] touching clone of [SPRITE2] with [VAR] set to [VAL]?",
             arguments: {
-              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS3" },
+              SPRITE1: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
               SPRITE2: { type: Scratch.ArgumentType.STRING, menu: "TARGETS4" },
               VAR: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: 0 }
@@ -272,7 +273,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is [STRING] real?",
             arguments: {
-              STRING: { type: Scratch.ArgumentType.STRING }
+              STRING: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true }
             }
           },
           {
@@ -496,14 +497,14 @@
     handleScroll = (event) => {
       scrollDist += event.deltaY;
       oldScroll[1] = event.deltaY;
-      if (this.scrollWheelBool({ EVENT:"up", SECRET: true })) runtime.startHats("HyperSenseSP_scrollWheelHat");
-      if (this.scrollWheelBool({ EVENT:"down", SECRET: true })) runtime.startHats("HyperSenseSP_scrollWheelHat2");
+      if (this.scrollWheelBool({ EVENT: "up", SECRET: true })) runtime.startHats("HyperSenseSP_scrollWheelHat");
+      if (this.scrollWheelBool({ EVENT: "down", SECRET: true })) runtime.startHats("HyperSenseSP_scrollWheelHat2");
     };
 
     toProperKey(key, reverse) {
       if (reverse) {
         if (key === "CAPSLOCK") return "Caps Lock";
-        key = Scratch.Cast.toString(key).replace("DIGIT", "").toLowerCase();
+        key = Cast.toString(key).replace("DIGIT", "").toLowerCase();
         if (key.includes("arrow")) key = key.replace("arrow", "") + " Arrow";
         if (key.includes("page")) key = "Page " + key.charAt(4).toUpperCase() + key.slice(5);
         key = key.charAt(0).toUpperCase() + key.slice(1);
@@ -536,12 +537,21 @@
       return `#${rgb.r.toString(16).padStart(2, "0")}${rgb.g.toString(16).padStart(2, "0")}${rgb.b.toString(16).padStart(2, "0")}`;
     }
 
+    getTarget(name, util, checkMouse, checkMyself, returnName) {
+      if (checkMouse && name === "_mouse_") return "_mouse_";
+      if (checkMyself && name === "_myself_") return returnName ? util.target.getName() : util.target;
+
+      const target = runtime.getSpriteTargetByName(name);
+      if (returnName) return target ? target.getName() : name;
+      else return target;
+    }
+
     // Block Funcs
     monitorScrollWheel() { return scrollDist }
     scrollVel() { return oldScroll[1] * -1 }
 
-    setScrollDistance(args) { scrollDist = Scratch.Cast.toNumber(args.DISTANCE) }
-    changeScrollDistance(args) { scrollDist += Scratch.Cast.toNumber(args.DISTANCE) }
+    setScrollDistance(args) { scrollDist = Cast.toNumber(args.DISTANCE) }
+    changeScrollDistance(args) { scrollDist += Cast.toNumber(args.DISTANCE) }
 
     scrollWheelBool(args, util) {
       let oldVal;
@@ -555,34 +565,34 @@
         if (args.SECRET) oldScroll[0] = scrollDist;
         else util.thread.stackFrames[0].oldVal = scrollDist;
       }
-      return Scratch.Cast.toBoolean(status);
+      return Cast.toBoolean(status);
     }
 
-    mouseClick(args, util) { return util.ioQuery("mouse", "getButtonIsDown", [Scratch.Cast.toNumber(args.BUTTON)]) }
+    mouseClick(args, util) { return util.ioQuery("mouse", "getButtonIsDown", [Cast.toNumber(args.BUTTON)]) }
     realX() { return mousePos[0] }
     realY() { return mousePos[1] }
     velX() { return mousePos[2] }
     velY() { return mousePos[3] }
 
-    isKeyHit(args) { return this.keyHandler(Scratch.Cast.toString(args.KEY), false) }
-    whenKeyHit(args) { return this.keyHandler(Scratch.Cast.toString(args.KEY), false) }
+    isKeyHit(args) { return this.keyHandler(Cast.toString(args.KEY), false) }
+    whenKeyHit(args) { return this.keyHandler(Cast.toString(args.KEY), false) }
 
-    whenKeyPressed(args) { return this.keyHandler(Scratch.Cast.toString(args.KEY), true) }
-    isKeyPressed(args) { return this.keyHandler(Scratch.Cast.toString(args.KEY), true) }
+    whenKeyPressed(args) { return this.keyHandler(Cast.toString(args.KEY), true) }
+    isKeyPressed(args) { return this.keyHandler(Cast.toString(args.KEY), true) }
 
     currentKey() { return this.toProperKey(curPressKey, true) }
     currentKeys() {
-      return JSON.stringify(Object.keys(pressedKeys).map((key) => { return this.toProperKey(key, true) }));
+      return JSON.stringify(Object.keys(pressedKeys).map((key) => this.toProperKey(key, true)));
     }
 
     timeKeyPressed(args) {
-      const key = this.toProperKey(Scratch.Cast.toString(args.KEY), false);
+      const key = this.toProperKey(Cast.toString(args.KEY), false);
       if (key === "ANY") return Math.max(0, ...Object.values(pressedKeys));
       else return pressedKeys[key] ?? 0;
     }
 
     spritePointing(args, util) {
-      const target = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      const target = this.getTarget(args.SPRITE1, util, false, true, false);
       if (!target) return false;
       const oldDir = target.direction;
       runtime.ext_scratch3_motion.pointTowards({ TOWARDS: args.SPRITE2 }, { ...util, target, ioQuery: util.ioQuery });
@@ -592,34 +602,43 @@
     }
 
     spriteTouchingSprite(args, util) {
-      const sprite2 = args.SPRITE2;
-      const target = sprite2 === "_myself_" ? util.target : runtime.getSpriteTargetByName(sprite2);
+      const target = this.getTarget(args.SPRITE2, util, false, true, false);
       if (!target) return false;
-      return target.sprite.clones.some((t) => { return t.isTouchingObject(args.SPRITE1) })
+      return target.sprite.clones.some((t) => t.isTouchingObject(args.SPRITE1));
     }
 
     spriteTouchingSpriteType(args, util) {
-      const target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      const target1 = this.getTarget(args.SPRITE1, util, true, true, false);
       const target2 = runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target1 || !target2) return false;
-      if (args.TYPE === "parent") return render.isTouchingDrawables(target1.drawableID, [target2.drawableID]);
-      else {
+      if (args.TYPE === "parent") {
+        if (target1 === "_mouse_") return target2.isTouchingObject("_mouse_");
+        else return render.isTouchingDrawables(target1.drawableID, [target2.drawableID]);
+      } else {
         const clones = target2.sprite.clones;
-        const cloneIds = [];
-        for (var i = 1; i < clones.length; i++) cloneIds.push(clones[i].drawableID);
-        return render.isTouchingDrawables(target1.drawableID, cloneIds);
+        if (target1 === "_mouse_") return clones.some((c) => !c.isOriginal && c.isTouchingObject("_mouse_"));
+        else {
+          const cloneIds = [];
+          for (var i = 1; i < clones.length; i++) cloneIds.push(clones[i].drawableID);
+          return render.isTouchingDrawables(target1.drawableID, cloneIds);
+        }
       }
     }
 
     spriteTouchingClone(args, util) {
-      const target1 = args.SPRITE1 === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE1);
+      const target1 = this.getTarget(args.SPRITE1, util, true, true, false);
       const target2 = runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target1 || !target2) return false;
+
       const clones = target2.sprite.clones;
       for (var i = 1; i < clones.length; i++) {
         const variable = clones[i].lookupVariableByNameAndType(args.VAR, "", clones[i]);
-        if (variable && Scratch.Cast.toString(variable.value) === Scratch.Cast.toString(args.VAL)) {
-          if (render.isTouchingDrawables(target1.drawableID, [clones[i].drawableID])) return true;
+        if (variable && Cast.toString(variable.value) === Cast.toString(args.VAL)) {
+          if (target1 === "_mouse_") {
+            if (clones[i].isTouchingObject("_mouse_")) return true;
+          } else {
+            if (render.isTouchingDrawables(target1.drawableID, [clones[i].drawableID])) return true;
+          }
         }
       }
       return false;
@@ -627,7 +646,7 @@
 
     spriteCurrentTouching(args, util) {
       const list = [];
-      const thisSprite = args.SPRITE === "_mouse_" ? "_mouse_" : args.SPRITE === "_myself_" ? util.target.getName() : args.SPRITE;
+      const thisSprite = this.getTarget(args.SPRITE, util, true, true, true);
       const targets = runtime.targets;
       for (let i = 1; i < targets.length; i++) {
         const target = targets[i];
@@ -638,7 +657,7 @@
     }
 
     getNeighbors(args, util) {
-      const circ = Scratch.Cast.toNumber(args.DIAMETER);
+      const circ = Cast.toNumber(args.DIAMETER);
       let list = [], pos = [];
       if (args.SPRITE === "_mouse_") pos = [util.ioQuery("mouse", "getScratchX"), util.ioQuery("mouse", "getScratchY"), ""];
       else if (args.SPRITE === "_myself_") pos = [util.target.x, util.target.y, util.target.id];
@@ -657,11 +676,11 @@
       return JSON.stringify(list);
     }
 
-    colorAtPosition(args) { return this.colorTouching(Scratch.Cast.toNumber(args.x), Scratch.Cast.toNumber(args.y)) }
+    colorAtPosition(args) { return this.colorTouching(Cast.toNumber(args.x), Cast.toNumber(args.y)) }
     colorTouchingSprite(args, util) {
       if (args.SPRITE === "_mouse_") return this.colorTouching(util.ioQuery("mouse", "getScratchX"), util.ioQuery("mouse", "getScratchY"));
       else {
-        const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+        const target = this.getTarget(args.SPRITE, util, false, true, false);
         if (!target) return "";
         const wasVisible = target.visible;
         target.setVisible(false);
@@ -671,7 +690,9 @@
       }
     }
 
-    boolean(args) { return (Scratch.Cast.toBoolean(args.STRING) && args.STRING !== undefined) }
+    boolean(args) {
+      return Cast.toBoolean(args.STRING) && args.STRING !== undefined
+    }
 
     getAllString(args) {
       let regex;
@@ -680,7 +701,7 @@
         case "special characters": {regex = /[A-Za-z0-9]/g; break }
         default: regex = /[^A-Za-z]/g;
       }
-      return Scratch.Cast.toString(args.STRING).replace(regex, "");
+      return Cast.toString(args.STRING).replace(regex, "");
     }
 
     advancedAsk(args, util) {
@@ -710,16 +731,16 @@
       return box ? box.value : "";
     }
 
-    isAsking() { return Scratch.Cast.toBoolean(document.querySelector(`div[class*="question-input"]`)) }
+    isAsking() { return Cast.toBoolean(document.querySelector(`div[class*="question-input"]`)) }
 
     setAtt(args) {
       let box = document.querySelector(`div[class*="question"]`);
       if (!box) return publicVars.askStuff = args;
       const canvas = getComputedStyle(render.canvas);
-      const width = Scratch.Cast.toNumber(args.width);
+      const width = Cast.toNumber(args.width);
       if (width) box.style.width = `${width * (parseInt(canvas.width) / 480)}px`;
-      const x = Scratch.Cast.toNumber(args.x) + (parseInt(canvas.width) / 2) - (width * (parseInt(canvas.width) / 480) / 2);
-      const y = Scratch.Cast.toNumber(args.y) + (parseInt(canvas.height) / 2) - (askAs === "stage" ? 53 : 39);
+      const x = Cast.toNumber(args.x) + (parseInt(canvas.width) / 2) - (width * (parseInt(canvas.width) / 480) / 2);
+      const y = Cast.toNumber(args.y) + (parseInt(canvas.height) / 2) - (askAs === "stage" ? 53 : 39);
       box.style.transform = `translate(${x}px, ${y * -1}px)`;
     }
 
@@ -778,18 +799,18 @@
     allLayers() { return render._drawList.length - 1 }
 
     spriteDragMode(args, util) {
-      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      const target = this.getTarget(args.SPRITE, util, false, true, false);
       if (target) target.setDraggable(args.DRAG === "draggable");
     }
     spriteDragging(args, util) {
-      const target = args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
+      const target = this.getTarget(args.SPRITE, util, false, true, false);
       if (target) return target[args.DRAG === "draggable" ? "draggable" : "dragging"];
       return false;
     }
 
     /* Deprecation Marker */
     toggleMicrophone() { console.warn("Deprecated Block") }
-    monitorScrollWheelLimited(args) { return Math.max(Math.min(scrollDist, Scratch.Cast.toNumber(args.MAX)), Scratch.Cast.toNumber(args.MIN)) }
+    monitorScrollWheelLimited(args) { return Math.max(Math.min(scrollDist, Cast.toNumber(args.MAX)), Cast.toNumber(args.MIN)) }
     /* Marker End */
   }
 
