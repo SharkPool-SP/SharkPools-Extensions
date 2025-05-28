@@ -51,7 +51,7 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/17/2025"
     },
     "Tune-Shark": {
@@ -97,8 +97,8 @@
       "url": "extension-code/Hyper-Sense.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 04/10/2025"
+      "status": "update",
+      "date": "Last Updated: 05/27/2025"
     },
     "Keys-Plus-V2": {
       "desc": "Powerful and flexible Key detection Blocks with some additional features",
@@ -225,7 +225,7 @@
       "url": "extension-code/Sprite-Parenting.js",
       "banner": "extension-thumbs/Sprite-Parenting.svg",
       "tags": ["all", "utilities"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/19/2025"
     },
     "Rigidbodies": {
@@ -522,7 +522,7 @@
       "url": "extension-code/More-Operators.js",
       "banner": "extension-thumbs/More-Operators.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/19/2025"
     },
     "Captchas": {
@@ -621,7 +621,7 @@
       "url": "extension-code/Turbo-Skins.js",
       "banner": "extension-thumbs/Turbo-Skins.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
