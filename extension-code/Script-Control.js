@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.0
+// Version V.2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -155,6 +155,12 @@
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: Scratch.translate("Operations") },
+          {
+            opcode: "threadCount",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("# of scripts running")
+          },
+          "---",
           {
             opcode: "whileScript",
             blockType: Scratch.BlockType.LOOP,
@@ -388,6 +394,10 @@
           }
         }
       }
+    }
+
+    threadCount() {
+      return runtime.threads.length;
     }
 
     whileScript(args, util) {
