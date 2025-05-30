@@ -468,8 +468,8 @@
       "url": "extension-code/Script-Control.js",
       "banner": "extension-thumbs/Script-Control.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 05/04/2025"
+      "status": "update",
+      "date": "Last Updated: 05/30/2025"
     },
     "Layer-Control": {
       "desc": "Relayer Pen, Video Camera, Backdrops, Sprites and more",
