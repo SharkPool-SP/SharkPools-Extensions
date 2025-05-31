@@ -876,6 +876,26 @@
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
               </block>`
           },
+          "---",
+          {
+            opcode: "setRawVarValue",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set [TYPE] named [NAME] to [VALUE]",
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPE" },
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
+              VALUE: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true }
+            },
+          },
+          {
+            opcode: "rawVarValue",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "get raw [TYPE] named [NAME]",
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPE" },
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" }
+            },
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Safety Settings" },
           {
             func: "optimizeWarn",
@@ -904,6 +924,7 @@
           TOGGLER: ["enabled", "disabled"],
           CUST_ORDER: ["filter", "order"],
           ARRAY_CHECK: ["every", "some"],
+          VAR_TYPE: ["variable", "list"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values"] },
           CONVERTS: { acceptReporters: true, items: ["string", "array", "JSON"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
@@ -1571,6 +1592,36 @@
         util.thread.stackFrames[0].SPjson = entry[0];
       }
       util.startBranch(1, true);
+    }
+
+    setRawVarValue(args, util) {
+      const name = Cast.toString(args.NAME);
+      let variable, stage = runtime.getTargetForStage();
+      if (args.TYPE === "variable") {
+        variable = stage.lookupVariableByNameAndType(name, "");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "");
+
+        if (variable) variable.value = args.VALUE;
+      } else {
+        variable = stage.lookupVariableByNameAndType(name, "list");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "list");
+
+        if (variable && Array.isArray(args.VALUE)) variable.value = args.VALUE;
+      }
+    }
+
+    rawVarValue(args, util) {
+      const name = Cast.toString(args.NAME);
+      let variable, stage = runtime.getTargetForStage();
+      if (args.TYPE === "variable") {
+        variable = stage.lookupVariableByNameAndType(name, "");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "");
+      } else {
+        variable = stage.lookupVariableByNameAndType(name, "list");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "list");
+      }
+
+      return variable ? variable.value : "";
     }
   }
 
