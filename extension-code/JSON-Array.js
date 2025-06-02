@@ -926,7 +926,7 @@
           ARRAY_CHECK: ["every", "some"],
           VAR_TYPE: ["variable", "list"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values"] },
-          CONVERTS: { acceptReporters: true, items: ["string", "array", "JSON"] },
+          CONVERTS: { acceptReporters: true, items: ["string", "pretty string", "array", "JSON"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
           SETTINGS: { acceptReporters: true, items: this.settings },
           ORDERING: {
@@ -1485,6 +1485,7 @@
       switch (args.TYPE) {
         case "array": return Object.entries(this.tryParse(args.OBJ));
         case "JSON": return Object.assign({}, this.tryParse(args.OBJ));
+        case "pretty string": return JSON.stringify(this.tryParse(args.OBJ), circularReplacer(), "\t");
         default: return JSON.stringify(this.tryParse(args.OBJ), circularReplacer());
       }
     }
