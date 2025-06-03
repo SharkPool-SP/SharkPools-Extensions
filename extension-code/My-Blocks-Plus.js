@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.31
+// Version V.1.2.32
 
 (function(Scratch) {
   "use strict";
@@ -57,23 +57,6 @@
   let extensionRemovable = false;
   let ext; // extension object
   let execute, Thread; // set by exports
-
-  // TODO remove these when 'goog' is exposed on TurboWarp Desktop
-  function colorDarken(hex, amt) {
-    const hex2Rgb = (h) => {
-      h = h.replace("#", "");
-      if (h.length === 3) h = h.split("").map(char => char + char).join("");
-      let bigint = parseInt(h, 16);
-      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-    }
-    return rgb2Hex(hex2Rgb(hex).map((part) => Math.round(part * (1 - amt))));
-  }
-  function rgb2Hex([r, g, b]) {
-    return ("#" + [r, g, b].map((part) => {
-      const hex = part.toString(16);
-      return hex.length === 1 ? "0" + hex : hex;
-    }).join(""));
-  }
 
   function themeifyColor(hex) {
     if (isPM) return [hex];
@@ -367,6 +350,7 @@
   }
 
   function attachColors(row, isDark, editor) {
+    const colorUtil = ScratchBlocks.goog.color;
     const bounceAnim = (circ) => {
       circ.animate(
         [{ transform: "scale(0.75)" }, { transform: "scale(1)" }], { duration: 200, easing: "ease-in-out" }
@@ -374,8 +358,14 @@
     };
     const setCol = (col) => {
       tempStore.color = col;
-      if (isPM) editor.setColor(col, colorDarken(col, 0.1), colorDarken(col, 0.2));
-      else {
+      const rgb = colorUtil.hexToRgb(col);
+      if (isPM) {
+        editor.setColor(
+          col,
+          colorUtil.rgbArrayToHex(colorUtil.darken(rgb, 0.1)),
+          colorUtil.rgbArrayToHex(colorUtil.darken(rgb, 0.2))
+        );
+      } else {
         editor.setColour(...themeifyColor(col));
         editor.updateDisplay_();
       }
@@ -1244,10 +1234,11 @@
       inputs = {};
       for (const input in block.inputs) {
           // Ignore blocks prefixed with branch prefix, and custom branch inputs.
-          if (input.substring(0, Blocks.BRANCH_INPUT_PREFIX.length) !== Blocks.BRANCH_INPUT_PREFIX
-            && !(store.inputs[input] && store.inputs[input].type === "brc")) {
-              inputs[input] = block.inputs[input];
-          }
+          if (
+            !store.inputs ||
+            input.substring(0, Blocks.BRANCH_INPUT_PREFIX.length) !== Blocks.BRANCH_INPUT_PREFIX
+            && !(store.inputs[input] && store.inputs[input].type === "brc")
+          ) inputs[input] = block.inputs[input];
       }
       this._cache.inputs[block.id] = inputs;
       return inputs;
