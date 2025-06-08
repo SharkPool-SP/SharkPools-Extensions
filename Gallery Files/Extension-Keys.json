@@ -115,7 +115,7 @@
       "url": "extension-code/Popup-Phoenix.js",
       "banner": "extension-thumbs/Popup-Phoenix.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/01/2024"
     },
     "Better-Input": {
@@ -251,9 +251,9 @@
       "creator": "SharkPool, Drago Cuven, 0znzw",
       "url": "extension-code/Files-Expanded.js",
       "banner": "extension-thumbs/Files-Expanded.svg",
-      "tags": ["all", "expanded", "fetching"],
-      "status": "",
-      "date": "Last Updated: 02/01/2025"
+      "tags": ["all", "expanded"],
+      "status": "update",
+      "date": "Last Updated: 06/07/2025"
     },
     "Temporary-Variables": {
       "desc": "Create Temporary Variables for Sprites, Threads, and the Project",
@@ -468,7 +468,7 @@
       "url": "extension-code/Script-Control.js",
       "banner": "extension-thumbs/Script-Control.svg",
       "tags": ["all", "utilities"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 05/30/2025"
     },
     "Layer-Control": {
