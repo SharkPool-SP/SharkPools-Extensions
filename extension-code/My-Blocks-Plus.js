@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.32
+// Version V.1.2.33
 
 (function(Scratch) {
   "use strict";
@@ -1352,7 +1352,7 @@
         thread.target.blocks.getNextBlock = function(id) {
           const block = ogGetNext.call(this, id);
           if (block) return block;
-          else return ogTarget.blocks.getNextBlock(id);
+          else return ogTarget.blocks.getNextBlock(id) ?? null;
         }
       }
 
