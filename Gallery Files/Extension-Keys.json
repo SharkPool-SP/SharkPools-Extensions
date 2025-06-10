@@ -625,7 +625,7 @@
       "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
-      "desc": "Create Scenes, like Unity, in your Project",
+      "desc": "Create Scenes (savestates), like Unity, in your Project",
       "creator": "SharkPool",
       "url": "extension-code/Scenes.js",
       "banner": "extension-thumbs/Scenes.svg",
