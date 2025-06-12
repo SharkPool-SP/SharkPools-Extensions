@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.03
+// Version V.1.0.04
 
 (function (Scratch) {
   "use strict";
@@ -331,7 +331,7 @@
           isOg: target.isOriginal,
           ogID: isPM ? cloneOrigin.id : cloneOrigin.extensionStorage["SPscenes"]?.ogID || cloneOrigin.id,
           penData: structuredClone(target._customState["Scratch.pen"]) || {},
-          extStore: target.extensionStorage || {}
+          extStore: isPM ? {} : target.extensionStorage
         };
       }
 
