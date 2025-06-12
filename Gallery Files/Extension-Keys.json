@@ -162,7 +162,7 @@
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/03/2025"
     },
     "Sprite-Effects": {
@@ -414,8 +414,8 @@
       "url": "extension-code/Display-Text.js",
       "banner": "extension-thumbs/Display-Text.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
-      "date": "Last Updated: 05/02/2025"
+      "status": "update",
+      "date": "Last Updated: 06/12/2025"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
@@ -630,8 +630,8 @@
       "url": "extension-code/Scenes.js",
       "banner": "extension-thumbs/Scenes.svg",
       "tags": ["all", "utilities", "addon"],
-      "status": "",
-      "date": "Last Updated: 02/01/2025"
+      "status": "update",
+      "date": "Last Updated: 06/12/2025"
     },
     "Pen-Papers": {
       "desc": "Create Multiple Pen Layers! Inspired by ObviousAlex",
