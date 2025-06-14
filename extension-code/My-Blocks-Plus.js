@@ -1469,7 +1469,7 @@
               // fix field colours
               if (
                 e.newInputName && block?.category_ === null &&
-                block.inputList[0].fieldRow[0].arrow_ !== undefined &&
+                block.inputList[0].fieldRow[0]?.arrow_ !== undefined &&
                 parent?.type === "procedures_call"
               ) block.setColour(parent.colour_);
 
