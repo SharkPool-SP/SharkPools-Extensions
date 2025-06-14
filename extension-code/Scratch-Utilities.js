@@ -130,7 +130,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "load project from json [JSON]",
             arguments: {
-              JSON: { type: Scratch.ArgumentType.NUMBER, defaultValue: "{}" }
+              JSON: { type: Scratch.ArgumentType.COMMAND, defaultValue: "{}" }
             },
           },
           "---",
