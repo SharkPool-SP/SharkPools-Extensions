@@ -33,6 +33,7 @@
       "url": "extension-code/Scratch-Utilities.js",
       "banner": "extension-thumbs/Scratch-Utilities.svg",
       "tags": ["all", "expanded", "fetching"],
+      "isDeprecated": true,
       "status": "",
       "date": "Last Updated: 04/05/2024"
     },
