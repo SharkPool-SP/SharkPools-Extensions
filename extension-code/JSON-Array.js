@@ -623,7 +623,7 @@
             text: "[ARR] contains [ITEM] ?",
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true },
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b" }
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true }
             },
           },
           {
