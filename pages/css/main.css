@@ -13,6 +13,10 @@ body {
   justify-content: center;
   align-content: center;
   gap: 15px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 660px;
 }
 .navBar .navHeader {
   display: flex;
