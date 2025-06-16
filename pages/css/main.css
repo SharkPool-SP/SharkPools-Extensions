@@ -85,10 +85,10 @@ body {
   user-select: none;
   width: auto;
   height: 35px;
-  margin: 10px auto;
+  margin: 10px .15em;
   padding: 2px 10px 2px;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 1.2em;
   line-height: 35px;
   background-color: #00b8ff;
   border: solid 5px #007dff;
