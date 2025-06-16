@@ -18,6 +18,7 @@ function rescaler() {
 
   // scale extension div to show a minimum of 3 extensions
   const extDiv = document.querySelector(`div[class="ext-div"]`);
+  if (!extDiv) return;
   if (extDiv.children[0].getBoundingClientRect().y !== extDiv.children[1].getBoundingClientRect().y) {
     extDiv.style.width = "250%";
     extDiv.style.left = "-75%";
