@@ -3,7 +3,7 @@
 // Description: Display Text in Your Projects!
 // By: SharkPool
 
-// Version V.1.5.2
+// Version V.1.5.21
 
 (function (Scratch) {
   "use strict";
@@ -616,7 +616,7 @@
       txtElement.innerHTML = txt2md(args.TXT);
       txtElement.id = `SP_Text-Ext-${ID}`;
       txtElement.classList.add(ID);
-      txtElement.setAttribute("style", "user-select: none; text-wrap: nowrap; overflow-wrap: break-word; color: #000; font: inherit; margin: 0; left: 50%; top: 50%; transform: translate(calc(-50% + 0px), calc(-50% + 0px));")
+      txtElement.setAttribute("style", "user-select: none; text-wrap: nowrap; overflow: visible; overflow-wrap: break-word; color: #000; font: inherit; margin: 0; left: 50%; top: 50%; transform: translate(calc(-50% + 0px), calc(-50% + 0px));")
       txtElement.setAttribute("sptxtpos", "0|0");
       txtElement.setAttribute("txtContent", args.TXT);
       textDiv.appendChild(txtElement);
