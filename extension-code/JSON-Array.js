@@ -252,15 +252,46 @@
         case "SPjson.arrCheck": {
           const safeObj = this.descendInput(node.array).asUnknown();
           const safeBool = this.descendInput(node.bool).asBoolean();
-          return new exp.TypedInput(`(function() {
-            function* generator() {
-              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
-              yield p.${node.type === "some" ? "some" : "every"}((SPobjV, SPobjK) => {
+          return new exp.TypedInput(`yield* (function* () {
+            function* runGenerator(gen, input) {
+              let result;
+              try {
+                result = gen.next(input);
+              } catch (e) { throw e }
+
+              while (!result.done) {
+                let yielded = result.value;
+                if (yielded && typeof yielded.next === "function") yielded = yield* runGenerator(yielded);
+                else if (yielded && typeof yielded.then === "function") yielded = yield yielded;
+
+                try {
+                  result = gen.next(yielded);
+                } catch (e) { throw e }
+              }
+              return result.value;
+            }
+
+            function* genSome(arr, predicate) {
+              for (let i = 0; i < arr.length; i++) {
+                if (yield* predicate(arr[i], i)) return true;
+              }
+              return false;
+            }
+            function* genEvery(arr, predicate) {
+              for (let i = 0; i < arr.length; i++) {
+                if (!(yield* predicate(arr[i], i))) return false;
+              }
+              return true;
+            }
+
+            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+            const result = yield* runGenerator(
+              ${node.type === "some" ? "genSome" : "genEvery"}(p, function* (SPobjV, SPobjK) {
                 SPobjK++;
                 return ${safeBool};
-              });
-            }
-            return [...generator()][0];
+              })
+            );
+            return result;
           })()`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.arrMap": {
