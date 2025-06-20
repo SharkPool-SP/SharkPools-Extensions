@@ -1063,9 +1063,10 @@
     }
 
     reporterYield(util, wasCompiled) {
-      const thisBlock = util.thread.stackFrames[0].myID ?? util.thread.blockContainer.getBlock(
+      let thisBlock = util.thread.blockContainer.getBlock(
         wasCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op?.id
       );
+      if (!thisBlock) thisBlock = util.thread.stackFrames[0].myID;
       if (!thisBlock) return true; // abort!
 
       util.thread.stackFrames[0].myID = thisBlock;
@@ -1104,8 +1105,8 @@
         else {
           util.thread.stackFrames[0].SPjson = entry[index - 1];
           handleCon(util.thread.stackFrames[0].isArray, entry[index]);
+          util.stackFrame.index--;
         }
-        util.stackFrame.index--;
       }
       if (util.stackFrame.execute === "done") return finishFunc(util);
       else yieldFunc(util);
@@ -1130,7 +1131,6 @@
       if (opt) {
         this[opt] = args.TYPE === "enabled";
         this.initParser();
-        console.log(this.tryParse);
       }
     }
 
@@ -1384,6 +1384,7 @@
         util.stackFrame.execute = true;
         util.stackFrame.array = array;
         util.stackFrame.index = array.length - 1;
+        util.thread.stackFrames[0].SPjson = undefined;
         if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
           util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
           util.thread.isCompiled = false;
@@ -1393,18 +1394,19 @@
       } else {
         const { index, array } = util.stackFrame;
         if (index < 0) util.stackFrame.execute = "done";
-        else if (array[index] !== undefined) {
-          util.thread.stackFrames[0].SPjson = [index + 1, array[index]];
-          util.stackFrame.checks.push(Cast.toBoolean(args.BOOL));
-        }
+        if (array[index] !== undefined) util.thread.stackFrames[0].SPjson = [index + 1, array[index]];
+        util.stackFrame.checks.push(Cast.toBoolean(args.BOOL));
         util.stackFrame.index--;
-      }
-      if (util.stackFrame.execute === "done") {
-        util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
 
-        if (args.TYPE === "every") return util.stackFrame.checks.indexOf(false) < 0;
-        else return util.stackFrame.checks.indexOf(true) > -1;
-      } else this.reporterYield(util);
+        if (util.stackFrame.execute === "done") {
+          util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
+
+          const fixedArray = util.stackFrame.checks;
+          fixedArray.shift();
+          if (args.TYPE === "every") return fixedArray.indexOf(false) < 0;
+          else return fixedArray.indexOf(true) > -1;
+        } else this.reporterYield(util);
+      }
     }
 
     arrMap(args, util) {
