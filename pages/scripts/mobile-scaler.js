@@ -19,7 +19,11 @@ function rescaler() {
   // scale extension div to show a minimum of 3 extensions
   const extDiv = document.querySelector(`div[class="ext-div"]`);
   if (!extDiv) return;
-  if (extDiv.children[0].getBoundingClientRect().y !== extDiv.children[1].getBoundingClientRect().y) {
+
+  const children = Array.from(extDiv.children);
+  const breakerIndex = children.findIndex((e) => e.getAttribute("class") === "ext-breaker");
+  const checkerIndex = breakerIndex === -1 ? 0 : breakerIndex + 1;
+  if (extDiv.children[checkerIndex].getBoundingClientRect().y !== extDiv.children[checkerIndex + 1].getBoundingClientRect().y) {
     extDiv.style.width = "250%";
     extDiv.style.left = "-75%";
     extDiv.style.transformOrigin = "top center";
