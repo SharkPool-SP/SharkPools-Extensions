@@ -34,10 +34,16 @@ function displayExts(json, optDontFade) {
       const date = document.createElement("pre");
       date.classList.add("update-date");
       date.textContent = info.date;
+      
+      // this is just to help people who use Control + F
+      const hiddenTitle = document.createElement("pre");
+      hiddenTitle.classList.add("update-date");
+      hiddenTitle.style.opacity = 0;
+      hiddenTitle.textContent = `${name} ${name.replaceAll("-", " ")}`;
 
       dataDiv = document.createElement("div");
       dataDiv.classList.add("ext-data");
-      dataDiv.append(desc, descBreaker, creator, date);
+      dataDiv.append(desc, descBreaker, creator, date, hiddenTitle);
     }
 
     /* Tag Setup */
