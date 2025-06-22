@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.5.0
+// Version V.3.5.01
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -166,6 +166,7 @@
         prevFrameTime = now;
 
         const projectVal = scratchAudio.inputNode.gain.value;
+        const speedBuffer = runtime.frameLoop.framerate / 1000;
         Object.values(soundBank).forEach((bank) => {
           if (bank.loaded) {
             const sound = bank.context;
@@ -191,10 +192,12 @@
               // Apply Speed Changes
               if (bank.speed !== 1) {
                 const lastTime = bank.currentTime;
+                sound.release = speedBuffer;
                 sound.stop();
                 bank.currentTime = lastTime;
+                sound.attack = speedBuffer;
                 sound.play(0, lastTime);
-                this.fixAudioNodes(sound.sourceNode, bank);
+                this.updateAudioNodes(sound.sourceNode, bank);
               }
             }
           }
@@ -863,6 +866,8 @@
         pitch: 1,
         detune: 0,
         speed: 1,
+        attack: 0,
+        release: 0,
         rate: 1,
         loopParm: [0, 0],
         overlap: false,
@@ -895,10 +900,12 @@
       return isNaN(value) ? 0 : value;
     }
 
-    fixAudioNodes(src, sound) {
+    updateAudioNodes(src, sound) {
       src.playbackRate.value = sound.pitch;
       src.detune.value = sound.detune;
       src.gainSuccessor.gain.value = sound.gain;
+      sound.context.attack = sound.attack;
+      sound.context.release = sound.release;
       if (src.loop)
         this.loopParams({
           NAME: sound.name,
@@ -1020,14 +1027,14 @@
           if (!sound.playing) con.currentTime = atTime;
           sound.play(0, atTime);
           const srcNode = sound.sourceNode;
-          this.fixAudioNodes(srcNode, con);
+          this.updateAudioNodes(srcNode, con);
           if (Object.keys(con.binds).length > 0) {
             Object.keys(con.binds).forEach((key) => {
               const thisSound = con.binds[key];
               const context = thisSound.context;
               if (!context.playing) thisSound.currentTime = atTime;
               context.play(0, atTime);
-              this.fixAudioNodes(context.sourceNode, thisSound);
+              this.updateAudioNodes(context.sourceNode, thisSound);
             });
           }
           if (sound.loop)
@@ -1065,7 +1072,7 @@
         ctx.stop();
         sound.currentTime = lastTime;
         ctx.play(0, lastTime);
-        this.fixAudioNodes(ctx.sourceNode, sound);
+        this.updateAudioNodes(ctx.sourceNode, sound);
       }
     }
 
@@ -1366,9 +1373,9 @@
             sound.effects[prop.toUpperCase()]?.options.gain * 100 || 0
           );
         case "attack":
-          return sound.context.attack * 100;
+          return sound.attack * 100;
         case "release":
-          return sound.context.release * 100;
+          return sound.release * 100;
         default: {
           const effect = sound.effects[prop.toUpperCase()];
           if (effect === undefined) return "";
@@ -1468,15 +1475,15 @@
       else if (effect === "detune") sound.detune = 0;
       else if (effect === "speed") sound.speed = 1;
       else if (effect === "gain") sound.gain = 1;
-      else if (effect === "attack") sound.context.attack = 0;
-      else if (effect === "release") sound.context.release = 0;
+      else if (effect === "attack") sound.attack = 0;
+      else if (effect === "release") sound.release = 0;
       else if (effect === "all effects") {
         sound.pitch = 1;
         sound.detune = 0;
         sound.speed = 1;
         sound.gain = 1;
-        sound.context.attack = 0;
-        sound.context.release = 0;
+        sound.attack = 0;
+        sound.release = 0;
         const effects = sound.effects;
         Object.values(effects).forEach((e) => ctx.removeEffect(e));
         sound.effects = {};
@@ -1486,7 +1493,7 @@
         delete sound.effects[name];
       }
       sound.rate = sound.pitch * sound.speed * Math.pow(2, sound.detune / 1200);
-      this.fixAudioNodes(ctx.sourceNode, sound);
+      this.updateAudioNodes(ctx.sourceNode, sound);
     }
 
     setThingNew(args) {
@@ -1498,10 +1505,8 @@
       else if (args.TYPE === "detune") sound.detune = value * 1000;
       else if (args.TYPE === "speed") sound.speed = Math.max(0, value);
       else if (args.TYPE === "gain") sound.gain = value;
-      else if (args.TYPE === "attack")
-        sound.context.attack = Math.max(0, value);
-      else if (args.TYPE === "release")
-        sound.context.release = Math.max(0, value);
+      else if (args.TYPE === "attack") sound.attack = Math.max(0, value);
+      else if (args.TYPE === "release") sound.release = Math.max(0, value);
       else if (args.TYPE === "pan") {
         const pan = new Pizzicato.Effects.StereoPanner({
           pan: Math.max(-1, Math.min(1, value)),
@@ -1512,7 +1517,7 @@
         return this.updateEffect(distort, sound, "DISTORTION", args);
       }
       sound.rate = sound.pitch * sound.speed * Math.pow(2, sound.detune / 1200);
-      this.fixAudioNodes(ctx.sourceNode, sound);
+      this.updateAudioNodes(ctx.sourceNode, sound);
     }
 
     setReverb(args) {
