@@ -23,7 +23,11 @@ function rescaler() {
   const children = Array.from(extDiv.children);
   const breakerIndex = children.findIndex((e) => e.getAttribute("class") === "ext-breaker");
   const checkerIndex = breakerIndex === -1 ? 0 : breakerIndex + 2;
-  if (extDiv.children[checkerIndex].getBoundingClientRect().y !== extDiv.children[checkerIndex + 1].getBoundingClientRect().y) {
+  if (
+    extDiv.children[checkerIndex].getBoundingClientRect().y === extDiv.children[checkerIndex + 1].getBoundingClientRect().y
+  ) {
+    extDiv.setAttribute("style", "");
+  } else {
     extDiv.style.width = "250%";
     extDiv.style.left = "-75%";
     extDiv.style.transformOrigin = "top center";
