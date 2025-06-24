@@ -95,11 +95,11 @@
     "Hyper-Sense": {
       "desc": "New Sensing Blocks",
       "creator": "SharkPool",
-      "url": "extension-code/Hyper-Sense.js",
+      "url": "extension-code/Hyper-Sense-V2.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 05/27/2025"
+      "status": "new",
+      "date": "Re-Released: 06/23/2025"
     },
     "Keys-Plus-V2": {
       "desc": "Powerful and flexible Key detection Blocks with some additional features",
