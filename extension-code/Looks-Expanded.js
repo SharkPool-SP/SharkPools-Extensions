@@ -724,8 +724,8 @@ gl_FragColor.a = baseAlpha;`
 
       switch (args.INFO) {
         case "name": return costume.name;
-        case "width": return costume.size[0];
-        case "height": return costume.size[1];
+        case "width": return costume.size[0] / costume.bitmapResolution;
+        case "height": return costume.size[1] / costume.bitmapResolution;
         case "type": return costume.dataFormat;
         case "rotation center x": return costume.rotationCenterX;
         case "rotation center y": return costume.rotationCenterY;
