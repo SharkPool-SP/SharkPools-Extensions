@@ -52,7 +52,7 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
+      "status": "",
       "date": "Last Updated: 06/21/2025"
     },
     "Tune-Shark": {
@@ -89,8 +89,8 @@
       "url": "extension-code/Sound-Waves.js",
       "banner": "extension-thumbs/Sound-Waves.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 04/10/2025"
+      "status": "update",
+      "date": "Last Updated: 06/29/2025"
     },
     "Hyper-Sense": {
       "desc": "New Sensing Blocks",
