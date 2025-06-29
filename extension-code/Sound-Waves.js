@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.1.2
+// Version V.2.1.3
 
 (function (Scratch) {
   "use strict";
@@ -23,6 +23,12 @@
     "C", "C#", "D", "D#", "E", "F",
     "F#", "G", "G#", "A", "A#", "B"
   ];
+  const normalVolumeMap = {
+    sine: 1.0,
+    triangle: 1.2,
+    square: 0.5,
+    sawtooth: 0.4
+  };
 
   class SPsoundWaves {
     constructor() {
@@ -39,7 +45,9 @@
       this.oscillators = new Map();
       this.gainNodes = new Map();
       this.playingStatus = new Map();
+      /* Deprecation Marker */
       this.registerKeyEvents();
+      /* Marker End */
       runtime.on("PROJECT_STOP_ALL", () => this.stopNote());
     }
     getInfo() {
@@ -201,12 +209,11 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "pressed key to note"
           },
-          {
-            opcode: "getKeyPressedDuration",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "pressed key duration"
-          },
           /* Deprecation Marker */
+          {
+            opcode: "getKeyPressedDuration", blockType: Scratch.BlockType.REPORTER,
+            text: "pressed key duration", hideFromPalette: true,
+          },
           {
             opcode: "playNote",
             blockType: Scratch.BlockType.COMMAND,
@@ -263,7 +270,10 @@
       const gainNode = this.audioContext.createGain();
       oscillator.type = waves.includes(waveform) ? waveform : "square";
       oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(1.0, this.audioContext.currentTime);
+      gainNode.gain.setValueAtTime(
+        normalVolumeMap[waveform] ?? 1,
+        this.audioContext.currentTime
+      );
 
       oscillator.connect(gainNode);
       gainNode.connect(this.gainNode);
@@ -284,6 +294,7 @@
       if (index !== -1) this.oscillators.splice(index, 1);
     }
 
+    /* Deprecation Marker */
     registerKeyEvents() {
       document.addEventListener("keydown", (event) => {
         if (!this.keyPressed) {
@@ -297,6 +308,7 @@
         this.keyPressedTime = 0;
       });
     }
+    /* Marker End */
 
     convertAndReportNoteFromKeyPressed(key) {
       const keysToNotes = {
@@ -411,9 +423,9 @@
 
     convertPressedKeyToNote() { return this.keyPressed ? this.currentNote : 0 }
 
-    getKeyPressedDuration() {
-      return this.keyPressed ? this.audioContext.currentTime - this.keyPressedTime : 0;
-    }
+    /* Deprecation Marker */
+    getKeyPressedDuration() { return this.keyPressed ? this.audioContext.currentTime - this.keyPressedTime : 0 }
+    /* Marker End */
   }
 
   Scratch.extensions.register(new SPsoundWaves());
