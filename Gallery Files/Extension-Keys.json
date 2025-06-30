@@ -33,6 +33,7 @@
       "url": "extension-code/Scratch-Utilities.js",
       "banner": "extension-thumbs/Scratch-Utilities.svg",
       "tags": ["all", "expanded", "fetching"],
+      "isDeprecated": true,
       "status": "",
       "date": "Last Updated: 04/05/2024"
     },
@@ -52,7 +53,7 @@
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "",
-      "date": "Last Updated: 05/17/2025"
+      "date": "Last Updated: 06/21/2025"
     },
     "Tune-Shark": {
       "desc": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3",
@@ -88,17 +89,17 @@
       "url": "extension-code/Sound-Waves.js",
       "banner": "extension-thumbs/Sound-Waves.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 04/10/2025"
+      "status": "update",
+      "date": "Last Updated: 06/29/2025"
     },
     "Hyper-Sense": {
       "desc": "New Sensing Blocks",
       "creator": "SharkPool",
-      "url": "extension-code/Hyper-Sense.js",
+      "url": "extension-code/Hyper-Sense-V2.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "update",
-      "date": "Last Updated: 05/27/2025"
+      "status": "new",
+      "date": "Re-Released: 06/23/2025"
     },
     "Keys-Plus-V2": {
       "desc": "Powerful and flexible Key detection Blocks with some additional features",
@@ -116,7 +117,7 @@
       "banner": "extension-thumbs/Popup-Phoenix.svg",
       "tags": ["all", "utilities", "expanded"],
       "status": "",
-      "date": "Released: 02/19/2025"
+      "date": "Last Updated: 06/01/2025"
     },
     "Better-Input": {
       "desc": "Expansion of the 'Ask and Wait' Block. Deprecated, please use Popup-Phoenix",
@@ -163,7 +164,7 @@
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "",
-      "date": "Last Updated: 05/03/2025"
+      "date": "Last Updated: 06/03/2025"
     },
     "Sprite-Effects": {
       "desc": "Apply Effects and Filters to SVGs, Sprites, and the Canvas! Faster than Image Effects",
@@ -251,9 +252,9 @@
       "creator": "SharkPool, Drago Cuven, 0znzw",
       "url": "extension-code/Files-Expanded.js",
       "banner": "extension-thumbs/Files-Expanded.svg",
-      "tags": ["all", "expanded", "fetching"],
+      "tags": ["all", "expanded"],
       "status": "",
-      "date": "Last Updated: 02/01/2025"
+      "date": "Last Updated: 06/07/2025"
     },
     "Temporary-Variables": {
       "desc": "Create Temporary Variables for Sprites, Threads, and the Project",
@@ -415,7 +416,7 @@
       "banner": "extension-thumbs/Display-Text.svg",
       "tags": ["all", "expanded", "utilities", "category"],
       "status": "",
-      "date": "Last Updated: 05/02/2025"
+      "date": "Last Updated: 06/12/2025"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
@@ -469,7 +470,7 @@
       "banner": "extension-thumbs/Script-Control.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 05/04/2025"
+      "date": "Last Updated: 05/30/2025"
     },
     "Layer-Control": {
       "desc": "Relayer Pen, Video Camera, Backdrops, Sprites and more",
@@ -594,8 +595,8 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
-      "date": "Last Updated: 04/21/2025"
+      "status": "update",
+      "date": "Last Updated: 06/29/2025"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
@@ -604,7 +605,7 @@
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "",
-      "date": "Last Updated: 05/04/2025"
+      "date": "Last Updated: 06/09/2025"
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
@@ -625,13 +626,13 @@
       "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
-      "desc": "Create Scenes, like Unity, in your Project",
+      "desc": "Create Scenes (savestates), like Unity, in your Project",
       "creator": "SharkPool",
       "url": "extension-code/Scenes.js",
       "banner": "extension-thumbs/Scenes.svg",
       "tags": ["all", "utilities", "addon"],
       "status": "",
-      "date": "Last Updated: 02/01/2025"
+      "date": "Last Updated: 06/12/2025"
     },
     "Pen-Papers": {
       "desc": "Create Multiple Pen Layers! Inspired by ObviousAlex",
