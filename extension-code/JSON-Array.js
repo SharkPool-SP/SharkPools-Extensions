@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.04
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -16,6 +16,7 @@
   const arrowURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNS44OTMiIGhlaWdodD0iMTUuODkzIiB2aWV3Qm94PSIwIDAgMTUuODkzIDE1Ljg5MyI+PHBhdGggZD0iTTkuMDIxIDEyLjI5NHYtMi4xMDdsLTYuODM5LS45MDVDMS4zOTggOS4xODQuODQ2IDguNDg2Ljk2MiA3LjcyN2MuMDktLjYxMi42MDMtMS4wOSAxLjIyLTEuMTY0bDYuODM5LS45MDVWMy42YzAtLjU4Ni43MzItLjg2OSAxLjE1Ni0uNDY0bDQuNTc2IDQuMzQ1YS42NDMuNjQzIDAgMCAxIDAgLjkxOGwtNC41NzYgNC4zNmMtLjQyNC40MDQtMS4xNTYuMTEtMS4xNTYtLjQ2NSIgZmlsbD0ibm9uZSIgc3Ryb2tlLW9wYWNpdHk9Ii4xNSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEuNzUiLz48cGF0aCBkPSJNOS4wMjEgMTIuMjk0di0yLjEwN2wtNi44MzktLjkwNUMxLjM5OCA5LjE4NC44NDYgOC40ODYuOTYyIDcuNzI3Yy4wOS0uNjEyLjYwMy0xLjA5IDEuMjItMS4xNjRsNi44MzktLjkwNVYzLjZjMC0uNTg2LjczMi0uODY5IDEuMTU2LS40NjRsNC41NzYgNC4zNDVhLjY0My42NDMgMCAwIDEgMCAuOTE4bC00LjU3NiA0LjM2Yy0uNDI0LjQwNC0xLjE1Ni4xMS0xLjE1Ni0uNDY1IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48cGF0aCBkPSJNMCAxNS44OTJWMGgxNS44OTJ2MTUuODkyeiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==";
 
+  const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   const isPM = Scratch.extensions.isPenguinMod;
@@ -23,16 +24,19 @@
   const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
   let extClass;
 
-  // Custom Square Block Shapes
-  const ogConverter = runtime._convertBlockForScratchBlocks.bind(runtime);
-  runtime._convertBlockForScratchBlocks = function (blockInfo, categoryInfo) {
-    const res = ogConverter(blockInfo, categoryInfo);
-    if (blockInfo.outputShape) res.json.outputShape = blockInfo.outputShape;
-    return res;
-  }
+  const circularReplacer = () => {
+    const stack = new Set();
+    return function replacer(_, value) {
+      if (typeof value === "object" && value !== null) {
+        if (stack.has(value)) return Array.isArray(value) ? "[...]" : "{...}";
+        stack.add(value);
+      }
+      return value;
+    };
+  };
 
   const regenReporters = ["SPjson_objKey", "SPjson_objValue", "SPjson_arrValueA", "SPjson_arrValueB"];
-  const jsonBlocks = ["SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson", "SPjson_jsonMap"];
+  const jsonBlocks = ["SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson", "SPjson_jsonMap", "SPjson_jsonMake"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     // Regen Reporters
     const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
@@ -79,30 +83,24 @@
   // Patch Saving Pure Objects to Variables
   // We must stringify them for it to work
   const og2JSON = vm.constructor.prototype.toJSON;
-  vm.constructor.prototype.toJSON = function (optTargetId, serializationOptions) {
-    stringifyVariables();
-    return og2JSON.call(this, optTargetId, serializationOptions);
-  }
-
-  function stringifyVariables() {
-    for (let i = 0; i < runtime.targets.length; i++) {
-      const target = runtime.targets[i];
+  vm.constructor.prototype.toJSON = function (...args) {
+    for (const target of runtime.targets) {
       const vars = Object.values(target.variables);
-      for (let j = 0; j < vars.length; j++) {
-        const data = vars[j];
+      for (const data of vars) {
         if (data.type !== "broadcast_msg") {
           const val = data.value;
           if (data.type === "list") {
             // Iterate through each list item
-            for (var k = 0; k < val.length; k++) {
-              if (typeof val[k] === "object") val[k] = JSON.stringify(val[k]);
+            for (var i = 0; i < val.length; i++) {
+              if (typeof val[i] === "object") val[i] = JSON.stringify(val[i], circularReplacer());
             }
           } else {
-            if (typeof val === "object") data.value = JSON.stringify(val);
+            if (typeof val === "object") data.value = JSON.stringify(val, circularReplacer());
           }
         }
       }
     }
+    return og2JSON.call(this, ...args);
   }
 
   // Modify Visual Report to stringify JSON
@@ -111,50 +109,21 @@
     runtime.visualReport = function (blockId, value) {
       if (value.constructor?.name === "Object" || value.constructor?.name === "Array") {
         // PM custom return constructors have a different name
-        value = JSON.stringify(value);
+        value = JSON.stringify(value, circularReplacer());
       }
       return ogVisReport.call(this, blockId, value);
     }
   } else {
     runtime.visualReport = function (target, blockId, value) {
-      if (typeof value === "object") value = JSON.stringify(value);
+      if (typeof value === "object") value = JSON.stringify(value, circularReplacer());
       return ogVisReport.call(this, target, blockId, value);
     }
-  }
-
-  // Modify Monitors to stringify JSON
-  if (typeof scaffolding === "undefined") {
-    const ogListener = vm.listeners("MONITORS_UPDATE").find((f) => f.name === "onMonitorsUpdate");
-    if (ogListener) vm.removeListener("MONITORS_UPDATE", ogListener);
-    vm.on("MONITORS_UPDATE", (monitors) => {
-      const iterators = monitors._list?._tail?.array;
-      if (iterators) iterators.forEach((entry) => {
-        const data = entry[1]._map._root?.entries || entry[1]._map._root.nodes;
-        const valueInd = data.findIndex((e) => { return e.entry && e.entry[0] === "value" });
-        if (valueInd === -1) return;
-
-        if (data[0]?.entry && data[0]?.entry[1] === "list") {
-          data[valueInd].entry[1] = data[valueInd]?.entry[1]?.map((item) => {
-            if (typeof item === "object") item = JSON.stringify(item);
-            return item;
-          });
-        } else {
-          const value = data[valueInd].entry[1];
-          if (typeof value === "object") data[valueInd].entry[1] = JSON.stringify(value);
-        }
-      });
-
-      ReduxStore.dispatch({
-        type: "scratch-gui/monitors/UPDATE_MONITORS",
-        monitors
-      });
-    });
   }
 
   // Compiler Patches
   // TODO remove this when there is a dedicated API for refreshing block arguments
   const generateParser = (type, alwaysTryParse) => {
-    if (!alwaysTryParse) return `(o) => {return o}`;
+    if (!alwaysTryParse) return `(o) => o`;
 
     const defaultV = type === undefined ? "o" : type === 0 ? "{}" : "[]";
     let funcString = `(o) => {\n`;
@@ -283,15 +252,46 @@
         case "SPjson.arrCheck": {
           const safeObj = this.descendInput(node.array).asUnknown();
           const safeBool = this.descendInput(node.bool).asBoolean();
-          return new exp.TypedInput(`(function() {
-            function* generator() {
-              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
-              yield p.${node.type === "some" ? "some" : "every"}((SPobjV, SPobjK) => {
+          return new exp.TypedInput(`yield* (function* () {
+            function* runGenerator(gen, input) {
+              let result;
+              try {
+                result = gen.next(input);
+              } catch (e) { throw e }
+
+              while (!result.done) {
+                let yielded = result.value;
+                if (yielded && typeof yielded.next === "function") yielded = yield* runGenerator(yielded);
+                else if (yielded && typeof yielded.then === "function") yielded = yield yielded;
+
+                try {
+                  result = gen.next(yielded);
+                } catch (e) { throw e }
+              }
+              return result.value;
+            }
+
+            function* genSome(arr, predicate) {
+              for (let i = 0; i < arr.length; i++) {
+                if (yield* predicate(arr[i], i)) return true;
+              }
+              return false;
+            }
+            function* genEvery(arr, predicate) {
+              for (let i = 0; i < arr.length; i++) {
+                if (!(yield* predicate(arr[i], i))) return false;
+              }
+              return true;
+            }
+
+            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+            const result = yield* runGenerator(
+              ${node.type === "some" ? "genSome" : "genEvery"}(p, function* (SPobjV, SPobjK) {
                 SPobjK++;
                 return ${safeBool};
-              });
-            }
-            return [...generator()][0];
+              })
+            );
+            return result;
           })()`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.arrMap": {
@@ -398,6 +398,7 @@
       ];
       this.alwaysCast = true; this.alwaysParse = true;
       this.alwaysTryParse = true; this.useNewObj = true;
+      this.initParser();
     }
     getInfo() {
       return {
@@ -423,6 +424,7 @@
           {
             opcode: "jsonBuilder",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "{ [KEY] : [VAL] }",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
@@ -433,6 +435,7 @@
           {
             opcode: "getKey",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "get [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
@@ -442,6 +445,7 @@
           {
             opcode: "getPath",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "get path [PATH] from [OBJ]",
             arguments: {
               PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key", "value1"]`, exemptFromNormalization: true },
@@ -451,6 +455,7 @@
           {
             opcode: "setKey",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "set [KEY] to [VAL] in [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
@@ -461,6 +466,7 @@
           {
             opcode: "setPath",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "set path [PATH] to [VAL] in [OBJ]",
             arguments: {
               PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key1", "key2"]`, exemptFromNormalization: true },
@@ -471,6 +477,7 @@
           {
             opcode: "deleteKey",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "delete [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
@@ -490,7 +497,6 @@
             opcode: "keyIndex",
             blockType: Scratch.BlockType.REPORTER,
             text: "index of [KEY] in [OBJ]",
-            allowDropAnywhere: true,
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
@@ -499,6 +505,7 @@
           {
             opcode: "getEntry",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "get [KEY] entry from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
@@ -508,6 +515,7 @@
           {
             opcode: "extractJson",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "all [TYPE] from [OBJ]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "OBJ_EXTRACT" },
@@ -517,6 +525,7 @@
           {
             opcode: "mergeJson",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "merge [OBJ1] and [OBJ2]",
             arguments: {
               OBJ1: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
@@ -525,7 +534,7 @@
           },
           "---",
           {
-            opcode: "jsonMap", blockType: Scratch.BlockType.REPORTER,
+            opcode: "jsonMap", blockType: Scratch.BlockType.REPORTER, allowDropAnywhere: true,
             text: "map [OBJ] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true,
             arguments: {
               OBJ: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
@@ -556,8 +565,9 @@
           {
             opcode: "arrBuilder",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "［ [VAL] ］",
-            outputShape: 3,
             arguments: {
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true }
             },
@@ -566,8 +576,9 @@
           {
             opcode: "arrAdd",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "add [ITEM] to [ARR]",
-            outputShape: 3,
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "thing", exemptFromNormalization: true },
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: "[]", exemptFromNormalization: true }
@@ -576,8 +587,9 @@
           {
             opcode: "arrInsert",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "insert [ITEM] at [IND] in [ARR]",
-            outputShape: 3,
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true },
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
@@ -587,8 +599,9 @@
           {
             opcode: "arrReplace",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "replace item [IND] with [ITEM] in [ARR]",
-            outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a", exemptFromNormalization: true },
@@ -598,8 +611,9 @@
           {
             opcode: "arrSwap",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "swap item [IND1] with item [IND2] in [ARR]",
-            outputShape: 3,
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               IND2: { type: Scratch.ArgumentType.STRING, defaultValue: 3 },
@@ -609,8 +623,9 @@
           {
             opcode: "arrDelete",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "delete item [IND] in [ARR]",
-            outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
@@ -619,8 +634,9 @@
           {
             opcode: "arrGet",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "item [IND] in [ARR]",
-            outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
@@ -629,8 +645,9 @@
           {
             opcode: "arrSlice",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "items [IND1] to [IND2] in [ARR]",
-            outputShape: 3,
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
               IND2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 },
@@ -640,8 +657,8 @@
           {
             opcode: "arrLength",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
             text: "length of [ARR]",
-            outputShape: 3,
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
             },
@@ -653,14 +670,14 @@
             text: "[ARR] contains [ITEM] ?",
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true },
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b" }
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true }
             },
           },
           {
             opcode: "arrMatches",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
             text: "# of times [ITEM] appears in [ARR]",
-            outputShape: 3,
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]`, exemptFromNormalization: true }
@@ -669,8 +686,8 @@
           {
             opcode: "arrContainers",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
             text: "# of items containing [TESTER] in [ARR]",
-            outputShape: 3,
             arguments: {
               TESTER: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "ab", "ba", "bb"]`, exemptFromNormalization: true }
@@ -679,8 +696,9 @@
           {
             opcode: "itemIndex",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "index # [IND] of item [ITEM] in [ARR]",
-            outputShape: 3,
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
@@ -691,8 +709,9 @@
           {
             opcode: "mergeArray",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "merge array [ARR1] and [ARR2]",
-            outputShape: 3,
             arguments: {
               ARR1: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
               ARR2: { type: Scratch.ArgumentType.STRING, defaultValue: `["c", "d"]`, exemptFromNormalization: true }
@@ -701,8 +720,9 @@
           {
             opcode: "repeatArray",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "repeat array [ARR] [NUM] times",
-            outputShape: 3,
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 }
@@ -711,8 +731,9 @@
           {
             opcode: "fillArray",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "fill array [ARR] to length [NUM]",
-            outputShape: 3,
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
@@ -721,8 +742,9 @@
           {
             opcode: "arrOrder",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "order [ARR] by [ORDERER]",
-            outputShape: 3,
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["2", "item1", "1", "item12", "1"]`, exemptFromNormalization: true },
               ORDERER: { type: Scratch.ArgumentType.STRING, menu: "ORDERING" }
@@ -730,7 +752,7 @@
           },
           "---",
           {
-            opcode: "arrCheck", blockType: Scratch.BlockType.BOOLEAN,
+            opcode: "arrCheck", blockType: Scratch.BlockType.BOOLEAN, allowDropAnywhere: true,
             text: "check [ARR] if [TYPE] item [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "ARRAY_CHECK" },
@@ -740,8 +762,8 @@
             },
           },
           {
-            opcode: "arrMap", blockType: Scratch.BlockType.REPORTER, outputShape: 3,
-            text: "map [ARR] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true,
+            opcode: "arrMap", blockType: Scratch.BlockType.REPORTER, blockShape: Scratch.BlockShape.SQUARE,
+            text: "map [ARR] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true, allowDropAnywhere: true,
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
               IND: {}, VAL: {},
@@ -760,8 +782,8 @@
             text: "value B", color1: "#677cd6"
           },
           {
-            opcode: "arrSort", blockType: Scratch.BlockType.REPORTER, outputShape: 3,
-            text: "sort [ARR] using rule [A] [B] [IMG] [VALUE]", hideFromPalette: true,
+            opcode: "arrSort", blockType: Scratch.BlockType.REPORTER, blockShape: Scratch.BlockShape.SQUARE,
+            text: "sort [ARR] using rule [A] [B] [IMG] [VALUE]", hideFromPalette: true, allowDropAnywhere: true,
             arguments: {
               ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
               A: {}, B: {},
@@ -804,6 +826,7 @@
             opcode: "parse",
             blockType: Scratch.BlockType.REPORTER,
             text: "parse [OBJ]",
+            allowDropAnywhere: true,
             arguments: {
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key": "value"}`, exemptFromNormalization: true }
             },
@@ -812,6 +835,7 @@
             opcode: "clone",
             blockType: Scratch.BlockType.REPORTER,
             text: "copy [OBJ] to new",
+            allowDropAnywhere: true,
             arguments: {
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key": "value"}`, exemptFromNormalization: true }
             },
@@ -820,6 +844,7 @@
             opcode: "convert",
             blockType: Scratch.BlockType.REPORTER,
             text: "[OBJ] to [TYPE]",
+            allowDropAnywhere: true,
             arguments: {
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: "{}", exemptFromNormalization: true },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CONVERTS" }
@@ -829,6 +854,7 @@
           {
             opcode: "jsonMake",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "[TXT] split by [SPLIT] with delimiter [DELIM] to JSON",
             arguments: {
               TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "a:1,b:2,c:3" },
@@ -839,8 +865,9 @@
           {
             opcode: "arrMake",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
             text: "[TXT] split by [SPLIT] to [TYPE]",
-            outputShape: 3,
             arguments: {
               TXT: { type: Scratch.ArgumentType.STRING, defaultValue: "a,b,c", exemptFromNormalization: true },
               SPLIT: { type: Scratch.ArgumentType.STRING, defaultValue: "," },
@@ -874,6 +901,7 @@
           },
           {
             opcode: "filterNew", blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "[TYPE] [OBJ] by [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CUST_ORDER" },
@@ -906,6 +934,27 @@
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
               </block>`
           },
+          "---",
+          {
+            opcode: "setRawVarValue",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set [TYPE] named [NAME] to [VALUE]",
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPE" },
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
+              VALUE: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true }
+            },
+          },
+          {
+            opcode: "rawVarValue",
+            blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
+            text: "get raw [TYPE] named [NAME]",
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPE" },
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" }
+            },
+          },
           { blockType: Scratch.BlockType.LABEL, text: "Safety Settings" },
           {
             func: "optimizeWarn",
@@ -934,8 +983,9 @@
           TOGGLER: ["enabled", "disabled"],
           CUST_ORDER: ["filter", "order"],
           ARRAY_CHECK: ["every", "some"],
+          VAR_TYPE: ["variable", "list"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values"] },
-          CONVERTS: { acceptReporters: true, items: ["string", "array", "JSON"] },
+          CONVERTS: { acceptReporters: true, items: ["string", "pretty string", "array", "JSON"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
           SETTINGS: { acceptReporters: true, items: this.settings },
           ORDERING: {
@@ -951,43 +1001,100 @@
     }
 
     // Helper Funcs
-    tryParse(obj, optType) {
-      if (!this.alwaysTryParse) return obj;
-      if (
-        (optType === 1 && Array.isArray(obj)) ||
-        (optType === 0 && obj.constructor?.name === "Object") ||
-        (optType === undefined && typeof obj === "object")
-      ) return this.useNewObj ? structuredClone(obj) : obj;
-      const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
-      try {
-        if (this.alwaysParse) {
-          const parsed = JSON.parse(obj);
-          return (
-            (optType === 1 && Array.isArray(parsed)) ||
-            (optType === 0 && parsed.constructor?.name === "Object") ||
-            optType === undefined
-          ) ? parsed : defaultV;
-        }
-        return defaultV;
-      } catch {
-        return defaultV;
+    initParser() {
+      // dynamically create 'tryParse' so its as fast as possible, no need for unused checks
+      const fixedClone = (obj) => {
+        try { return structuredClone(obj) } catch { return obj }
+      };
+
+      if (!this.alwaysTryParse) return this.tryParse = (obj) => obj;
+
+      if (this.useNewObj && this.alwaysParse) {
+        this.tryParse = (obj, optType) => {
+          if (
+            (optType === 1 && Array.isArray(obj)) ||
+            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === undefined && typeof obj === "object")
+          ) return fixedClone(obj);
+          const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
+          try {
+            const parsed = JSON.parse(obj);
+            return (
+              (optType === 1 && Array.isArray(parsed)) ||
+              (optType === 0 && parsed.constructor?.name === "Object") ||
+              optType === undefined
+            ) ? parsed : defaultV;
+          } catch {
+            return defaultV;
+          }
+        };
+        return;
+      }
+
+      if (!this.useNewObj && this.alwaysParse) {
+        this.tryParse = (obj, optType) => {
+          if (
+            (optType === 1 && Array.isArray(obj)) ||
+            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === undefined && typeof obj === "object")
+          ) return obj;
+          const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
+          try {
+            const parsed = JSON.parse(obj);
+            return (
+              (optType === 1 && Array.isArray(parsed)) ||
+              (optType === 0 && parsed.constructor?.name === "Object") ||
+              optType === undefined
+            ) ? parsed : defaultV;
+          } catch {
+            return defaultV;
+          }
+        };
+        return;
+      }
+
+      if (this.useNewObj && !this.alwaysParse) {
+        this.tryParse = (obj, optType) => {
+          if (
+            (optType === 1 && Array.isArray(obj)) ||
+            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === undefined && typeof obj === "object")
+          ) return fixedClone(obj);
+          return optType === undefined ? obj : optType === 0 ? {} : [];
+        };
+        return;
+      }
+
+      if (!this.useNewObj && !this.alwaysParse) {
+        this.tryParse = (obj, optType) => {
+          if (
+            (optType === 1 && Array.isArray(obj)) ||
+            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === undefined && typeof obj === "object")
+          ) return obj;
+          return optType === undefined ? obj : optType === 0 ? {} : [];
+        };
+        return;
       }
     }
 
-    toArrInd(num) { return Scratch.Cast.toNumber(num) - 1 }
+    tryParse(obj, optType) { /* dynamically constructed */ }
+
+    toArrInd(num) { return Cast.toNumber(num) - 1 }
 
     toSafe(val) {
       if (this.alwaysCast) {
         if (typeof val === "object") return val;
-        if (isNaN(val) || val === Infinity || val === -Infinity) return Scratch.Cast.toString(val);
+        if (isNaN(val) || val === Infinity || val === -Infinity) return Cast.toString(val);
       }
       return val;
     }
 
     reporterYield(util, wasCompiled) {
-      const thisBlock = util.thread.stackFrames[0].myID ?? util.thread.blockContainer.getBlock(
+      let thisBlock = util.thread.blockContainer.getBlock(
         wasCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op?.id
       );
+      if (!thisBlock) thisBlock = util.thread.stackFrames[0].myID;
       if (!thisBlock) return true; // abort!
 
       util.thread.stackFrames[0].myID = thisBlock;
@@ -1026,8 +1133,8 @@
         else {
           util.thread.stackFrames[0].SPjson = entry[index - 1];
           handleCon(util.thread.stackFrames[0].isArray, entry[index]);
+          util.stackFrame.index--;
         }
-        util.stackFrame.index--;
       }
       if (util.stackFrame.execute === "done") return finishFunc(util);
       else yieldFunc(util);
@@ -1049,7 +1156,10 @@
 
     toggleSetting(args) {
       const opt = this.settings.find(item => item.value === args.THING)?.value;
-      if (opt) this[opt] = args.TYPE === "enabled";
+      if (opt) {
+        this[opt] = args.TYPE === "enabled";
+        this.initParser();
+      }
     }
 
     isSettingOn(args) {
@@ -1067,7 +1177,7 @@
 
     getKey(args) {
       const obj = this.tryParse(args.OBJ, 0);
-      const key = Scratch.Cast.toString(args.KEY);
+      const key = Cast.toString(args.KEY);
       if (hasOwn(obj, key)) return obj[key] ?? "";
       return "";
     }
@@ -1076,7 +1186,7 @@
       const path = this.tryParse(args.PATH, 1);
       let val = this.tryParse(args.OBJ, 0);
       for (var i = 0; i < path.length; i++) {
-        const key = Scratch.Cast.toString(path[i]);
+        const key = Cast.toString(path[i]);
         if (hasOwn(val, key)) val = val[key];
         else val = undefined;
         if (val === undefined) {
@@ -1089,7 +1199,7 @@
 
     setKey(args) {
       const obj = this.tryParse(args.OBJ, 0);
-      obj[Scratch.Cast.toString(args.KEY)] = this.toSafe(args.VAL);
+      obj[Cast.toString(args.KEY)] = this.toSafe(args.VAL);
       return obj;
     }
 
@@ -1106,7 +1216,7 @@
 
     deleteKey(args) {
       const obj = this.tryParse(args.OBJ, 0);
-      delete obj[Scratch.Cast.toString(args.KEY)];
+      delete obj[Cast.toString(args.KEY)];
       return obj;
     }
 
@@ -1114,12 +1224,12 @@
 
     keyIndex(args) {
       return Object.keys(this.tryParse(args.OBJ, 0))
-        .indexOf(Scratch.Cast.toString(args.KEY)) + 1;
+        .indexOf(Cast.toString(args.KEY)) + 1;
     }
 
     getEntry(args) {
       const obj = this.tryParse(args.OBJ, 0);
-      const key = Scratch.Cast.toString(args.KEY);
+      const key = Cast.toString(args.KEY);
       if (hasOwn(obj, key)) return { [key] : obj[key] } || {};
       return {};
     }
@@ -1217,7 +1327,7 @@
 
     arrSlice(args) {
       return this.tryParse(args.ARR, 1).slice(
-        this.toArrInd(args.IND1), Scratch.Cast.toNumber(args.IND2)
+        this.toArrInd(args.IND1), Cast.toNumber(args.IND2)
       );
     }
 
@@ -1232,12 +1342,12 @@
 
     arrContainers(args) {
       const arr = this.tryParse(args.ARR, 1);
-      return arr.filter((item) => Scratch.Cast.toString(item).includes(this.toSafe(args.TESTER))).length;
+      return arr.filter((item) => Cast.toString(item).includes(this.toSafe(args.TESTER))).length;
     }
 
     itemIndex(args) {
       const arr = this.tryParse(args.ARR, 1);
-      const ind = Scratch.Cast.toNumber(args.IND);
+      const ind = Cast.toNumber(args.IND);
       const safe = this.toSafe(args.ITEM)
       if (ind === 0) return arr.indexOf(safe) + 1; // Secret Behaviour
       else {
@@ -1255,12 +1365,12 @@
     }
 
     repeatArray(args) {
-      const times = Scratch.Cast.toNumber(args.NUM);
+      const times = Cast.toNumber(args.NUM);
       return Array(times).fill(this.tryParse(args.ARR, 1)).flat();
     }
 
     fillArray(args) {
-      const length = Scratch.Cast.toNumber(args.NUM);
+      const length = Cast.toNumber(args.NUM);
       const arr = this.tryParse(args.ARR, 1);
       return arr.concat(Array(Math.max(0, length - arr.length)).fill(""));
     }
@@ -1302,6 +1412,7 @@
         util.stackFrame.execute = true;
         util.stackFrame.array = array;
         util.stackFrame.index = array.length - 1;
+        util.thread.stackFrames[0].SPjson = undefined;
         if (util.thread.stackFrames[0].SPwasCompiled === undefined) {
           util.thread.stackFrames[0].SPwasCompiled = util.thread.isCompiled;
           util.thread.isCompiled = false;
@@ -1311,18 +1422,19 @@
       } else {
         const { index, array } = util.stackFrame;
         if (index < 0) util.stackFrame.execute = "done";
-        else if (array[index] !== undefined) {
-          util.thread.stackFrames[0].SPjson = [index + 1, array[index]];
-          util.stackFrame.checks.push(Scratch.Cast.toBoolean(args.BOOL));
-        }
+        if (array[index] !== undefined) util.thread.stackFrames[0].SPjson = [index + 1, array[index]];
+        util.stackFrame.checks.push(Cast.toBoolean(args.BOOL));
         util.stackFrame.index--;
-      }
-      if (util.stackFrame.execute === "done") {
-        util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
 
-        if (args.TYPE === "every") return util.stackFrame.checks.indexOf(false) < 0;
-        else return util.stackFrame.checks.indexOf(true) > -1;
-      } else this.reporterYield(util);
+        if (util.stackFrame.execute === "done") {
+          util.thread.isCompiled = util.thread.stackFrames[0].SPwasCompiled;
+
+          const fixedArray = util.stackFrame.checks;
+          fixedArray.shift();
+          if (args.TYPE === "every") return fixedArray.indexOf(false) < 0;
+          else return fixedArray.indexOf(true) > -1;
+        } else this.reporterYield(util);
+      }
     }
 
     arrMap(args, util) {
@@ -1377,7 +1489,7 @@
         else {
           util.thread.stackFrames[0].SPjson = [array[i], array[j]];
           const propName = j > array.length - 1 ? `0${array[i]}` : i < 1 ? `${array[j]}${array[array.length - 1]}` : `${array[j]}${array[i - 1]}`;
-          util.stackFrame.sortedVals[propName] = Scratch.Cast.toNumber(args.VALUE);
+          util.stackFrame.sortedVals[propName] = Cast.toNumber(args.VALUE);
           util.stackFrame.j++;
           if (j > array.length - 1) {
             util.stackFrame.i++;
@@ -1434,12 +1546,13 @@
       switch (args.TYPE) {
         case "array": return Object.entries(this.tryParse(args.OBJ));
         case "JSON": return Object.assign({}, this.tryParse(args.OBJ));
-        default: return JSON.stringify(this.tryParse(args.OBJ));
+        case "pretty string": return JSON.stringify(this.tryParse(args.OBJ), circularReplacer(), "\t");
+        default: return JSON.stringify(this.tryParse(args.OBJ), circularReplacer());
       }
     }
 
     jsonMake(args) {
-      const arr = Scratch.Cast.toString(args.TXT).split(args.SPLIT);
+      const arr = Cast.toString(args.TXT).split(args.SPLIT);
       const obj = {};
       arr.forEach((item) => {
         const value = item.split(args.DELIM);
@@ -1449,14 +1562,14 @@
     }
 
     arrMake(args) {
-      if (args.TYPE === "array") return Scratch.Cast.toString(args.TXT).split(args.SPLIT);
+      if (args.TYPE === "array") return Cast.toString(args.TXT).split(args.SPLIT);
       else return this.tryParse(args.TXT, 1).join(args.SPLIT);
     }
 
     objKey(args, util) {
       const arr = util.thread.stackFrames[0].SPjson;
       if (arr) {
-        if (util.thread.stackFrames[0].isArray) return Scratch.Cast.toNumber(arr[0]) + 1 ?? "";
+        if (util.thread.stackFrames[0].isArray) return Cast.toNumber(arr[0]) + 1 ?? "";
         else return arr[0] ?? "";
       }
       return "";
@@ -1541,6 +1654,36 @@
         util.thread.stackFrames[0].SPjson = entry[0];
       }
       util.startBranch(1, true);
+    }
+
+    setRawVarValue(args, util) {
+      const name = Cast.toString(args.NAME);
+      let variable, stage = runtime.getTargetForStage();
+      if (args.TYPE === "variable") {
+        variable = stage.lookupVariableByNameAndType(name, "");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "");
+
+        if (variable) variable.value = args.VALUE;
+      } else {
+        variable = stage.lookupVariableByNameAndType(name, "list");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "list");
+
+        if (variable && Array.isArray(args.VALUE)) variable.value = args.VALUE;
+      }
+    }
+
+    rawVarValue(args, util) {
+      const name = Cast.toString(args.NAME);
+      let variable, stage = runtime.getTargetForStage();
+      if (args.TYPE === "variable") {
+        variable = stage.lookupVariableByNameAndType(name, "");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "");
+      } else {
+        variable = stage.lookupVariableByNameAndType(name, "list");
+        if (!variable) variable = util.target.lookupVariableByNameAndType(name, "list");
+      }
+
+      return variable ? variable.value : "";
     }
   }
 
