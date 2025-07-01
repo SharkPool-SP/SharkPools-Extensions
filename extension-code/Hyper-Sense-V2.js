@@ -1,4 +1,4 @@
-// Name: Hyper Sense
+// Name: Hyper Sense V2
 // ID: HyperSense2SP
 // Description: Cool New Sensing Blocks
 // By: SharkPool
@@ -134,7 +134,7 @@
     getInfo() {
       return {
         id: "HyperSense2SP",
-        name: Scratch.translate("Hyper Sense"),
+        name: Scratch.translate("Hyper Sense V2"),
         color1: "#5cb1d6",
         color2: "#47a8d1",
         color3: "#2e8eb8",
