@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.33
+// Version V.1.2.34
 
 (function(Scratch) {
   "use strict";
@@ -996,7 +996,7 @@
         SB.Events.enable();
       }
       if (SB.Events.isEnabled()) SB.Events.fire(new SB.Events.BlockCreate(newBlock));
-      newBlock?.outputConnection.connect(input.connection);
+      newBlock?.outputConnection?.connect(input.connection);
     };
     SB.Blocks["procedures_call"].attachShadow_ = utils.attachShadow_;
 
