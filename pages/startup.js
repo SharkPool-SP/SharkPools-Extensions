@@ -2,6 +2,7 @@ let isPenguinMod = false, inCredits = false;
 let currentTag = "all", downloadType = "download";
 let compress = false, eraseDeprecation = false;
 let galleryData = {}, pins = [];
+let _cachedExtTags = undefined;
 
 /* Storage */
 function getCleanStorage() {
@@ -18,13 +19,15 @@ function getCleanStorage() {
   downloadType = store.downloadType || "download";
   compress = store.compress ?? false;
   eraseDeprecation = store.eraseDeprecation ?? false;
+  _cachedExtTags = store._cachedExtTags;
   if (store.pinnedExts && Array.isArray(store.pinnedExts)) pins = store.pinnedExts;
 }
 
 function updateStorage() {
   localStorage.setItem("SPgalleryInfo", JSON.stringify({
     tag: currentTag, pinnedExts: pins,
-    downloadType, compress, eraseDeprecation
+    downloadType, compress, eraseDeprecation,
+    _cachedExtTags
   }));
 }
 
