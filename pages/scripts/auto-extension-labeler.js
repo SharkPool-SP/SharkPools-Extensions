@@ -33,21 +33,34 @@ async function getRecentFiles() {
   const commitsRes = await fetch(
     `https://api.github.com/repos/${repo}/commits?since=${expiryMarker}`, { headers }
   );
+  if (!commitsRes.ok) {
+    console.warn("Failed to fetch GitHub commits", commitsRes.status);
+    return undefined;
+  }
 
   const commits = await commitsRes.json();
   const files = new Set();
   let i = 0;
   for (const commit of commits) {
-    if (i > 6) break; // dont be fetch greedy, max 7 automatic tags
+    if (i > 9) break; // dont be fetch greedy, max 10 automatic tags
     i++;
 
     const commitRes = await fetch(
       `https://api.github.com/repos/${repo}/commits/${commit.sha}`, { headers }
     );
+    if (!commitsRes.ok) {
+      console.warn("Failed to fetch GitHub commits", commitRes.status);
+      return undefined;
+    }
     const commitData = await commitRes.json();
+    const commitDate = commitData.commit.committer.date.substring(0, 10);
 
     for (const file of commitData.files || []) {
-      if (file.filename.startsWith("extension-code/")) files.add(file.filename);
+      if (file.filename.startsWith("extension-code/")) files.add({
+        ID: file.filename,
+        date: commitDate,
+        isNew: file.status === "added"
+      });
     }
   }
 
