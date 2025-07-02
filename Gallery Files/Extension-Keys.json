@@ -98,7 +98,7 @@
       "url": "extension-code/Hyper-Sense-V2.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "new",
+      "status": "",
       "date": "Re-Released: 06/23/2025"
     },
     "Keys-Plus-V2": {
@@ -343,8 +343,8 @@
       "url": "extension-code/Messages-Plus.js",
       "banner": "extension-thumbs/Messages-Plus.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
-      "date": "Last Updated: 10/29/2024"
+      "status": "update",
+      "date": "Last Updated: 07/01/2024"
     },
     "Advanced-Messages": {
       "desc": "New Message Blocks for Advanced, Non-Vanilla Purposes",
@@ -487,8 +487,8 @@
       "url": "extension-code/Renderer-Control.js",
       "banner": "extension-thumbs/Renderer-Control.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Last Updated: 12/05/2024"
+      "status": "update",
+      "date": "Last Updated: 07/01/2024"
     },
     "Timezones": {
       "desc": "Convert and get the Time in different Timezones",
