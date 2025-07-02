@@ -75,3 +75,5 @@ async function getRecentFiles() {
   updateStorage();
   return results;
 }
+
+window.fetchAutoLabeler = getRecentFiles;
