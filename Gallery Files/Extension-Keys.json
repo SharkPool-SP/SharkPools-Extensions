@@ -344,7 +344,7 @@
       "banner": "extension-thumbs/Messages-Plus.svg",
       "tags": ["all", "expanded", "utilities", "category"],
       "status": "update",
-      "date": "Last Updated: 07/01/2024"
+      "date": "Last Updated: 07/01/2025"
     },
     "Advanced-Messages": {
       "desc": "New Message Blocks for Advanced, Non-Vanilla Purposes",
@@ -488,7 +488,7 @@
       "banner": "extension-thumbs/Renderer-Control.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "update",
-      "date": "Last Updated: 07/01/2024"
+      "date": "Last Updated: 07/01/2025"
     },
     "Timezones": {
       "desc": "Convert and get the Time in different Timezones",
