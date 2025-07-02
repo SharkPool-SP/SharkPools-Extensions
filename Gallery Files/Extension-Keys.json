@@ -343,6 +343,7 @@
       "url": "extension-code/Messages-Plus.js",
       "banner": "extension-thumbs/Messages-Plus.svg",
       "tags": ["all", "expanded", "utilities", "category"],
+      "overrideLabeler": true,
       "status": "update",
       "date": "Last Updated: 07/01/2025"
     },
@@ -487,6 +488,7 @@
       "url": "extension-code/Renderer-Control.js",
       "banner": "extension-thumbs/Renderer-Control.svg",
       "tags": ["all", "utilities", "expanded", "category"],
+      "overrideLabeler": true,
       "status": "update",
       "date": "Last Updated: 07/01/2025"
     },
@@ -595,6 +597,7 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
+      "overrideLabeler": true,
       "status": "update",
       "date": "Last Updated: 06/29/2025"
     },
@@ -649,8 +652,9 @@
       "url": "extension-code/Example.js",
       "banner": "extension-thumbs/Example.svg",
       "tags": ["all", "utilities", "expanded", "fetching", "category", "addon", "searchQ"],
-      "status": "",
-      "date": ""
+      "overrideLabeler": false,
+      "status": "", // done by auto-labeler or SharkPool
+      "date": "" // done by auto-labeler or SharkPool
     }
   },
   "site": {
