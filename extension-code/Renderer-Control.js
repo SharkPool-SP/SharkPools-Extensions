@@ -3,7 +3,7 @@
 // Description: Control Visuals of Sprites, Backdrops, Pen, Video, and More!
 // By: SharkPool
 
-// Version V.1.2.01
+// Version V.1.2.1
 
 (function (Scratch) {
   "use strict";
@@ -15,6 +15,13 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   const render = vm.renderer;
+
+  let autoRedraw = true;
+  const ogDraw = render.draw;
+  render.draw = function (...args) {
+    if (autoRedraw) ogDraw.call(this, ...args);
+  }
+
   class SPrenderControl {
     getInfo() {
       return {
@@ -155,9 +162,27 @@
               ID: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
             }
           },
+          "---",
+          {
+            opcode: "toggleAutoRedraw",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("toggle auto redraw [TYPE]"),
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "TOGGLER" },
+            }
+          },
+          {
+            opcode: "forceRedraw",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("force redraw")
+          },
         ],
         menus: {
           XY: ["x", "y"],
+          TOGGLER: [
+            { text: Scratch.translate("on"), value: "on" },
+            { text: Scratch.translate("off"), value: "off" }
+          ],
           TARGETS: { acceptReporters: true, items: "_getTargets" },
           EFFECTS: { acceptReporters: true, items: "_getEffects" }
         }
@@ -173,7 +198,7 @@
         { text: Scratch.translate("Pen Layer"), value: "_pen_" }
       ];
       // Custom Drawable Layer (CST's 3D or Simple3D Exts for Example)
-      for (var i = 0; i < render._allDrawables.length; i++) {
+      for (const i of render._drawList) {
         const drawable = render._allDrawables[i];
         if (drawable !== undefined && drawable.customDrawableName !== undefined) spriteNames.push({
           text: drawable.customDrawableName, value: `${i}=SP-custLayer`
@@ -221,7 +246,7 @@
         if (target.drawableID === ID) return `${target.getName()}${target.isOriginal ? "" : " (Clone)"}`;
       }
       // Custom Layer Check
-      for (var i = 0; i < render._allDrawables.length; i++) {
+      for (const i of render._drawList) {
         const drawable = render._allDrawables[i];
         if (
           drawable.customDrawableName !== undefined && i === ID
@@ -268,8 +293,9 @@
 
     scaleOfID(args) {
       const allLay = vm.renderer._drawList;
-      if (allLay.indexOf(args.ID) !== -1) return render._allDrawables[args.ID]._scale[args.XY === "x" ? 0 : 1];
-      return 0;
+      const isX = args.XY === "x" ? 0 : 1;
+      if (allLay.indexOf(args.ID) === -1) return 0;
+      return render._allDrawables[args.ID]._scale[isX];
     }
 
     directID(args) {
@@ -280,8 +306,8 @@
 
     dirOfID(args) {
       const allLay = render._drawList;
-      if (allLay.indexOf(args.ID) !== -1) return render._allDrawables[args.ID]._direction;
-      return 0;
+      if (allLay.indexOf(args.ID) === -1) return 0;
+      return render._allDrawables[args.ID]._direction;
     }
 
     rotateID(args) {
@@ -296,28 +322,44 @@
 
     rotateOfID(args) {
       const allLay = render._drawList;
-      if (allLay.indexOf(args.ID) !== -1) return render._allDrawables[args.ID]._skinScale[args.XY === "x" ? 0 : 1] / 2;
-      return 0;
+      const isX = args.XY === "x" ? 0 : 1;
+      if (allLay.indexOf(args.ID) === -1) return 0;
+      return render._allDrawables[args.ID]._skinScale[isX] / 2;
     }
 
     positionID(args) {
       args.x = Scratch.Cast.toNumber(args.x);
       args.y = Scratch.Cast.toNumber(args.y);
       const allLay = render._drawList;
-      if (allLay.indexOf(args.ID) !== -1) render._allDrawables[args.ID].updatePosition([args.x, args.y]);
+      if (allLay.indexOf(args.ID) !== -1) {
+        render._allDrawables[args.ID].updatePosition([args.x, args.y]);
+      }
     }
 
     posOfID(args) {
       const allLay = render._drawList;
-      if (allLay.indexOf(args.ID) !== -1) return render._allDrawables[args.ID]._position[args.XY === "x" ? 0 : 1];
-      return 0;
+      const isX = args.XY === "x" ? 0 : 1;
+      if (allLay.indexOf(args.ID) === -1) return 0;
+      return render._allDrawables[args.ID]._position[isX];
     }
 
     resetID(args) {
       const effects = this._getEffects();
       for (var i = 0; i < effects.length; i++) {
-        this.effectID({ ID : args.ID, EFFECT : effects[i], NUM : 0 });
+        this.effectID({ ID: args.ID, EFFECT: effects[i], NUM: 0 });
       }
+    }
+
+    toggleAutoRedraw(args) {
+      autoRedraw = args.TYPE === "on";
+    }
+
+    forceRedraw() {
+      const ogAutoRedraw = autoRedraw;
+      autoRedraw = true;
+      render.dirty = true;
+      render.draw();
+      autoRedraw = ogAutoRedraw;
     }
   }
 
