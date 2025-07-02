@@ -1,18 +1,23 @@
-
 **How to add YOUR Extension to SharkPool's Extension Collection**
+---
 
 ***Step-By-Step Tutorial***
 
 **Step 1**: Make Your Extension
+---
   - Rule 1: Please Follow **Normal** Extension JS Format, extensions made with Turbobuilder or anything alike are **Not Allowed**
 
-**Step 2**: Make a Thumbnail for Your Extension
+Add your Extension Code to '[extension-code](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)'
+
+**Step 2**: Make a Banner for Your Extension
+---
   - Rule 1: It **MUST** be 300x150px SVG (without Border)
-  - Rule 2: It **MUST** have a curved outline bordering the thumbnail (Copy the Borders used in Existing Thumbnails)
+  - Rule 2: It **MUST** have a curved outline bordering the Banner (Copy the Borders used in Existing Banners)
 
-**Step 3**: Add your Extension Code and Thumbnail to the '[extension-code](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-code)' and '[extension-thumbs](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)' folders on Github
+Add your Banner to '[extension-thumbs](https://github.com/SharkPool-SP/SharkPools-Extensions/tree/main/extension-thumbs)'
 
-**Step 4**: Edit and Add to the [Extension Keys JSON](https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension-Keys.json)
+**Step 3**: Edit [Extension Keys JSON](https://github.com/SharkPool-SP/SharkPools-Extensions/blob/main/Gallery%20Files/Extension-Keys.json)
+---
   - Rule 1: Under the 'extensions' key, you need to add a new sub-key right before the 'example' extension
   - Rule 2: Format it like this, replace the [text] with your links/text:
     ```
@@ -21,6 +26,7 @@
        "creator": "[Your Creator Name]",
        "url": "[File path to your Extension Code]",
        "banner": "[File path to your Extension Banner]",
+       "overrideLabeler": [false],
        "tags": "[Array of Tags that Relate to your Extension]"
        "status": "[use 'new' if its a new extension or 'update' if its an update to an existing extension]"
     }
@@ -34,6 +40,7 @@
     - 'fetching' --> Extensions that use 'fetch' or anything related to it
     - 'addon' --> Extensions that are Addons to the Editor (i.e Better Comments, Sprite Panel)
 
-**Step 5**: Pull Request and You're Done!
+**Step 4**: Pull Request and You're Done!
+---
 
-**Note: Remember to include all files and changes (SVG Thumbnail, Extension Code, and JSON additions: Code Link, Credits, Name, Tags))**
+**Note: Remember to include all files and changes (SVG Banner, Extension Code, and JSON additions: Code Link, Credits, Name, Tags))**
