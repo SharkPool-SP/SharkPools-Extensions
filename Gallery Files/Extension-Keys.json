@@ -653,8 +653,8 @@
       "banner": "extension-thumbs/Example.svg",
       "tags": ["all", "utilities", "expanded", "fetching", "category", "addon", "searchQ"],
       "overrideLabeler": false,
-      "status": "", // done by auto-labeler or SharkPool
-      "date": "" // done by auto-labeler or SharkPool
+      "status": "",
+      "date": ""
     }
   },
   "site": {
