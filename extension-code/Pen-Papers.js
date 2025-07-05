@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.2
+// Version V.1.0.3
 
 (function (Scratch) {
   "use strict";
@@ -113,6 +113,16 @@
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               NAME: { type: Scratch.ArgumentType.STRING, menu: "PAPERS" }
+            },
+          },
+          {
+            opcode: "touchingPaperPoint",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is paper [NAME] touching x [X] y [Y] ?",
+            arguments: {
+              NAME: { type: Scratch.ArgumentType.STRING, menu: "PAPERS" },
+              X: { type: Scratch.ArgumentType.NUMBER },
+              Y: { type: Scratch.ArgumentType.NUMBER }
             },
           },
         ],
@@ -228,6 +238,19 @@
 
       const name = Scratch.Cast.toString(args.NAME);
       if (papers[name] !== undefined) return render.isTouchingDrawables(target.drawableID, [papers[name].drawable]);
+      return false;
+    }
+
+    touchingPaperPoint(args, util) {
+      const name = Scratch.Cast.toString(args.NAME);
+      if (papers[name] !== undefined) {
+        const drawable = render._allDrawables[papers[name].drawable];
+        drawable.updateCPURenderAttributes();
+        return drawable.isTouching([
+          Scratch.Cast.toNumber(args.X),
+          Scratch.Cast.toNumber(args.Y)
+        ]);
+      }
       return false;
     }
   }
