@@ -1715,16 +1715,6 @@
     }
   }
 
-  const oldinstallTargets = vm.installTargets;
-  vm.installTargets = function(...args) {
-    // Remove the dummy block
-    if (args[0] && args[0][0]) {
-      const tempBlockId = Object.values(args[0][0].blocks._blocks).find(o => o.opcode === TEMP_BLOCK_OPCODE)?.id;
-      if (tempBlockId) delete args[0][0].blocks._blocks[tempBlockId];
-    }
-    return oldinstallTargets.apply(this, args);
-  }
-
   const ogDupSprite = vm.duplicateSprite;
   vm.duplicateSprite = function(targetId) {
     return ogDupSprite.call(this, targetId).then(() => {
