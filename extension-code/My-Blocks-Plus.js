@@ -1246,6 +1246,28 @@
   }
   patchTarget();
 
+  if (runtime.targets.length) {
+    // Make the extension stay by adding a dummy block
+    const blocks = runtime.targets[0].blocks;
+    blocks._blocks[TEMP_BLOCK_OPCODE] = {
+      opcode: TEMP_BLOCK_OPCODE, id: TEMP_BLOCK_OPCODE, fields: {},
+      next: null, parent: null, shadow: true, toLevel: true,
+      x: undefined, y: undefined
+    }
+  }
+  // project loaded, add in the temp block if it isnt there
+  runtime.once('PROJECT_LOADED', () => {
+    for (const target of runtime.targets) {
+      const blocks = Object.values(target.blocks._blocks)
+      if (blocks.some(block => block.opcode === TEMP_BLOCK_OPCODE)) return;
+    }
+    const blocks = runtime.targets[0].blocks;
+    blocks._blocks[TEMP_BLOCK_OPCODE] = {
+      opcode: TEMP_BLOCK_OPCODE, id: TEMP_BLOCK_OPCODE, fields: {},
+      next: null, parent: null, shadow: true, toLevel: true,
+      x: undefined, y: undefined
+    }
+  });
   const oldToJSON = vm.constructor.prototype.toJSON;
   vm.constructor.prototype.toJSON = function(...args) {
     if (extensionRemovable) return oldToJSON.apply(this, args);
@@ -1257,17 +1279,7 @@
       ext?.serialize();
     }
 
-    // Make the extension stay by adding a dummy block
-    const blocks = runtime.targets[0].blocks;
-    blocks._blocks[TEMP_BLOCK_OPCODE] = {
-      opcode: TEMP_BLOCK_OPCODE, id: TEMP_BLOCK_OPCODE, fields: {},
-      next: null, parent: null, shadow: false, toLevel: true,
-      x: undefined, y: undefined
-    }
     const jsonStr = oldToJSON.apply(this, args);
-    // Block IDs may have been compressed at this point
-    const tempBlockId = Object.values(blocks._blocks).find(o => o.opcode === TEMP_BLOCK_OPCODE)?.id;
-    if (tempBlockId) delete blocks._blocks[tempBlockId];
     return jsonStr;
   }
 
@@ -1701,16 +1713,6 @@
     } else {
       target.blocks.deleteBlock(blockId);
     }
-  }
-
-  const oldinstallTargets = vm.installTargets;
-  vm.installTargets = function(...args) {
-    // Remove the dummy block
-    if (args[0] && args[0][0]) {
-      const tempBlockId = Object.values(args[0][0].blocks._blocks).find(o => o.opcode === TEMP_BLOCK_OPCODE)?.id;
-      if (tempBlockId) delete args[0][0].blocks._blocks[tempBlockId];
-    }
-    return oldinstallTargets.apply(this, args);
   }
 
   const ogDupSprite = vm.duplicateSprite;
