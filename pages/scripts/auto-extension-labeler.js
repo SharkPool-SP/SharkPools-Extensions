@@ -53,7 +53,8 @@ async function getRecentFiles() {
       return undefined;
     }
     const commitData = await commitRes.json();
-    const commitDate = commitData.commit.committer.date.substring(0, 10);
+    let commitDate = commitData.commit.committer.date.substring(0, 10);
+    commitDate = `${commitDate.substring(5, commitDate.length)}-${commitDate.substring(0, 4)}`; // YYYY-MM-DD
 
     for (const file of commitData.files || []) {
       if (file.filename.startsWith("extension-code/")) files.add({
