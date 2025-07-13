@@ -6,7 +6,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // License: MIT AND LGPLv3
 
-// Version V.1.0.03
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -345,6 +345,12 @@
 
   class SP0zMenuMaker {
     constructor() {
+      /* used by My Blocks+ */
+      this.getMenus = () => customMenus;
+      this.setMenus = (menu, value) => {
+        customMenus[menu].items = value;
+      }
+
       const self = this; // To avoid slow writes every time a menu is changed
       const oldToJSON = vm.constructor.prototype.toJSON;
       vm.constructor.prototype.toJSON = function (...args) {
@@ -503,4 +509,5 @@
     refreshMagic();
     startListenerWorker();
   }
+  runtime.ext_SP0zMenuMaker = extensionInstance;
 })(Scratch);
