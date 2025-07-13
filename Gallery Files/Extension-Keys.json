@@ -343,7 +343,6 @@
       "url": "extension-code/Messages-Plus.js",
       "banner": "extension-thumbs/Messages-Plus.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "overrideLabeler": true,
       "status": "",
       "date": "Last Updated: 07/01/2025"
     },
@@ -488,7 +487,6 @@
       "url": "extension-code/Renderer-Control.js",
       "banner": "extension-thumbs/Renderer-Control.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "overrideLabeler": true,
       "status": "",
       "date": "Last Updated: 07/01/2025"
     },
@@ -562,7 +560,7 @@
       "banner": "extension-thumbs/DOM-Selector.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 07/06/2025"
+      "date": "Last Updated: 07/13/2025"
     },
     "SVG-Spritesheets": {
       "desc": "Create and Export SVG Spritesheets",
@@ -597,7 +595,6 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "overrideLabeler": true,
       "status": "",
       "date": "Last Updated: 06/29/2025"
     },
@@ -608,7 +605,7 @@
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "",
-      "date": "Last Updated: 07/06/2025"
+      "date": "Last Updated: 07/13/2025"
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
@@ -617,7 +614,7 @@
       "banner": "extension-thumbs/Dropdown-Maker.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 05/12/2025"
+      "date": "Last Updated: 07/13/2025"
     },
     "Turbo-Skins": {
       "desc": "Improved Skins extension, inspired by LilyMakesThings",
