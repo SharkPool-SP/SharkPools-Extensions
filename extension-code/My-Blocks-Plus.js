@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.34
+// Version V.1.2.4
 
 (function(Scratch) {
   "use strict";
@@ -51,6 +51,7 @@
 
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
+  let globalTargetFocus = undefined; // not to be confused with globalBlocksCache, this helps find block IDs in stacks
   
   let imgStorage = {}, imgStoreSize = 0;
 
@@ -1171,22 +1172,39 @@
     const Blocks = target.blocks.constructor;
     const oldGetProcDef = Blocks.prototype.getProcedureDefinition;
     Blocks.prototype.getProcedureDefinition = function(name) {
-      const thisDef = oldGetProcDef.call(this, name);
-      if (!thisDef && globalBlocksCache[name] && globalBlocksCache[name].blocks !== this) {
+      const definition = oldGetProcDef.call(this, name);
+      if (!definition && globalBlocksCache[name] && globalBlocksCache[name].blocks !== this) {
         return globalBlocksCache[name].blocks.getProcedureDefinition(name);
       }
-      return thisDef;
+      return definition;
     }
     const oldGetBlock = Blocks.prototype.getBlock;
     Blocks.prototype.getBlock = function(name) {
-      const thisBlock = oldGetBlock.call(this, name);
+      let thisBlock;
+
+      // globals take priority
+      if (globalTargetFocus) {
+        thisBlock = oldGetBlock.call(globalTargetFocus.blocks, name);
+        if (!thisBlock || thisBlock.next === null) globalTargetFocus = undefined;
+        if (thisBlock) return thisBlock;
+      }
+
+      thisBlock = oldGetBlock.call(this, name);
       if (thisBlock) return thisBlock;
+
+      let focusTarget;
       for (const target of this.runtime.targets) {
         if (!target.isOriginal || target.blocks === this) continue;
-        const targetBlock = oldGetBlock.call(target.blocks, name);
-        if (targetBlock) return targetBlock;
+        thisBlock = oldGetBlock.call(target.blocks, name);
+        if (thisBlock) {
+          focusTarget = target;
+          break;
+        }
       }
-      return undefined;
+
+      if (thisBlock && globalTargetFocus === undefined) globalTargetFocus = focusTarget;
+      else if (!thisBlock || thisBlock.next === null) globalTargetFocus = undefined;
+      return thisBlock;
     }
     const oldGetBranch = Blocks.prototype.getBranch;
     Blocks.prototype.getBranch = function(id, branchNum) {
@@ -1256,7 +1274,7 @@
     }
   }
   // project loaded, add in the temp block if it isnt there
-  runtime.once('PROJECT_LOADED', () => {
+  runtime.once("PROJECT_LOADED", () => {
     for (const target of runtime.targets) {
       const blocks = Object.values(target.blocks._blocks)
       if (blocks.some(block => block.opcode === TEMP_BLOCK_OPCODE)) return;
@@ -1727,6 +1745,25 @@
     });
   }
 
+  const handleCustomInputExports = (inputs) => {
+    // TODO export images too
+    if (!runtime.extensionManager.isExtensionLoaded("SP0zMenuMaker")) return;
+
+    const menuMaker = runtime.ext_SP0zMenuMaker;
+    const allMenus = menuMaker.getMenus();
+    const values = Object.values(inputs);
+
+    let output = { menus: {} };
+    for (const input of values) {
+      /* custom menu support */
+      if (input.isDrop && input.type.startsWith(CUSTOM_MENU_ID)) {
+        const name = input.type.substring(CUSTOM_MENU_ID.length, input.type.length);
+        output.menus[name] = allMenus[name].items;
+      }
+    }
+
+    return output;
+  };
   const ogExportBlocks = vm.exportStandaloneBlocks;
   vm.exportStandaloneBlocks = function(blockObjects) {
     const exported = ogExportBlocks.call(this, blockObjects);
@@ -1740,10 +1777,22 @@
       const store = storeGet(block.mutation.proccode);
       if (!store) continue;
       block.MyBlocksPlusData = store;
+      block.MyBlocksPlusExternals = handleCustomInputExports(store.inputs);
     }
     return exported;
   }
 
+  const handleCustomInputImports = (externals) => {
+    if (!runtime.extensionManager.isExtensionLoaded("SP0zMenuMaker")) return;
+
+    const menuMaker = runtime.ext_SP0zMenuMaker;
+    const menus = Object.entries(externals.menus);
+    for (const [name, items] of menus) {
+      menuMaker.setMenus(name, items);
+    }
+
+    menuMaker.refreshCategory();
+  };
   const ogShareBlocks = vm.shareBlocksToTarget;
   vm.shareBlocksToTarget = function(blocks, targetId, optFromTargetId) {
     // load potential custom block data
@@ -1751,14 +1800,27 @@
     if (blocks.constructor?.name === "Object") realBlocks = blocks.blocks;
     else realBlocks = blocks;
 
+    let hasProcBlock = false;
     for (const block of realBlocks) {
       if (block.opcode !== "procedures_prototype") continue;
-      if (block.MyBlocksPlusData) {
+      const mbpData = block?.MyBlocksPlusData;
+      if (mbpData) {
         const target = runtime.getTargetById(targetId);
-        storeSet(block.mutation.proccode, block.MyBlocksPlusData, target);
+        storeSet(block.mutation.proccode, mbpData, target);
+        handleCustomInputImports(block.MyBlocksPlusExternals);
+        hasProcBlock = true;
       }
     }
-    return ogShareBlocks.call(this, blocks, targetId, optFromTargetId);
+
+    const shared = ogShareBlocks.call(this, blocks, targetId, optFromTargetId);
+    if (hasProcBlock && Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+      setTimeout(() => {
+        const workspace = SB.mainWorkspace;
+        listNeedsRefresh = true;
+        SB.Procedures.flyoutCategory(workspace);
+      }, 10);
+    });
+    return shared;
   }
 
   class SPmbpCST {
