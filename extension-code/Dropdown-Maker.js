@@ -346,9 +346,11 @@
   class SP0zMenuMaker {
     constructor() {
       /* used by My Blocks+ */
+      this.refreshCategory = refreshMagic;
       this.getMenus = () => customMenus;
       this.setMenus = (menu, value) => {
-        customMenus[menu].items = value;
+        if (customMenus[menu]) customMenus[menu].items = value;
+        else customMenus[menu] = { items: value, acceptReporters: false };
       }
 
       const self = this; // To avoid slow writes every time a menu is changed
