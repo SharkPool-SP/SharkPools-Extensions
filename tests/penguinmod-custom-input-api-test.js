@@ -15,6 +15,17 @@
 
   if (Scratch.gui) {
     Scratch.gui.getBlockly().then(SB => {
+      function recursiveRender(block) {
+        if (!block) return;
+        while (block.parentBlock_ !== null) {
+          if (block.parentBlock_ !== null) {
+            block.render(false);
+            block = block.parentBlock_;
+          }
+        }
+        block.render(false);
+      }
+
       SB.FieldCustom.registerInput(
         "button-test",
         (() => {
@@ -137,7 +148,7 @@
           function onMouseUp() {
             isDragging = false;
             field.sourceBlock_?.setMovable(true);
-            ScratchBlocks.mainWorkspace.isDraggable = () => !!ScratchBlocks.scrollbar;
+            ScratchBlocks.mainWorkspace.isDraggable = () => !!ScratchBlocks.mainWorkspace.scrollbar;
           }
 
           function onMouseMove(e) {
@@ -157,7 +168,154 @@
           input._cleanup = () => {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+            field.sourceBlock_?.setMovable(true);
+            ScratchBlocks.mainWorkspace.isDraggable = () => !!ScratchBlocks.mainWorkspace.scrollbar;
           };
+        },
+        (block) => {},
+        (block) => {}
+      );
+
+      SB.FieldCustom.registerInput(
+        "textarea",
+        (() => {
+          const container = document.createElement('textarea');
+          container.style.background = "#fff";
+          container.style.color = "#404040";
+          container.style.width = '120px';
+          container.style.minWidth = "120px";
+          container.style.minHeight = "32px";
+          container.style.height = "50px";
+          container.style.margin = "5px 0";
+          container.style.padding = "5px";
+          container.style.borderRadius = '8px';
+          container.style.cursor = 'pointer';
+          container.style.display = 'block';
+
+          return container;
+        })(),
+        (field, input) => {
+          if (!input) return;
+
+          input.value = field.getValue();
+          let isPaused = false;
+          const observer = new ResizeObserver(entries => {
+            if (isPaused) return;
+            for (const entry of entries) {
+              isPaused = true;
+              let { width, height } = entry.contentRect;
+              width = Math.max(100, width);
+              height = Math.max(32, height);
+
+              const foreignObject = input.parentNode;
+              foreignObject.setAttribute("width", width);
+              foreignObject.setAttribute("height", height);
+
+              field.size_.width = width + 15;
+              field.size_.height = height + 25;
+              input.style.border = `solid 2px ${field.sourceBlock_?.colourTertiary_}`;
+              recursiveRender(field.sourceBlock_);
+              requestAnimationFrame(() => { isPaused = false });
+            }
+          });
+
+          observer.observe(input);
+
+          input.addEventListener("change", () => {
+            field.setValue(input.value);
+          })
+        },
+        (block) => {},
+        (block) => {}
+      );
+
+      SB.FieldCustom.registerInput(
+        "soundplayer",
+        (() => {
+          const container = document.createElement('div');
+          container.style.background = "#00000050";
+          container.style.color = "#404040";
+          container.style.width = '300px';
+          container.style.height = "90%";
+          container.style.margin = "5px 0";
+          container.style.padding = "5px";
+          container.style.borderRadius = '8px';
+          container.style.cursor = 'pointer';
+          container.style.display = 'flex';
+
+          const pausePlay = document.createElement('button');
+          pausePlay.textContent = "stop/play";
+
+          const srcBtn = document.createElement('button');
+          srcBtn.textContent = "song url";
+
+          const tracker = document.createElement('progress');
+          tracker.style.width = '100px'
+          tracker.value = 0;
+
+          container.append(pausePlay, srcBtn, tracker);
+          return container;
+        })(),
+        (field, input) => {
+  let audio = new Audio();
+    const btns = input.querySelectorAll("button");
+    const tracker = input.querySelector("progress");
+
+    // Update progress
+    const updateProgress = () => {
+      if (audio.duration) {
+        tracker.max = audio.duration;
+        tracker.value = audio.currentTime;
+      } else {
+        tracker.value = 0;
+      }
+    };
+
+    // Continuously update progress using requestAnimationFrame
+    let rafId = null;
+    const startTracking = () => {
+      const tick = () => {
+        updateProgress();
+        rafId = requestAnimationFrame(tick);
+      };
+      tick();
+    };
+    const stopTracking = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    };
+
+    // Play/pause button
+    btns[0].addEventListener("mousedown", () => {
+      if (audio.paused) {
+        audio.play();
+        startTracking();
+      } else {
+        audio.pause();
+        stopTracking();
+      }
+    });
+
+    // Set URL and load
+    btns[1].addEventListener("mousedown", () => {
+      ScratchBlocks.prompt(
+        "audio src",
+        "",
+        (value) => {
+          field.setValue(value);
+          audio.src = value;
+          tracker.value = 0;
+        },
+        "Set Song URL",
+        "broadcast_msg"
+      );
+    });
+
+    // Clean up when audio ends
+    audio.addEventListener("ended", () => {
+      stopTracking();
+      tracker.value = 0;
+    });
         },
         (block) => {},
         (block) => {}
@@ -185,20 +343,51 @@
             opcode: "sliderTest",
             blockType: Scratch.BlockType.REPORTER,
             text: "slider [THING] test",
+            disableMonitor: true,
             arguments: {
               THING: { type: Scratch.ArgumentType.CUSTOM, id: "slider-test", defaultValue: "50" }
             },
-          }
+          },
+          {
+            opcode: "textareaTest",
+            blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            extensions: ["colours_operators"],
+            text: "textarea [THING]",
+            disableMonitor: true,
+            arguments: {
+              THING: { type: Scratch.ArgumentType.CUSTOM, id: "textarea", defaultValue: "test 1 2 3 \n newline maybe?" }
+            },
+          },
+          {
+            opcode: "audioTest",
+            blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            extensions: ["colours_sounds"],
+            text: "sound [THING]",
+            disableMonitor: true,
+            arguments: {
+              THING: { type: Scratch.ArgumentType.CUSTOM, id: "soundplayer", defaultValue: "https://sharkpools-extensions.vercel.app/extension-utils/TS/Resonance-Home.mp3" }
+            },
+          },
         ],
       };
     }
 
     // Block Funcs
     buttonBlock(args) {
-      return args.THING;
+      return "no op"
     }
 
     sliderTest(args) {
+      return args.THING;
+    }
+
+    textareaTest(args) {
+      return args.THING;
+    }
+
+    audioTest(args) {
       return args.THING;
     }
   }
