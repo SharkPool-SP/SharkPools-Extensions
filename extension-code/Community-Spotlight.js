@@ -358,7 +358,7 @@
         return result;
       }
     }
-    SB.SPgradients.gradientUrls.set("SPcolorMaster", "url(#SPspotlight-GRAD)");
+    SB.SPgradients.gradientUrls.set("SPspotlight", "url(#SPspotlight-GRAD)");
   });
 
   Scratch.extensions.register(new SPspotlight());
