@@ -2,6 +2,7 @@
 // ID: SPevents
 // Description: Events from the Runtime
 // By: SharkPool
+// License: MIT
 
 // Version V.1.2.02
 
