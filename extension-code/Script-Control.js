@@ -448,8 +448,9 @@
         const gradPath = SB.SPgradients.gradientUrls.get(this.type.slice(0, this.type.indexOf("_")));
         if (gradPath && this?.svgPath_ && this?.category_) {
           const svg = this.svgPath_;
+          const fill = svg.getAttribute("fill");
           this.svgPath_.setAttribute(
-            svg.getAttribute("fill") === color1 ? "fill" : "stroke",
+            fill === color1 || fill === gradPath ? "fill" : "stroke",
             gradPath
           );
         }
