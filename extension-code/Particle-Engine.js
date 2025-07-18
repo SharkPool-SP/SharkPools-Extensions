@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.2.0.1
+// Version V.2.0.2
 
 (function (Scratch) {
   "use strict";
@@ -262,6 +262,7 @@ void main() {
     } = engine;
     const { width, height } = canvas;
     const delta = interpolate ? 1 + deltaTime : 1;
+    const lifeRate = 0.01 * delta;
 
     // Clear canvas
     twgl.bindFramebufferInfo(gl, null);
@@ -322,6 +323,11 @@ void main() {
           speed, gravX, gravY, streX, eStreX, streY, eStreY, accelRad, accelTan,
           sinW, sinS, cosW, cosS, fIn, fOut, sCol, eCol
         } = particle;
+        /* do not draw if dead */
+        if (particle.life - lifeRate <= 0) {
+          thisData.delete(particle);
+          continue;
+        }
 
         const dx = x - (pos[0] + width * 0.5);
         const dy = y - (pos[1] + height * 0.5);
@@ -351,14 +357,18 @@ void main() {
         }
 
         particle.ind++;
-        particle.life -= 0.01 * delta;
-        if (particle.life <= 0) {
-          thisData.delete(particle);
-          continue;
-        }
+        particle.life -= lifeRate;
 
+        const screenX = particle.x + width * 0.5;
+        const screenY = particle.y + height * 0.5;
         const sizeX = tWidth * size * streX;
         const sizeY = tHeight * size * streY;
+        /* do not draw if out-of-bounds */
+        if (
+          screenX + sizeX < 0 || screenX - sizeX > width ||
+          screenY + sizeY < 0 || screenY - sizeY > height
+        ) continue;
+
         const posNDC = [particle.x + (width * .5), particle.y + (height * .5), 0];
 
         let matrix = twgl.m4.translate(projection, posNDC);
