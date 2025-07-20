@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.4
+// Version V.1.2.41
 
 (function(Scratch) {
   "use strict";
@@ -919,6 +919,7 @@
           let connection, newInput;
           if (type === "brc") {
             connection = this.makeConnection_(SB.NEXT_STATEMENT);
+            if (isPM) connection.setCheck("normal");
             newInput = new SB.Input(SB.NEXT_STATEMENT, input.name, this, connection);
           } else {
             const imageURL = getStoredImage(store.inputs[input.name].src);
@@ -958,14 +959,19 @@
         // ScratchBlocks ways of getting the next block won't work while the blocks are being created
         const actualNextBlock = this.getNextBlock() || vm?.editingTarget?.blocks?.getBlock(this.id)?.next || (domToBlockXml && domToBlockXml.querySelector("next"));
         const isReturner = isPM ? this.output_ : this.return_;
-        if (!store.isTerminal !== undefined && !isReturner && !actualNextBlock) this.setNextStatement(!store.isTerminal, this.type === "procedures_prototype" ? true : undefined);
+        if (!store.isTerminal !== undefined && !isReturner && !actualNextBlock) {
+          this.setNextStatement(
+            !store.isTerminal,
+            this.type === "procedures_prototype" ? true : isPM ? "normal" : undefined
+          );
+        }
       } else {
         // The insertion marker should copy the terminal-ness of the source block,
         // otherwise Blockly will throw an error
         const targetBlock = this.workspace?.currentGesture_?.targetBlock_;
         // targetBlock doesn't exist when dragging to the start of a stack
         // In this case, it should always be a stack block
-        this.setNextStatement(targetBlock ? !!targetBlock?.nextConnection : true);
+        this.setNextStatement(targetBlock ? !!targetBlock?.nextConnection : true, isPM ? "normal" : undefined);
       }
     }
     for (const opcode of ["procedures_call", "procedures_prototype", "procedures_declaration"]) {
@@ -1086,10 +1092,10 @@
       if (!block.isInsertionMarker()) {
         const store = storeGet(block.procCode_);
         if (store && store.isTerminal && block.nextConnection && !block.getNextBlock())
-          block.setNextStatement(!store.isTerminal);
+          block.setNextStatement(!store.isTerminal, isPM ? "normal" : undefined);
       } else {
         // The insertion marker should copy the next connection of the source block
-        block.setNextStatement(Boolean(block.getNextBlock()));
+        block.setNextStatement(Boolean(block.getNextBlock()), isPM ? "normal" : undefined);
       }
     }
     // For the previous block when starting a drag of the current block
