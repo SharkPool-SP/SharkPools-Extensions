@@ -145,7 +145,7 @@
       "banner": "extension-thumbs/Particle-Engine.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 04/21/2025"
+      "date": "Last Updated: 07/20/2025"
     },
     "Particle-Tools": {
       "desc": "Tools that make creating Particle Systems easy",
@@ -605,7 +605,7 @@
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "",
-      "date": "Last Updated: 07/13/2025"
+      "date": "Last Updated: 07/20/2025"
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
