@@ -483,13 +483,25 @@
         }
         customMenus = menus;
         refreshMagic();
-        if (typeof scaffolding === "undefined") {
-          // Remove Menu Blocks that no Longer Exist
-          const allBlocks = ScratchBlocks.mainWorkspace.blockDB_;
-          const menuNames = Object.keys(customMenus);
-          for (const [key, block] of Object.entries(allBlocks)) {
+
+        // Remove Menu Blocks that no Longer Exist
+        const menuNames = Object.keys(customMenus);
+        if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+          const allBlocks = SB.mainWorkspace.blockDB_;
+          for (const block of Object.values(allBlocks)) {
             if (block.type.startsWith("SP0zMenuMaker_menu_")) {
               if (menuNames.indexOf(block.type.replace("SP0zMenuMaker_menu_", "")) === -1) block.dispose();
+            }
+          }
+        });
+        if (typeof scaffolding === "undefined") {
+          for (const target of runtime.targets) {
+            const blockCache = target.blocks;
+            for (const block of Object.values(blockCache._blocks)) {
+              if (
+                block.opcode.startsWith("SP0zMenuMaker_menu_") && 
+                menuNames.indexOf(block.opcode.replace("SP0zMenuMaker_menu_", "")) === -1
+              ) blockCache.deleteBlock(block.id, true);
             }
           }
         }
