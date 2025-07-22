@@ -1225,7 +1225,7 @@
     }
     const oldPopProcCache = Blocks.prototype.populateProcedureCache;
     Blocks.prototype.populateProcedureCache = function() {
-      if (this._cache.proceduresPopulated) return;
+      if (this.isMbpPopulated) return;
       refreshGlobalBlocksCache();
       oldPopProcCache.call(this);
       for (const proccode of Object.keys(globalBlocksCache)) {
@@ -1236,6 +1236,7 @@
         this._cache.procedureParamNames[proccode] = target.blocks._cache.procedureParamNames[proccode];
         this._cache.procedureDefinitions[proccode] = target.blocks._cache.procedureDefinitions[proccode];
       }
+      this.isMbpPopulated = true;
     };
     const oldGetInputs = Blocks.prototype.getInputs;
     Blocks.prototype.getInputs = function(block) {
