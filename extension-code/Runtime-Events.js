@@ -2,6 +2,7 @@
 // ID: SPevents
 // Description: Events from the Runtime
 // By: SharkPool
+// License: MIT
 
 // Version V.1.2.02
 
@@ -29,6 +30,8 @@
     for (let i = 0; i < threads.length; i++) { threads[i].SPError = args || "" }
     return er.apply(this, args);
   }
+
+  const color1 = "#7b9cbb";
 
   class SPevents {
     constructor() {
@@ -82,11 +85,12 @@
         for (let i = 0; i < threads.length; i++) { threads[i].SPError = e.error || e.message }
       });
     }
+
     getInfo() {
       return {
         id: "SPevents",
         name: "Runtime Events",
-        color1: "#7b9cbb",
+        color1,
         color2: "#5a738a",
         color3: "#394958",
         menuIconURI,
@@ -186,40 +190,38 @@
     lastError(_, util) { return util.thread.SPError ?? "" }
   }
 
-  function add2Body() {
-    var grad = document.createElement("div");
-    grad.innerHTML = `
-      <svg><defs>
-        <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPevents-GRAD1">
-        <stop offset="0" stop-color="#7b9cbb"/><stop offset="0.5" stop-color="#435b67"/></linearGradient>
-      </defs></svg>`;
-    document.body.append(grad);
-  }
   if (Scratch.gui) Scratch.gui.getBlockly().then((SB) => {
+    function add2Body() {
+      const grad = document.querySelector(`div[class="SPgradCache"]`) || document.createElement("div");
+      grad.setAttribute("class", "SPgradCache");
+      grad.innerHTML = `
+        ${grad.innerHTML}
+        <svg><defs>
+          <linearGradient x1="240" y1="0" x2="240" y2="100" gradientUnits="userSpaceOnUse" id="SPevents-GRAD">
+          <stop offset="0" stop-color="#7b9cbb"/><stop offset="0.5" stop-color="#435b67"/></linearGradient>
+        </defs></svg>`;
+      document.body.append(grad);
+    }
     add2Body();
     if (!SB?.SPgradients?.patched) {
-      // Gradient Patch by 0znzw & SharkPool
-      SB.SPgradients = { gradientUrls: {}, patched: false };
-      const BSP = SB.BlockSvg.prototype, BSPR = BSP.render;
-      BSP.render = function(...args) {
-        const blockTheme = ReduxStore.getState().scratchGui?.theme?.theme?.blocks;
-        const res = BSPR.apply(this, args);
-        let category;
-        if (this?.svgPath_ && this?.category_ && (category = this.type.slice(0, this.type.indexOf("_"))) && SB.SPgradients.gradientUrls[category]) {
-          const urls = SB.SPgradients.gradientUrls[category];
-          if (urls) {
-            this.svgPath_.setAttribute("fill", urls[0]);
-            if (blockTheme === "dark") {
-              this.svgPath_.setAttribute("fill-opacity", ".5");
-              this.svgPath_.setAttribute("stroke", "#8fc2db");
-            }
-          }
+      /* Gradient Patch by SharkPool, inspired by 0znzw */
+      SB.SPgradients = { gradientUrls: new Map(), patched: true };
+      const ogBlockRender = SB.BlockSvg.prototype.render;
+      SB.BlockSvg.prototype.render = function(...args) {
+        const result = ogBlockRender.apply(this, args);
+        const gradPath = SB.SPgradients.gradientUrls.get(this.type.slice(0, this.type.indexOf("_")));
+        if (gradPath && this?.svgPath_ && this?.category_) {
+          const svg = this.svgPath_;
+          const fill = svg.getAttribute("fill");
+          this.svgPath_.setAttribute(
+            fill === color1 || fill === gradPath ? "fill" : "stroke",
+            gradPath
+          );
         }
-        return res;
+        return result;
       }
-      SB.SPgradients.patched = true;
     }
-    ScratchBlocks.SPgradients.gradientUrls["SPevents"] = ["url(#SPevents-GRAD1)"];
+    SB.SPgradients.gradientUrls.set("SPevents", "url(#SPevents-GRAD)");
   });
 
   Scratch.extensions.register(new SPevents());
