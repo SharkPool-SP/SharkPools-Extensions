@@ -405,7 +405,7 @@
 
     whenChanged(args, util) {
       if (typeof util.thread.sharktilsPars === "undefined") util.thread.stackFrames[0].sharktilsPars = {};
-      const blockId = util.thread.peekStack();
+      const blockId = `${util.target.id}${util.thread.peekStack()}`;
       const input = args.INPUT;
       if (!lastValues[blockId]) lastValues[blockId] = input;
       if (lastValues[blockId] !== input) {
