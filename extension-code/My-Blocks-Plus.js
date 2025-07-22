@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.41
+// Version V.1.2.42
 
 (function(Scratch) {
   "use strict";
@@ -52,7 +52,8 @@
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
   let globalTargetFocus = undefined; // not to be confused with globalBlocksCache, this helps find block IDs in stacks
-  
+  let loadingProjectCacheCheck = false;
+
   let imgStorage = {}, imgStoreSize = 0;
 
   let extensionRemovable = false;
@@ -1225,7 +1226,11 @@
     }
     const oldPopProcCache = Blocks.prototype.populateProcedureCache;
     Blocks.prototype.populateProcedureCache = function() {
-      if (this.isMbpPopulated) return;
+      if (loadingProjectCacheCheck) {
+        if (this.isMbpPopulated) return;
+      } else {
+        if (this._cache.proceduresPopulated) return;
+      }
       refreshGlobalBlocksCache();
       oldPopProcCache.call(this);
       for (const proccode of Object.keys(globalBlocksCache)) {
@@ -1236,7 +1241,10 @@
         this._cache.procedureParamNames[proccode] = target.blocks._cache.procedureParamNames[proccode];
         this._cache.procedureDefinitions[proccode] = target.blocks._cache.procedureDefinitions[proccode];
       }
-      this.isMbpPopulated = true;
+      if (loadingProjectCacheCheck) {
+        this.isMbpPopulated = true;
+        loadingProjectCacheCheck = false;
+      }
     };
     const oldGetInputs = Blocks.prototype.getInputs;
     Blocks.prototype.getInputs = function(block) {
@@ -1282,6 +1290,7 @@
   }
   // project loaded, add in the temp block if it isnt there
   runtime.once("PROJECT_LOADED", () => {
+    loadingProjectCacheCheck = true;
     for (const target of runtime.targets) {
       const blocks = Object.values(target.blocks._blocks)
       if (blocks.some(block => block.opcode === TEMP_BLOCK_OPCODE)) return;
