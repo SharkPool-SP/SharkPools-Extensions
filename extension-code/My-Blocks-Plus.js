@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.42
+// Version V.1.2.5
 
 (function(Scratch) {
   "use strict";
@@ -52,7 +52,6 @@
   let proceduresXML = "", tempStore = {}, storage = {};
   let globalBlocksCache = {};
   let globalTargetFocus = undefined; // not to be confused with globalBlocksCache, this helps find block IDs in stacks
-  let loadingProjectCacheCheck = false;
 
   let imgStorage = {}, imgStoreSize = 0;
 
@@ -1226,13 +1225,8 @@
     }
     const oldPopProcCache = Blocks.prototype.populateProcedureCache;
     Blocks.prototype.populateProcedureCache = function() {
-      if (loadingProjectCacheCheck) {
-        if (this.isMbpPopulated) return;
-      } else {
-        if (this._cache.proceduresPopulated) return;
-      }
-      refreshGlobalBlocksCache();
       oldPopProcCache.call(this);
+      refreshGlobalBlocksCache();
       for (const proccode of Object.keys(globalBlocksCache)) {
         const target = globalBlocksCache[proccode];
         if (target.blocks === this) continue;
@@ -1240,10 +1234,6 @@
         // add global blocks to this cache if they aren't present already
         this._cache.procedureParamNames[proccode] = target.blocks._cache.procedureParamNames[proccode];
         this._cache.procedureDefinitions[proccode] = target.blocks._cache.procedureDefinitions[proccode];
-      }
-      if (loadingProjectCacheCheck) {
-        this.isMbpPopulated = true;
-        loadingProjectCacheCheck = false;
       }
     };
     const oldGetInputs = Blocks.prototype.getInputs;
@@ -1290,7 +1280,6 @@
   }
   // project loaded, add in the temp block if it isnt there
   runtime.once("PROJECT_LOADED", () => {
-    loadingProjectCacheCheck = true;
     for (const target of runtime.targets) {
       const blocks = Object.values(target.blocks._blocks)
       if (blocks.some(block => block.opcode === TEMP_BLOCK_OPCODE)) return;
@@ -1596,7 +1585,7 @@
     const globalStore = globalBlocksCache[name];
     if (globalStore !== undefined) return storage[globalStore.id]?.[name] ?? {};
 
-    const id = (target || vm.editingTarget).id;
+    const id = (target || vm.editingTarget)?.id;
     return storage[id]?.[name] ?? {};
   }
   function storeDel(name, target = null) {
@@ -1761,6 +1750,7 @@
     });
   }
 
+  /* Backpack Support (BLOCKS) */
   const handleCustomInputExports = (inputs) => {
     // TODO export images too
     if (!runtime.extensionManager.isExtensionLoaded("SP0zMenuMaker")) return;
@@ -1838,9 +1828,69 @@
     });
     return shared;
   }
+  /* Backpack Support (SPRITES) */
+  const ogExportSprite = vm.exportSprite;
+  vm.exportSprite = function(...args) {
+    // inject our dummy block to prevent extension deletion
+    const targetID = args[0];
+    if (storage[targetID]) {
+      const target = runtime.getTargetById(targetID);
+      target.blocks._blocks[TEMP_BLOCK_OPCODE] = {
+        opcode: TEMP_BLOCK_OPCODE, id: TEMP_BLOCK_OPCODE, fields: {},
+        next: null, parent: null, shadow: true, toLevel: true,
+        x: undefined, y: undefined
+      };
+    }
+    return ogExportSprite.call(this, ...args);
+  }
+  window.test = storage;
+  window.test2 = () => {listNeedsRefresh = true};
+  const ogImportSprite = vm._addSprite3;
+  vm._addSprite3 = function(...args) {
+    const importTarget = args[0];
+    // remove dummy block if present, this is never the stage (where its saved) so nothing bad should happen
+    delete importTarget.blocks[TEMP_BLOCK_OPCODE];
+
+    // extract storage to copy over
+    let stored;
+    if (isPM) {
+      stored = importTarget.extensionData["SPmbpCST"].SPmbpCST;
+      if (stored) {
+        runtime.once("targetWasCreated", (target) => {
+          if (Scratch.gui) Scratch.gui.getBlockly().then(SB => setTimeout(() => {
+            storage[target.id] = stored[importTarget.id];
+            listNeedsRefresh = true;
+            SB.Procedures.flyoutCategory(SB.mainWorkspace);
+            queueMicrotask(() => vm.emitWorkspaceUpdate());
+          }, 100));
+        });
+      }
+    } else {
+      runtime.once("targetWasCreated", (target) => queueMicrotask(() => {
+        stored = target.extensionStorage["SPmbpCST"];
+        if (stored) {
+          storage[target.id] = stored;
+          listNeedsRefresh = true;
+          let hasGlobal = false;
+          for (const proc of Object.values(stored)) {
+            if (proc.global === true) {
+              hasGlobal = true;
+              break;
+            } 
+          }
+
+          if (hasGlobal && Scratch.gui) Scratch.gui.getBlockly().then(SB => setTimeout(() => {
+            listNeedsRefresh = true;
+            SB.Procedures.flyoutCategory(SB.mainWorkspace);
+          }, 100));
+        }
+      }));
+    }
+
+    return ogImportSprite.call(this, ...args);
+  }
 
   class SPmbpCST {
-    constructor() {}
     getInfo() {
       return {
         id: "SPmbpCST",
