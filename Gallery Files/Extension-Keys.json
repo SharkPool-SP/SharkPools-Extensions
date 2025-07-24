@@ -205,11 +205,11 @@
     "Recording": {
       "desc": "Blocks for Recording your Microphone while your Project runs",
       "creator": "SharkPool",
-      "url": "extension-code/Recording.js",
+      "url": "extension-code/Recording-V2.js",
       "banner": "extension-thumbs/Recording.svg",
       "tags": ["all", "utilities"],
       "status": "",
-      "date": "Last Updated: 08/26/2024"
+      "date": "Last Updated: 07/03/2025"
     },
     "Newgrounds-Audio": {
       "desc": "Fetch Audio and Audio Information from Newgrounds. Works best with Tune Shark V3",
@@ -436,6 +436,15 @@
       "status": "",
       "date": "Last Updated: 12/30/2024"
     },
+    "Events-Plus": {
+      "desc": "New Event Blocks",
+      "creator": "SharkPool",
+      "url": "extension-code/Events-Plus.js",
+      "banner": "extension-thumbs/Events-Plus.svg",
+      "tags": ["all", "utilities", "expanded", "category"],
+      "status": "",
+      "date": "Released: 07/23/2025"
+    },
     "Runtime-Events": {
       "desc": "Detect Events from Runtime",
       "creator": "SharkPool",
@@ -605,7 +614,7 @@
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
       "status": "",
-      "date": "Last Updated: 07/21/2025"
+      "date": "Last Updated: 07/23/2025"
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
