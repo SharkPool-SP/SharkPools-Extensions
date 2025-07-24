@@ -355,6 +355,24 @@
       "status": "",
       "date": "Last Updated: 04/05/2025"
     },
+    "Events-Plus": {
+      "desc": "New Event Blocks",
+      "creator": "SharkPool",
+      "url": "extension-code/Events-Plus.js",
+      "banner": "extension-thumbs/Events-Plus.svg",
+      "tags": ["all", "utilities", "expanded", "category"],
+      "status": "",
+      "date": "Released: 07/23/2025"
+    },
+    "Runtime-Events": {
+      "desc": "Detect Events from Runtime",
+      "creator": "SharkPool",
+      "url": "extension-code/Runtime-Events.js",
+      "banner": "extension-thumbs/Runtime-Events.svg",
+      "tags": ["all", "expanded", "utilities", "category"],
+      "status": "",
+      "date": "Last Updated: 08/11/2024"
+    },
     "Fetch-Plus": {
       "desc": "Fetch and Encode Content from URLs while viewing the Progress and Status of the Fetch",
       "creator": "SharkPool",
@@ -435,24 +453,6 @@
       "tags": ["all", "utilities"],
       "status": "",
       "date": "Last Updated: 12/30/2024"
-    },
-    "Events-Plus": {
-      "desc": "New Event Blocks",
-      "creator": "SharkPool",
-      "url": "extension-code/Events-Plus.js",
-      "banner": "extension-thumbs/Events-Plus.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
-      "date": "Released: 07/23/2025"
-    },
-    "Runtime-Events": {
-      "desc": "Detect Events from Runtime",
-      "creator": "SharkPool",
-      "url": "extension-code/Runtime-Events.js",
-      "banner": "extension-thumbs/Runtime-Events.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
-      "date": "Last Updated: 08/11/2024"
     },
     "Speech-Bubbles": {
       "desc": "Customizable Speech Bubbles",
