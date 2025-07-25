@@ -303,7 +303,7 @@
     },
     "Since-2000": {
       "desc": "Expansion of the 'since 2000' Blocks",
-      "creator": "ION, 0znzw",
+      "creator": "ionslayer, 0znzw",
       "url": "extension-code/Since-2000.js",
       "banner": "extension-thumbs/Since-2000.svg",
       "tags": ["all", "expanded"],
@@ -501,7 +501,7 @@
     },
     "Timezones": {
       "desc": "Convert and get the Time in different Timezones",
-      "creator": "ION",
+      "creator": "ionslayer",
       "url": "extension-code/Timezones.js",
       "banner": "extension-thumbs/Timezones.svg",
       "tags": ["all", "utilities"],
