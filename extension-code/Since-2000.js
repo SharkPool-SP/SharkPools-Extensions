@@ -1,7 +1,7 @@
 /**!
  * Since 2000
  * @author 0znzw (@link https://scratch.mit.edu/users/0znzw/)
- * @author ION (@link https://scratch.mit.edu/users/ionslayer/)
+ * @author ionslayer (@link https://scratch.mit.edu/users/ionslayer/)
  * @version 1.4
  * @license MIT AND LGPL-3.0
  */
