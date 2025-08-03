@@ -449,7 +449,6 @@
         if (gradPath && this?.svgPath_ && this?.category_) {
           const svg = this.svgPath_;
           const fill = svg.getAttribute("fill");
-          console.log(fill === color1, fill)
           this.svgPath_.setAttribute(
             fill === color1 || fill === gradPath ? "fill" : "stroke",
             gradPath
