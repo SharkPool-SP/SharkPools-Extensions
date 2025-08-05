@@ -112,18 +112,18 @@
       const ogBlockRender = SB.BlockSvg.prototype.render;
       SB.BlockSvg.prototype.render = function(...args) {
         const result = ogBlockRender.apply(this, args);
-        const gradPath = SB.SPgradients.gradientUrls.get(this.type.slice(0, this.type.indexOf("_")));
-        if (gradPath && this?.svgPath_ && this?.category_) {
+        const grad = SB.SPgradients.gradientUrls.get(this.type.slice(0, this.type.indexOf("_")));
+        if (grad && this?.svgPath_ && this?.category_) {
           const svg = this.svgPath_;
           this.svgPath_.setAttribute(
-            svg.getAttribute("fill") === color1 ? "fill" : "stroke",
-            gradPath
+            svg.getAttribute("fill") === grad.check ? "fill" : "stroke",
+            grad.path
           );
         }
         return result;
       }
     }
-    SB.SPgradients.gradientUrls.set("SPext", "url(#SPext-GRAD)");
+    SB.SPgradients.gradientUrls.set("SPext", { path: "url(#SPext-GRAD)", check: color1 });
   });
 
   Scratch.extensions.register(new SPext());
