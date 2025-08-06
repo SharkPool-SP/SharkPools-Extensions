@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.1
+// Version V.1.1.11
 
 (function (Scratch) {
   "use strict";
@@ -252,7 +252,7 @@
         case "SPjson.arrCheck": {
           const safeObj = this.descendInput(node.array).asUnknown();
           const safeBool = this.descendInput(node.bool).asBoolean();
-          return new exp.TypedInput(`yield* (function* () {
+          return new exp.TypedInput(`(yield* (function* () {
             function* runGenerator(gen, input) {
               let result;
               try {
@@ -271,28 +271,25 @@
               return result.value;
             }
 
-            function* genSome(arr, predicate) {
+            function* genCheck(arr, predicate) {
               for (let i = 0; i < arr.length; i++) {
-                if (yield* predicate(arr[i], i)) return true;
+                ${ node.type === "some" ?
+                  "if (yield* predicate(arr[i], i)) return true;" :
+                  "if (!(yield* predicate(arr[i], i))) return false;" 
+                }
               }
-              return false;
-            }
-            function* genEvery(arr, predicate) {
-              for (let i = 0; i < arr.length; i++) {
-                if (!(yield* predicate(arr[i], i))) return false;
-              }
-              return true;
+              return ${ node.type === "some" ? "false" : "true" };
             }
 
             const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
             const result = yield* runGenerator(
-              ${node.type === "some" ? "genSome" : "genEvery"}(p, function* (SPobjV, SPobjK) {
+              genCheck(p, function* (SPobjV, SPobjK) {
                 SPobjK++;
                 return ${safeBool};
               })
             );
             return result;
-          })()`, exp.TYPE_BOOLEAN);
+          })())`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.arrMap": {
           const safeObj = this.descendInput(node.array).asUnknown();
