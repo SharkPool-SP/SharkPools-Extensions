@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version 2.0.0
+// Version 2.0.01
 
 (function (Scratch) {
   "use strict";
@@ -612,13 +612,10 @@
       return `#${rgb.r.toString(16).padStart(2, "0")}${rgb.g.toString(16).padStart(2, "0")}${rgb.b.toString(16).padStart(2, "0")}`;
     }
 
-    getTarget(name, util, checkMouse, checkMyself, returnName) {
+    getTarget(name, util, checkMouse, checkMyself) {
       if (checkMouse && name === "_mouse_") return "_mouse_";
-      if (checkMyself && name === "_myself_") return returnName ? util.target.getName() : util.target;
-
-      const target = runtime.getSpriteTargetByName(name);
-      if (returnName) return target ? target.getName() : name;
-      else return target;
+      if (checkMyself && name === "_myself_") return util.target;
+      return runtime.getSpriteTargetByName(name);
     }
 
     updateAskMonitor() {
@@ -761,7 +758,7 @@
     }
 
     spritePointing(args, util) {
-      const target = this.getTarget(args.SPRITE1, util, false, true, false);
+      const target = this.getTarget(args.SPRITE1, util, false, true);
       if (!target) return false;
       const oldDir = target.direction;
       runtime.ext_scratch3_motion.pointTowards({ TOWARDS: args.SPRITE2 }, { ...util, target, ioQuery: util.ioQuery });
@@ -771,13 +768,13 @@
     }
 
     spriteTouchingSprite(args, util) {
-      const target = this.getTarget(args.SPRITE2, util, false, true, false);
+      const target = this.getTarget(args.SPRITE2, util, false, true);
       if (!target) return false;
       return target.sprite.clones.some((t) => t.isTouchingObject(args.SPRITE1));
     }
 
     spriteTouchingSpriteType(args, util) {
-      const target1 = this.getTarget(args.SPRITE1, util, true, true, false);
+      const target1 = this.getTarget(args.SPRITE1, util, true, true);
       const target2 = runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target1 || !target2) return false;
       if (args.TYPE === "parent") {
@@ -795,7 +792,7 @@
     }
 
     spriteTouchingClone(args, util) {
-      const target1 = this.getTarget(args.SPRITE1, util, true, true, false);
+      const target1 = this.getTarget(args.SPRITE1, util, true, true);
       const target2 = runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target1 || !target2) return false;
 
@@ -815,12 +812,23 @@
 
     spritesTouching(args, util) {
       const list = [];
-      const thisSprite = this.getTarget(args.SPRITE, util, true, true, true);
+      const thisSprite = this.getTarget(args.SPRITE, util, true, true);
+      if (!thisSprite) return "[]";
       const targets = runtime.targets;
-      for (let i = 1; i < targets.length; i++) {
-        const target = targets[i];
-        const name = `${target.getName()}${target.isOriginal ? "" : " (Clone)"}`;
-        if (target.isTouchingObject(thisSprite) && name !== thisSprite) list.push(name);
+      if (thisSprite === "_mouse_") {
+        for (let i = 1; i < targets.length; i++) {
+          const target = targets[i];
+          const name = `${target.getName()}${target.isOriginal ? "" : " (Clone)"}`;
+          if (target.isTouchingObject(thisSprite)) list.push(name);
+        }
+      } else {
+        for (let i = 1; i < targets.length; i++) {
+          const target = targets[i];
+          if (target.id === thisSprite.id) continue;
+
+          const name = `${target.getName()}${target.isOriginal ? "" : " (Clone)"}`;
+          if (render.isTouchingDrawables(thisSprite.drawableID, [target.drawableID])) list.push(name);
+        }
       }
       return JSON.stringify(list);
     }
@@ -849,7 +857,7 @@
     objTouchingColor(args, util) {
       if (args.SPRITE === "_mouse_") return this.colorAtPos(util.ioQuery("mouse", "getScratchX"), util.ioQuery("mouse", "getScratchY"));
       else {
-        const target = this.getTarget(args.SPRITE, util, false, true, false);
+        const target = this.getTarget(args.SPRITE, util, false, true);
         if (!target) return "";
         const wasVisible = target.visible;
         target.setVisible(false);
@@ -860,11 +868,11 @@
     }
 
     spriteDragMode(args, util) {
-      const target = this.getTarget(args.SPRITE, util, false, true, false);
+      const target = this.getTarget(args.SPRITE, util, false, true);
       if (target) target.setDraggable(args.DRAG === "draggable");
     }
     spriteDraggable(args, util) {
-      const target = this.getTarget(args.SPRITE, util, false, true, false);
+      const target = this.getTarget(args.SPRITE, util, false, true);
       if (target) return target[args.DRAG === "draggable" ? "draggable" : "dragging"];
       return false;
     }
