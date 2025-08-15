@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.5
+// Version V.1.2.51
 
 (function(Scratch) {
   "use strict";
@@ -611,6 +611,17 @@
     Thread = exports.Thread; execute = exports.execute;
     const { JSGenerator, ScriptTreeGenerator } = exports;
     const exp = JSGenerator.exports === undefined ? JSGenerator.unstable_exports : JSGenerator.exports;
+    if (!isPM) {
+      JSGenerator.prototype.isLastBlockInLoop = function() {
+        for (let i = this.frames.length - 1; i >= 0; i--) {
+          const frame = this.frames[i];
+          if (frame.mbpRunningBranch) return false;
+          if (!frame.isLastBlock) return false;
+          if (frame.isLoop) return true;
+        }
+        return false;
+      }
+    }
     const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
     ScriptTreeGenerator.prototype.descendStackedBlock = function(block) {
       switch (block.opcode) {
@@ -697,7 +708,8 @@
             const arg = node.arguments[i];
             if (!arg.value || !arg.mbpKey) continue;
             this.source = "";
-            this.descendStack(arg.value, new exp.Frame(false));
+            this.currentFrame.mbpRunningBranch = true;
+            this.descendStack(arg.value, new exp.Frame(false, "control.if", true)); // 3rd param used by PM
             if (this.script.yields) {
               arg.value = `function* () { ${this.source} }`;
               forceYield = true;
