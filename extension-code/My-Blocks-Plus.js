@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.51
+// Version V.1.2.52
 
 (function(Scratch) {
   "use strict";
@@ -1840,7 +1840,7 @@
     });
     return shared;
   }
-  /* Backpack Support (SPRITES) */
+  /* Backpack/Import/Export Support (SPRITES) */
   const ogExportSprite = vm.exportSprite;
   vm.exportSprite = function(...args) {
     // inject our dummy block to prevent extension deletion
@@ -1855,8 +1855,6 @@
     }
     return ogExportSprite.call(this, ...args);
   }
-  window.test = storage;
-  window.test2 = () => {listNeedsRefresh = true};
   const ogImportSprite = vm._addSprite3;
   vm._addSprite3 = function(...args) {
     const importTarget = args[0];
@@ -1866,7 +1864,7 @@
     // extract storage to copy over
     let stored;
     if (isPM) {
-      stored = importTarget.extensionData["SPmbpCST"].SPmbpCST;
+      stored = importTarget.extensionData["SPmbpCST"]?.SPmbpCST;
       if (stored) {
         runtime.once("targetWasCreated", (target) => {
           if (Scratch.gui) Scratch.gui.getBlockly().then(SB => setTimeout(() => {
