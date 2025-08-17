@@ -66,8 +66,13 @@ body {
   transform: scale(1.2);
 }
 .innerNav .navImgBig {
-  width: 70px;
-  height: 70px;
+  width: 35px;
+  height: 35px;
+  padding: 8px;
+  margin: 5px;
+  background-color: #00b8ff;
+  border: solid 5px #007dff;
+  border-radius: 50px;
   cursor: pointer;
   transition: transform 150ms ease-in-out;
   transform: scale(1);
