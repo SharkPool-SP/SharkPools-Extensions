@@ -65,6 +65,16 @@ body {
 .innerNav .navImg:hover {
   transform: scale(1.2);
 }
+.innerNav .navImgBig {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  transition: transform 150ms ease-in-out;
+  transform: scale(1);
+}
+.innerNav .navImgBig:hover {
+  transform: scale(1.1);
+}
 .tagBar {
   display: flex;
   justify-content: center;
@@ -224,11 +234,12 @@ body {
   overflow: hidden;
   animation: donateShine 2s linear infinite;
   cursor: pointer;
-  transition: transform 150ms ease-in-out;
+  transition: transform 150ms ease-in-out, margin 150ms ease-in-out;
   transform: scale(1);
 }
 .donateBtn:hover {
   transform: scale(1.1);
+  margin: 5px 15px;
 }
 
 @keyframes donateShine {
