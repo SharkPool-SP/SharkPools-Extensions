@@ -42,18 +42,33 @@ function addBtnBehaviours() {
 
   const navBtns = document.querySelectorAll(`img[class="navImg"]`);
   /* Settings Button */
-  const extDwnload = navBtns[0];
-  extDwnload.addEventListener("click", (e) => {
+  navBtns[0].addEventListener("click", (e) => {
     openSettingsPanel();
     e.stopImmediatePropagation();
   });
-
   /* Contributers Button */
-  const toContribs = navBtns[1];
-  toContribs.addEventListener("click", (e) => {
+  navBtns[1].addEventListener("click", (e) => {
     inCredits = !inCredits;
     if (inCredits) displayContributors();
     else displayExts(filterExts(galleryData.extensions));
+    e.stopImmediatePropagation();
+  });
+
+  const bigNavBtns = document.querySelectorAll(`img[class="navImgBig"]`);
+  /* Refresh Tags Button */
+  bigNavBtns[0].addEventListener("click", async (e) => {
+    /* 2 min cooldown */
+    if (Date.now() > e.target.getAttribute("delay")) {
+      e.target.setAttribute("delay", Date.now() + (2000 * 60));
+      _cachedExtTags = undefined;
+      await window.fetchAutoLabeler();
+      document.querySelector(`div[class="tagBar"] div[class="tag"][id="all"]`).click();
+      e.stopImmediatePropagation();
+    }
+  });
+  /* GitHub Button */
+  bigNavBtns[1].addEventListener("click", (e) => {
+    window.open("https://github.com/SharkPool-SP/SharkPools-Extensions");
     e.stopImmediatePropagation();
   });
 
