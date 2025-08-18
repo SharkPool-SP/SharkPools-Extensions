@@ -3,7 +3,7 @@
 // Description: Customize and Organize Lists Monitors.
 // By: SharkPool
 
-// Version 2.1.01
+// Version 2.1.02
 
 (function (Scratch) {
   "use strict";
@@ -419,7 +419,7 @@
       const { id, listMon } = this.getMonitor(args.LIST, util, true);
       if (!listMon) return;
       const items = util.target.lookupVariableById(id).value;
-      const columnCnt = Math.min(100, Math.round(Scratch.Cast.toNumber(args.NUM)));
+      const columnCnt = Math.max(1, Math.min(100, Math.round(Scratch.Cast.toNumber(args.NUM))));
       listMon.setAttribute("SPcolumnCnt", columnCnt);
       let container = listMon.querySelector(`div[class^="SPstyLists-columnRender"`);
       if (container) container.parentNode.removeChild(container);
