@@ -52,10 +52,10 @@ function addBtnBehaviours() {
     const tag = document.querySelector(`div[class="tag"][id="${currentTag}"`);
 
     if (inCredits) {
-      item.setAttribute("selected", false);
+      tag.setAttribute("selected", false);
       displayContributors();
     } else {
-      item.setAttribute("selected", true);
+      tag.setAttribute("selected", true);
       displayExts(filterExts(galleryData.extensions));
     }
     e.stopImmediatePropagation();
