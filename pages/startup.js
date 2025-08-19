@@ -49,8 +49,15 @@ function addBtnBehaviours() {
   /* Contributers Button */
   navBtns[1].addEventListener("click", (e) => {
     inCredits = !inCredits;
-    if (inCredits) displayContributors();
-    else displayExts(filterExts(galleryData.extensions));
+    const tag = document.querySelector(`div[class="tag"][id="${currentTag}"`);
+
+    if (inCredits) {
+      item.setAttribute("selected", false);
+      displayContributors();
+    } else {
+      item.setAttribute("selected", true);
+      displayExts(filterExts(galleryData.extensions));
+    }
     e.stopImmediatePropagation();
   });
 
@@ -75,15 +82,12 @@ function addBtnBehaviours() {
   /* Tags */
   const tags = document.querySelectorAll(`div[class="tag"]`);
   tags.forEach((item) => {
-    if (currentTag === item.id) {
-      item.style.backgroundColor = "#003cff";
-      item.style.borderColor = "#001fff";
-    }
+    if (currentTag === item.id) item.setAttribute("selected", true);
+
     item.addEventListener("click", (e) => {
       inCredits = false;
-      tags.forEach((i) => i.setAttribute("style", ""));
-      item.style.backgroundColor = "#003cff";
-      item.style.borderColor = "#001fff";
+      tags.forEach((i) => i.setAttribute("selected", false));
+      item.setAttribute("selected", true);
 
       currentTag = item.id;
       let s = new URLSearchParams(location.search);
