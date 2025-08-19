@@ -429,7 +429,7 @@
       if (!util.thread.stackFrames[0].oldVal) util.thread.stackFrames[0].oldVal = {};
       const oldVal = util.thread.stackFrames[0].oldVal[thisID];
       const con = oldVal !== input && oldVal !== undefined;
-      util.thread.stackFrames[0].oldVal[thisID]; = input;
+      util.thread.stackFrames[0].oldVal[thisID] = input;
       return con;
     }
 
