@@ -80,6 +80,7 @@ body {
 .innerNav .navImgBig:hover {
   transform: scale(1.1);
 }
+
 .tagBar {
   display: flex;
   justify-content: center;
@@ -110,6 +111,10 @@ body {
   border-radius: 50px;
   transition: transform 150ms ease-in-out;
   transform: scale(1);
+}
+.tagBar .tag[selected="true"] {
+  background-color: #003cff !important;
+  border-color: #001fff !important;
 }
 .tagBar .tag:hover {
   transform: scale(1.15);
