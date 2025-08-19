@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.3.4.14
+// Version V.3.4.15
 
 (function (Scratch) {
   "use strict";
@@ -424,10 +424,12 @@
     }
 
     isChanged(args, util) {
+      const thisID = util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op.id;
       const input = args.INPUT;
-      const oldVal = util.thread.stackFrames[0].oldVal;
+      if (!util.thread.stackFrames[0].oldVal) util.thread.stackFrames[0].oldVal = {};
+      const oldVal = util.thread.stackFrames[0].oldVal[thisID];
       const con = oldVal !== input && oldVal !== undefined;
-      util.thread.stackFrames[0].oldVal = input;
+      util.thread.stackFrames[0].oldVal[thisID]; = input;
       return con;
     }
 
