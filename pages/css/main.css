@@ -155,6 +155,9 @@ body {
   margin: 0;
   padding: 7px 10px 10px 10px;
   text-wrap: wrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   font-family: Sans-Serif;
   font-size: 15px;
   user-select: text;
