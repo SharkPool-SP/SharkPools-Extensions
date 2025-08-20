@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.52
+// Version V.1.2.53
 
 (function(Scratch) {
   "use strict";
@@ -1864,7 +1864,7 @@
     // extract storage to copy over
     let stored;
     if (isPM) {
-      stored = importTarget.extensionData["SPmbpCST"]?.SPmbpCST;
+      stored = importTarget.extensionData?.["SPmbpCST"]?.SPmbpCST;
       if (stored) {
         runtime.once("targetWasCreated", (target) => {
           if (Scratch.gui) Scratch.gui.getBlockly().then(SB => setTimeout(() => {
