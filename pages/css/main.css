@@ -125,9 +125,11 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  position: absolute;
+  position: relative;
+  padding: 0;
   width: 105%;
-  left: -2.5%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .ext-breaker {
   display: inline-block;
