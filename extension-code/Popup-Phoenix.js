@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.06
+// Version V.1.0.07
 
 (function (Scratch) {
   "use strict";
@@ -998,10 +998,7 @@
         ],
         menus: {
           FONTS: { acceptReporters: true, items: "getFonts" },
-          POP_STYLES: { acceptReporters: true, items: this.genStyleList("popup") },
-          LAB_STYLES: { acceptReporters: true, items: this.genStyleList("label") },
-          INP_STYLES: { acceptReporters: true, items: this.genStyleList("input") },
-          BUT_STYLES: { acceptReporters: true, items: this.genStyleList("button") },
+          POP_STYLES: { acceptReporters: true, items: this.genStyleList() },
           INPUTS: { acceptReporters: true, items: validInputs },
           BORDERS: { acceptReporters: true, items: validBorders },
           EFFECTS: { acceptReporters: true, items: validEffects },
@@ -1210,7 +1207,7 @@
       const id = Cast.toString(args.ID);
       let type = Cast.toString(args.TYPE);
 
-      const isValidInput = validInputs.findIndex((i) => { return i.value === type });
+      const isValidInput = validInputs.findIndex((i) => i.value === type);
       if (isValidInput === -1) type = "text";
       elementStorage.inputs[id] = createInput(id, type, {});
     }
@@ -1286,7 +1283,7 @@
       if (row === undefined || btn === undefined) return;
 
       const btnList = row.data.buttons;
-      const btnIndex = btnList.findIndex((i) => { return i.id === btn.data.id});
+      const btnIndex = btnList.findIndex((i) => i.id === btn.data.id);
       if (btnIndex > -1) return;
       btnList.push(btn.data);
       row.DOMelement.appendChild(btn.DOMelement);
@@ -1298,7 +1295,7 @@
       if (row === undefined || btn === undefined) return;
 
       const btnList = row.data.buttons;
-      const btnIndex = btnList.findIndex((i) => { return i.id === btn.data.id});
+      const btnIndex = btnList.findIndex((i) => i.id === btn.data.id);
       if (btnIndex === -1) return;
       btnList.splice(btnIndex, 1);
       row.DOMelement.children[btnIndex].remove();
@@ -1372,9 +1369,16 @@
 
     setInputAlign(args) {
       const id = Cast.toString(args.ID);
-      const styles = styleStorage.inputs[id] ?? genDefaultStyles(id, "input");
+      let isLabel = false
+      let styles = styleStorage.inputs[id];
+      if (!styles) {
+        styles = styleStorage.labels[id];
+        if (styles) isLabel = true;
+        else styles = genDefaultStyles(id, "input");
+      }
+
       styles["text-align"] = args.TYPE === "flex-end" ? "right" : args.TYPE;
-      updateBoxVisuals(id, "inputs");
+      updateBoxVisuals(id, isLabel ? "labels" : "inputs");
     }
 
     setInputFont(args) {
@@ -1408,7 +1412,7 @@
       let value = Cast.toString(args.VALUE);
       const path = this.getElementPath(Cast.toString(args.ELEMENT), true, true) + "s";
       const styles = styleStorage[path][id] ?? genDefaultStyles(id, path);
-      const isValidStyle = this.genStyleList().findIndex((i) => { return i.value === param });
+      const isValidStyle = this.genStyleList().findIndex((i) => i.value === param);
 
       if (!param.includes("color") && param !== "background") {
         if (param === "width" || param === "height") {
@@ -1428,7 +1432,7 @@
     setElementBorder(args) {
       const id = Cast.toString(args.ID);
       const weight = Cast.toNumber(args.WEIGHT);
-      const isBorderValid = validBorders.findIndex((i) => { return i.value === args.TYPE });
+      const isBorderValid = validBorders.findIndex((i) => i.value === args.TYPE);
       const path = this.getElementPath(Cast.toString(args.ELEMENT), true, true) + "s";
       const styles = styleStorage[path][id] ?? genDefaultStyles(id, path);
       styles[path === "labels" ? "border-bottom" : "border"] = 
@@ -1458,7 +1462,7 @@
 
     setElementEffect(args) {
       const effect = Cast.toString(args.EFFECT);
-      const effectIndex = validEffects.findIndex((i) => { return i.value === effect });
+      const effectIndex = validEffects.findIndex((i) => i.value === effect);
       if (effectIndex === -1) return;
       const id = Cast.toString(args.ID);
       const path = this.getElementPath(Cast.toString(args.ELEMENT), true, true) + "s";
@@ -1510,7 +1514,7 @@
 
     getElementEffect(args) {
       const effect = Cast.toString(args.EFFECT);
-      const isValidEffect = validEffects.findIndex((i) => { return i.value === effect });
+      const isValidEffect = validEffects.findIndex((i) => i.value === effect);
       if (isValidEffect === -1) return "";
 
       const id = Cast.toString(args.ID);
