@@ -6,7 +6,6 @@
       "url": "extension-code/Sharktilities.js",
       "banner": "extension-thumbs/Sharktilities.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 07/21/2025"
     },
     "YouTube-Operations": {
@@ -15,7 +14,6 @@
       "url": "extension-code/YouTube-Operations.js",
       "banner": "extension-thumbs/YouTube-Operations.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 04/20/2025"
     },
     "Time-Calculation": {
@@ -24,7 +22,6 @@
       "url": "extension-code/Time-Calculation.js",
       "banner": "extension-thumbs/Time-Calculation.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
       "date": "Last Updated: 06/01/2024"
     },
     "Scratch-Utilities": {
@@ -34,7 +31,6 @@
       "banner": "extension-thumbs/Scratch-Utilities.svg",
       "tags": ["all", "expanded", "fetching"],
       "isDeprecated": true,
-      "status": "",
       "date": "Last Updated: 04/05/2024"
     },
     "Seeds": {
@@ -43,7 +39,6 @@
       "url": "extension-code/Seeds.js",
       "banner": "extension-thumbs/Seeds.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 11/29/2023"
     },
     "Tune-Shark-V3": {
@@ -52,7 +47,6 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 06/21/2025"
     },
     "Tune-Shark": {
@@ -62,7 +56,6 @@
       "banner": "extension-thumbs/Tune-Shark.svg",
       "tags": ["all", "utilities", "category"],
       "isDeprecated": true,
-      "status": "",
       "date": "Last Updated: 10/07/2024"
     },
     "Added-Motion": {
@@ -71,7 +64,6 @@
       "url": "extension-code/Added-Motion.js",
       "banner": "extension-thumbs/Added-Motion.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 12/12/2023"
     },
     "Geometry-Dash-API": {
@@ -80,7 +72,6 @@
       "url": "extension-code/Geometry-Dash-API.js",
       "banner": "extension-thumbs/Geometry-Dash-API.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Sound-Waves": {
@@ -89,7 +80,6 @@
       "url": "extension-code/Sound-Waves.js",
       "banner": "extension-thumbs/Sound-Waves.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 06/29/2025"
     },
     "Hyper-Sense": {
@@ -98,7 +88,6 @@
       "url": "extension-code/Hyper-Sense-V2.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 08/08/2025"
     },
     "Keys-Plus-V2": {
@@ -107,7 +96,6 @@
       "url": "extension-code/KeysPlusV2.js",
       "banner": "extension-thumbs/Keys-Plus-V2.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Released: 02/05/2025"
     },
     "Popup-Phoenix": {
@@ -116,7 +104,6 @@
       "url": "extension-code/Popup-Phoenix.js",
       "banner": "extension-thumbs/Popup-Phoenix.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
       "date": "Last Updated: 07/05/2025"
     },
     "Better-Input": {
@@ -126,7 +113,6 @@
       "banner": "extension-thumbs/Better-Input.svg",
       "tags": ["all", "utilities", "expanded"],
       "isDeprecated": true,
-      "status": "",
       "date": "Last Updated: 11/02/2024"
     },
     "Camera-Sensing-Plus": {
@@ -135,7 +121,6 @@
       "url": "extension-code/Camera-Sensing-Plus.js",
       "banner": "extension-thumbs/Camera-Sensing-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
@@ -144,8 +129,7 @@
       "url": "extension-code/Particle-Engine.js",
       "banner": "extension-thumbs/Particle-Engine.svg",
       "tags": ["all", "utilities"],
-      "status": "",
-      "date": "Last Updated: 07/20/2025"
+      "date": "Last Updated: 08/26/2025"
     },
     "Particle-Tools": {
       "desc": "Tools that make creating Particle Systems easy",
@@ -154,7 +138,6 @@
       "banner": "extension-thumbs/Particle-Tools.svg",
       "tags": ["all", "utilities"],
       "isDeprecated": true,
-      "status": "",
       "date": "Last Updated: 02/04/2024"
     },
     "Looks-Expanded": {
@@ -163,7 +146,6 @@
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 08/20/2025"
     },
     "Sprite-Effects": {
@@ -172,7 +154,6 @@
       "url": "extension-code/Sprite-Effects.js",
       "banner": "extension-thumbs/Sprite-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 03/10/2025"
     },
     "Image-Effects": {
@@ -181,7 +162,6 @@
       "url": "extension-code/Image-Effects.js",
       "banner": "extension-thumbs/Image-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Image-Editor": {
@@ -190,7 +170,6 @@
       "url": "extension-code/Image-Editor.js",
       "banner": "extension-thumbs/Image-Editor.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Pixel-Utilities": {
@@ -199,7 +178,6 @@
       "url": "extension-code/Pixel-Utilities.js",
       "banner": "extension-thumbs/Pixel-Utilities.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 03/07/2024"
     },
     "Recording": {
@@ -208,7 +186,6 @@
       "url": "extension-code/Recording-V2.js",
       "banner": "extension-thumbs/Recording.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 07/03/2025"
     },
     "Newgrounds-Audio": {
@@ -217,7 +194,6 @@
       "url": "extension-code/Newgrounds-Audio.js",
       "banner": "extension-thumbs/Newgrounds-Audio.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 02/01/2025"
     },
     "Sprite-Parenting": {
@@ -226,7 +202,6 @@
       "url": "extension-code/Sprite-Parenting.js",
       "banner": "extension-thumbs/Sprite-Parenting.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 05/19/2025"
     },
     "Rigidbodies": {
@@ -235,7 +210,6 @@
       "url": "extension-code/Rigidbodies.js",
       "banner": "extension-thumbs/Rigidbodies.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "",
       "date": "Released: 02/28/2025"
     },
     "Lazy-Collisions": {
@@ -244,7 +218,6 @@
       "url": "extension-code/Lazy-Collisions.js",
       "banner": "extension-thumbs/Lazy-Collisions.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 05/04/2025"
     },
     "Files-Expanded": {
@@ -253,7 +226,6 @@
       "url": "extension-code/Files-Expanded.js",
       "banner": "extension-thumbs/Files-Expanded.svg",
       "tags": ["all", "expanded"],
-      "status": "",
       "date": "Last Updated: 06/07/2025"
     },
     "Temporary-Variables": {
@@ -262,7 +234,6 @@
       "url": "extension-code/Temporary-Variables.js",
       "banner": "extension-thumbs/Temporary-Variables.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 04/06/2025"
     },
     "Variables-Expanded": {
@@ -271,7 +242,6 @@
       "url": "extension-code/Variables-Expanded.js",
       "banner": "extension-thumbs/Variables-Expanded.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 11/30/2024"
     },
     "Sty-Lists": {
@@ -280,7 +250,6 @@
       "url": "extension-code/Sty-Lists.js",
       "banner": "extension-thumbs/Sty-Lists.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 04/12/2025"
     },
     "Gamepad-Expanded": {
@@ -289,7 +258,6 @@
       "url": "extension-code/Gamepad-Expanded.js",
       "banner": "extension-thumbs/Gamepad-Expanded.svg",
       "tags": ["all", "expanded", "category"],
-      "status": "",
       "date": "Released: 10/??/2023"
     },
     "Tile-Grids": {
@@ -298,7 +266,6 @@
       "url": "extension-code/Tile-Grids.js",
       "banner": "extension-thumbs/Tile-Grids.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Released: 10/09/2023"
     },
     "Since-2000": {
@@ -307,7 +274,6 @@
       "url": "extension-code/Since-2000.js",
       "banner": "extension-thumbs/Since-2000.svg",
       "tags": ["all", "expanded"],
-      "status": "",
       "date": "Last Updated: 04/22/2025"
     },
     "Animations": {
@@ -316,7 +282,6 @@
       "url": "extension-code/Animations.js",
       "banner": "extension-thumbs/Animations.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 03/24/2025"
     },
     "Pause-Utilities": {
@@ -325,7 +290,6 @@
       "url": "extension-code/Pause-Utilities.js",
       "banner": "extension-thumbs/Pause-Utilities.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 04/04/2025"
     },
     "Text-to-Speech": {
@@ -334,7 +298,6 @@
       "url": "extension-code/Text-to-Speech.js",
       "banner": "extension-thumbs/Text-to-Speech.svg",
       "tags": ["all", "expanded", "fetching"],
-      "status": "",
       "date": "Last Updated: 01/02/2024"
     },
     "Messages-Plus": {
@@ -343,7 +306,6 @@
       "url": "extension-code/Messages-Plus.js",
       "banner": "extension-thumbs/Messages-Plus.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 07/01/2025"
     },
     "Advanced-Messages": {
@@ -352,7 +314,6 @@
       "url": "extension-code/Advanced-Messages.js",
       "banner": "extension-thumbs/Advanced-Messages.svg",
       "tags": ["all", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 04/05/2025"
     },
     "Events-Plus": {
@@ -361,7 +322,6 @@
       "url": "extension-code/Events-Plus.js",
       "banner": "extension-thumbs/Events-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Released: 07/23/2025"
     },
     "Runtime-Events": {
@@ -370,7 +330,6 @@
       "url": "extension-code/Runtime-Events.js",
       "banner": "extension-thumbs/Runtime-Events.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 08/11/2024"
     },
     "Fetch-Plus": {
@@ -379,7 +338,6 @@
       "url": "extension-code/Fetch-Progress.js",
       "banner": "extension-thumbs/Fetch-Plus.svg",
       "tags": ["all", "fetching", "expanded"],
-      "status": "",
       "date": "Last Updated: 04/04/2025"
     },
     "Geolocation": {
@@ -388,7 +346,6 @@
       "url": "extension-code/Geolocation.js",
       "banner": "extension-thumbs/Geolocation.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 04/10/2025"
     },
     "Spotify": {
@@ -397,7 +354,6 @@
       "url": "extension-code/Spotify.js",
       "banner": "extension-thumbs/Spotify.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 11/16/2024"
     },
     "SoundCloud-API": {
@@ -406,7 +362,6 @@
       "url": "extension-code/SoundCloud-API.js",
       "banner": "extension-thumbs/SoundCloud-API.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 04/04/2025"
     },
     "Google-Spreadsheets": {
@@ -415,7 +370,6 @@
       "url": "extension-code/Google-Spreadsheets.js",
       "banner": "extension-thumbs/Google-Spreadsheets.svg",
       "tags": ["all", "fetching", "utilities"],
-      "status": "",
       "date": "Last Updated: 01/16/2025"
     },
     "Money-Utilities": {
@@ -424,7 +378,6 @@
       "url": "extension-code/Money-Utilities.js",
       "banner": "extension-thumbs/Money-Utilities.svg",
       "tags": ["all", "fetching", "utilities"],
-      "status": "",
       "date": "Last Updated: 04/04/2025"
     },
     "Display-Text": {
@@ -433,7 +386,6 @@
       "url": "extension-code/Display-Text.js",
       "banner": "extension-thumbs/Display-Text.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 06/12/2025"
     },
     "Color-Master": {
@@ -442,7 +394,6 @@
       "url": "extension-code/Color-Master.js",
       "banner": "extension-thumbs/Color-Master.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 01/23/2025"
     },
     "QR-Codes": {
@@ -451,7 +402,6 @@
       "url": "extension-code/QR-Codes.js",
       "banner": "extension-thumbs/QR-Codes.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 12/30/2024"
     },
     "Speech-Bubbles": {
@@ -460,7 +410,6 @@
       "url": "extension-code/Speech-Bubbles.js",
       "banner": "extension-thumbs/Speech-Bubbles.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "status": "",
       "date": "Last Updated: 09/14/2024"
     },
     "Font-Manager": {
@@ -469,7 +418,6 @@
       "url": "extension-code/Font-Manager.js",
       "banner": "extension-thumbs/Font-Manager.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 07/16/2024"
     },
     "Script-Control": {
@@ -478,7 +426,6 @@
       "url": "extension-code/Script-Control.js",
       "banner": "extension-thumbs/Script-Control.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 05/30/2025"
     },
     "Layer-Control": {
@@ -487,7 +434,6 @@
       "url": "extension-code/Layer-Control.js",
       "banner": "extension-thumbs/Layer-Control.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 09/24/2024"
     },
     "Renderer-Control": {
@@ -496,7 +442,6 @@
       "url": "extension-code/Renderer-Control.js",
       "banner": "extension-thumbs/Renderer-Control.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 07/01/2025"
     },
     "Timezones": {
@@ -505,7 +450,6 @@
       "url": "extension-code/Timezones.js",
       "banner": "extension-thumbs/Timezones.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Released: 01/25/2024"
     },
     "Perlin-Noise": {
@@ -514,7 +458,6 @@
       "url": "extension-code/Perlin-Noise.js",
       "banner": "extension-thumbs/Perlin-Noise.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 01/08/2025"
     },
     "Extra-Controls": {
@@ -523,7 +466,6 @@
       "url": "extension-code/Extra-Controls.js",
       "banner": "extension-thumbs/Extra-Controls.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 05/04/2025"
     },
     "More-Operators": {
@@ -532,7 +474,6 @@
       "url": "extension-code/More-Operators.js",
       "banner": "extension-thumbs/More-Operators.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 05/19/2025"
     },
     "Captchas": {
@@ -541,7 +482,6 @@
       "url": "extension-code/Captchas.js",
       "banner": "extension-thumbs/Captchas.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Released: 04/05/2024"
     },
     "Better-Comments": {
@@ -550,7 +490,6 @@
       "url": "extension-code/Better-Comments.js",
       "banner": "extension-thumbs/Better-Comments.svg",
       "tags": ["all", "expanded", "addon"],
-      "status": "",
       "date": "Last Updated: 04/11/2025"
     },
     "Sprite-Panel": {
@@ -559,7 +498,6 @@
       "url": "extension-code/Sprite-Panel.js",
       "banner": "extension-thumbs/Sprite-Panel.svg",
       "tags": ["all", "expanded", "addon"],
-      "status": "",
       "date": "Last Updated: 05/06/2025"
     },
     "DOM-Selector": {
@@ -568,7 +506,6 @@
       "url": "extension-code/DOM-Selector.js",
       "banner": "extension-thumbs/DOM-Selector.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 07/13/2025"
     },
     "SVG-Spritesheets": {
@@ -577,7 +514,6 @@
       "url": "extension-code/SVG-Spritesheets.js",
       "banner": "extension-thumbs/SVG-Spritesheets.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 12/20/2024"
     },
     "Community-Spotlight": {
@@ -586,7 +522,6 @@
       "url": "extension-code/Community-Spotlight.js",
       "banner": "extension-thumbs/Community-Spotlight.svg",
       "tags": ["all", "fetching"],
-      "status": "",
       "date": "Last Updated: 01/17/2025"
     },
     "GIF-Manager": {
@@ -595,7 +530,6 @@
       "url": "extension-code/GIF-Manager.js",
       "banner": "extension-thumbs/GIF-Manager.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Released: 08/29/2024"
     },
     "JSON-Array": {
@@ -604,7 +538,6 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
       "date": "Last Updated: 06/29/2025"
     },
     "My-Blocks-Plus": {
@@ -613,7 +546,6 @@
       "url": "extension-code/My-Blocks-Plus.js",
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 08/15/2025"
     },
     "Dropdown-Maker": {
@@ -622,7 +554,6 @@
       "url": "extension-code/Dropdown-Maker.js",
       "banner": "extension-thumbs/Dropdown-Maker.svg",
       "tags": ["all", "utilities"],
-      "status": "",
       "date": "Last Updated: 07/13/2025"
     },
     "Turbo-Skins": {
@@ -631,7 +562,6 @@
       "url": "extension-code/Turbo-Skins.js",
       "banner": "extension-thumbs/Turbo-Skins.svg",
       "tags": ["all", "utilities", "expanded"],
-      "status": "",
       "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
@@ -640,7 +570,6 @@
       "url": "extension-code/Scenes.js",
       "banner": "extension-thumbs/Scenes.svg",
       "tags": ["all", "utilities", "addon"],
-      "status": "",
       "date": "Last Updated: 06/12/2025"
     },
     "Pen-Papers": {
@@ -649,7 +578,6 @@
       "url": "extension-code/Pen-Papers.js",
       "banner": "extension-thumbs/Pen-Papers.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "status": "",
       "date": "Last Updated: 07/05/2025"
     },
     "Example": {
@@ -658,8 +586,8 @@
       "url": "extension-code/Example.js",
       "banner": "extension-thumbs/Example.svg",
       "tags": ["all", "utilities", "expanded", "fetching", "category", "addon", "searchQ"],
-      "overrideLabeler": false,
       "status": "",
+      "overrideLabeler": false,
       "date": ""
     }
   },
