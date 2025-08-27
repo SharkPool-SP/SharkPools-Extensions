@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.2.0.2
+// Version V.2.0.21
 
 (function (Scratch) {
   "use strict";
@@ -225,7 +225,6 @@ void main() {
       drawableId, drawable, skinId, skin, target,
       canvas, gl, programInfo, bufferInfo, projection,
       emitters: Object.create(null),
-      data: new Map(),
       interpolate: false, paused: false, noTrails: true
     };
     target[engineTag] = engine;
@@ -257,7 +256,7 @@ void main() {
     const {
       canvas, gl, programInfo,
       bufferInfo, projection,
-      emitters, data,
+      emitters,
       interpolate, noTrails
     } = engine;
     const { width, height } = canvas;
@@ -276,18 +275,15 @@ void main() {
       const emitter = emitters[key];
       if (!emitter.texture) continue;
 
-      const { pos, opts, tintCache, texture } = emitter;
+      const { pos, opts, tintCache, data, texture } = emitter;
       const { tWidth, tHeight } = texture;
       emitter.frameCnt++;
 
       const maxP = Math.round(rng(opts.maxP.val, opts.maxP.inf));
       const rPos = [pos[0] - (tWidth * .25), pos[1] + (tHeight * .25)];
 
-      if (!data.has(key)) data.set(key, new Set());
-      const thisData = data.get(key);
-
       // Emit new particles
-      if (emitter.frameCnt > 1 && thisData.size < maxP) {
+      if (emitter.frameCnt > 1 && data.size < maxP) {
         const count = Math.min(maxP, Math.round(rng(opts.emission.val, opts.emission.inf)));
         for (let i = 0; i < count; i++) {
           const life = rng(opts.time.val, opts.time.inf);
@@ -310,14 +306,14 @@ void main() {
             ogPos: []
           };
           obj.ogPos = [obj.x, obj.y];
-          thisData.add(obj);
+          data.add(obj);
         }
       }
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture.texture);
 
-      for (const particle of thisData) {
+      for (const particle of data) {
         let {
           ind, conLife, life, x, y, ogPos, dir, eDir, size, eSize, spin, eSpin,
           speed, gravX, gravY, streX, eStreX, streY, eStreY, accelRad, accelTan,
@@ -325,7 +321,7 @@ void main() {
         } = particle;
         /* do not draw if dead */
         if (particle.life - lifeRate <= 0) {
-          thisData.delete(particle);
+          data.delete(particle);
           continue;
         }
 
@@ -397,7 +393,7 @@ void main() {
       const emitters = Object.values(engine.emitters);
       for (const emitter of emitters) {
         emitter.frameCnt = 0;
-        emitter.tintCache = new Map();
+        emitter.tintCache.clear();
       }
     });
   };
@@ -874,7 +870,7 @@ void main() {
       const engine = target[engineTag];
       engine.emitters[args.NAME] = {
         pos: [0,0], opts: structuredClone(optionList),
-        frameCnt: 0, tintCache: new Map()
+        frameCnt: 0, tintCache: new Map(), data: new Set()
       };
       newTexture(shapes.sqr, engine.gl, (t) => {
         engine.emitters[args.NAME].texture = t;
@@ -953,7 +949,7 @@ void main() {
           }
           if (emitter.opts[type]) {
             emitter.opts[type] = { val, inf: Cast.toNumber(args.INT) };
-            if (shouldResetCache) emitter.tintCache = new Map();
+            if (shouldResetCache) emitter.tintCache.clear();
           }
         }
       }
@@ -991,7 +987,7 @@ void main() {
               else return;
             }
             emitter.opts = rawOpts;
-            emitter.tintCache = new Map();
+            emitter.tintCache.clear();
           } catch {}
         }
       }
