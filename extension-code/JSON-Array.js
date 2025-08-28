@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.11
+// Version V.1.1.12
 
 (function (Scratch) {
   "use strict";
@@ -737,6 +737,17 @@
             },
           },
           {
+            opcode: "flatArray",
+            blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
+            allowDropAnywhere: true,
+            text: "flatten array [ARR] depth [NUM]",
+            arguments: {
+              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `[[1, 2], [3, [4, 5]]]`, exemptFromNormalization: true },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
+            },
+          },
+          {
             opcode: "arrOrder",
             blockType: Scratch.BlockType.REPORTER,
             blockShape: Scratch.BlockShape.SQUARE,
@@ -1370,6 +1381,11 @@
       const length = Cast.toNumber(args.NUM);
       const arr = this.tryParse(args.ARR, 1);
       return arr.concat(Array(Math.max(0, length - arr.length)).fill(""));
+    }
+
+    flatArray(args) {
+      const arr = this.tryParse(args.ARR, 1);
+      return arr.flat(Cast.toNumber(args.NUM));
     }
 
     arrOrder(args) {
