@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.13
+// Version V.2.0.14
 
 (function (Scratch) {
   "use strict";
@@ -404,7 +404,7 @@
   }
 
   function convert2Md(comment, txt) {
-    if (!txt) return;
+    if (!txt && txt !== "") return;
     const txtArea = comment.textarea_;
     if (txtArea.previousSibling) txtArea.previousSibling.remove();
 
