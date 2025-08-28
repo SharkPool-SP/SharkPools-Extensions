@@ -490,7 +490,7 @@
       "url": "extension-code/Better-Comments.js",
       "banner": "extension-thumbs/Better-Comments.svg",
       "tags": ["all", "expanded", "addon"],
-      "date": "Last Updated: 04/11/2025"
+      "date": "Last Updated: 08/28/2025"
     },
     "Sprite-Panel": {
       "desc": "Addon for viewing and managing Sprites and Clones",
@@ -538,7 +538,7 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "date": "Last Updated: 06/29/2025"
+      "date": "Last Updated: 08/28/2025"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
