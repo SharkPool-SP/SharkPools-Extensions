@@ -61,7 +61,7 @@
     SB.BlockSvg.prototype.render = function (...args) {
       const data = ogRender.call(this, ...args);
       if (this.svgPath_ && jsonBlocks.includes(this.type)) {
-        if (this.type !== "SPjson_jsonValid" && this.type !== "SPjson_objValid") {
+        if (this.type !== "SPjson_jsonValid" && this.type !== "SPjson_objValid" && this.type !== "SPjson_extractJson") {
           const fixedWidth = this.width - 35;
           this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
           this.svgPath_.setAttribute("d", makeShape(this.width));
@@ -512,6 +512,7 @@
           {
             opcode: "extractJson",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: Scratch.BlockShape.SQUARE,
             allowDropAnywhere: true,
             text: "all [TYPE] from [OBJ]",
             arguments: {
