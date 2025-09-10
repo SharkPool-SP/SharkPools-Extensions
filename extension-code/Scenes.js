@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.04
+// Version V.1.0.05
 
 (function (Scratch) {
   "use strict";
@@ -479,7 +479,7 @@
         else runtime.ioDevices.video.disableVideo();
         videoSensing.setVideoTransparency(extras.videoSensing.ghost);
       }
-      if (penSource !== undefined) {
+      if (penSource !== undefined && extras.penData) {
         penSource.updateProperties({
           position: extras.penData.pos,
           direction: extras.penData.direction,
