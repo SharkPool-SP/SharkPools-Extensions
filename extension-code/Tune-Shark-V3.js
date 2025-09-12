@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.5.01
+// Version V.3.5.1
 // Thanks to HOME for the song "Resonance" being used as the default audio link
 
 (function (Scratch) {
@@ -810,6 +810,7 @@
                 value: "estimated bpm",
               },
               { text: Scratch.translate("channels"), value: "channels" },
+              { text: Scratch.translate("sample rate"), value: "samples" },
               { text: Scratch.translate("fft data"), value: "fft" },
               { text: Scratch.translate("binds"), value: "binds" },
               { text: Scratch.translate("volume"), value: "volume" },
@@ -1348,6 +1349,8 @@
           );
         case "channels":
           return src.buffer.numberOfChannels;
+        case "samples":
+          return src.buffer.sampleRate;
         case "fft":
           const dataArray = new Uint8Array(sound.analyser.frequencyBinCount);
           sound.analyser.getByteFrequencyData(dataArray);
@@ -1695,3 +1698,4 @@
 
   Scratch.extensions.register(new SPtuneShark3());
 })(Scratch);
+
