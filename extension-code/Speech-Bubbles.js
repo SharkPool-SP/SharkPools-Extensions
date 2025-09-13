@@ -3,7 +3,7 @@
 // Description: Customizable Speech Bubbles
 // By: SharkPool
 
-// Version V.1.3.01
+// Version V.1.3.02
 
 (function (Scratch) {
   "use strict";
@@ -40,8 +40,9 @@
 
   class speechSP {
     constructor() {
-      runtime.on("PROJECT_START", () => { this.shutUp({ SPRITE: "_all_" }) });
-      runtime.on("PROJECT_STOP_ALL", () => { this.shutUp({ SPRITE: "_all_" }) });
+      runtime.on("PROJECT_START", () => this.shutUp({ SPRITE: "_all_" }));
+      runtime.on("PROJECT_STOP_ALL", () => this.shutUp({ SPRITE: "_all_" }));
+      runtime.on("targetWasRemoved", (target) => this.shutUp({ SPRITE: target.id }));
       runtime.on("AFTER_EXECUTE", () => {
         const values = Object.values(allBubbles);
         for (let i = 0; i < values.length; i++) {
@@ -665,3 +666,4 @@
 
   Scratch.extensions.register(new speechSP());
 })(Scratch);
+
