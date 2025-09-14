@@ -55,10 +55,10 @@
         doForEachAnimation((anim) => {
           if (anim.playing) {
             const isReverse = anim.playType === 2 || anim.playType === 4;
-            const deltaFixed = runtime.currentStepTime * (30 / 1000);
+            const deltaFixed = runtime.currentStepTime * (120 / 1000);
             anim.timer += 0.01 * deltaFixed;
             if (anim.timer > anim.buffer) {
-              anim.buffer += anim.fps / 1000;
+              anim.buffer += 1 / anim.fps;
               if (isReverse) anim.currentFrame--;
               else anim.currentFrame++;
               anim.normalCurrentFrame = anim.currentFrame + 1;
@@ -388,7 +388,7 @@
     }
 
     resetAnimPlayer(anim) {
-      anim.buffer = anim.fps / 1000;
+      anim.buffer = 1 / anim.fps;
       anim.timer = 0;
       anim.currentFrame = -1;
     }
