@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.53
+// Version V.1.2.54
 
 (function(Scratch) {
   "use strict";
@@ -1626,7 +1626,7 @@
   function deserializeStorage(data) {
     if (isPM) {
       storage = data.SPmbpCST || {};
-      imgStorage = data.SPmbpCST.imgStorage ?? {};
+      imgStorage = data.SPmbpCST?.imgStorage ?? {};
       imgStoreSize = Object.keys(imgStorage).length;
       startEditorListener();
       if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
