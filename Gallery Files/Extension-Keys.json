@@ -282,7 +282,7 @@
       "url": "extension-code/Animations.js",
       "banner": "extension-thumbs/Animations.svg",
       "tags": ["all", "utilities"],
-      "date": "Last Updated: 03/24/2025"
+      "date": "Last Updated: 09/14/2025"
     },
     "Pause-Utilities": {
       "desc": "Pause your Project, Scripts, and Sprites",
