@@ -1,53 +1,74 @@
-{
-  "0": {
-    "name": "SharkPool-SP", "url": "https://avatars.githubusercontent.com/u/139097378?s=300&v=4"
+[
+  {
+    "display": "SharkPool", "username": "SharkPool-SP", 
+    "url": "https://avatars.githubusercontent.com/u/139097378?s=300&v=4"
   },
-  "1": {
-    "name": "yuri-kiss", "url": "https://avatars.githubusercontent.com/u/135030944?s=300&v=4"
+  {
+    "display": "yuri-kiss", "name": "yuri-kiss",
+    "url": "https://avatars.githubusercontent.com/u/135030944?s=300&v=4"
   },
-  "2": {
-    "name": "Drago-Cuven", "url": "https://avatars.githubusercontent.com/u/57764393?s=300&v=4"
+  {
+    "display": "Drago Cuven", "name": "Drago-Cuven",
+    "url": "https://avatars.githubusercontent.com/u/57764393?s=300&v=4"
   },
-  "3": {
-    "name": "ionslayer", "url": "https://avatars.githubusercontent.com/u/138623383?s=300&v=4"
+  {
+    "display": "ionslayer", "name": "ionslayer",
+    "url": "https://avatars.githubusercontent.com/u/138623383?s=300&v=4"
   },
-  "4": {
-    "name": "KojoBailey", "url": "https://avatars.githubusercontent.com/u/50509420?s=300&v=4"
+  {
+    "display": "Kojo Bailey", "name": "KojoBailey",
+    "url": "https://avatars.githubusercontent.com/u/50509420?s=300&v=4"
   },
-  "5": {
-    "name": "JeremyGamer13", "url": "https://avatars.githubusercontent.com/u/69337718?s=300&v=4"
+  {
+    "display": "JeremyGamer13", "name": "JeremyGamer13",
+    "url": "https://avatars.githubusercontent.com/u/69337718?s=300&v=4"
   },
-  "6": {
-    "name": "Meehdrescher", "url": "https://avatars.githubusercontent.com/u/83909483?s=300&v=4"
+  {
+    "display": "Meehdrescher", "name": "Meehdrescher",
+    "url": "https://avatars.githubusercontent.com/u/83909483?s=300&v=4"
   },
-  "7": {
-    "name": "DNin01", "url": "https://avatars.githubusercontent.com/u/106490990?s=300&v=4"
+  {
+    "display": "DNin01", "name": "DNin01",
+    "url": "https://avatars.githubusercontent.com/u/106490990?s=300&v=4"
   },
-  "8": {
-    "name": "FurryR", "url": "https://avatars.githubusercontent.com/u/55276797?s=300&v=4"
+  {
+    "display": "FurryR", "name": "FurryR",
+    "url": "https://avatars.githubusercontent.com/u/55276797?s=300&v=4"
   },
-  "9":{
-    "name": "Mistium", "url":"https://avatars.githubusercontent.com/u/92952823?s=300&v=4"
+  {
+    "display": "Mist", "name": "Mistium",
+    "url":"https://avatars.githubusercontent.com/u/92952823?s=300&v=4"
   },
-  "10":{
-    "name": "LittleBlueGamer427", "url":"https://avatars.githubusercontent.com/u/148423893?s=300&v=4"
+  {
+    "display": "LittleBlueGamer", "name": "LittleBlueGamer427",
+    "url":"https://avatars.githubusercontent.com/u/148423893?s=300&v=4"
   },
-  "11":{
-    "name": "fo-od", "url":"https://avatars.githubusercontent.com/u/99752044?s=300&v=4"
+  {
+    "display": "fo-od", "name": "fo-od",
+    "url":"https://avatars.githubusercontent.com/u/99752044?s=300&v=4"
   },
-  "12":{
-    "name": "Ender-Studio", "url":"https://avatars.githubusercontent.com/u/172468850?s=300&v=4"
+  {
+    "display": "Ender-Studio", "name": "Ender-Studio",
+    "url":"https://avatars.githubusercontent.com/u/172468850?s=300&v=4"
   },
-  "13":{
-    "name": "CST1229", "url":"https://avatars.githubusercontent.com/u/68464103?s=300&v=4"
+  {
+    "display": "CST1229", "name": "CST1229",
+    "url":"https://avatars.githubusercontent.com/u/68464103?s=300&v=4"
   },
-  "14":{
-    "name": "AlmejasHub", "url":"https://avatars.githubusercontent.com/u/180870857?s=300&v=4"
+  {
+    "display": "Alejo", "name": "AlmejasHub",
+    "url":"https://avatars.githubusercontent.com/u/180870857?s=300&v=4"
   },
-  "15":{
-    "name": "RedMan13", "url":"https://avatars.githubusercontent.com/u/74981904?v=4"
+  {
+    "display": "godslayerakp", "name": "RedMan13",
+    "url":"https://avatars.githubusercontent.com/u/74981904?v=4"
   },
-  "16":{
-    "name": "gomigg", "url":"https://avatars.githubusercontent.com/u/91437192?v=4"
+  {
+    "display": "GomiGG", "name": "gomigg",
+    "url":"https://avatars.githubusercontent.com/u/91437192?v=4"
+  },
+  {
+    "display": "Ice", "name": "IceandFire04",
+    "url":"https://avatars.githubusercontent.com/u/67441866?v=4"
   }
-}
+]
