@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version 1.2.2
+// Version 1.2.3
 
 (function (Scratch) {
   "use strict";
@@ -114,7 +114,7 @@
           }
         ],
         menus: {
-          ENCODING: ["2D Array", "Object", "Object Array"]
+          ENCODING: ["2D Array", "Object", "Object Array", "TSV"]
         },
       };
     }
@@ -187,7 +187,9 @@
         const response = await Scratch.fetch(url);
         if (!response.ok) return defaultReturn;
         const content = await response.text();
-        return JSON.stringify(this.tsvParser(content));
+
+        if (encodingType == "TSV") return content;
+        else return JSON.stringify(this.tsvParser(content));
       } catch (e) {
         console.warn(e);
         return defaultReturn;
