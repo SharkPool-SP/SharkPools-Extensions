@@ -187,7 +187,9 @@
         const response = await Scratch.fetch(url);
         if (!response.ok) return defaultReturn;
         const content = await response.text();
-        if (encodingType == "TSV") return content; else return JSON.stringify(this.tsvParser(content));
+
+        if (encodingType == "TSV") return content;
+        else return JSON.stringify(this.tsvParser(content));
       } catch (e) {
         console.warn(e);
         return defaultReturn;
