@@ -69,7 +69,7 @@
       subtree: true, attributeFilter: ["style"], attributes: true
     });
   };
-  // scratch-gui may reset canvas styles when resizing the window or going in/out of fullscreen
+  // scratch-gui may reset canvas styles when resizing the window / going in/out of fullscreen
   let observer = new MutationObserver(reImpFilter);
   observer.observe(canvas, {
     subtree: true, attributeFilter: ["style"], attributes: true
@@ -92,10 +92,10 @@
     imgCopy.hideFromPalette = sprite;
 
     const args = imgCopy.arguments;
-    args.SPRITE.defaultValue = "</svg> or data.uri";
+    args.SPRITE.defaultValue = "</svg> / data.uri";
     delete args.SPRITE.menu;
     if (args.SPRITE2) {
-      args.SPRITE2.defaultValue = "</svg> or data.uri";
+      args.SPRITE2.defaultValue = "</svg> / data.uri";
       delete args.SPRITE2.menu;
     }
     return [json, imgCopy];
@@ -265,11 +265,12 @@
             },
           }),
           "---",
+          /* Deprecation Marker */
           ...genDualBlock({
             opcode: "distortSprite",
             blockType: Scratch.BlockType.REPORTER,
             text: "apply [EFFECT] distortion to [SPRITE] at x [X] y [Y] at [NUM]%",
-            hideFromPalette: !sprite,
+            hideFromPalette: true,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "DISTORTION" },
@@ -282,15 +283,29 @@
             opcode: "distortSpriteImage",
             blockType: Scratch.BlockType.REPORTER,
             text: "apply [EFFECT] distortion to [SPRITE] at x [X] y [Y] at [NUM]%",
-            hideFromPalette: !sprite,
+            hideFromPalette: true,
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
-              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "</svg> or data.uri" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "</svg> / data.uri" },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             },
           }),
+          /* Marker End */
+          {
+            opcode: "distortObject",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "apply [EFFECT] distortion to [SPRITE] at x [x] y [y] size [SIZE] intensity [NUM]",
+            arguments: {
+              SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
+              EFFECT: { type: Scratch.ArgumentType.STRING, defaultValue: "preset / </svg> / data.uri" },
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              SIZE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 }
+            },
+          },
           {
             opcode: "distortPreset",
             blockType: Scratch.BlockType.REPORTER,
@@ -314,7 +329,7 @@
             text: "replace [COLOR] with pattern [PAT] scale [SIZE] in [SPRITE]",
             hideFromPalette: !sprite,
             arguments: {
-              PAT: { type: Scratch.ArgumentType.STRING, defaultValue: "</svg> or data.uri" },
+              PAT: { type: Scratch.ArgumentType.STRING, defaultValue: "</svg> / data.uri" },
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
               SIZE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
@@ -366,7 +381,7 @@
             arguments: {
               SPRITE: { type: Scratch.ArgumentType.STRING, menu: "TARGETS2" },
               BLEND: { type: Scratch.ArgumentType.STRING, menu: "BLENDING2" },
-              MAP: { type: Scratch.ArgumentType.STRING, defaultValue: "</svg> or data.uri" }
+              MAP: { type: Scratch.ArgumentType.STRING, defaultValue: "</svg> / data.uri" }
             },
           }),
           "---",
@@ -557,7 +572,7 @@
     // Helper Funcs
     applierTutorial() {
       alert(`With this extension, you can apply effects and filters to sprites and the canvas!
-        \nTo apply effects to sprites, you need to use the "skins" extension by LilyMakesThings or some alternative for displaying SVGs
+        \nTo apply effects to sprites, you need to use the "skins" extension by LilyMakesThings / some alternative for displaying SVGs
         \nTo apply effects to the canvas, use the "apply filter to canvas" block in this extension. Always use the "canvas" option in a block, if provided.`);
     }
 
@@ -980,6 +995,7 @@
       return svg;
     }
 
+    /* Deprecation Marker */
     distortSprite(args, util) { return this.setDistort(args, false, false, util) }
     async distortImage(args) { return await this.setDistort(args, true, false) }
     distortSpriteImage(args, util) { return this.setDistort(args, false, true, util) }
@@ -998,7 +1014,6 @@
         const amts = [cast.toNumber(args.NUM), cast.toNumber(args.X) * mul, cast.toNumber(args.Y) * mul];
         if (isCanvas) {
           tableValue = [parseFloat(computed.width), parseFloat(computed.height)];
-          // TODO improve this maybe?
           if (typeof scaffolding !== "undefined") amts[1] += tableValue[0] / (1 + (render.canvas.width / runtime.stageWidth));
         } else {
           tableValue = [/width="([^"]*)"/.exec(svg), /height="([^"]*)"/.exec(svg)];
@@ -1016,6 +1031,38 @@
           <feDisplacementMap id="dMapRes" xChannelSelector="R" yChannelSelector="G" in="SourceGraphic" in2="distortImg" result="displacementMap" color-interpolation-filters="sRGB" scale="${amts[0] * mul}" /><feComposite operator="in" in2="distortImg"></feComposite>
         ${amts[0] < 0 && effect !== "ripple" ? "" : `<feComposite operator="over" in2="SourceGraphic"></feComposite>`}</filter>`;
         return this.filterApplier(svg, filter, override ? "customDistort" : effect);
+      }
+      return svg;
+    }
+    /* Marker End */
+
+    async distortObject(args, util) {
+      let svg;
+      if (args.SPRITE === "_myself_") svg = await this.findAsset(util);
+      else svg = args.SPRITE.startsWith("data:image/") ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
+      if (svg) {
+        let source = cast.toString(args.EFFECT);
+
+        const isCanvas = args.SPRITE === "_canvas_";
+        const computed = isCanvas ? window.getComputedStyle(render.canvas) : {};
+        const mul = isCanvas ? parseFloat(computed.width) / runtime.stageWidth : 1;
+        const pos = [cast.toNumber(args.NUM), cast.toNumber(args.x) * mul, cast.toNumber(args.y) * mul];
+        const size = Math.abs(cast.toNumber(args.SIZE));
+        
+        if (isCanvas) {
+          pos[1] += parseFloat(computed.width) / 2;
+          pos[2] -= parseFloat(computed.height) / 2;
+        }
+
+        pos[1] -= size / 2;
+        pos[2] += size / 2;
+
+        const filter =`<filter id="objectDistort" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <feImage id="dMapS" xlink:href="${source}" x="${pos[1]}" y="${-pos[2]}" width="${size}" height="${size}" result="distortImg" />
+          <feDisplacementMap id="dMapRes" xChannelSelector="R" yChannelSelector="G" in="SourceGraphic" in2="distortImg" result="displacementMap" color-interpolation-filters="sRGB" scale="${pos[0] * mul}" /><feComposite operator="in" in2="distortImg"></feComposite>
+          <feComposite operator="over" in2="SourceGraphic"></feComposite>
+        </filter>`;
+        return this.filterApplier(svg, filter, "objectDistort");
       }
       return svg;
     }
