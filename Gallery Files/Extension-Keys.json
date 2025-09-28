@@ -154,7 +154,7 @@
       "url": "extension-code/Sprite-Effects.js",
       "banner": "extension-thumbs/Sprite-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "date": "Last Updated: 03/10/2025"
+      "date": "Last Updated: 09/27/2025"
     },
     "Image-Effects": {
       "desc": "Apply Effects and Filters to Images",
