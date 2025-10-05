@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.01
+// Version V.1.0.02
 
 (function (Scratch) {
   "use strict";
@@ -103,6 +103,7 @@
           {
             opcode: "getVar",
             blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
             text: "get [TYPE] var [NAME]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
