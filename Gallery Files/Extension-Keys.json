@@ -129,7 +129,7 @@
       "url": "extension-code/Particle-Engine.js",
       "banner": "extension-thumbs/Particle-Engine.svg",
       "tags": ["all", "utilities"],
-      "date": "Last Updated: 08/26/2025"
+      "date": "Last Updated: 10/05/2025"
     },
     "Particle-Tools": {
       "desc": "Tools that make creating Particle Systems easy",
