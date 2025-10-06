@@ -1,10 +1,10 @@
 // Name: JSON and Array
 // ID: SPjson
-// Description: Super Fast JSON and Array Extension
+// Description: Super Fast JSON and Array Extension.
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.12
+// Version V.1.1.2
 
 (function (Scratch) {
   "use strict";
@@ -21,6 +21,14 @@
   const runtime = vm.runtime;
   const isPM = Scratch.extensions.isPenguinMod;
 
+  const defaults = {
+    "obj": `{"key": "value"}`,
+    "arr1": `["a", "b", "c"]`,
+    "arr2": `["a", "b", "b", "a"]`,
+    "arr3": `["a", "b"]`,
+  };
+
+  /* extension utilities */
   const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
   let extClass;
 
@@ -35,18 +43,43 @@
     };
   };
 
-  const regenReporters = ["SPjson_objKey", "SPjson_objValue", "SPjson_arrValueA", "SPjson_arrValueB"];
-  const jsonBlocks = ["SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath", "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize", "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson", "SPjson_jsonMap", "SPjson_jsonMake"];
+  const genArgument = (type, value) => {
+    return {
+      type: Scratch.ArgumentType.STRING,
+      exemptFromNormalization: true,
+      shape: type === "arr" ? Scratch.BlockShape.SQUARE : Scratch.BlockShape.PLUS,
+      defaultValue: value
+    }
+  };
+
+  /* block shapes and blockly patches */
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-    // Regen Reporters
+    // regenerated reporters
+    const regenReporters = ["SPjson_objKey", "SPjson_objValue", "SPjson_arrValueA", "SPjson_arrValueB"];
+
     const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
     SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
       const result = ogCheck(block);
       if (result) return true;
       return block.isShadow() && regenReporters.includes(block.type);
     };
+  });
 
-    // Custom JSON Block Shape
+  const objShape = isPM ? Scratch.BlockShape.PLUS : Scratch.BlockShape.ROUND;
+  const arrayShape = Scratch.BlockShape.SQUARE;
+
+  if (!isPM && Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+    // make our own custom json shape for turbowarp
+    const jsonBlocks = [
+      "SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath",
+      "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize",
+      "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson",
+      "SPjson_jsonMap", "SPjson_jsonMake"
+    ];
+    const igoreOuter = [
+      "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
+    ];
+
     const makeShape = (width) => {
       width -= 35;
       return (`
@@ -61,7 +94,7 @@
     SB.BlockSvg.prototype.render = function (...args) {
       const data = ogRender.call(this, ...args);
       if (this.svgPath_ && jsonBlocks.includes(this.type)) {
-        if (this.type !== "SPjson_jsonValid" && this.type !== "SPjson_objValid" && this.type !== "SPjson_extractJson") {
+        if (!igoreOuter.includes(this.type)) {
           const fixedWidth = this.width - 35;
           this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
           this.svgPath_.setAttribute("d", makeShape(this.width));
@@ -415,12 +448,13 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is object [OBJ] valid?",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
+              OBJ: genArgument("obj", defaults.obj),
             },
           },
           {
             opcode: "jsonBuilder",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "{ [KEY] : [VAL] }",
             arguments: {
@@ -432,53 +466,58 @@
           {
             opcode: "getKey",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "get [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", defaults.obj)
             },
           },
           {
             opcode: "getPath",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "get path [PATH] from [OBJ]",
             arguments: {
-              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key", "value1"]`, exemptFromNormalization: true },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":{"value1":1, "value2":2}}`, exemptFromNormalization: true }
+              PATH: genArgument("arr", `["key", "value1"]`),
+              OBJ: genArgument("obj", `{"key":{"value1":1, "value2":2}}`)
             },
           },
           {
             opcode: "setKey",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "set [KEY] to [VAL] in [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: "{}", exemptFromNormalization: true }
+              OBJ: genArgument("obj", "{}")
             },
           },
           {
             opcode: "setPath",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "set path [PATH] to [VAL] in [OBJ]",
             arguments: {
-              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: `["key1", "key2"]`, exemptFromNormalization: true },
+              PATH: genArgument("arr", `["key1", "key2"]`),
               VAL: { type: Scratch.ArgumentType.STRING, defaultValue: "value", exemptFromNormalization: true },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key1":{}}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", `{"key1":{}}`)
             },
           },
           {
             opcode: "deleteKey",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "delete [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", defaults.obj)
             },
           },
           {
@@ -486,7 +525,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "size of [OBJ]",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", defaults.obj)
             },
           },
           "---",
@@ -496,47 +535,48 @@
             text: "index of [KEY] in [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", defaults.obj)
             },
           },
           {
             opcode: "getEntry",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "get [KEY] entry from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", defaults.obj)
             },
           },
           {
             opcode: "extractJson",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "all [TYPE] from [OBJ]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "OBJ_EXTRACT" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value","key2":"value2"}`, exemptFromNormalization: true }
+              OBJ: genArgument("obj", `{"key":"value","key2":"value2"}`)
             },
           },
           {
             opcode: "mergeJson",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "merge [OBJ1] and [OBJ2]",
             arguments: {
-              OBJ1: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
-              OBJ2: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key2":"value2"}`, exemptFromNormalization: true }
+              OBJ1: genArgument("obj", defaults.obj),
+              OBJ2: genArgument("obj", `{"key2":"value2"}`)
             },
           },
           "---",
           {
-            opcode: "jsonMap", blockType: Scratch.BlockType.REPORTER, allowDropAnywhere: true,
+            opcode: "jsonMap", blockType: Scratch.BlockType.REPORTER, blockShape: objShape, allowDropAnywhere: true,
             text: "map [OBJ] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true,
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
-              IND: {}, VAL: {},
+              OBJ: genArgument("obj", ""), IND: {}, VAL: {},
               VALUE: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
             },
@@ -545,7 +585,7 @@
             blockType: Scratch.BlockType.XML,
             xml: `
               <block type="SPjson_jsonMap">
-                <value name="OBJ"><shadow type="text"><field name="TEXT">{"key":"value"}</field></shadow></value>
+                <value name="OBJ"><shadow type="text"><field name="TEXT">${defaults.obj}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
                 <value name="VALUE"><shadow type="text"><field name="TEXT">value-2</field></shadow></value>
@@ -557,13 +597,13 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is array [ARR] valid?",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true },
+              ARR: genArgument("arr", defaults.arr1)
             },
           },
           {
             opcode: "arrBuilder",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "［ [VAL] ］",
             arguments: {
@@ -574,7 +614,7 @@
           {
             opcode: "arrAdd",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "add [ITEM] to [ARR]",
             arguments: {
@@ -585,80 +625,79 @@
           {
             opcode: "arrInsert",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "insert [ITEM] at [IND] in [ARR]",
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true },
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", `["a", "c"]`)
             },
           },
           {
             opcode: "arrReplace",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "replace item [IND] with [ITEM] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a", exemptFromNormalization: true },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["z", "b", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", `["z", "b", "c"]`)
             },
           },
           {
             opcode: "arrSwap",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "swap item [IND1] with item [IND2] in [ARR]",
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               IND2: { type: Scratch.ArgumentType.STRING, defaultValue: 3 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr1)
             },
           },
           {
             opcode: "arrDelete",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "delete item [IND] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr1)
             },
           },
           {
             opcode: "arrGet",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "item [IND] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr1)
             },
           },
           {
             opcode: "arrSlice",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "items [IND1] to [IND2] in [ARR]",
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
               IND2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr1)
             },
           },
           {
             opcode: "arrLength",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
             text: "length of [ARR]",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr1)
             },
           },
           "---",
@@ -667,95 +706,91 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "[ARR] contains [ITEM] ?",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "c"]`, exemptFromNormalization: true },
+              ARR: genArgument("arr", defaults.arr1),
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true }
             },
           },
           {
             opcode: "arrMatches",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
             text: "# of times [ITEM] appears in [ARR]",
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr2)
             },
           },
           {
             opcode: "arrContainers",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
             text: "# of items containing [TESTER] in [ARR]",
             arguments: {
               TESTER: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "ab", "ba", "bb"]`, exemptFromNormalization: true }
+              ARR:genArgument("arr", `["a", "ab", "ba", "bb"]`)
             },
           },
           {
             opcode: "itemIndex",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
-            allowDropAnywhere: true,
             text: "index # [IND] of item [ITEM] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b", "b", "a"]`, exemptFromNormalization: true }
+              ARR: genArgument("arr", defaults.arr2)
             },
           },
           "---",
           {
             opcode: "mergeArray",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "merge array [ARR1] and [ARR2]",
             arguments: {
-              ARR1: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
-              ARR2: { type: Scratch.ArgumentType.STRING, defaultValue: `["c", "d"]`, exemptFromNormalization: true }
+              ARR1: genArgument("arr", defaults.arr3),
+              ARR2: genArgument("arr", `["c", "d"]`)
             },
           },
           {
             opcode: "repeatArray",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "repeat array [ARR] [NUM] times",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
+              ARR: genArgument("arr", defaults.arr3),
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 }
             },
           },
           {
             opcode: "fillArray",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "fill array [ARR] to length [NUM]",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["a", "b"]`, exemptFromNormalization: true },
+              ARR: genArgument("arr", defaults.arr3),
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             },
           },
           {
             opcode: "flatArray",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "flatten array [ARR] depth [NUM]",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `[[1, 2], [3, [4, 5]]]`, exemptFromNormalization: true },
+              ARR: genArgument("arr", `[[1, 2], [3, [4, 5]]]`),
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
             },
           },
           {
             opcode: "arrOrder",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "order [ARR] by [ORDERER]",
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: `["2", "item1", "1", "item12", "1"]`, exemptFromNormalization: true },
+              ARR: genArgument("arr", `["2", "item1", "1", "item12", "1"]`),
               ORDERER: { type: Scratch.ArgumentType.STRING, menu: "ORDERING" }
             }
           },
@@ -765,16 +800,15 @@
             text: "check [ARR] if [TYPE] item [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "ARRAY_CHECK" },
-              ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
-              IND: {}, VAL: {}, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
+              ARR: genArgument("arr", ""), IND: {}, VAL: {}, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
             },
           },
           {
-            opcode: "arrMap", blockType: Scratch.BlockType.REPORTER, blockShape: Scratch.BlockShape.SQUARE,
+            opcode: "arrMap", blockType: Scratch.BlockType.REPORTER, blockShape: arrayShape,
             text: "map [ARR] using rule [IND] [VAL] [IMG] [VALUE]", hideFromPalette: true, allowDropAnywhere: true,
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              ARR: genArgument("arr", ""),
               IND: {}, VAL: {},
               VALUE: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
@@ -791,10 +825,10 @@
             text: "value B", color1: "#677cd6"
           },
           {
-            opcode: "arrSort", blockType: Scratch.BlockType.REPORTER, blockShape: Scratch.BlockShape.SQUARE,
+            opcode: "arrSort", blockType: Scratch.BlockType.REPORTER, blockShape: arrayShape,
             text: "sort [ARR] using rule [A] [B] [IMG] [VALUE]", hideFromPalette: true, allowDropAnywhere: true,
             arguments: {
-              ARR: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true },
+              ARR: genArgument("arr", ""),
               A: {}, B: {},
               VALUE: { type: Scratch.ArgumentType.STRING },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
@@ -805,12 +839,12 @@
             xml: `
               <block type="SPjson_arrCheck">
                 <field name="TYPE">every</field>
-                <value name="ARR"><shadow type="text"><field name="TEXT">["a", "b", "c"]</field></shadow></value>
+                <value name="ARR"><shadow type="text"><field name="TEXT">${defaults.arr1}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
               </block>
               <block type="SPjson_arrMap">
-                <value name="ARR"><shadow type="text"><field name="TEXT">["a", "b", "c"]</field></shadow></value>
+                <value name="ARR"><shadow type="text"><field name="TEXT">${defaults.arr1}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
                 <value name="VALUE"><shadow type="text"><field name="TEXT">d</field></shadow></value>
@@ -828,7 +862,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is JSON [OBJ] valid?",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key":"value"}`, exemptFromNormalization: true },
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: defaults.obj, exemptFromNormalization: true }
             },
           },
           {
@@ -837,7 +871,7 @@
             text: "parse [OBJ]",
             allowDropAnywhere: true,
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key": "value"}`, exemptFromNormalization: true }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: defaults.obj, exemptFromNormalization: true }
             },
           },
           {
@@ -846,7 +880,7 @@
             text: "copy [OBJ] to new",
             allowDropAnywhere: true,
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"key": "value"}`, exemptFromNormalization: true }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: defaults.obj, exemptFromNormalization: true }
             },
           },
           {
@@ -863,6 +897,7 @@
           {
             opcode: "jsonMake",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
             allowDropAnywhere: true,
             text: "[TXT] split by [SPLIT] with delimiter [DELIM] to JSON",
             arguments: {
@@ -874,7 +909,7 @@
           {
             opcode: "arrMake",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: Scratch.BlockShape.SQUARE,
+            blockShape: arrayShape,
             allowDropAnywhere: true,
             text: "[TXT] split by [SPLIT] to [TYPE]",
             arguments: {
@@ -986,14 +1021,19 @@
               THING: { type: Scratch.ArgumentType.STRING, menu: "SETTINGS" },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "TOGGLER" }
             },
-          }
+          },
+          {
+            opcode: "optiReader",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "optimization level",
+          },
         ],
         menus: {
           TOGGLER: ["enabled", "disabled"],
           CUST_ORDER: ["filter", "order"],
           ARRAY_CHECK: ["every", "some"],
           VAR_TYPE: ["variable", "list"],
-          OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values"] },
+          OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values", "entries"] },
           CONVERTS: { acceptReporters: true, items: ["string", "pretty string", "array", "JSON"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
           SETTINGS: { acceptReporters: true, items: this.settings },
@@ -1244,7 +1284,9 @@
     }
 
     extractJson(args) {
-      return Object[args.TYPE === "keys" ? "keys" : "values"](this.tryParse(args.OBJ, 0));
+      return Object[
+        args.TYPE === "keys" ? "keys" : args.TYPE === "values" ? "values" : "entries"
+      ](this.tryParse(args.OBJ, 0));
     }
 
     mergeJson(args) {
@@ -1539,6 +1581,8 @@
     parse(args) {
       const obj = args.OBJ;
       if (typeof obj === "object") return obj;
+      if (obj === "[]") return [];
+      else if (obj === "{}") return {};
       try {
         return JSON.parse(obj);
       } catch {
