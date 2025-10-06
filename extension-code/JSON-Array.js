@@ -1216,6 +1216,21 @@
       return opt ? this[opt] : false;
     }
 
+    optiReader() {
+      // these numbers arent accurate but represent what works well
+      let optiLevel = 100;
+
+      if (this.alwaysCast) optiLevel -= 10;
+
+      // alwaysTryParse removes a bunch of logic, so only evaluate this
+      if (!this.alwaysTryParse) return `${optiLevel} [UNSAFE MODE]`;
+
+      if (this.useNewObj) optiLevel -= 40;
+      if (this.alwaysParse) optiLevel -= 50;
+
+      return `${optiLevel} [SAFE MODE]`;
+    }
+
     // JSON Funcs
     objValid(args) {
       const obj = this.tryParse(args.OBJ);
