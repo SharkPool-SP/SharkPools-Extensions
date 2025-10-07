@@ -74,7 +74,7 @@
       "SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath",
       "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize",
       "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson",
-      "SPjson_jsonMap", "SPjson_jsonMake"
+      "SPjson_jsonMap", "SPjson_jsonMake", "objBlank"
     ];
     const igoreOuter = [
       "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
@@ -444,6 +444,14 @@
           },
           { blockType: Scratch.BlockType.LABEL, text: "JSON" },
           {
+            opcode: "objBlank",
+            blockType: Scratch.BlockType.REPORTER,
+            blockShape: objShape,
+            disableMonitor: true,
+            allowDropAnywhere: true,
+            text: "new object"
+          },
+          {
             opcode: "objValid",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is object [OBJ] valid?",
@@ -593,6 +601,14 @@
           },
           { blockType: Scratch.BlockType.LABEL, text: "Arrays" },
           {
+            opcode: "arrBlank",
+            blockType: Scratch.BlockType.REPORTER,
+            blockShape: arrayShape,
+            allowDropAnywhere: true,
+            disableMonitor: true,
+            text: "new array"
+          },
+          {
             opcode: "arrValid",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is array [ARR] valid?",
@@ -619,7 +635,7 @@
             text: "add [ITEM] to [ARR]",
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "thing", exemptFromNormalization: true },
-              ARR: { type: Scratch.ArgumentType.STRING, defaultValue: "[]", exemptFromNormalization: true }
+              ARR: genArgument("arr", "[]")
             },
           },
           {
@@ -1232,6 +1248,8 @@
     }
 
     // JSON Funcs
+    objBlank() { return {} }
+
     objValid(args) {
       const obj = this.tryParse(args.OBJ);
       return typeof obj === "object" && obj.constructor?.name === "Object";
@@ -1343,6 +1361,8 @@
     }
 
     // Array Funcs
+    arrBlank() { return [] }
+
     arrValid(args) { return Array.isArray(this.tryParse(args.ARR)) }
 
     arrBuilder(args) { return [this.toSafe(args.VAL)] }
@@ -1596,8 +1616,6 @@
     parse(args) {
       const obj = args.OBJ;
       if (typeof obj === "object") return obj;
-      if (obj === "[]") return [];
-      else if (obj === "{}") return {};
       try {
         return JSON.parse(obj);
       } catch {
