@@ -72,13 +72,14 @@
     if (isPM) {
       // custom object shape (penguinmod)
       SB.BlockSvg.registerCustomShape("SPjson_objShape", {
-        emptyInputPath: "m 0 0 z", // unused
-        emptyInputWidth: 0, // unused
+        emptyInputPath: "m 0 0 z", emptyInputWidth: 0, // unused
         leftPath: (block) => {
           if (block.isShadow_) {
+            const offset = block.edgeShapeWidth_ - 11;
+            const height = block.edgeShapeWidth_ - 16;
             return [
-              `l -5 0 c -11 0 -1 -10 -11 -11`,
-              `c -4 0 -4 -9 0 -9 c 10 0 0 -12 11 -12`
+              `l ${-offset} 0 c -11 0 -1 ${-11 - height} -11 ${-11 - height}`,
+              `c -4 0 -4 -9 0 -9 c 10 0 0 ${-12 - height} 11 ${-12 - height}`
             ];
           } else {
             const ogShape = block.edgeShape_;
@@ -91,10 +92,12 @@
         },
         rightPath: (block) => {
           if (block.isShadow_) {
+            const offset = block.edgeShapeWidth_ - 11;
+            const height = block.edgeShapeWidth_ - 16;
             return [
-              `l 5 0 c 11 0 1 10 11 11`,
+              `l ${offset} 0 c 11 0 1 ${11 + height} 11 ${11 + height}`,
               `c 4 0 4 9 0 9`,
-              `c -10 0 0 12 -11 12 l -5 0`
+              `c -10 0 0 ${12 + height} -11 ${12 + height} l ${-offset} 0`
             ];
           } else {
             const ogShape = block.edgeShape_;
