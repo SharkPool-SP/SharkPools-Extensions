@@ -47,7 +47,7 @@
     return {
       type: Scratch.ArgumentType.STRING,
       exemptFromNormalization: true,
-      shape: type === "arr" ? Scratch.BlockShape.SQUARE : Scratch.BlockShape.PLUS,
+      shape: type === "arr" ? Scratch.BlockShape.SQUARE : "SPjson_objShape",
       defaultValue: value
     }
   };
@@ -68,48 +68,91 @@
   const objShape = isPM ? Scratch.BlockShape.PLUS : Scratch.BlockShape.ROUND;
   const arrayShape = Scratch.BlockShape.SQUARE;
 
-  if (!isPM && Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-    // make our own custom json shape for turbowarp
-    const jsonBlocks = [
-      "SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath",
-      "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize",
-      "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson",
-      "SPjson_jsonMap", "SPjson_jsonMake", "objBlank"
-    ];
-    const igoreOuter = [
-      "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
-    ];
-
-    const makeShape = (width) => {
-      width -= 35;
-      return (`
-        m20 0h${width}C${width + 30} 0 ${width + 30} 4 ${width + 30} 12
-        c0 0 2 0 3 0 1 0 3 2 3 3 0 1 0 8 0 10 0 2-1 3-3 3-2 0-3 0-3 0
-        C${width + 30} 37 ${width + 30} 40 ${width + 20} 40h${(width + 10) * -1}
-        C5 40 5 36 4 28c0 0-1 0-2 0-2 0-3-1-3-3l0-10c0 0 0-3 4-3 0 0 1 0 1 0C5 4 5 0 10 0z
-      `).replaceAll("\n", "").trim();
-    };
-
-    const ogRender = SB.BlockSvg.prototype.render;
-    SB.BlockSvg.prototype.render = function (...args) {
-      const data = ogRender.call(this, ...args);
-      if (this.svgPath_ && jsonBlocks.includes(this.type)) {
-        if (!igoreOuter.includes(this.type)) {
-          const fixedWidth = this.width - 35;
-          this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
-          this.svgPath_.setAttribute("d", makeShape(this.width));
-        }
-        this.inputList.forEach((input) => {
-          if (input.name.startsWith("OBJ")) {
-            const block = input.connection.targetBlock();
-            if (block && block.type === "text" && block.svgPath_) {
-              block.svgPath_.setAttribute("transform", `scale(1, ${block.height / 40})`);
-              block.svgPath_.setAttribute("d", makeShape(block.width));
-            }
+  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+    if (isPM) {
+      // custom object shape (penguinmod)
+      SB.BlockSvg.registerCustomShape("SPjson_objShape", {
+        emptyInputPath: "m 0 0 z", // unused
+        emptyInputWidth: 0, // unused
+        leftPath: (block) => {
+          if (block.isShadow_) {
+            return [
+              `l -5 0 c -11 0 -1 -10 -11 -11`,
+              `c -4 0 -4 -9 0 -9 c 10 0 0 -12 11 -12`
+            ];
+          } else {
+            const ogShape = block.edgeShape_;
+            const steps = [];
+            block.edgeShape_ = objShape;
+            block.renderDrawLeft_(steps, 0);
+            block.edgeShape_ = ogShape;
+            return [steps[0]];
           }
-        });
+        },
+        rightPath: (block) => {
+          if (block.isShadow_) {
+            return [
+              `l 5 0 c 11 0 1 10 11 11`,
+              `c 4 0 4 9 0 9`,
+              `c -10 0 0 12 -11 12 l -5 0`
+            ];
+          } else {
+            const ogShape = block.edgeShape_;
+            const steps = [];
+            block.edgeShape_ = objShape;
+            block.renderDrawRight_(steps, 0);
+            block.edgeShape_ = ogShape;
+            return [steps[0]];
+          }
+        },
+        blockPadding: {
+          internal: {}, external: SB.BlockSvg.SHAPE_IN_SHAPE_PADDING[5]
+        },
+      });
+      SB.BlockSvg.SHAPE_IN_SHAPE_PADDING[3]["custom-SPjson_objShape"] = 10;
+    } else {
+      // custom object shape (turbowarp)
+      const jsonBlocks = [
+        "SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath",
+        "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize",
+        "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson",
+        "SPjson_jsonMap", "SPjson_jsonMake", "objBlank"
+      ];
+      const igoreOuter = [
+        "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
+      ];
+
+      const makeShape = (width) => {
+        width -= 35;
+        return (`
+          m20 0h${width}C${width + 30} 0 ${width + 30} 4 ${width + 30} 12
+          c0 0 2 0 3 0 1 0 3 2 3 3 0 1 0 8 0 10 0 2-1 3-3 3-2 0-3 0-3 0
+          C${width + 30} 37 ${width + 30} 40 ${width + 20} 40h${(width + 10) * -1}
+          C5 40 5 36 4 28c0 0-1 0-2 0-2 0-3-1-3-3l0-10c0 0 0-3 4-3 0 0 1 0 1 0C5 4 5 0 10 0z
+        `).replaceAll("\n", "").trim();
+      };
+
+      const ogRender = SB.BlockSvg.prototype.render;
+      SB.BlockSvg.prototype.render = function (...args) {
+        const data = ogRender.call(this, ...args);
+        if (this.svgPath_ && jsonBlocks.includes(this.type)) {
+          if (!igoreOuter.includes(this.type)) {
+            const fixedWidth = this.width - 35;
+            this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
+            this.svgPath_.setAttribute("d", makeShape(this.width));
+          }
+          this.inputList.forEach((input) => {
+            if (input.name.startsWith("OBJ")) {
+              const block = input.connection.targetBlock();
+              if (block && block.type === "text" && block.svgPath_) {
+                block.svgPath_.setAttribute("transform", `scale(1, ${block.height / 40})`);
+                block.svgPath_.setAttribute("d", makeShape(block.width));
+              }
+            }
+          });
+        }
+        return data;
       }
-      return data;
     }
   });
 
@@ -846,7 +889,7 @@
             arguments: {
               ARR: genArgument("arr", ""),
               A: {}, B: {},
-              VALUE: { type: Scratch.ArgumentType.STRING },
+              VALUE: { type: Scratch.ArgumentType.NUMBER },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
             },
           },
