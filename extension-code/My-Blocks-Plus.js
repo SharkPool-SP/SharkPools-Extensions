@@ -627,7 +627,7 @@
       switch (block.opcode) {
         case "procedures_call": {
           const proc = block.mutation.proccode;
-          const store = storeGet(proc, this.target);
+          const store = storeGet(proc, this.target.sprite.clones[0]);
           if (!this.thread[targetProcData]) this.thread[targetProcData] = {};
           this.thread[targetProcData][proc] = { block, store }; // attach some data we need
           if (!store || !store.inputs) return _ogIRdescendStack.call(this, block);
