@@ -67,11 +67,12 @@
       "date": "Last Updated: 12/12/2023"
     },
     "Geometry-Dash-API": {
-      "desc": "Fetch statistics and information from Geometry Dash. Thank you RobTopGames and GD Colon",
-      "creator": "SharkPool",
+      "desc": "Fetch statistics and information from Geometry Dash. Deprecated, expect incorrect values.",
+      "creator": "SharkPool, thank you RobTopGames and GD Colon",
       "url": "extension-code/Geometry-Dash-API.js",
       "banner": "extension-thumbs/Geometry-Dash-API.svg",
       "tags": ["all", "fetching"],
+      "isDeprecated": true,
       "date": "Last Updated: 04/10/2025"
     },
     "Sound-Waves": {
