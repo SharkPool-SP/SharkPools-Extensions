@@ -365,8 +365,10 @@
    */
   const downloadUntrustedURL = async (url, file) => {
     if (isDataURL(url)) {
-      if (isPM) downloadBackupURL(url, file);
-      else {
+      if (isPM) {
+        downloadBackupURL(url, file);
+        return;
+      } else {
         // TODO: Scratch.fetch's better handling of data: means this is probably not needed anymore
         // and it the blob: probably works better with big files
         return Scratch.download(url, file);
