@@ -1866,9 +1866,11 @@
     if (isPM) {
       stored = importTarget.extensionData?.["SPmbpCST"]?.SPmbpCST;
       if (stored) {
+        const ogStore = storage[importTarget.id];
         runtime.once("targetWasCreated", (target) => {
           if (Scratch.gui) Scratch.gui.getBlockly().then(SB => setTimeout(() => {
             storage[target.id] = stored[importTarget.id];
+            storage[importTarget.id] = ogStore;
             listNeedsRefresh = true;
             SB.Procedures.flyoutCategory(SB.mainWorkspace);
             queueMicrotask(() => vm.emitWorkspaceUpdate());
