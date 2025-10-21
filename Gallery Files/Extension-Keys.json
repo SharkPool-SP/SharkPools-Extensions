@@ -549,6 +549,14 @@
       "tags": ["all", "utilities", "expanded", "category"],
       "date": "Last Updated: 08/15/2025"
     },
+    "MIDI-Tools": {
+      "desc": "Utilities For Making Midi Notes Into Functions",
+      "creator": "ObscuraPH",
+      "url": "extension-code/MIDI-Tools.js",
+      "banner": "extension-thumbs/MIDI-Tools.svg",
+      "tags": ["all", "utilities", "fetching"],
+      "date": "Last Updated: 10/21/2025"
+    },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
       "creator": "SharkPool, CST1229, 0znzw",
