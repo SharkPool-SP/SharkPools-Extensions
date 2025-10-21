@@ -1,0 +1,252 @@
+(function (Scratch) {
+    'use strict';
+
+  const menuIconURI =
+"data:image/png;base64,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";
+  const blockIconURI =
+"data:image/png;base64,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";
+
+    const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+    function loadToneMidi() {
+        if (window.Midi) return Promise.resolve(window.Midi);
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@tonejs/midi@2.0.28/build/Midi.js';
+            script.onload = () => window.Midi ? resolve(window.Midi) : reject(new Error('Tone.js Midi loaded but no Midi class'));
+            script.onerror = () => reject(new Error('Failed to load Tone.js Midi from CDN'));
+            document.head.appendChild(script);
+        });
+    }
+
+    class ObscurasMIDITools {
+        constructor(runtime) {
+            this.runtime = runtime;
+            this.midiData = null;
+
+            this._triggeredNotes = new Set();
+            this._timers = [];
+
+            this._isPlaying = false;
+            this._isPaused = false;
+            this._pauseTime = 0;
+            this._startTime = 0;
+
+            this.toneMidiReady = loadToneMidi();
+
+            this.fileInput = document.createElement('input');
+            this.fileInput.type = 'file';
+            this.fileInput.accept = '.mid,.midi';
+            this.fileInput.style.display = 'none';
+            document.body.appendChild(this.fileInput);
+        }
+
+        getInfo() {
+            return {
+                id: 'ObscurasMIDITools',
+                name: 'Obscuras MIDI Tools v3.0',
+                menuIconURI,
+                blockIconURI,
+                color1: '#310061',
+                color2: '#8300FF',
+                color3: '#8300FF',
+                blocks: [
+                    { opcode: 'separatorImport', blockType: 'label', text: 'Importers:' },
+                    { opcode: 'importMidiUrl', blockType: 'command', text: 'import MIDI from URL [URL]', arguments: { URL: { type: 'string', defaultValue: 'https://example.com/song.mid' } } },
+                    { opcode: 'importMidiFile', blockType: 'command', text: 'import MIDI from file' },
+
+                    { opcode: 'separatorPlayback', blockType: 'label', text: 'MIDI Playback:' },
+                    { opcode: 'playMidi', blockType: 'command', text: 'play MIDI' },
+                    { opcode: 'stopMidi', blockType: 'command', text: 'stop MIDI' },
+
+                    { opcode: 'separatorCommand', blockType: 'label', text: 'Command Blocks:' },
+                    { opcode: 'onNote', blockType: 'hat', text: 'when note [NOTE] is played', isEdgeActivated: true, arguments: { NOTE: { type: 'number', defaultValue: 60 } } },
+
+                    { opcode: 'separatorReporters', blockType: 'label', text: 'Reporters:' },
+                    { opcode: 'getNotesAtTime', blockType: 'reporter', text: 'notes at time [TIME]', arguments: { TIME: { type: 'number', defaultValue: 0 } } },
+                    { opcode: 'allNotes', blockType: 'reporter', text: 'all notes in MIDI' },
+                    { opcode: 'getBPM', blockType: 'reporter', text: 'MIDI BPM' },
+                    { opcode: 'currentNoteLengthSeconds', blockType: 'reporter', text: 'length of current note in seconds' },
+                    { opcode: 'currentNotePlaying', blockType: 'reporter', text: 'note currently playing' },
+                    { opcode: 'getDurationIfNoteIsPlaying', blockType: 'reporter', text: 'length of note [NOTE] if playing', arguments: { NOTE: { type: 'number', defaultValue: 60 } } },
+
+                    { opcode: 'separatorReporters', blockType: 'label', text: 'For Musicians:' },
+                    { opcode: 'noteName', blockType: 'reporter', text: 'note name of [NOTE]', arguments: { NOTE: { type: 'number', defaultValue: 60 } } },
+                ]
+            };
+        }
+
+        async importMidiUrl(args) {
+            const Midi = await this.toneMidiReady;
+            const res = await fetch(args.URL);
+            const arrayBuffer = await res.arrayBuffer();
+            this.midiData = new Midi(arrayBuffer);
+        }
+
+       importMidiFile() {
+            return new Promise((resolve, reject) => {
+                this.fileInput.value = '';
+                this.fileInput.onchange = async () => {
+                    if (this.fileInput.files.length > 0) {
+                        const file = this.fileInput.files[0];
+                        const reader = new FileReader();
+                        reader.onload = async () => {
+                            try {
+                                const Midi = await this.toneMidiReady;
+                                this.midiData = new Midi(reader.result);
+                                resolve();
+                            } catch (err) {
+                                alert('Failed to parse MIDI: ' + err.message);
+                                reject(err);
+                            }
+                        };
+                        reader.readAsArrayBuffer(file);
+                    } else {
+                        reject(new Error('No file chosen'));
+                    }
+                };
+                this.fileInput.click();
+            });
+        }
+
+        playMidi() {
+            if (!this.midiData) return;
+            this.stopMidi();
+
+            this._isPlaying = true;
+            this._isPaused = false;
+            this._startTime = performance.now() / 1000;
+            this._pauseTime = 0;
+
+            this._triggeredNotes.clear();
+
+            for (const track of this.midiData.tracks) {
+                for (const n of track.notes) {
+                    const delay = n.time * 1000;
+                    const startTimer = setTimeout(() => {
+                        if (!this._isPlaying || this._isPaused) return;
+                        this._triggeredNotes.add(n.midi);
+
+                        const endTimer = setTimeout(() => {
+                            this._triggeredNotes.delete(n.midi);
+                        }, n.duration * 1000);
+                        this._timers.push(endTimer);
+                    }, delay);
+                    this._timers.push(startTimer);
+                }
+            }
+        }
+
+        pauseMidi() {
+            if (!this._isPlaying || this._isPaused) return;
+            this._isPaused = true;
+            this._pauseTime = performance.now() / 1000;
+            for (const t of this._timers) clearTimeout(t);
+            this._timers = [];
+        }
+
+        stopMidi() {
+            this._isPlaying = false;
+            this._isPaused = false;
+            this._pauseTime = 0;
+            for (const t of this._timers) clearTimeout(t);
+            this._timers = [];
+            this._triggeredNotes.clear();
+        }
+
+        onNote(args) {
+            const note = Number(args.NOTE);
+            return this._triggeredNotes.has(note);
+        }
+
+        getNotesAtTime(args) {
+            if (!this.midiData) return [];
+            const time = Number(args.TIME);
+            const notes = [];
+            for (const track of this.midiData.tracks) {
+                for (const n of track.notes) {
+                    if (Math.abs(n.time - time) < 0.05) notes.push(n.midi);
+                }
+            }
+            return notes;
+        }
+
+        noteName(args) {
+            const midi = Number(args.NOTE);
+            const name = NOTE_NAMES[midi % 12];
+            const octave = Math.floor(midi / 12 - 1);
+            return name + octave;
+        }
+
+        allNotes() {
+            if (!this.midiData) return [];
+            const notes = [];
+            for (const track of this.midiData.tracks) {
+                for (const n of track.notes) {
+                    notes.push(n.midi);
+                }
+            }
+            return notes;
+        }
+
+        getBPM() {
+            if (!this.midiData || !this.midiData.header || !this.midiData.header.tempos.length) return 120;
+            const bpm = this.midiData.header.tempos[0].bpm;
+            return Math.round(bpm * 10) / 10;
+        }
+
+        currentNoteLengthSeconds() {
+            if (!this._triggeredNotes.size || !this._isPlaying || !this.midiData) return 0;
+
+
+            const triggered = [...this._triggeredNotes][0];
+            const currentTime = (performance.now() / 1000) - this._startTime;
+
+
+            for (const track of this.midiData.tracks) {
+                for (const note of track.notes) {
+                    if (note.midi === triggered) {
+                        if (currentTime >= note.time && currentTime <= note.time + note.duration) {
+                            return Number(note.duration.toFixed(3));
+                        }
+                    }
+                }
+            }
+
+
+            return 0;
+        }
+
+        currentNotePlaying() {
+            if (!this._triggeredNotes.size) return '';
+            return [...this._triggeredNotes][0];
+        }
+
+        getDurationIfNoteIsPlaying(args) {
+            if (!this._isPlaying || !this.midiData) return 0;
+
+
+            const noteNumber = Number(args.NOTE);
+            const currentTime = (performance.now() / 1000) - this._startTime;
+
+
+            if (!this._triggeredNotes.has(noteNumber)) return 0;
+
+
+            for (const track of this.midiData.tracks) {
+                for (const note of track.notes) {
+                    if (note.midi === noteNumber) {
+                        if (currentTime >= note.time && currentTime <= note.time + note.duration) {
+                            return Number(note.duration.toFixed(3));
+                        }
+                    }
+                }
+            }
+
+
+            return 0;
+        }
+    }
+
+    Scratch.extensions.register(new ObscurasMIDITools(Scratch.vm.runtime));
+})(Scratch);
