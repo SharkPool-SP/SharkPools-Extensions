@@ -62,120 +62,122 @@
                 color3: '#8300FF',
                 blocks: [
                     {
-						Scratch.BlockType: 'label',
+						blockType: Scratch.BlockType.LABEL,
 						text: 'Importers:'
 		    		},
             		{
 						opcode: 'importMidiUrl',
-						Scratch.BlockType: 'command', text: 'import MIDI from URL [URL]',
+						blockType: Scratch.BlockType.COMMAND,
+						text: 'import MIDI from URL [URL]',
 						arguments: 
 						{ 
 			    			URL: 
 			    			{ 
-			    			    Scratch.ArgumentType: 'string',
+			    			    type: Scratch.ArgumentType.STRING,
 								defaultValue: 'https://example.com/song.mid'
 			    			}
 						}
                     },
                     {
 						opcode: 'importMidiFile',
-						Scratch.BlockType: 'command',
+					blockType: Scratch.BlockType.COMMAND,
 						text: 'import MIDI from file'
 		   			},
                     {
-						Scratch.BlockType: 'label',
+					blockType: Scratch.BlockType.LABEL,
 						text: 'MIDI Playback:'
 		    		},
                     {
 						opcode: 'playMidi',
-						Scratch.BlockType: 'command',
+						blockType: Scratch.BlockType.COMMAND,
 						text: 'play MIDI'
 		   			},
                     {
 						opcode: 'stopMidi',
-						Scratch.BlockType: 'command',
+						blockType: Scratch.BlockType.COMMAND,
 						text: 'stop MIDI'
 		    		},
                     {
-						Scratch.BlockType: 'label',
+						blockType: Scratch.BlockType.LABEL,
 						text: 'Command Blocks:'
 		    		},
                     {
 						opcode: 'onNote',
-						Scratch.BlockType: 'hat',
+						blockType: Scratch.BlockType.HAT,
 						text: 'when note [NOTE] is played',
 						isEdgeActivated: true,
 						arguments: 
 						{ 
 							NOTE: 
 						    { 
-								Scratch.ArgumentType: 'number', defaultValue: 60
+								type: Scratch.ArgumentType.NUMBER,
+								defaultValue: 60
 						    }
 						}
 		   			},
                     {
-						Scratch.BlockType: 'label',
+						blockType: Scratch.BlockType.LABEL,
 						text: 'Reporters:'
 		    		},
                     {
 						opcode: 'getNotesAtTime',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'notes at time [TIME]',
 						arguments:
 						{
 						    TIME: 
 						    {
-								Scratch.ArgumentType: 'number',
+								type: Scratch.ArgumentType.NUMBER,
 								defaultValue: 0 
 						    }
 						}
 		   			},
 	        		{
 						opcode: 'allNotes',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'all notes in MIDI'
 		    		},
                     {
 						opcode: 'getBPM',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'MIDI BPM'
 					},
                     {
 						opcode: 'currentNoteLengthSeconds',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'length of current note in seconds'
 		    		},
                     {
 						opcode: 'currentNotePlaying',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'note currently playing'
 		    		},
                     {
 						opcode: 'getDurationIfNoteIsPlaying',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'length of note [NOTE] if playing',
 						arguments:
 						{
 						    NOTE:
 						    {
-							Scratch.ArgumentType: 'number',
+							type: Scratch.ArgumentType.NUMBER,
 							defaultValue: 60
 						    }
 						}
 		    		},
                     {
-						Scratch.BlockType: 'label',
+						blockType: Scratch.BlockType.LABEL,
 						text: 'For Musicians:'
 		    		},
                     {
 						opcode: 'noteName',
-						Scratch.BlockType: 'reporter',
+						blockType: Scratch.BlockType.REPORTER,
 						text: 'note name of [NOTE]',
 						arguments:
 						{
 						    NOTE:
 						    {
-							Scratch.ArgumentType: 'number',
+							type: Scratch.ArgumentType.NUMBER,
 							defaultValue: 60
 						    }
 						}
