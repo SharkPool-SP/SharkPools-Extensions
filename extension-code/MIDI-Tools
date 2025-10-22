@@ -61,130 +61,129 @@
                 color3: '#8300FF',
                 blocks: [
                     {
-			opcode: 'separatorImport',
-			blockType: 'label',
-			text: 'Importers:'
-		    },
-                    {
-			opcode: 'importMidiUrl',
-			blockType: 'command', text: 'import MIDI from URL [URL]',
-			arguments: 
-			{ 
-			    URL: 
-			    { 
-			        type: 'string',
-				defaultValue: 'https://example.com/song.mid'
-			    }
-			}
+						opcode: 'separatorImport',
+						blockType: 'label',
+						text: 'Importers:'
+		    		},
+            		{
+						opcode: 'importMidiUrl',
+						blockType: 'command', text: 'import MIDI from URL [URL]',
+						arguments: 
+						{ 
+			    			URL: 
+			    			{ 
+			    			    type: 'string',
+								defaultValue: 'https://example.com/song.mid'
+			    			}
+						}
                     },
                     {
-			opcode: 'importMidiFile',
-			blockType: 'command',
-			text: 'import MIDI from file'
-		    },
-
+						opcode: 'importMidiFile',
+						blockType: 'command',
+						text: 'import MIDI from file'
+		   			},
                     {
-			opcode: 'separatorPlayback',
-			blockType: 'label',
-			text: 'MIDI Playback:'
-		    },
+						opcode: 'separatorPlayback',
+						blockType: 'label',
+						text: 'MIDI Playback:'
+		    		},
                     {
-			opcode: 'playMidi',
-			blockType: 'command',
-			text: 'play MIDI'
-		    },
+						opcode: 'playMidi',
+						blockType: 'command',
+						text: 'play MIDI'
+		   			},
                     {
-			opcode: 'stopMidi',
-			blockType: 'command',
-			text: 'stop MIDI'
-		    },
+						opcode: 'stopMidi',
+						blockType: 'command',
+						text: 'stop MIDI'
+		    		},
                     {
-			opcode: 'separatorCommand',
-			blockType: 'label',
-			text: 'Command Blocks:'
-		    },
+						opcode: 'separatorCommand',
+						blockType: 'label',
+						text: 'Command Blocks:'
+		    		},
                     {
-			opcode: 'onNote',
-			blockType: 'hat',
-			text: 'when note [NOTE] is played',
-			isEdgeActivated: true,
-			arguments: 
-			{ 
-			    NOTE: 
-			    { 
-				type: 'number', defaultValue: 60
-			    }
-			}
-		    },
+						opcode: 'onNote',
+						blockType: 'hat',
+						text: 'when note [NOTE] is played',
+						isEdgeActivated: true,
+						arguments: 
+						{ 
+							NOTE: 
+						    { 
+								type: 'number', defaultValue: 60
+						    }
+						}
+		   			},
                     {
-			opcode: 'separatorReporters',
-			blockType: 'label',
-			text: 'Reporters:'
-		    },
+						opcode: 'separatorReporters',
+						blockType: 'label',
+						text: 'Reporters:'
+		    		},
                     {
-			opcode: 'getNotesAtTime',
-			blockType: 'reporter',
-			text: 'notes at time [TIME]',
-			arguments:
-			{
-			    TIME: 
-			    {
-				type: 'number',
-				defaultValue: 0 
-			    }
-			}
-		    },
+						opcode: 'getNotesAtTime',
+						blockType: 'reporter',
+						text: 'notes at time [TIME]',
+						arguments:
+						{
+						    TIME: 
+						    {
+								type: 'number',
+								defaultValue: 0 
+						    }
+						}
+		   			},
+	        		{
+						opcode: 'allNotes',
+						blockType: 'reporter',
+						text: 'all notes in MIDI'
+		    		},
                     {
-			opcode: 'allNotes',
-			blockType: 'reporter',
-			text: 'all notes in MIDI'
-		    },
+						opcode: 'getBPM',
+						blockType: 'reporter',
+						text: 'MIDI BPM'
+					},
                     {
-			opcode: 'getBPM',
-			blockType: 'reporter',
-			text: 'MIDI BPM'
-		    },
+						opcode: 'currentNoteLengthSeconds',
+						blockType: 'reporter',
+						text: 'length of current note in seconds'
+		    		},
                     {
-			opcode: 'currentNoteLengthSeconds',
-			blockType: 'reporter',
-			text: 'length of current note in seconds'
-		    },
+						opcode: 'currentNotePlaying',
+						blockType: 'reporter',
+						text: 'note currently playing'
+		    		},
                     {
-			opcode: 'currentNotePlaying',
-			blockType: 'reporter',
-			text: 'note currently playing'
-		    },
+						opcode: 'getDurationIfNoteIsPlaying',
+						blockType: 'reporter',
+						text: 'length of note [NOTE] if playing',
+						arguments:
+						{
+						    NOTE:
+						    {
+							type: 'number',
+							defaultValue: 60
+						    }
+						}
+		    		},
                     {
-			opcode: 'getDurationIfNoteIsPlaying',
-			blockType: 'reporter',
-			text: 'length of note [NOTE] if playing',
-			arguments:
-			{
-			    NOTE:
-			    {
-				type: 'number',
-				defaultValue: 60
-			    }
-			}
-		    },
+						opcode: 'separatorReporters',
+						blockType: 'label',
+						text: 'For Musicians:'
+		    		},
                     {
-			opcode: 'separatorReporters',
-			blockType: 'label',
-			text: 'For Musicians:'
-		    },
-                    {
-			opcode: 'noteName',
-			blockType: 'reporter',
-			text: 'note name of [NOTE]',
-			arguments:
-			{
-			    NOTE:
-			    {
-				type: 'number',
-				defaultValue: 60
-			    }
-			}
-		    },
+						opcode: 'noteName',
+						blockType: 'reporter',
+						text: 'note name of [NOTE]',
+						arguments:
+						{
+						    NOTE:
+						    {
+							type: 'number',
+							defaultValue: 60
+						    }
+						}
+		    		},
                 ]
             };
         }
