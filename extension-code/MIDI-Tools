@@ -60,7 +60,8 @@
                 color1: '#310061',
                 color2: '#8300FF',
                 color3: '#8300FF',
-                blocks: [
+                blocks: 
+				[
                     {
 						blockType: Scratch.BlockType.LABEL,
 						text: 'Importers:'
@@ -80,11 +81,11 @@
                     },
                     {
 						opcode: 'importMidiFile',
-					blockType: Scratch.BlockType.COMMAND,
+						blockType: Scratch.BlockType.COMMAND,
 						text: 'import MIDI from file'
 		   			},
                     {
-					blockType: Scratch.BlockType.LABEL,
+						blockType: Scratch.BlockType.LABEL,
 						text: 'MIDI Playback:'
 		    		},
                     {
