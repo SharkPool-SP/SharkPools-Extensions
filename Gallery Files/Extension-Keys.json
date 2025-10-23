@@ -581,6 +581,14 @@
       "tags": ["all", "utilities", "expanded", "category"],
       "date": "Last Updated: 07/05/2025"
     },
+    "MIDI-Tools": {
+      "desc": "Utilities For Making Midi Notes Into Functions",
+      "creator": "ObscuraPH",
+      "url": "extension-code/MIDI-Tools.js",
+      "banner": "extension-thumbs/MIDI-Tools.svg",
+      "tags": ["all", "utilities"],
+      "date": "Released: 10/24/2025"
+    },
     "Example": {
       "desc": "",
       "creator": "SharkPool",
