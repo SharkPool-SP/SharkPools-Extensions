@@ -106,7 +106,7 @@
             isEdgeActivated: true,
             arguments: {
               NOTE: {
-                type: Scratch.ArgumentType.NUMBER,
+                type: Scratch.ArgumentType.NOTE,
                 defaultValue: 60
               }
             }
@@ -152,7 +152,7 @@
             text: 'length of note [NOTE] if playing',
             arguments: {
               NOTE: {
-                type: Scratch.ArgumentType.NUMBER,
+                type: Scratch.ArgumentType.NOTE,
                 defaultValue: 60
               }
             }
@@ -167,7 +167,7 @@
             text: 'note name of [NOTE]',
             arguments: {
               NOTE: {
-                type: Scratch.ArgumentType.NUMBER,
+                type: Scratch.ArgumentType.NOTE,
                 defaultValue: 60
               }
             }
