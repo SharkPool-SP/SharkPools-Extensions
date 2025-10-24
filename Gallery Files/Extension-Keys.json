@@ -152,10 +152,12 @@
     "Sprite-Effects": {
       "desc": "Apply Effects and Filters to SVGs, Sprites, and the Canvas! Faster than Image Effects",
       "creator": "SharkPool",
-      "url": "extension-code/Sprite-Effects.js",
+      "url": "extension-code/Sprite-Effects-V2.js",
       "banner": "extension-thumbs/Sprite-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "date": "Last Updated: 09/27/2025"
+      "date": "Last Updated: 10/24/2025",
+      "overrideLabeler": true,
+      "status": "new"
     },
     "Image-Effects": {
       "desc": "Apply Effects and Filters to Images",
