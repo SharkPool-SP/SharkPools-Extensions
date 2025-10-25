@@ -36,3 +36,4 @@ function rescaler() {
 
 window.addEventListener("resize", rescaler);
 window.addEventListener("load", rescaler);
+document.addEventListener("DOMContentLoaded", rescaler);
