@@ -146,10 +146,7 @@ function genText(type, text) {
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
   desc.textContent = text;
-  if (type === "center-notif") {
-    desc.style.top = "50%";
-    desc.style.fontSize = "25px";
-  }
+  if (type === "center-notif") desc.style.top = "50%";
 
   document.body.appendChild(desc);
   const animation = desc.animate([{ left: desc.style.left }, { left: "50%" }], { duration: 400, easing: "ease-in-out" });
