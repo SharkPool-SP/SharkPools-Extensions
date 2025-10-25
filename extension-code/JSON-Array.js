@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.2
+// Version V.1.1.21
 
 (function (Scratch) {
   "use strict";
@@ -35,6 +35,9 @@
   const circularReplacer = () => {
     const stack = new Set();
     return function replacer(_, value) {
+      if (typeof value === "bigint") {
+        return Number.isSafeInteger(value) ? Number(value) : value.toString() + "n";
+      }
       if (typeof value === "object" && value !== null) {
         if (stack.has(value)) return Array.isArray(value) ? "[...]" : "{...}";
         stack.add(value);
