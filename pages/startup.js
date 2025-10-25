@@ -145,7 +145,7 @@ function genText(type, text) {
   const desc = document.createElement("div");
   desc.classList.add("text-descriptor");
   desc.setAttribute("type", type);
-  desc.textContent = text;
+  desc.innerHTML = text;
   if (type === "center-notif") desc.style.top = "50%";
 
   document.body.appendChild(desc);
@@ -230,7 +230,12 @@ async function downloadExt(name, data) {
     messager.postMessage({
       loadExt: `https://sharkpools-extensions.vercel.app/${data.url}`
     }, "https://studio.penguinmod.com");
-    genText("center-notif", "Copied to PenguinMod! Check the Editor");
+
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    genText(
+      "center-notif",
+      `Copied to PenguinMod!${isMobile ? "<br>" : "" }Check the Editor`
+    );
     return;
   }
 
