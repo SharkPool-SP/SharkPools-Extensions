@@ -234,7 +234,7 @@ async function downloadExt(name, data) {
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     genText(
       "center-notif",
-      `Copied to PenguinMod!${isMobile ? "<br>" : "" }Check the Editor`
+      `Copied to PenguinMod!${isMobile ? "<br>" : " " }Check the Editor`
     );
     return;
   }
