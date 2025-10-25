@@ -214,10 +214,10 @@ body {
   width: max-content;
   max-width: 90%;
   background-color: rgba(87,87,87,.86);
-  border: solid 7px #ebebeb;
   border-radius: 15px;
-  padding: 20px;
-  font-size: 20px;
+  border: solid .7vw #ebebeb;
+  padding: 2vw;
+  font-size: 2vw;
   font-weight: 600;
   position: fixed;
   left: -50%;
