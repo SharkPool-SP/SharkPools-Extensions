@@ -589,7 +589,9 @@
       "url": "extension-code/MIDI-Tools.js",
       "banner": "extension-thumbs/MIDI-Tools.svg",
       "tags": ["all", "utilities"],
-      "date": "Released: 10/24/2025"
+      "date": "Released: 10/24/2025",
+      "overrideLabeler": true,
+      "status": "new"
     },
     "Example": {
       "desc": "",
