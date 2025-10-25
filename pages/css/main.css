@@ -215,9 +215,9 @@ body {
   max-width: 90%;
   background-color: rgba(87,87,87,.86);
   border-radius: 15px;
-  border: solid .7vw #ebebeb;
-  padding: 2vw;
-  font-size: 2vw;
+  border: solid clamp(5px, .7vw, 8px) #ebebeb;
+  padding: clamp(8px, 2%, 20px);
+  font-size: clamp(8px, 5vw, 20px);
   font-weight: 600;
   position: fixed;
   left: -50%;
