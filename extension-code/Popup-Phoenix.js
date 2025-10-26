@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.07
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -835,6 +835,14 @@
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: translatedInputs.popup }
             },
           },
+          {
+            opcode: "focusInput",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("focus on input with ID [ID]"),
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: translatedInputs.input }
+            },
+          },
           "---",
           {
             opcode: "setPopupTarget",
@@ -1330,6 +1338,14 @@
       if (popup === undefined) return "";
       return popup.lastBtnPressed ?? "";
     }
+
+    focusInput(args) {
+      const input = elementStorage.inputs[Cast.toString(args.ID)];
+      if (input) {
+        input.DOMelement.firstChild.focus();
+      }
+    }
+
 
     setPopupTarget(args) {
       const id = Cast.toString(args.ID);
