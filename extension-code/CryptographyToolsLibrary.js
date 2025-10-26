@@ -5,7 +5,7 @@
 
 //  Version 1.0.0
 
-
+(function(Scratch) {
 class CryptoExtensions {
   constructor() {
     // Initialize the improved AES cipher
@@ -2151,3 +2151,4 @@ parseBigInt(value) {
 
 
 Scratch.extensions.register(new CryptoExtensions());
+  })(Scratch);
