@@ -1,3 +1,11 @@
+// Name: Cryptography Tools Library
+// ID: JJctLIB
+// Description: Encrypt and Decrypt information with Cryptography!
+// By: JayJay
+
+//  Version 1.0.0
+
+
 class CryptoExtensions {
   constructor() {
     // Initialize the improved AES cipher
