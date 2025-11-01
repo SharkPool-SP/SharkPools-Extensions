@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.02
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -201,14 +201,15 @@
 
     forVar(args, util) {
       if (util.stackFrame.index === undefined) {
-        util.stackFrame.incrementVal = Math.round(Scratch.Cast.toNumber(args.INC_VALUE));
-        util.stackFrame.index = Math.round(Scratch.Cast.toNumber(args.START));
-        util.stackFrame.endIndex = Math.round(Scratch.Cast.toNumber(args.END));
+        util.stackFrame.incrementVal = Scratch.Cast.toNumber(args.INC_VALUE);
+        util.stackFrame.index = Scratch.Cast.toNumber(args.START);
+        util.stackFrame.endIndex = Scratch.Cast.toNumber(args.END);
+        this.setVar({ ...args, VALUE: util.stackFrame.index - util.stackFrame.incrementVal }, util);
       }
 
+      util.stackFrame.index = this.getVar(args, util) + util.stackFrame.incrementVal;
       this.setVar({ ...args, VALUE: util.stackFrame.index }, util);
-      util.startBranch(1, util.stackFrame.index < util.stackFrame.endIndex);
-      util.stackFrame.index += util.stackFrame.incrementVal;
+      util.startBranch(1, util.stackFrame.endIndex > util.stackFrame.index);
     }
 
     scopeVar(_, util) {
