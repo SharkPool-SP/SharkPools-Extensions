@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.54
+// Version V.1.2.6
 
 (function(Scratch) {
   "use strict";
@@ -1590,6 +1590,26 @@
     });
   }
   if (typeof scaffolding === "undefined") startBlockListener();
+
+  // reset global block caches on edits
+  const ogResetCache = vm.exports.Blocks.prototype.resetCache;
+  vm.exports.Blocks.prototype.resetCache = function(...args) {
+    const globalProcs = Object.keys(globalBlocksCache);
+    const compiledProcs = Object.keys(this._cache.compiledProcedures)
+      .map((p) => p.substring(1, p.length));
+
+    const defList = globalProcs.filter(p => compiledProcs.includes(p));
+    ogResetCache.call(this, ...args);
+    if (defList.length === 0) return;
+
+    for (const target of runtime.targets) {
+      const cache = target.blocks._cache.compiledProcedures;
+      for (const def of defList) {
+        delete cache["Z" + def];
+        delete cache["W" + def];
+      }
+    }
+  }
 
   // Custom Blocks Internals
   function storeGet(name, target = null) {
