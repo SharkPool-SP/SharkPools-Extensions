@@ -1449,16 +1449,22 @@
   }
 
   // reset the compiled code cache for global blocks that get changed
-  function resetGlobalCompilerCache(proccode) {
-    for (const target of runtime.targets) {
-      const blocks = target.blocks;
-      const compiledProcs = Object.keys(blocks._cache.compiledProcedures);
-      for (let i = 0; i < compiledProcs.length; i++) {
-        if (compiledProcs[i].includes(proccode)) {
-          blocks.resetCache();
-          return;
-        }
-      }
+  const ogResetCache = vm.exports.Blocks.prototype.resetCache;
+  vm.exports.Blocks.prototype.resetCache = function(ignoreGlobal) {
+    if (ignoreGlobal) {
+      ogResetCache.call(this);
+      return;
+    }
+
+    const globalProcs = Object.keys(globalBlocksCache);
+    const compiledProcs = Object.keys(this._cache.compiledProcedures)
+      .map((p) => p.substring(1, p.length));
+
+    const defListReset = globalProcs.some(p => compiledProcs.includes(p));
+    if (defListReset) {
+      for (const target of runtime.targets) target.blocks.resetCache(true);
+    } else {
+      ogResetCache.call(this);
     }
   }
 
@@ -1504,7 +1510,6 @@
                   const proto = block.getInput("custom_block")?.connection?.targetBlock();
                   if (!proto) return;
                   const store = storeGet(proto.procCode_);
-                  if (store.global) resetGlobalCompilerCache(proto.procCode_);
                 }
                 block = block.getParent();
               }
@@ -1541,7 +1546,6 @@
                         listNeedsRefresh = true;
                         if (store.global) store.return = vmProto.mutation.return;
                       }
-                      if (store.global) resetGlobalCompilerCache(proto.procCode_);
                     }
                     parent = parent.getParent();
                   }
@@ -1590,26 +1594,6 @@
     });
   }
   if (typeof scaffolding === "undefined") startBlockListener();
-
-  // reset global block caches on edits
-  const ogResetCache = vm.exports.Blocks.prototype.resetCache;
-  vm.exports.Blocks.prototype.resetCache = function(...args) {
-    const globalProcs = Object.keys(globalBlocksCache);
-    const compiledProcs = Object.keys(this._cache.compiledProcedures)
-      .map((p) => p.substring(1, p.length));
-
-    const defList = globalProcs.filter(p => compiledProcs.includes(p));
-    ogResetCache.call(this, ...args);
-    if (defList.length === 0) return;
-
-    for (const target of runtime.targets) {
-      const cache = target.blocks._cache.compiledProcedures;
-      for (const def of defList) {
-        delete cache["Z" + def];
-        delete cache["W" + def];
-      }
-    }
-  }
 
   // Custom Blocks Internals
   function storeGet(name, target = null) {
