@@ -3,7 +3,7 @@
 // Description: Play Animations for your Sprites
 // By: SharkPool
 // Licence: MIT
-// Version V.2.0.13
+// Version V.2.0.14
 
 (function (Scratch) {
   "use strict";
@@ -87,6 +87,21 @@
           }
         });
       });
+
+      // Clean up animations when clones are deleted
+      const cleanupAnimations = () => {
+        const currentIDs = new Set(runtime.targets.map(t => t.id));
+        for (const id in allAnimations) {
+          if (!currentIDs.has(id)) {
+            delete allAnimations[id];
+            // console.log(`Deleted animations for removed clone: ${id}`);
+          }
+        }
+      };
+
+      runtime.on("PROJECT_STOP_ALL", cleanupAnimations);
+      runtime.on("TARGETS_UPDATE", cleanupAnimations);
+
     }
     getInfo() {
       return {
