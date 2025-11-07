@@ -1449,8 +1449,8 @@
   }
 
   // reset the compiled code cache for global blocks that get changed
-  const ogResetCache = vm.exports.Blocks.prototype.resetCache;
-  vm.exports.Blocks.prototype.resetCache = function(ignoreGlobal) {
+  const ogResetCache = vm.runtime.targets[0].blocks.constructor.prototype.resetCache;
+  vm.runtime.targets[0].blocks.constructor.prototype.resetCache = function(ignoreGlobal) {
     if (ignoreGlobal) {
       ogResetCache.call(this);
       return;
