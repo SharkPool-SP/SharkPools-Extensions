@@ -155,9 +155,7 @@
       "url": "extension-code/Sprite-Effects-V2.js",
       "banner": "extension-thumbs/Sprite-Effects.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "date": "Last Updated: 10/24/2025",
-      "overrideLabeler": true,
-      "status": "new"
+      "date": "Last Updated: 10/24/2025"
     },
     "Image-Effects": {
       "desc": "Apply Effects and Filters to Images",
@@ -589,9 +587,7 @@
       "url": "extension-code/MIDI-Tools.js",
       "banner": "extension-thumbs/MIDI-Tools.svg",
       "tags": ["all", "utilities"],
-      "date": "Released: 10/24/2025",
-      "overrideLabeler": true,
-      "status": "new"
+      "date": "Released: 10/24/2025"
     },
     "Example": {
       "desc": "",
