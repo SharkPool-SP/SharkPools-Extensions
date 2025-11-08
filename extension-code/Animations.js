@@ -94,7 +94,6 @@
         for (const id in allAnimations) {
           if (!currentIDs.has(id)) {
             delete allAnimations[id];
-            // console.log(`Deleted animations for removed clone: ${id}`);
           }
         }
       };
