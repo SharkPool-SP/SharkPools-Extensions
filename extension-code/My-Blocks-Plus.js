@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.6
+// Version V.1.2.61
 
 (function(Scratch) {
   "use strict";
@@ -1449,22 +1449,25 @@
   }
 
   // reset the compiled code cache for global blocks that get changed
-  const ogResetCache = vm.runtime.targets[0].blocks.constructor.prototype.resetCache;
-  vm.runtime.targets[0].blocks.constructor.prototype.resetCache = function(ignoreGlobal) {
-    if (ignoreGlobal) {
-      ogResetCache.call(this);
-      return;
-    }
+  let cachePatched = false;
+  function patchCache() {
+    cachePatched = true;
+    const ogResetCache = vm.runtime.targets[0].blocks.constructor.prototype.resetCache;
+    vm.runtime.targets[0].blocks.constructor.prototype.resetCache = function(ignoreGlobal) {
+      if (ignoreGlobal) {
+        ogResetCache.call(this);
+        return;
+      }
 
-    const globalProcs = Object.keys(globalBlocksCache);
-    const compiledProcs = Object.keys(this._cache.compiledProcedures)
-      .map((p) => p.substring(1, p.length));
+      const globalProcs = Object.keys(globalBlocksCache);
+      const compiledProcs = Object.keys(this._cache.compiledProcedures)
+        .map((p) => p.substring(1, p.length));
 
-    const defListReset = globalProcs.some(p => compiledProcs.includes(p));
-    if (defListReset) {
-      for (const target of runtime.targets) target.blocks.resetCache(true);
-    } else {
-      ogResetCache.call(this);
+      if (globalProcs.some(p => compiledProcs.includes(p))) {
+        for (const target of runtime.targets) target.blocks.resetCache(true);
+      } else {
+        ogResetCache.call(this);
+      }
     }
   }
 
@@ -1481,6 +1484,7 @@
         if (!extensionRemovable) {
           listNeedsRefresh = true;
           if (workspace?.rendered) SB.Procedures.flyoutCategory(workspace);
+          if (!cachePatched) patchCache();
         }
       });
     });
