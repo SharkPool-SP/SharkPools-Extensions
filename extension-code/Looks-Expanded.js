@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.31
+// Version V.1.0.32
 
 (function (Scratch) {
   "use strict";
@@ -123,6 +123,14 @@ void main() {
   gl_Position = u_projectionMatrix * u_modelMatrix * vec4(positionSP, 0, 1);
   #endif`
       );
+      if (isPM) {
+        // penguinmod has skewing, which we have to disable for warping to work
+        args[1][0] = args[1][0].replace(
+          `gl_Position = u_projectionMatrix * u_modelMatrix * vec4(x,y, 0, 1);`,
+          `gl_Position = u_projectionMatrix * u_modelMatrix * vec4(positionSP, 0, 1);`
+        );
+      }
+
 
       args[1][1] = args[1][1].replace(
         `uniform sampler2D u_skin;`,
