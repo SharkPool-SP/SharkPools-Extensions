@@ -90,7 +90,7 @@
             block.edgeShape_ = objShape;
             block.renderDrawLeft_(steps, 0);
             block.edgeShape_ = ogShape;
-            return [steps[0]];
+            return [steps[1]];
           }
         },
         rightPath: (block) => {
