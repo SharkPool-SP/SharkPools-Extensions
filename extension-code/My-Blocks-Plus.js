@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.61
+// Version V.1.2.62
 
 (function(Scratch) {
   "use strict";
@@ -234,25 +234,27 @@
     dropBtn.addEventListener("click", () => openMenuSelector(editor, isDark, workspace));
 
     // branch btn
-    const branchBtn = row.childNodes[1].cloneNode(true);
-    branchBtn.childNodes[0].src = inputURIs("brc");
-    branchBtn.childNodes[2].textContent = "branch";
-    row.insertBefore(branchBtn, row.childNodes[3]);
-    branchBtn.addEventListener("click", (e) => {
-      editor.addStringNumberExternal();
-      e.stopImmediatePropagation();
+    if (!isPM) {
+      const branchBtn = row.childNodes[1].cloneNode(true);
+      branchBtn.childNodes[0].src = inputURIs("brc");
+      branchBtn.childNodes[2].textContent = "branch";
+      row.insertBefore(branchBtn, row.childNodes[3]);
+      branchBtn.addEventListener("click", (e) => {
+        editor.addStringNumberExternal();
+        e.stopImmediatePropagation();
 
-      const args = editor.argumentIds_;
-      const id = args[args.length - 1];
-      const inputs = tempStore.inputs || {};
-      inputs[id] = { type: "brc", isDrop: false };
-      tempStore.inputs = inputs;
-      cleanupBlockInputs(inputs, args);
+        const args = editor.argumentIds_;
+        const id = args[args.length - 1];
+        const inputs = tempStore.inputs || {};
+        inputs[id] = { type: "brc", isDrop: false };
+        tempStore.inputs = inputs;
+        cleanupBlockInputs(inputs, args);
 
-      editor.displayNames_[args.length - 1] = "branch";
-      editor.updateDisplay_();
-      editor.focusLastEditor_();
-    });
+        editor.displayNames_[args.length - 1] = "branch";
+        editor.updateDisplay_();
+        editor.focusLastEditor_();
+      });
+    }
 
     // dynamic btns
     const labPaths = [["text", "text"], ["image", "img"]];
@@ -1967,7 +1969,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "start branch [INDEX] [ICON]",
             extensions: ["SPmbpCST_defineColored"],
-            hideFromPalette: extensionRemovable,
+            hideFromPalette: isPM || extensionRemovable,
             arguments: {
               INDEX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ICON: { type: Scratch.ArgumentType.IMAGE, dataURI: guiURIs("branchStart") }
