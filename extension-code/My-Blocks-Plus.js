@@ -234,11 +234,12 @@
     dropBtn.addEventListener("click", () => openMenuSelector(editor, isDark, workspace));
 
     // branch btn
+    const branchBtn = row.childNodes[1].cloneNode(true);
+    branchBtn.childNodes[0].src = inputURIs("brc");
+    branchBtn.childNodes[2].textContent = "branch";
+    if (!isPM) branchBtn.style.display = "none";
+    row.insertBefore(branchBtn, row.childNodes[3]);
     if (!isPM) {
-      const branchBtn = row.childNodes[1].cloneNode(true);
-      branchBtn.childNodes[0].src = inputURIs("brc");
-      branchBtn.childNodes[2].textContent = "branch";
-      row.insertBefore(branchBtn, row.childNodes[3]);
       branchBtn.addEventListener("click", (e) => {
         editor.addStringNumberExternal();
         e.stopImmediatePropagation();
