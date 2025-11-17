@@ -237,7 +237,7 @@
     const branchBtn = row.childNodes[1].cloneNode(true);
     branchBtn.childNodes[0].src = inputURIs("brc");
     branchBtn.childNodes[2].textContent = "branch";
-    if (!isPM) branchBtn.style.display = "none";
+    if (isPM) branchBtn.style.display = "none";
     row.insertBefore(branchBtn, row.childNodes[3]);
     if (!isPM) {
       branchBtn.addEventListener("click", (e) => {
