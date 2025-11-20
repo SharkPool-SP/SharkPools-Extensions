@@ -2,7 +2,7 @@
  * Since 2000
  * @author 0znzw (@link https://scratch.mit.edu/users/0znzw/)
  * @author ionslayer (@link https://scratch.mit.edu/users/ionslayer/)
- * @version 1.4
+ * @version 2.0
  * @license MIT AND LGPL-3.0
  */
 (function (Scratch) {
@@ -14,6 +14,31 @@
      * @param {PerformanceMark} markerStart The marker that signifies the start timer.
      */
     constructor(markerStart) {
+      try {
+        this.temporal = globalThis.Temporal && Temporal.PlainDateTime.from('2000-01-01T00:00:00.000+00:00');
+        if (this.temporal) {
+          this.nanosecondsSince2000  = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'nanoseconds', relativeTo: this.temporal });
+          this.microsecondsSince2000 = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'microseconds', relativeTo: this.temporal });
+          this.secondsSince2000      = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'seconds', relativeTo: this.temporal });
+          this.minutesSince2000      = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'minutes', relativeTo: this.temporal });
+          this.hoursSince2000        = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'hours', relativeTo: this.temporal });
+          this.daysSince2000         = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'days', relativeTo: this.temporal });
+          this.weeksSince2000        = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'weeks', relativeTo: this.temporal });
+          this.monthsSince2000       = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'months', relativeTo: this.temporal });
+          this.yearsSince2000        = () => this.temporal.until(Temporal.Now.plainDateTimeISO()).total({ unit: 'years', relativeTo: this.temporal });
+          this.leapYearsSince2000    = () => {
+            const now = Temporal.Now.plainDateISO().year;
+            return (Math.floor(now / 4) - Math.floor(now / 100) + Math.floor(now / 400)) - extension.magicLeapYears;
+          };
+          this.decadesSince2000      = () => this.yearsSince2000() / 10;
+          this.centuriesSince2000    = () => this.yearsSince2000() / 100;
+          this.millenniumsSince2000  = () => this.yearsSince2000() / 1000;
+        }
+      } catch(_error) {} finally {
+        this.temporal = this.temporal || null;
+        if (!this.temporal) console.warn('Temporal is not supported, nanoseconds & microseconds since 2000 will be innacurate.');
+      }
+
       this.markerStart = markerStart;
       this.markerStart.end = extension.markerEnd;
       this.showLegacy = false;
@@ -34,6 +59,11 @@
             opcode: 'Since2000', // All containing reporter via a menu.
             blockType: BlockType.REPORTER, text: Scratch.translate('[menu] since 2000'),
             arguments: { menu: { type: ArgumentType.STRING, menu: 'since2k' } },
+          },
+          {
+            hideFromPalette: !this.showLegacy,
+            opcode: 'nanosecondsSince2000', blockType: BlockType.REPORTER,
+            text: Scratch.translate('nanoseconds since 2000'),
           },
           {
             hideFromPalette: !this.showLegacy,
@@ -118,6 +148,7 @@
               {text: Scratch.translate('(11) decades'), value: 'decades'},
               {text: Scratch.translate('(12) centuries'), value: 'centuries'},
               {text: Scratch.translate('(13) millenniums'), value: 'millenniums'},
+              {text: Scratch.translate('(14) nanoseconds'), value: 'nanoseconds'},
             ],
           },
         },
@@ -135,12 +166,13 @@
     static magicWeeks = (7 * this.magicDays);
     static magicYears = (365.25 * this.magicDays);
     static magicMonths = (this.magicYears / 12);
-    static magicLeapYears = (4 * this.magicYears);
+    static magicLeapYears = Math.floor(1999 / 4) - Math.floor(1999 / 100) + Math.floor(1999 / 400);
     static magicDecades = (10 * this.magicYears);
     static magicCenturies = (100 * this.magicYears);
     static magicMillenniums = (1000 * this.magicYears);
     static markerStart = extId + '_performanceMarkStart';
     static markerEnd = extId + '_performanceMarkEnd';
+    nanosecondsSince2000() { return Math.trunc(this.microsecondsSince2000() * 10000); }
     microsecondsSince2000() {
       performance.mark(extension.markerEnd, {
         detail: 'ending marker',
@@ -161,7 +193,10 @@
     weeksSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicWeeks; }
     monthsSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicMonths; }
     yearsSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicYears; }
-    leapYearsSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicLeapYears + 1; }
+    leapYearsSince2000() {
+      const now = (new Date()).getFullYear();
+      return (Math.floor(now / 4) - Math.floor(now / 100) + Math.floor(now / 400)) - extension.magicLeapYears;
+    }
     decadesSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicDecades; }
     centuriesSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicCenturies; }
     millenniumsSince2000() { return (Date.now() - extension.s2kMAGIC) / extension.magicMillenniums; }
@@ -184,7 +219,7 @@
       return value;
     }
     Since2000({ menu }) {
-      switch (this._asValue(menu, 13)) {
+      switch (this._asValue(menu, 14)) {
         case '1': case 'microseconds': return this.microsecondsSince2000();
         case '2': case 'milliseconds': return this.millisecondsSince2000();
         case '3': case 'seconds': return this.secondsSince2000();
@@ -198,6 +233,7 @@
         case '11': case 'decades': return this.decadesSince2000();
         case '12': case 'centuries': return this.centuriesSince2000();
         case '13': case 'millenniums': return this.millenniumsSince2000();
+        case '14': case 'nanoseconds': return this.nanosecondsSince2000();
         case '0': default: return -1;
       }
     }
@@ -209,3 +245,4 @@
   if (Scratch.extensions.unsandboxed) Scratch.vm.runtime[`cext_${extId}`] = ext;
   Scratch.extensions.register(ext);
 })(Scratch);
+
