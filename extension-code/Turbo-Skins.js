@@ -53,7 +53,7 @@
       if (skinData.type !== type) removeSkin(skinData.name);
       else {
         if (skinData.type === "svg") existingSkin.setSVG(data);
-        else existingSkin.setBitmap(data);
+        else existingSkin.setBitmap(data, 1);
         return;
       }
     }
@@ -64,7 +64,7 @@
       skin.setSVG(data);
     } else {
       skin = new BitmapSkin(skinId, render);
-      skin.setBitmap(data);
+      skin.setBitmap(data, 1);
     }
     skin[skinTag] = { type, name, data, hitbox: skinId };
     allSkins[name] = skin;
