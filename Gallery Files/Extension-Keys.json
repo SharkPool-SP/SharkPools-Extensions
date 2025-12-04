@@ -92,7 +92,7 @@
       "date": "Last Updated: 08/08/2025"
     },
     "Keys-Plus-V2": {
-      "desc": "Powerful and flexible Key detection Blocks with some additional features",
+      "desc": "Powerful and flexible Key detection Blocks with some additional features (No longer maintained)",
       "creator": "StackOverflow",
       "url": "extension-code/KeysPlusV2.js",
       "banner": "extension-thumbs/Keys-Plus-V2.svg",
