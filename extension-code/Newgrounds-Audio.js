@@ -1,9 +1,10 @@
 // Name: Newgrounds Audio
 // ID: SPaudioNG
-// Description: Fetch Audio Tracks from Newgrounds
+// Description: Fetch Audio Tracks from Newgrounds.
 // By: SharkPool
+// License: MIT
 
-// Version V.2.0.02
+// Version V.2.0.1
 
 (function (Scratch) {
   "use strict";
@@ -31,25 +32,38 @@
           {
             opcode: "fetchID",
             blockType: Scratch.BlockType.COMMAND,
-            text: "fetch Track data with ID [ID]",
+            text: "fetch track with ID [ID]",
             arguments: {
               ID: { type: Scratch.ArgumentType.NUMBER, defaultValue: 505816 }
             }
           },
+          "---",
           {
             opcode: "findURL",
             blockType: Scratch.BlockType.REPORTER,
-            text: "Track URL",
+            text: "track URL",
             disableMonitor: true
           },
           {
             opcode: "getTrackInfo",
             blockType: Scratch.BlockType.REPORTER,
-            text: "[INFO] of Track",
+            text: "[INFO] of track",
             arguments: {
               INFO: { type: Scratch.ArgumentType.STRING, menu: "INFO" }
             }
-          }
+          },
+          {
+            opcode: "scouted",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "track author scouted?",
+            disableMonitor: true
+          },
+          {
+            opcode: "downloadAllowed",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "track allowed for download?",
+            disableMonitor: true
+          },
         ],
         menus: {
           INFO: {
@@ -57,7 +71,8 @@
             items: [
               "Name", "Author", "Description", "Rating",
               "Release Date", "Raw File Size", "File Size",
-              "Length", "Listens", "Downloads", "Vote Count"
+              "Length", "Listens", "Downloads", "Vote Count",
+              "Copyright License"
             ]
           }
         }
@@ -75,6 +90,50 @@
       return descTxt.trim();
     }
 
+    ccLicenseReader(licence, returnBool) {
+      licence = Scratch.Cast.toString(licence).toLowerCase().trim();
+
+      const goodTexts = [
+        `you may only use this piece for commercial purposes if your work is a web-based game or animation,`,
+      ];
+      const badTexts = [
+        `you may not use this work for any purposes`,
+      ];
+      const warnTexts = [
+        `you are free to copy, distribute and transmit this work under the following conditions:`,
+        `please contact me if you would like to use this in a project. we can discuss the details.`,
+      ];
+
+      let result = "warn";
+      for (const text of goodTexts) {
+        if (licence.startsWith(text)) {
+          result = "good";
+          break;
+        }
+      }
+      for (const text of badTexts) {
+        if (licence.startsWith(text)) {
+          result = "bad";
+          break;
+        }
+      }
+      for (const text of warnTexts) {
+        if (licence.startsWith(text)) {
+          result = "warn";
+          break;
+        }
+      }
+
+      if (returnBool) {
+        if (result === "bad") return false;
+        else return true;
+      } else {
+        if (result === "good") return "This Track can freely be used for web-based games";
+        else if (result === "bad") return "This Track is not allowed for use!";
+        else return "This Track can only be used for non-profit web-based games WITH credit. Further use requires permission from the author";
+      }
+    }
+
     // Block Funcs
     fetchID(args) {
       const url = `${proxy2}https://www.newgrounds.com/audio/listen/${args.ID}`;
@@ -82,22 +141,25 @@
         if (!response.ok) throw new Error("Error 404");
         return response.text();
       })
-      .then(html => { lastNgResponse = html })
-      .catch(e => { console.warn("Error:", e) });
+      .then(html => {
+        lastNgResponse = html;
+      })
+      .catch(e => {
+        console.warn("Error:", e);
+      });
     }
 
     findURL(args) {
       const html = lastNgResponse;
-      if (html === "") return "Fetch an ID First!"
+      if (!html) return "Fetch an ID First!"
       const embedController = html.match(/new embedController\(\[{"url":"([^"]+)\?/);
       return `${proxy}${embedController[1].replaceAll("\\", "")}`;
     }
 
     getTrackInfo(args) {
-      const html = lastNgResponse;
-      if (html === "") return "Fetch an ID First!"
+      if (!lastNgResponse) return "Fetch an ID First!"
       const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
+      const doc = parser.parseFromString(lastNgResponse, "text/html");
       const scriptTags = doc.querySelectorAll("script");
       let scriptTxt = null;
       scriptTags.forEach(tag => {
@@ -120,14 +182,15 @@
           element = doc.querySelector("meta[itemprop=\"datePublished\"]");
           return element ? element.getAttribute("content") : "";
         case "Raw File Size":
-        case "File Size":
+        case "File Size": {
           const bytes = parseInt((scriptTxt.match(/"filesize":(\d+)/) || [0,0])[1], 10);
           if (args.INFO.startsWith("Raw")) return bytes;
           return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+        }
         case "Length": return (scriptTxt.match(/"length":"([^"]+)"/) || [0,0])[1];
         case "Listens":
         case "Downloads":
-        case "Vote Count":
+        case "Vote Count": {
           const properName = args.INFO === "Vote Count" ? "Votes" : args.INFO;
           const dtElements = doc.querySelectorAll("dt");
           for (const dt of dtElements) {
@@ -138,8 +201,27 @@
             }
           }
           return 0;
+        }
+        case "Copyright License": {
+          const ccLicense = lastNgResponse.match(/<div class="pod-body creative-commons">[\s\S]*?<p>\s*([\s\S]*?)\s*<\/p>/i)?.[1] || "";
+          return this.ccLicenseReader(ccLicense, false);
+        }
         default: return "Invalid Menu Selection";
       }
+    }
+
+    scouted() {
+      if (!lastNgResponse) return false;
+
+      const scoutRegex = /<dt>\s*Listens\s*<\/dt>[\s\S]*?<dd>\s*([\d,]+)\s*<\/dd>[\s\S]*?<dt>\s*Downloads\s*<\/dt>[\s\S]*?<dd>\s*([\d,]+)\s*<\/dd>[\s\S]*?<dt>\s*Score\s*<\/dt>/i;
+      return Scratch.Cast.toBoolean(lastNgResponse.match(scoutRegex));
+    }
+
+    downloadAllowed() {
+      if (!lastNgResponse || !this.scouted()) return false;
+
+      const ccLicense = lastNgResponse.match(/<div class="pod-body creative-commons">[\s\S]*?<p>\s*([\s\S]*?)\s*<\/p>/i)?.[1] || "";
+      return this.ccLicenseReader(ccLicense, true);
     }
   }
 
