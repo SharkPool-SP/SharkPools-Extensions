@@ -517,6 +517,14 @@
       "tags": ["all", "utilities"],
       "date": "Last Updated: 12/20/2024"
     },
+    "PNG-Spritesheets": {
+      "desc": "Create and Export PNG Spritesheets",
+      "creator": "SharkPool",
+      "url": "extension-code/PNG-Spritesheets.js",
+      "banner": "extension-thumbs/PNG-Spritesheets.svg",
+      "tags": ["all", "utilities"],
+      "date": "Last Updated: 12/8/2025"
+    },
     "Community-Spotlight": {
       "desc": "Display and Promote Projects for Free",
       "creator": "SharkPool, Community Spotlight Team",
