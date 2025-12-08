@@ -519,7 +519,7 @@
     },
     "PNG-Spritesheets": {
       "desc": "Create and Export PNG Spritesheets",
-      "creator": "SharkPool",
+      "creator": "Drago Cuven",
       "url": "extension-code/PNG-Spritesheets.js",
       "banner": "extension-thumbs/PNG-Spritesheets.svg",
       "tags": ["all", "utilities"],
