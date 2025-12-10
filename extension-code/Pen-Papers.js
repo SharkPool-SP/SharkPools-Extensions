@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.3
+// Version V.1.0.31
 
 (function (Scratch) {
   "use strict";
@@ -28,6 +28,18 @@
   const penExt = runtime.ext_pen;
   const defaultSkinID = penExt._getPenLayerID();
   papers["default"] = { skin: defaultSkinID, drawable: penExt._penDrawableId };
+
+  // patch this renderer function to implement high-quality support
+  const ogUpdateRenderQuality = render._updateRenderQuality;
+  render._updateRenderQuality = function(...args) {
+    ogUpdateRenderQuality.call(this, ...args);
+
+    const quality = this.useHighQualityRender ? this.canvas.width / this._nativeSize[0] : 1;
+    const papersArray = Object.values(papers);
+    for (const paper of papersArray) {
+      paper.skin.setRenderQuality(quality);
+    }
+  }
 
   class SPpenPapers {
     getInfo() {
@@ -160,8 +172,12 @@
     createPaper(args) {
       const name = Scratch.Cast.toString(args.NAME);
       if (papers[name] === undefined) {
-        const skin = render.createPenSkin();
         const drawable = render.createDrawable("pen");
+        const skin = render.createPenSkin();
+        if (render.useHighQualityRender) {
+          skin.setRenderQuality(this.canvas.width / this._nativeSize[0]);
+        }
+
         papers[name] = { skin, drawable };
         render.updateDrawableSkinId(drawable, skin);
         render._allDrawables[drawable].customDrawableName = "Pen Paper: " + name;
