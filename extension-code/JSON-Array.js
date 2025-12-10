@@ -226,8 +226,7 @@
     let funcString = `(() => {\n`;
     funcString += `const t = typeof ${type};\n`;
     funcString += `if (t === "undefined") return "";\n`;
-    funcString += `else if (t === "object") return JSON.stringify(${type});\n`;
-    funcString += `else return ${type}.toString();\n`;
+    funcString += `else return ${type};\n`;
     return funcString + "})()";
   }
 
@@ -315,10 +314,10 @@
     JSGenerator.prototype.descendInput = function (node) {
       if (node === undefined) return;
       switch (node.kind) {
-        case "SPjson.arrValA": return new exp.TypedInput(generateCleanser("SParrA"), exp.TYPE_STRING);
-        case "SPjson.arrValB": return new exp.TypedInput(generateCleanser("SParrB"), exp.TYPE_STRING);
-        case "SPjson.objKey": return new exp.TypedInput(generateCleanser("SPobjK"), exp.TYPE_STRING);
-        case "SPjson.objVal": return new exp.TypedInput(generateCleanser("SPobjV"), exp.TYPE_STRING);
+        case "SPjson.arrValA": return new exp.TypedInput(generateCleanser("SParrA"), exp.TYPE_UNKNOWN);
+        case "SPjson.arrValB": return new exp.TypedInput(generateCleanser("SParrB"), exp.TYPE_UNKNOWN);
+        case "SPjson.objKey": return new exp.TypedInput(generateCleanser("SPobjK"), exp.TYPE_UNKNOWN);
+        case "SPjson.objVal": return new exp.TypedInput(generateCleanser("SPobjV"), exp.TYPE_UNKNOWN);
         case "SPjson.jsonMap": {
           const safeObj = this.descendInput(node.obj).asUnknown();
           const safeValue = this.descendInput(node.value).asUnknown();
