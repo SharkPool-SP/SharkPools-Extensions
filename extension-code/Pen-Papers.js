@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.31
+// Version V.1.0.32
 
 (function (Scratch) {
   "use strict";
@@ -37,7 +37,8 @@
     const quality = this.useHighQualityRender ? this.canvas.width / this._nativeSize[0] : 1;
     const papersArray = Object.values(papers);
     for (const paper of papersArray) {
-      paper.skin.setRenderQuality(quality);
+      const skin = render._allSkins[paper.skin];
+      skin.setRenderQuality(quality);
     }
   }
 
@@ -175,7 +176,7 @@
         const drawable = render.createDrawable("pen");
         const skin = render.createPenSkin();
         if (render.useHighQualityRender) {
-          skin.setRenderQuality(this.canvas.width / this._nativeSize[0]);
+          skin.setRenderQuality(render.canvas.width / render._nativeSize[0]);
         }
 
         papers[name] = { skin, drawable };
