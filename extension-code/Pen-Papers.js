@@ -176,7 +176,7 @@
         const drawable = render.createDrawable("pen");
         const skin = render.createPenSkin();
         if (render.useHighQualityRender) {
-          skin.setRenderQuality(render.canvas.width / render._nativeSize[0]);
+          render._allSkins[skin].setRenderQuality(render.canvas.width / render._nativeSize[0]);
         }
 
         papers[name] = { skin, drawable };
