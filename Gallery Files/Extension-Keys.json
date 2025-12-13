@@ -195,7 +195,7 @@
       "url": "extension-code/Newgrounds-Audio.js",
       "banner": "extension-thumbs/Newgrounds-Audio.svg",
       "tags": ["all", "fetching"],
-      "date": "Last Updated: 02/01/2025"
+      "date": "Last Updated: 12/06/2025"
     },
     "Sprite-Parenting": {
       "desc": "Link Sprites together and make them follow their parent's movement",
@@ -539,7 +539,7 @@
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
       "tags": ["all", "utilities", "expanded"],
-      "date": "Last Updated: 10/08/2025"
+      "date": "Last Updated: 12/10/2025"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
@@ -579,7 +579,7 @@
       "url": "extension-code/Pen-Papers.js",
       "banner": "extension-thumbs/Pen-Papers.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "date": "Last Updated: 07/05/2025"
+      "date": "Last Updated: 12/12/2025"
     },
     "MIDI-Tools": {
       "desc": "Utilities For Making Midi Notes Into Functions",
