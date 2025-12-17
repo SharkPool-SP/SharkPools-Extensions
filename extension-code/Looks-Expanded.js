@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.32
+// Version V.1.0.4
 
 (function (Scratch) {
   "use strict";
@@ -25,12 +25,6 @@
 
   const drawableKey = Symbol("SPlooksKey");
   const MAX_REPLACERS = 15;
-  const newUniforms = [
-    "u_replaceColorFromSP", "u_replaceColorToSP", "u_replaceThresholdSP", "u_numReplacersSP",
-    "u_warpSP", "u_maskTextureSP", "u_shouldMaskSP",
-    "u_tintColorSP", "u_saturateSP", "u_opaqueSP", "u_contrastSP",
-    "u_posterizeSP", "u_sepiaSP", "u_bloomSP"
-  ];
 
   const newSingleEffects = {
     saturation: 1, opaque: 0, contrast: 1,
@@ -53,28 +47,10 @@
   const replaceTo = new Float32Array(MAX_REPLACERS * 4).fill(0);
   const replaceThresh = new Float32Array(MAX_REPLACERS).fill(1);
 
-  let currentShader;
-
   /* patch for new effects */
   function initDrawable(drawable) {
     if (!drawable[drawableKey]) drawable[drawableKey] = genEffectFactory();
   }
-
-  const ogGetShader = render._shaderManager.getShader;
-  render._shaderManager.getShader = function (drawMode, effectBits) {
-    const shader = ogGetShader.call(this, drawMode, effectBits);
-    if (!shader._patched) {
-      shader._patched = true;
-      const gl = render._gl;
-
-      // add uniforms to the existing shader
-      for (const name of newUniforms) {
-        shader.uniformSetters[name] = gl.getUniformLocation(shader.program, name);
-      }
-    }
-    currentShader = shader;
-    return shader;
-  };
 
   // Clear the renderer's shader cache since we're patching shaders
   for (const cache of Object.values(render._shaderManager._shaderCache)) {
@@ -94,8 +70,7 @@
         .replaceAll("vec4(a_position", "vec4(positionSP")
         .replace("v_texCoord = a_texCoord;", "")
         .replace("#if !(defined(DRAW_MODE_line) || defined(DRAW_MODE_background))", "#if 1")
-        .replace(
-        `void main() {`,
+        .replace(`void main() {`,
         `uniform vec2 u_warpSP[4];
 
 void main() {
@@ -130,7 +105,6 @@ void main() {
           `gl_Position = u_projectionMatrix * u_modelMatrix * vec4(positionSP, 0, 1);`
         );
       }
-
 
       args[1][1] = args[1][1].replace(
         `uniform sampler2D u_skin;`,
@@ -252,10 +226,9 @@ gl_FragColor.a = baseAlpha;`
   };
 
   const ogGetUniforms = render.exports.Drawable.prototype.getUniforms;
-  render.exports.Drawable.prototype.getUniforms = function() {
+  render.exports.Drawable.prototype.getUniforms = function () {
     const gl = render.gl;
     const uniforms = ogGetUniforms.call(this);
-    if (!currentShader) return uniforms;
 
     initDrawable(this);
     const effectData = this[drawableKey];
@@ -269,34 +242,31 @@ gl_FragColor.a = baseAlpha;`
       }
     }
 
-    if (effectData.shouldMask) {
-      gl.activeTexture(gl.TEXTURE30);
-      gl.bindTexture(gl.TEXTURE_2D, effectData._maskTexture);
-      gl.uniform1i(currentShader.uniformSetters["u_maskTextureSP"], 30);
-      gl.activeTexture(gl.TEXTURE0);
-    }
-
     const newEffects = effectData.newEffects;
-    gl.uniform3fv(currentShader.uniformSetters.u_replaceColorFromSP, replaceFrom);
-    gl.uniform4fv(currentShader.uniformSetters.u_replaceColorToSP, replaceTo);
-    gl.uniform1fv(currentShader.uniformSetters.u_replaceThresholdSP, replaceThresh);
-    gl.uniform1i(currentShader.uniformSetters.u_numReplacersSP, replacers ? Math.min(replacers.length, MAX_REPLACERS) : 0);
-    gl.uniform4fv(currentShader.uniformSetters.u_tintColorSP, effectData.tint);
-    gl.uniform2fv(currentShader.uniformSetters.u_warpSP, effectData.warp);
-    gl.uniform1f(currentShader.uniformSetters.u_shouldMaskSP, effectData.shouldMask);
-    gl.uniform1f(currentShader.uniformSetters.u_saturateSP, newEffects.saturation);
-    gl.uniform1f(currentShader.uniformSetters.u_opaqueSP, newEffects.opaque);
-    gl.uniform1f(currentShader.uniformSetters.u_contrastSP, newEffects.contrast);
-    gl.uniform1f(currentShader.uniformSetters.u_posterizeSP, newEffects.posterize);
-    gl.uniform1f(currentShader.uniformSetters.u_sepiaSP, newEffects.sepia);
-    gl.uniform1f(currentShader.uniformSetters.u_bloomSP, newEffects.bloom);
+    uniforms.u_replaceColorFromSP = replaceFrom;
+    uniforms.u_replaceColorToSP = replaceTo;
+    uniforms.u_replaceThresholdSP = replaceThresh;
+    uniforms.u_numReplacersSP = replacers ? Math.min(replacers.length, MAX_REPLACERS) : 0;
+    uniforms.u_tintColorSP = effectData.tint;
+    uniforms.u_warpSP = effectData.warp;
+    uniforms.u_shouldMaskSP = effectData.shouldMask;
+    uniforms.u_saturateSP = newEffects.saturation;
+    uniforms.u_opaqueSP = newEffects.opaque;
+    uniforms.u_contrastSP = newEffects.contrast;
+    uniforms.u_posterizeSP = newEffects.posterize;
+    uniforms.u_sepiaSP = newEffects.sepia;
+    uniforms.u_bloomSP = newEffects.bloom;
+
+    if (effectData.shouldMask) {
+      uniforms["u_maskTextureSP"] = effectData._maskTexture;
+    }
 
     return uniforms;
   }
 
   // reset on stop/start/clear
   const ogClearEffects = vm.exports.RenderedTarget.prototype.clearEffects;
-  vm.exports.RenderedTarget.prototype.clearEffects = function() {
+  vm.exports.RenderedTarget.prototype.clearEffects = function () {
     const drawable = render._allDrawables[this.drawableID];
     drawable[drawableKey] = genEffectFactory();
     ogClearEffects.call(this);
