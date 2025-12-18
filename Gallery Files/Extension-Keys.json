@@ -1,7 +1,7 @@
 {
   "extensions": {
     "Topaz": {
-      "desc": "Customize and send requests to Google's Gemini API.",
+      "desc": "Send requests to Gemini API.",
       "creator": "cs3203402",
       "url": "extension-code/Topaz.js",
       "banner": "extension-thumb/Topaz.png",
