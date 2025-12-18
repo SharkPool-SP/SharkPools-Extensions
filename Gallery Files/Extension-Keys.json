@@ -4,7 +4,7 @@
       "desc": "Send requests to Gemini API.",
       "creator": "cs3203402",
       "url": "extension-code/Topaz.js",
-      "banner": "extension-thumb/Topaz.png",
+      "banner": "extension-thumb/Topaz.svg",
       "tags": ["all", "fetching"],
       "status": "new"
     }
