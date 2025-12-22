@@ -151,7 +151,7 @@
     async getIPInfo(args) {
       if (!await Scratch.canFetch(`https://freeipapi.com/api/json/${args.IP}`)) return "";
       try {
-        const response = await fetch(`https://freeipapi.com/api/json/${args.IP}`);
+        const response = await fetch(`https://corsproxy.io?url=https://freeipapi.com/api/json/${args.IP}`);
         const data = await response.json();
         return data[args.TYPE] ? data[args.TYPE] : "";
       } catch { return "" }
@@ -185,3 +185,4 @@
 
   Scratch.extensions.register(new SPgeolocation());
 })(Scratch);
+
