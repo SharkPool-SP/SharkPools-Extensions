@@ -347,7 +347,7 @@
       "url": "extension-code/Geolocation.js",
       "banner": "extension-thumbs/Geolocation.svg",
       "tags": ["all", "fetching"],
-      "date": "Last Updated: 04/10/2025"
+      "date": "Last Updated: 12/21/2025"
     },
     "Spotify": {
       "desc": "Fetch Statistics, Information, and Play Songs from Spotify",
