@@ -187,7 +187,7 @@
 
     setText(newText) {
       if (newText === this.rawText) return;
-      const hasCurve = this.specialStyles.get("curve") !== null;
+      const hasCurve = Cast.toBoolean(this.specialStyles.get("curve"));
       const alignment = this._element ? this._elementInner.getAttribute("text-anchor") : "";
 
       this.rawText = newText;
@@ -452,8 +452,6 @@
   const textObjects = Object.create(null);
   let isInDebugMode = false;
 
-  window.test = textObjects;
-
   class SPdisplayTextV2 {
     constructor() {
       this.textObjects = textObjects;
@@ -465,9 +463,9 @@
       return {
         id: "SPdisplayTextV2",
         name: "Display Text V2",
-        color1: "#778899",
-        color2: "#5E707F",
-        color3: "#3C4E5C",
+        color1: "#647b91",
+        color2: "#465969",
+        color3: "#324859",
         menuIconURI,
         blockIconURI,
         blocks: [
