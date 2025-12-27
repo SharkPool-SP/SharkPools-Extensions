@@ -1,13 +1,5 @@
 {
   "extensions": {
-    "Topaz": {
-      "desc": "Send requests to Gemini API.",
-      "creator": "cs3203402",
-      "url": "extension-code/Topaz.js",
-      "banner": "extension-thumb/Topaz.svg",
-      "tags": ["all", "fetching"],
-      "status": "new"
-    }
     "Sharktilities": {
       "desc": "Various utility blocks for various operations",
       "creator": "SharkPool",
@@ -597,15 +589,12 @@
       "tags": ["all", "utilities"],
       "date": "Released: 10/24/2025"
     },
-    "Example": {
-      "desc": "",
-      "creator": "SharkPool",
-      "url": "extension-code/Example.js",
-      "banner": "extension-thumbs/Example.svg",
-      "tags": ["all", "utilities", "expanded", "fetching", "category", "addon", "searchQ"],
-      "status": "",
-      "overrideLabeler": false,
-      "date": ""
+    "Topaz": {
+      "desc": "Send requests to Gemini API.",
+      "creator": "cs3203402",
+      "url": "extension-code/Topaz.js",
+      "banner": "extension-thumb/Topaz.svg",
+      "tags": ["all", "fetching"],
     }
   },
   "site": {
