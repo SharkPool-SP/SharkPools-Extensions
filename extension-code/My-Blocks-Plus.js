@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.62
+// Version V.1.2.63
 
 (function(Scratch) {
   "use strict";
@@ -150,27 +150,27 @@
     }
     const row = modal.querySelector(`[class^="custom-procedures_options-row_"]`);
     const blockEditor = newWorkspace.getBlockById(modal.querySelector("g[data-id]").getAttribute("data-id"));
-    const curProc = blockEditor.procCode_;
-    tempStore = structuredClone(storeGet(curProc)) || {}; // Reset
+    const oldProc = blockEditor.procCode_;
+    tempStore = structuredClone(storeGet(oldProc)) || {}; // Reset
     blockEditor.SPmbpCST_store = tempStore;
 
     attachInputBtns(row, blockEditor, isDark, workspace);
     attachColors(row, isDark, blockEditor);
-    attachCheckboxes(modal, blockEditor, isEditing, curProc);
+    attachCheckboxes(modal, blockEditor, isEditing, oldProc);
 
     // Attach Okay Button Listener
     const okBtn = modal.querySelector(`button[class^="custom-procedures_ok-button_"]`);
     okBtn.addEventListener("click", (e) => {
       // prevent proccode conflicts
-      const proc = blockEditor.procCode_;
-      let protoExists = ScratchBlocks.Procedures.getPrototypeBlock(proc, workspace);
+      const newProc = blockEditor.procCode_;
+      let protoExists = ScratchBlocks.Procedures.getPrototypeBlock(newProc, workspace);
       if (!protoExists) {
         refreshGlobalBlocksCache();
         const thisID = vm.editingTarget.id;
         for (const target of runtime.targets) {
-          protoExists = target.blocks.getProcedureDefinition(proc);
+          protoExists = target.blocks.getProcedureDefinition(newProc);
           if (protoExists) {
-            if (thisID === globalBlocksCache[proc]?.id) {
+            if (thisID === globalBlocksCache[newProc]?.id) {
               protoExists = undefined;
               break;
             } else {
@@ -179,16 +179,65 @@
           }
         }
       }
-      if ((protoExists && (!isEditing || curProc !== proc))) {
+      if ((protoExists && (!isEditing || oldProc !== newProc))) {
         alert("A custom block with this text already exists!");
         e.stopImmediatePropagation();
         return;
       }
 
       cleanupBlockInputs(tempStore.inputs, blockEditor.argumentIds_);
-      storeSet(blockEditor.procCode_, tempStore);
-      if (isEditing && curProc !== blockEditor.procCode_) storeDel(curProc);
+      storeSet(newProc, tempStore);
+      if (isEditing && oldProc !== newProc) storeDel(oldProc);
       refreshGlobalBlocksCache();
+
+      // update all global blocks outside this target
+      if (isEditing && oldProc !== newProc) {
+        const defaults = blockEditor.argumentDefaults_;
+        const argList = blockEditor.argumentIds_;
+        const argListString = JSON.stringify(argList);
+        const warp = blockEditor.getWarp();
+        for (const target of runtime.targets) {
+          if (target.id === vm.editingTarget.id) continue;
+
+          const blockCache = target.blocks;
+          const procCallers = Object.values(blockCache._blocks).filter((b) => b.opcode === "procedures_call");
+          for (const block of procCallers) {
+            block.mutation.proccode = newProc;
+            block.mutation.argumentids = argListString;
+            block.mutation.warp = Scratch.Cast.toString(warp);
+
+            // inject missing inputs
+            const inputs = Object.values(block.inputs);
+            const missing = argList.filter((a) => inputs.findIndex((i) => i.name === a) < 0);
+            for (const input of missing) {
+              let type = tempStore?.inputs?.[input];
+              if (type) {
+                if (type.isDrop) type = type.type;
+                else {
+                  type = getInputData(type)?.opcode;
+                  if (!isNormalInput(type)) type = null;
+                }
+              } else {
+                const defaultValue = defaults[argList.indexOf(input)];
+                if (defaultValue === "") type = "text";
+                // else "false" -> boolean, leave undefined
+              }
+
+              if (type) {
+                const tempBlock = newWorkspace.newBlock(type);
+                if (type === "text") tempBlock.setFieldValue("", "TEXT");
+                const id = tempBlock.id;
+                const shadow = blockCache.XMLToBlock({ xml: ScratchBlocks.Xml.blockToDom(tempBlock) });
+                shadow[0].parent = block.id;
+                shadow[0].shadow = true;
+                tempBlock.dispose();
+                blockCache.createBlock(shadow[0]);
+                block.inputs[id] = { name: input, block: id, shadow: id };
+              }
+            }
+          }
+        }
+      }
 
       if (isPM) {
         window.removeEventListener("error", returnTypeError, { once: true });
@@ -853,7 +902,9 @@
       if (extensionRemovable) return ogUpdateDisplay.call(this);
       const store = this.SPmbpCST_store || storeGet(this.procCode_);
       if (store.color && !this.isInsertionMarker()) {
-        this.setColour(...themeifyColor(store.color));
+        const blockColor = themeifyColor(store.color);
+        this.setColour(...blockColor);
+        if (isPM) this.color = blockColor
         if (this.type === "procedures_prototype") {
           // Recolor argument reporters and the define block to the block color
           // Disable branch inputs
