@@ -28,7 +28,7 @@
   let ai = new GoogleGenAI({ apiKey: "" });
   let instruction = "";
   let key = "No API key has been set.";
-  let modelChoice = "gemini-2.5-flash";
+  let modelChoice = "Gemini 2.5 - Flash";
 
   class smolderdevGeminiAPI {
     getInfo() {
@@ -108,7 +108,7 @@
 
     async generate(args) {
       const response = await ai.models.generateContent({
-        model: getActualModel(modelChoice),
+        model: actualModels[displayModels.indexOf(modelChoice)],
         contents: Scratch.Cast.toString(args.contents),
         config: {
           systemInstruction: instruction,
@@ -139,10 +139,6 @@
 
     getModel() {
       return modelChoice;
-    }
-
-    getActualModel(display) {
-      return actualModels[displayModels.indexOf(display)];
     }
   }
   Scratch.extensions.register(new smolderdevGeminiAPI());
