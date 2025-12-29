@@ -593,6 +593,14 @@
       "tags": ["all", "utilities"],
       "date": "Released: 10/24/2025"
     },
+    "Gemini": {
+      "desc": "Send requests to Gemini API.",
+      "creator": "cs3203402",
+      "url": "extension-code/Gemini-API.js",
+      "banner": "extension-thumb/Gemini.svg",
+      "tags": ["all", "fetching"],
+      "date": "Released: 12/29/2025"
+    },
     "Example": {
       "desc": "",
       "creator": "SharkPool",
