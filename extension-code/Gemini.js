@@ -2,7 +2,7 @@
 // ID: gemini
 // Description: Gemini API Requests with Customization
 // By: cs3203402
-// License: ARR
+// License: MIT
 
 // Version V.1.0.0
 
@@ -30,7 +30,7 @@
                         opcode: "generate",
                         blockType: Scratch.BlockType.REPORTER,
                         text: Scratch.translate(
-                            "generate from [contents] and temperature of [temp]"
+                            "generate from [contents] and creativity (0-2) of [temp]"
                         ),
                         arguments: {
                             contents: {
