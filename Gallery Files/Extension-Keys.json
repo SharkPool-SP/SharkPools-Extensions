@@ -47,7 +47,9 @@
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "date": "Last Updated: 09/11/2025"
+      "status": "",
+      "overrideLabeler": true,
+      "date": "Last Updated: 12/25/2025"
     },
     "Tune-Shark": {
       "desc": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3",
@@ -347,7 +349,7 @@
       "url": "extension-code/Geolocation.js",
       "banner": "extension-thumbs/Geolocation.svg",
       "tags": ["all", "fetching"],
-      "date": "Last Updated: 04/10/2025"
+      "date": "Last Updated: 12/21/2025"
     },
     "Spotify": {
       "desc": "Fetch Statistics, Information, and Play Songs from Spotify",
@@ -382,12 +384,14 @@
       "date": "Last Updated: 04/04/2025"
     },
     "Display-Text": {
-      "desc": "Display Advanced Text in your Projects",
+      "desc": "Display Text in your Projects, with Markdown Support",
       "creator": "SharkPool",
-      "url": "extension-code/Display-Text.js",
+      "url": "extension-code/Display-Text-V2.js",
       "banner": "extension-thumbs/Display-Text.svg",
       "tags": ["all", "expanded", "utilities", "category"],
-      "date": "Last Updated: 06/12/2025"
+      "status": "new",
+      "overrideLabeler": true,
+      "date": "Re-Released: 12/25/2025"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
@@ -547,7 +551,7 @@
       "url": "extension-code/My-Blocks-Plus.js",
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
       "tags": ["all", "utilities", "expanded", "category"],
-      "date": "Last Updated: 11/02/2025"
+      "date": "Last Updated: 12/28/2025"
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
