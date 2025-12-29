@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.63
+// Version V.1.2.64
 
 (function(Scratch) {
   "use strict";
@@ -191,7 +191,8 @@
       refreshGlobalBlocksCache();
 
       // update all global blocks outside this target
-      if (isEditing && oldProc !== newProc) {
+      if (isPM && isEditing && oldProc !== newProc) {
+        // TODO make this work in Turbowarp
         const defaults = blockEditor.argumentDefaults_;
         const argList = blockEditor.argumentIds_;
         const argListString = JSON.stringify(argList);
@@ -202,6 +203,7 @@
           const blockCache = target.blocks;
           const procCallers = Object.values(blockCache._blocks).filter((b) => b.opcode === "procedures_call");
           for (const block of procCallers) {
+            if (block.mutation.proccode !== oldProc) continue;
             block.mutation.proccode = newProc;
             block.mutation.argumentids = argListString;
             block.mutation.warp = Scratch.Cast.toString(warp);
