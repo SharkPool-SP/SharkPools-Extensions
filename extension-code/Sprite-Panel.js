@@ -1,7 +1,7 @@
 // Name: Sprite Panel
 // ID: SPspritePanel
 // Description: Complex Panel for Sprite and Clone Management
-// Licence: MIT AND LGPLv3 License
+// Licence: MIT AND LGPL-3.0
 // By: SharkPool & FurryR
 
 // Version V.1.1.12
