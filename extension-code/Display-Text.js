@@ -2,6 +2,7 @@
 // ID: SPdisText
 // Description: Display Text in Your Projects!
 // By: SharkPool
+// License: MIT
 
 // Version V.1.5.21
 
@@ -93,7 +94,7 @@
     getInfo() {
       return {
         id: "SPdisText",
-        name: "Display Text",
+        name: "Display Text (Deprecated)",
         color1: "#778899",
         color2: "#5E707F",
         color3: "#3C4E5C",
@@ -949,8 +950,6 @@
     }
 
     setTextCurve(args) {
-      // TODO clean this up and add more availiable text stylings
-      // Perhaps make the entire extension rely on svgs?
       const ID = this.fixID(args.ID);
       const settings = txtSettings[ID];
       const regex = args.ARC.includes("<svg") ? /<path[^>]*d="([^"]*)"/ : /<path[^>]*d="([^"]*)"/;
