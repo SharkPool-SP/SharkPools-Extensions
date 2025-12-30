@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -639,7 +639,7 @@
             text: Scratch.translate("set curve of [ID] to [PATH]"),
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: TRANSLATIONS.id },
-              PATH: { type: Scratch.ArgumentType.STRING, defaultValue: "[[-100, -50], [0, 50], [100, -50]]" }
+              PATH: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true, defaultValue: "[[-100, -50], [0, 50], [100, -50]]" }
             },
           },
           {
