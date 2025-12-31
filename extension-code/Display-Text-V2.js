@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.01
+// Version V.1.0.02
 
 (function (Scratch) {
   "use strict";
@@ -32,13 +32,28 @@
   textDiv.style.pointerEvents = "none";
   render.addOverlay(textDiv, "scale-centered");
 
+  const iteratorForEach = (iterator, func) => {
+    if (typeof iterator.forEach === "function") {
+      iterator.forEach((value) => func(value));
+    } else {
+      let value = iterator.next();
+      while (!value.done) {
+        func(value.value);
+        value = iterator.next();
+      }
+    };
+  }
+
   const BUILT_IN_FONTS = [];
-  document.fonts.keys().forEach((font) => {
-    BUILT_IN_FONTS.push({
-      text: Scratch.translate(font.family),
-      value: font.family
-    });
-  });
+  iteratorForEach(
+    document.fonts.keys(),
+    (font) => {
+      BUILT_IN_FONTS.push({
+        text: Scratch.translate(font.family),
+        value: font.family
+      });
+    }
+  );
 
   // Slightly modified version of Markdown for svg
   const MARKDOWN_CONSTS = {
@@ -386,11 +401,14 @@
       }
 
       if (isStyleUpdate) {
-        this.styles.entries().forEach((entry) => {
-          const oldValue = this._elementInner.getAttribute(entry[0]);
-          if (oldValue === entry[1]) return;
-          this._elementInner.setAttribute(entry[0], entry[1]);
-        });
+        iteratorForEach(
+          this.styles.entries(),
+          (entry) => {
+            const oldValue = this._elementInner.getAttribute(entry[0]);
+            if (oldValue === entry[1]) return;
+            this._elementInner.setAttribute(entry[0], entry[1]);
+          }
+        );
       } else {
         this._elementInner.innerHTML = this.cleansedText;
       }
@@ -1019,10 +1037,11 @@
           textObj.updateElement(true);
         } else {
           textObj.setAttribute("line-height", spacing, true);
+          if (!textObj._dirty) return;
 
           // force a reflow if there is no margins
           const wrapWidth = textObj.specialStyles.get("width");
-          if (textObj._dirty && (!wrapWidth || wrapWidth < 1)) {
+          if (!wrapWidth || wrapWidth < 1) {
             const oldRawText = textObj.rawText;
             textObj.rawText = undefined;
             textObj.setText(oldRawText);
@@ -1317,11 +1336,14 @@
         textObj2.styles = structuredClone(textObj1.styles);
 
         // specialStyles has some non-cloneable stuff
-        textObj1.specialStyles.entries().forEach(([key, value]) => {
-          textObj2.specialStyles.set(
-            key, key === "curve" ? value.cloneNode(true) : value
-          );
-        });
+        iteratorForEach(
+          textObj1.specialStyles.entries(),
+          ([key, value]) => {
+            textObj2.specialStyles.set(
+              key, key === "curve" ? value.cloneNode(true) : value
+            );
+          }
+        );
 
         textObj2._dirty = true;
         textObj2.updateElement(true, true);
