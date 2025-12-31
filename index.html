@@ -2,17 +2,6 @@
 <html lang="en">
   <head>
     <title>SharkPools Extension Collection</title>
-    <script>
-      if (location.origin.includes("https://sharkpool-sp.github.io")) {
-        const base = document.createElement("base");
-        base.setAttribute("href", "/SharkPools-Extensions/");
-        document.head.appendChild(base);
-      }
-    </script>
-    <script type="module">
-      // Import the Terser Library for Code Compression
-      import("https://cdn.jsdelivr.net/npm/terser@5.30.0/+esm").then(module => window.Terser = module);
-    </script>
     <base href="https://sharkpools-extensions.vercel.app/">
     <meta charset="utf-8">
 
@@ -22,6 +11,21 @@
     <meta content="https://sharkpools-extensions.vercel.app/" property="og:url">
     <meta content="https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/pages/SP_Text.png" property="og:image">
     <meta content="#00a6ff" data-react-helmet="true" name="theme-color">
+
+    <script type="module">
+      // Fix base path when hosted on GitHub Pages
+      if (location.origin.includes("https://sharkpool-sp.github.io")) {
+        const base = document.createElement("base");
+        base.href = "/SharkPools-Extensions/";
+        document.head.appendChild(base);
+      }
+
+      // Import the Terser Library for Code Compression
+      import("https://cdn.jsdelivr.net/npm/terser@5.30.0/+esm").then(module => {
+        window.Terser = module;
+      });
+    </script>
+
     <link rel="icon" href="Gallery%20Files/main-assets/SP.svg">
     <link href="pages/css/main.css" rel="stylesheet">
     <link href="pages/css/custom-scroller.css" rel="stylesheet">
@@ -64,11 +68,11 @@
       </button>
       <img class="navImgBig" draggable="false" src="Gallery%20Files/main-assets/logo-github.svg">
     </div>
-    <script src="pages/scripts/extension-generator.js" defer=""></script>
-    <script src="pages/scripts/contributor-generator.js" defer=""></script>
-    <script src="pages/scripts/mobile-scaler.js" defer=""></script>
-    <script src="pages/scripts/auto-extension-labeler.js" defer="" type="module"></script>
-    <script src="pages/startup.js"></script>
+    <script src="pages/scripts/extension-generator.js"></script>
+    <script src="pages/scripts/contributor-generator.js"></script>
+    <script src="pages/scripts/mobile-scaler.js"></script>
+    <script src="pages/scripts/auto-extension-labeler.js" type="module"></script>
+    <script src="pages/gallery-startup.js"></script>
     <div class="filters" style="display: none">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <filter id="bloom-filter">
@@ -79,5 +83,6 @@
     </div>
   </body>
 </html>
+
 
 
