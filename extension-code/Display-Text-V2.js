@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.02
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -278,7 +278,7 @@
 
           const words = node.textContent.split(/(\s+)/);
           for (const word of words) {
-            if (word.trim() === "") continue;
+            if (word === "") continue;
             const testNode = document.createTextNode(word);
             line.appendChild(testNode);
 
@@ -312,6 +312,8 @@
       this._elementInner = document.createElementNS("http://www.w3.org/2000/svg", "text");
       this._elementInner.setAttribute("paint-order", "stroke");
       this._elementInner.setAttribute("text-anchor", "middle");
+      this._elementInner.setAttribute("xml:space", "preserve");
+      this._elementInner.style.whiteSpace = "pre";
 
       this._elementInner.innerHTML = this.cleansedText;
       this._element.appendChild(this._elementInner);
@@ -322,7 +324,7 @@
     updateElement(isStyleUpdate, isSpecialUpdate) {
       if (!this._dirty) return;
       this._dirty = false;
-      this._cachedImage = [null, null];;
+      this._cachedImage = [null, null];
 
       if (isSpecialUpdate) {
         const specialStyles = this.specialStyles;
@@ -1326,6 +1328,8 @@
         textObj._element.style.textShadow = "none";
         element.setAttribute("paint-order", "stroke");
         element.setAttribute("text-anchor", "middle");
+        element.setAttribute("xml:space", "preserve");
+        element.style.whiteSpace = "pre";
       }
     }
 
