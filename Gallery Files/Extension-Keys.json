@@ -598,7 +598,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Example.js",
       "banner": "extension-thumbs/Example.svg",
-      "tags": ["all", "utilities", "expanded", "fetching", "category", "addon", "searchQ"],
+      "tags": ["all", "utilities", "expanded", "fetching", "category", "addon"],
       "status": "",
       "overrideLabeler": false,
       "date": ""
@@ -607,5 +607,19 @@
   "site": {
     "is up": true,
     "reset": false
-  }
+  },
+  "extension-tags": [
+    "all",
+    "utilities",
+    "expanded",
+    "fetching",
+    "category",
+    "addon",
+    "Graphics",
+    "Sound",
+    "Math",
+    "Data Management",
+    "Hardware",
+    "PenguinMod"
+  ]
 }
