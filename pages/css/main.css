@@ -38,7 +38,7 @@ body {
   width: 100px;
   height: 100px;
   cursor: pointer;
-  transition: transform 150ms ease-in-out;
+  transition: transform 200ms ease-in-out;
   transform: scale(1);
 }
 .navBar img:hover {
@@ -59,11 +59,11 @@ body {
   width: 70px;
   height: 70px;
   cursor: pointer;
-  transition: transform 150ms ease-in-out;
+  transition: transform 200ms ease-in-out;
   transform: scale(1);
 }
 .innerNav .navImg:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
 .innerNav .navImgBig {
   width: 35px;
@@ -74,7 +74,7 @@ body {
   border: solid 5px #007dff;
   border-radius: 50px;
   cursor: pointer;
-  transition: transform 150ms ease-in-out;
+  transition: transform 200ms ease-in-out;
   transform: scale(1);
 }
 .innerNav .navImgBig:hover {
@@ -109,7 +109,7 @@ body {
   background-color: #00b8ff;
   border: solid 5px #007dff;
   border-radius: 50px;
-  transition: transform 150ms ease-in-out;
+  transition: transform 200ms ease-in-out;
   transform: scale(1);
 }
 .tagBar .tag[selected="true"] {
@@ -202,7 +202,7 @@ body {
   opacity: 0;
   margin: 25px;
   cursor: pointer;
-  transition: transform 150ms ease-in-out;
+  transition: transform 200ms ease-in-out;
   transform: scale(1);
 }
 .contributor:hover {
@@ -249,7 +249,7 @@ body {
   overflow: hidden;
   animation: donateShine 2s linear infinite;
   cursor: pointer;
-  transition: transform 150ms ease-in-out, margin 150ms ease-in-out;
+  transition: transform 200ms ease-in-out, margin 150ms ease-in-out;
   transform: scale(1);
 }
 .donateBtn:hover {
