@@ -104,7 +104,7 @@ function addBtnBehaviours() {
 
   if (isPenguinMod) {
     const logo = document.querySelector(`img[class="toHost"]`);
-    logo.src = "Gallery%20Files/main-assets/logo-PM.svg";
+    logo.src = "pages/main-assets/logo-PM.svg";
     logo.setAttribute("onclick", "window.open('https://penguinmod.com/')");
   }
 }
@@ -114,14 +114,14 @@ function genTag(type) {
   const tag = document.createElement("img");
   tag.classList.add("ext-tag");
   tag.rngData = Math.random() * 1.5 + 1.5;
-  tag.src = `Gallery%20Files/main-assets/ext-${type}.svg`;
+  tag.src = `pages/main-assets/ext-${type}.svg`;
   return tag;
 }
 
 function genPin(extName) {
   const pin = document.createElement("img");
   pin.classList.add("ext-pin");
-  pin.src = `Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
+  pin.src = `pages/main-assets/pin-${pins.includes(extName)}.svg`;
   pin.style.opacity = "0";
   pin.onload = () => {
     if (pin.getAttribute("alrExists")) return;
@@ -133,7 +133,7 @@ function genPin(extName) {
     const ind = pins.indexOf(extName);
     if (ind > -1) pins.splice(ind, 1);
     else pins.push(extName);
-    pin.src = `Gallery%20Files/main-assets/pin-${pins.includes(extName)}.svg`;
+    pin.src = `pages/main-assets/pin-${pins.includes(extName)}.svg`;
     updateStorage();
     e.stopImmediatePropagation();
   });
@@ -312,7 +312,7 @@ function openSettingsPanel() {
 
   const bg = document.createElement("img");
   bg.classList.add("search-ui");
-  bg.src = "Gallery%20Files/main-assets/panel-bg.svg";
+  bg.src = "pages/main-assets/panel-bg.svg";
   bg.setAttribute("draggable", "false");
 
   const downloadTypeFunc = (e, box, type) => {
@@ -366,7 +366,7 @@ function openSettingsPanel() {
 
   const leave = document.createElement("img");
   leave.classList.add("panel-leave");
-  leave.src = "Gallery%20Files/main-assets/search-exit.svg";
+  leave.src = "pages/main-assets/search-exit.svg";
   leave.setAttribute("draggable", "false");
   leave.addEventListener("click", (e) => {
     updateStorage();
@@ -399,7 +399,7 @@ function openSearch() {
 
   const bg = document.createElement("img");
   bg.classList.add("search-ui");
-  bg.src = "Gallery%20Files/main-assets/search-bg.svg";
+  bg.src = "pages/main-assets/search-bg.svg";
   bg.setAttribute("draggable", "false");
 
   const input = document.createElement("input");
@@ -413,7 +413,7 @@ function openSearch() {
 
   const submit = document.createElement("img");
   submit.classList.add("search-enter");
-  submit.src = "Gallery%20Files/main-assets/search-enter.svg";
+  submit.src = "pages/main-assets/search-enter.svg";
   submit.setAttribute("draggable", "false");
   submit.addEventListener("click", (e) => {
     searchContainer.remove();
@@ -422,7 +422,7 @@ function openSearch() {
 
   const leave = document.createElement("img");
   leave.classList.add("search-leave");
-  leave.src = "Gallery%20Files/main-assets/search-exit.svg";
+  leave.src = "pages/main-assets/search-exit.svg";
   leave.setAttribute("draggable", "false");
   leave.addEventListener("click", (e) => {
     displayExts(filterExts(galleryData.extensions));
