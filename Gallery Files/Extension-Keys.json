@@ -5,7 +5,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Sharktilities.js",
       "banner": "extension-thumbs/Sharktilities.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/21/2025"
     },
     "YouTube-Operations": {
@@ -13,7 +13,7 @@
       "creator": "SharkPool, Nekl300 (contributor)",
       "url": "extension-code/YouTube-Operations.js",
       "banner": "extension-thumbs/YouTube-Operations.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/20/2025"
     },
     "Time-Calculation": {
@@ -21,7 +21,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Time-Calculation.js",
       "banner": "extension-thumbs/Time-Calculation.svg",
-      "tags": ["all", "utilities", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 06/01/2024"
     },
     "Scratch-Utilities": {
@@ -29,7 +29,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Scratch-Utilities.js",
       "banner": "extension-thumbs/Scratch-Utilities.svg",
-      "tags": ["all", "expanded", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "isDeprecated": true,
       "date": "Last Updated: 04/05/2024"
     },
@@ -38,7 +38,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Seeds.js",
       "banner": "extension-thumbs/Seeds.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 11/29/2023"
     },
     "Tune-Shark-V3": {
@@ -46,7 +46,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Tune-Shark-V3.js",
       "banner": "extension-thumbs/Tune-Shark-V3.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "status": "",
       "overrideLabeler": true,
       "date": "Last Updated: 12/25/2025"
@@ -56,7 +56,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Tune-Shark.js",
       "banner": "extension-thumbs/Tune-Shark.svg",
-      "tags": ["all", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "isDeprecated": true,
       "date": "Last Updated: 10/07/2024"
     },
@@ -65,7 +65,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Added-Motion.js",
       "banner": "extension-thumbs/Added-Motion.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/12/2023"
     },
     "Geometry-Dash-API": {
@@ -73,7 +73,7 @@
       "creator": "SharkPool, thank you RobTopGames and GD Colon",
       "url": "extension-code/Geometry-Dash-API.js",
       "banner": "extension-thumbs/Geometry-Dash-API.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "isDeprecated": true,
       "date": "Last Updated: 04/10/2025"
     },
@@ -82,7 +82,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Sound-Waves.js",
       "banner": "extension-thumbs/Sound-Waves.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 06/29/2025"
     },
     "Hyper-Sense": {
@@ -90,7 +90,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Hyper-Sense-V2.js",
       "banner": "extension-thumbs/Hyper-Sense.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 08/08/2025"
     },
     "Keys-Plus-V2": {
@@ -98,7 +98,7 @@
       "creator": "StackOverflow",
       "url": "extension-code/KeysPlusV2.js",
       "banner": "extension-thumbs/Keys-Plus-V2.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 02/05/2025"
     },
     "Popup-Phoenix": {
@@ -106,7 +106,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Popup-Phoenix.js",
       "banner": "extension-thumbs/Popup-Phoenix.svg",
-      "tags": ["all", "utilities", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 10/25/2025"
     },
     "Better-Input": {
@@ -114,7 +114,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Better-Input.js",
       "banner": "extension-thumbs/Better-Input.svg",
-      "tags": ["all", "utilities", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "isDeprecated": true,
       "date": "Last Updated: 11/02/2024"
     },
@@ -123,7 +123,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Camera-Sensing-Plus.js",
       "banner": "extension-thumbs/Camera-Sensing-Plus.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
@@ -131,7 +131,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Particle-Engine.js",
       "banner": "extension-thumbs/Particle-Engine.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 10/05/2025"
     },
     "Particle-Tools": {
@@ -139,7 +139,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Particle-Tools.js",
       "banner": "extension-thumbs/Particle-Tools.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "isDeprecated": true,
       "date": "Last Updated: 02/04/2024"
     },
@@ -148,7 +148,7 @@
       "creator": "SharkPool, CST1229",
       "url": "extension-code/Looks-Expanded.js",
       "banner": "extension-thumbs/Looks-Expanded.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/16/2025"
     },
     "Sprite-Effects": {
@@ -156,7 +156,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Sprite-Effects-V2.js",
       "banner": "extension-thumbs/Sprite-Effects.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 10/24/2025"
     },
     "Image-Effects": {
@@ -164,7 +164,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Image-Effects.js",
       "banner": "extension-thumbs/Image-Effects.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/10/2025"
     },
     "Image-Editor": {
@@ -172,7 +172,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Image-Editor.js",
       "banner": "extension-thumbs/Image-Editor.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/10/2025"
     },
     "Pixel-Utilities": {
@@ -180,7 +180,7 @@
       "creator": "LittleBlueGamer",
       "url": "extension-code/Pixel-Utilities.js",
       "banner": "extension-thumbs/Pixel-Utilities.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 03/07/2024"
     },
     "Recording": {
@@ -188,7 +188,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Recording-V2.js",
       "banner": "extension-thumbs/Recording.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/03/2025"
     },
     "Newgrounds-Audio": {
@@ -196,7 +196,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Newgrounds-Audio.js",
       "banner": "extension-thumbs/Newgrounds-Audio.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/06/2025"
     },
     "Sprite-Parenting": {
@@ -204,7 +204,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Sprite-Parenting.js",
       "banner": "extension-thumbs/Sprite-Parenting.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/19/2025"
     },
     "Rigidbodies": {
@@ -212,7 +212,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Rigidbodies.js",
       "banner": "extension-thumbs/Rigidbodies.svg",
-      "tags": ["all", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 02/28/2025"
     },
     "Lazy-Collisions": {
@@ -220,7 +220,7 @@
       "creator": "SharkPool, Food (contributor)",
       "url": "extension-code/Lazy-Collisions.js",
       "banner": "extension-thumbs/Lazy-Collisions.svg",
-      "tags": ["all", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/04/2025"
     },
     "Files-Expanded": {
@@ -228,7 +228,7 @@
       "creator": "SharkPool, Drago Cuven, 0znzw",
       "url": "extension-code/Files-Expanded.js",
       "banner": "extension-thumbs/Files-Expanded.svg",
-      "tags": ["all", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 06/07/2025"
     },
     "Temporary-Variables": {
@@ -236,7 +236,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Temporary-Variables.js",
       "banner": "extension-thumbs/Temporary-Variables.svg",
-      "tags": ["all", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 11/01/2025"
     },
     "Variables-Expanded": {
@@ -244,7 +244,7 @@
       "creator": "SharkPool, DogeIsCut",
       "url": "extension-code/Variables-Expanded.js",
       "banner": "extension-thumbs/Variables-Expanded.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 11/30/2024"
     },
     "Sty-Lists": {
@@ -252,7 +252,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Sty-Lists.js",
       "banner": "extension-thumbs/Sty-Lists.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/12/2025"
     },
     "Gamepad-Expanded": {
@@ -260,7 +260,7 @@
       "creator": "DNin01, Meehdrescher",
       "url": "extension-code/Gamepad-Expanded.js",
       "banner": "extension-thumbs/Gamepad-Expanded.svg",
-      "tags": ["all", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 10/??/2023"
     },
     "Tile-Grids": {
@@ -268,7 +268,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Tile-Grids.js",
       "banner": "extension-thumbs/Tile-Grids.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 10/09/2023"
     },
     "Since-2000": {
@@ -276,7 +276,7 @@
       "creator": "ionslayer, 0znzw",
       "url": "extension-code/Since-2000.js",
       "banner": "extension-thumbs/Since-2000.svg",
-      "tags": ["all", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 11/20/2025"
     },
     "Animations": {
@@ -284,7 +284,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Animations.js",
       "banner": "extension-thumbs/Animations.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 11/08/2025"
     },
     "Pause-Utilities": {
@@ -292,7 +292,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Pause-Utilities.js",
       "banner": "extension-thumbs/Pause-Utilities.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/04/2025"
     },
     "Text-to-Speech": {
@@ -300,7 +300,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Text-to-Speech.js",
       "banner": "extension-thumbs/Text-to-Speech.svg",
-      "tags": ["all", "expanded", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 01/02/2024"
     },
     "Messages-Plus": {
@@ -308,7 +308,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Messages-Plus.js",
       "banner": "extension-thumbs/Messages-Plus.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/01/2025"
     },
     "Advanced-Messages": {
@@ -316,7 +316,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Advanced-Messages.js",
       "banner": "extension-thumbs/Advanced-Messages.svg",
-      "tags": ["all", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/05/2025"
     },
     "Events-Plus": {
@@ -324,7 +324,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Events-Plus.js",
       "banner": "extension-thumbs/Events-Plus.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 07/23/2025"
     },
     "Runtime-Events": {
@@ -332,7 +332,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Runtime-Events.js",
       "banner": "extension-thumbs/Runtime-Events.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 08/11/2024"
     },
     "Fetch-Plus": {
@@ -340,7 +340,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Fetch-Progress.js",
       "banner": "extension-thumbs/Fetch-Plus.svg",
-      "tags": ["all", "fetching", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/04/2025"
     },
     "Geolocation": {
@@ -348,7 +348,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Geolocation.js",
       "banner": "extension-thumbs/Geolocation.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/21/2025"
     },
     "Spotify": {
@@ -356,7 +356,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Spotify.js",
       "banner": "extension-thumbs/Spotify.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 11/16/2024"
     },
     "SoundCloud-API": {
@@ -364,7 +364,7 @@
       "creator": "SharkPool",
       "url": "extension-code/SoundCloud-API.js",
       "banner": "extension-thumbs/SoundCloud-API.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/04/2025"
     },
     "Google-Spreadsheets": {
@@ -372,7 +372,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Google-Spreadsheets.js",
       "banner": "extension-thumbs/Google-Spreadsheets.svg",
-      "tags": ["all", "fetching", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 01/16/2025"
     },
     "Money-Utilities": {
@@ -380,7 +380,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Money-Utilities.js",
       "banner": "extension-thumbs/Money-Utilities.svg",
-      "tags": ["all", "fetching", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 04/04/2025"
     },
     "Display-Text": {
@@ -388,9 +388,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Display-Text-V2.js",
       "banner": "extension-thumbs/Display-Text.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
-      "status": "new",
-      "overrideLabeler": true,
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Re-Released: 12/25/2025"
     },
     "Color-Master": {
@@ -398,7 +396,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Color-Master.js",
       "banner": "extension-thumbs/Color-Master.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 01/23/2025"
     },
     "QR-Codes": {
@@ -406,7 +404,7 @@
       "creator": "SharkPool",
       "url": "extension-code/QR-Codes.js",
       "banner": "extension-thumbs/QR-Codes.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/30/2024"
     },
     "Speech-Bubbles": {
@@ -414,7 +412,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Speech-Bubbles.js",
       "banner": "extension-thumbs/Speech-Bubbles.svg",
-      "tags": ["all", "expanded", "utilities", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 09/14/2024"
     },
     "Font-Manager": {
@@ -422,7 +420,7 @@
       "creator": "SharkPool, 0znzw",
       "url": "extension-code/Font-Manager.js",
       "banner": "extension-thumbs/Font-Manager.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/16/2024"
     },
     "Script-Control": {
@@ -430,7 +428,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Script-Control.js",
       "banner": "extension-thumbs/Script-Control.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/30/2025"
     },
     "Layer-Control": {
@@ -438,7 +436,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Layer-Control.js",
       "banner": "extension-thumbs/Layer-Control.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 09/24/2024"
     },
     "Renderer-Control": {
@@ -446,7 +444,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Renderer-Control.js",
       "banner": "extension-thumbs/Renderer-Control.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/01/2025"
     },
     "Timezones": {
@@ -454,7 +452,7 @@
       "creator": "ionslayer",
       "url": "extension-code/Timezones.js",
       "banner": "extension-thumbs/Timezones.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 01/25/2024"
     },
     "Perlin-Noise": {
@@ -462,7 +460,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Perlin-Noise.js",
       "banner": "extension-thumbs/Perlin-Noise.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 01/08/2025"
     },
     "Extra-Controls": {
@@ -470,7 +468,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Extra-Controls.js",
       "banner": "extension-thumbs/Extra-Controls.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/04/2025"
     },
     "More-Operators": {
@@ -478,7 +476,7 @@
       "creator": "SharkPool",
       "url": "extension-code/More-Operators.js",
       "banner": "extension-thumbs/More-Operators.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/19/2025"
     },
     "Captchas": {
@@ -486,7 +484,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Captchas.js",
       "banner": "extension-thumbs/Captchas.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 04/05/2024"
     },
     "Better-Comments": {
@@ -494,7 +492,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Better-Comments.js",
       "banner": "extension-thumbs/Better-Comments.svg",
-      "tags": ["all", "expanded", "addon"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 08/28/2025"
     },
     "Sprite-Panel": {
@@ -502,7 +500,7 @@
       "creator": "SharkPool, FurryR",
       "url": "extension-code/Sprite-Panel.js",
       "banner": "extension-thumbs/Sprite-Panel.svg",
-      "tags": ["all", "expanded", "addon"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/06/2025"
     },
     "DOM-Selector": {
@@ -510,7 +508,7 @@
       "creator": "SharkPool",
       "url": "extension-code/DOM-Selector.js",
       "banner": "extension-thumbs/DOM-Selector.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/13/2025"
     },
     "SVG-Spritesheets": {
@@ -518,7 +516,7 @@
       "creator": "SharkPool",
       "url": "extension-code/SVG-Spritesheets.js",
       "banner": "extension-thumbs/SVG-Spritesheets.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/20/2024"
     },
     "Community-Spotlight": {
@@ -526,7 +524,7 @@
       "creator": "SharkPool, Community Spotlight Team",
       "url": "extension-code/Community-Spotlight.js",
       "banner": "extension-thumbs/Community-Spotlight.svg",
-      "tags": ["all", "fetching"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 01/17/2025"
     },
     "GIF-Manager": {
@@ -534,7 +532,7 @@
       "creator": "SharkPool",
       "url": "extension-code/GIF-Manager.js",
       "banner": "extension-thumbs/GIF-Manager.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 08/29/2024"
     },
     "JSON-Array": {
@@ -542,7 +540,7 @@
       "creator": "SharkPool",
       "url": "extension-code/JSON-Array.js",
       "banner": "extension-thumbs/JSON-Array.svg",
-      "tags": ["all", "utilities", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/10/2025"
     },
     "My-Blocks-Plus": {
@@ -550,7 +548,7 @@
       "creator": "SharkPool, CST1229, 0znzw",
       "url": "extension-code/My-Blocks-Plus.js",
       "banner": "extension-thumbs/My-Blocks-Plus.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/28/2025"
     },
     "Dropdown-Maker": {
@@ -558,7 +556,7 @@
       "creator": "SharkPool, CST1229, 0znzw",
       "url": "extension-code/Dropdown-Maker.js",
       "banner": "extension-thumbs/Dropdown-Maker.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 07/13/2025"
     },
     "Turbo-Skins": {
@@ -566,7 +564,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Turbo-Skins.js",
       "banner": "extension-thumbs/Turbo-Skins.svg",
-      "tags": ["all", "utilities", "expanded"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
@@ -574,7 +572,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Scenes.js",
       "banner": "extension-thumbs/Scenes.svg",
-      "tags": ["all", "utilities", "addon"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 09/09/2025"
     },
     "Pen-Papers": {
@@ -582,7 +580,7 @@
       "creator": "SharkPool",
       "url": "extension-code/Pen-Papers.js",
       "banner": "extension-thumbs/Pen-Papers.svg",
-      "tags": ["all", "utilities", "expanded", "category"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Last Updated: 12/12/2025"
     },
     "MIDI-Tools": {
@@ -590,7 +588,7 @@
       "creator": "ObscuraPH",
       "url": "extension-code/MIDI-Tools.js",
       "banner": "extension-thumbs/MIDI-Tools.svg",
-      "tags": ["all", "utilities"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware", "Online", "Category Expansion", "Editor Tool", "PenguinMod Only", "Dangerous"],
       "date": "Released: 10/24/2025"
     },
     "Example": {
@@ -598,28 +596,28 @@
       "creator": "SharkPool",
       "url": "extension-code/Example.js",
       "banner": "extension-thumbs/Example.svg",
-      "tags": ["all", "utilities", "expanded", "fetching", "category", "addon"],
+      "tags": ["All"],
       "status": "",
       "overrideLabeler": false,
+      "isDeprecated": false,
       "date": ""
     }
   },
+  "extension-tags": [
+    "All",
+    "Utility",
+    "Graphics",
+    "Sound",
+    "Data Management",
+    "Hardware",
+    "Online",
+    "Category Expansion",
+    "Editor Tool",
+    "PenguinMod Only",
+    "Dangerous"
+  ],
   "site": {
     "is up": true,
     "reset": false
-  },
-  "extension-tags": [
-    "all",
-    "utilities",
-    "expanded",
-    "fetching",
-    "category",
-    "addon",
-    "Graphics",
-    "Sound",
-    "Math",
-    "Data Management",
-    "Hardware",
-    "PenguinMod"
-  ]
+  }
 }
