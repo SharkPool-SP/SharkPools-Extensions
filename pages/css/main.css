@@ -83,44 +83,26 @@ body {
 
 .tagBar {
   display: flex;
+  flex-flow: wrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 800px;
-  height: 60px;
+  height: 65px;
+  max-width: 700px;
   margin: 15px;
+  padding: 0 5px;
   background-color: #242424;
-  border: solid 6px #2f2f2f;
-  border-radius: 50px;
+  border: solid 5px #2f2f2f;
+  border-radius: 25px;
+  overflow: hidden;
+  transition: height 300ms ease-in-out;
 }
-.tagBar .tag {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  width: auto;
-  height: 35px;
-  margin: 10px .15em;
-  padding: 2px 10px 2px;
-  font-weight: 600;
-  font-size: 1.2em;
-  line-height: 35px;
-  background-color: #00b8ff;
-  border: solid 5px #007dff;
-  border-radius: 50px;
-  transition: transform 200ms ease-in-out;
-  transform: scale(1);
-}
-.tagBar .tag[selected="true"] {
-  background-color: #003cff !important;
-  border-color: #001fff !important;
-}
-.tagBar .tag:hover {
-  transform: scale(1.15);
+.tagBar[expanded] {
+  height: 250px;
 }
 
-/* Extensions */
+/* Extension Div */
 .ext-div {
   display: flex;
   flex-wrap: wrap;
@@ -131,54 +113,9 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-.ext-breaker {
-  display: inline-block;
-  width: 100%;
-  border-bottom: dashed 6px rgba(255,255,255,0.2);
-  margin: 10px 5% 10px 5%;
-}
-.ext-holder {
-  display: inline-block;
-  width: 300px;
-  height: 285px;
-  margin: 20px 20px 20px 20px;
-  border: solid grey 2px;
-  border-radius: 19px;
-  opacity: 0;
-  cursor: pointer;
-  transition: transform 200ms ease-in-out;
-  transform: scale(1);
-}
-.ext-holder:hover {
-  filter: url(#bloom-filter);
-  transform: scale(1.1);
-}
-.ext-data pre {
-  margin: 0;
-  padding: 7px 10px 10px 10px;
-  text-wrap: wrap;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  font-family: Sans-Serif;
-  font-size: 15px;
-  user-select: text;
-}
-.ext-data .desc-breaker {
-  width: 250px;
-  border-top: dashed grey 2px;
-  margin: auto;
-}
-.ext-data .update-date {
-  width: 300px;
-  position: absolute;
-  bottom: 2px;
-  padding: 0 0 10px 0;
-  color: #a1a1a1;
-  font-size: 14px;
-}
 
-.ext-tag {
+/* Extension Status Tags */
+.status-tag {
   position: absolute;
   right: -35px;
   top: -25px;

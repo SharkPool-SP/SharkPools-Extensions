@@ -29,7 +29,6 @@
     <link rel="icon" href="pages/main-assets/SP.svg">
     <link href="pages/css/main.css" rel="stylesheet">
     <link href="pages/css/custom-scroller.css" rel="stylesheet">
-    <link href="pages/css/panel-ui.css" rel="stylesheet">
 
     <!-- Lilita One Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,30 +48,17 @@
     </div>
     <div class="innerNav">
       <img class="navImg" id="settings" draggable="false" src="pages/main-assets/settings.svg">
-      <div class="tagBar">
-        <div class="tag" id="all">All</div>
-        <div class="tag" id="expanded">Expanded</div>
-        <div class="tag" id="utilities">Utility</div>
-        <div class="tag" id="fetching">Fetching</div>
-        <div class="tag" id="category">Category</div>
-        <div class="tag" id="addon">Addon</div>
-        <div class="tag" id="search"><img width="30" draggable="false" src="pages/main-assets/search.svg"></div>
-      </div>
+      <div class="tagBar"></div>
       <img class="navImg" id="contributors" draggable="false" src="pages/main-assets/contributors.svg">
     </div>
     <div class="innerNav">
-      <img class="navImgBig" draggable="false" src="pages/main-assets/refresh.svg">
+      <img class="navImgBig" draggable="false" id="refreshTags" src="pages/main-assets/refresh.svg">
       <button class="donateBtn">
         <img src="https://www.paypalobjects.com/marketing/web/logos/paypal-mark-color.svg" width="25px">
-        Donate to SharkPool
+        <span>Donate to SharkPool</span>
       </button>
-      <img class="navImgBig" draggable="false" src="pages/main-assets/logo-github.svg">
+      <img class="navImgBig" draggable="false" id="gitRepo" src="pages/main-assets/logo-github.svg">
     </div>
-    <script src="pages/scripts/extension-generator.js"></script>
-    <script src="pages/scripts/contributor-generator.js"></script>
-    <script src="pages/scripts/mobile-scaler.js"></script>
-    <script src="pages/scripts/auto-extension-labeler.js" type="module"></script>
-    <script src="pages/gallery-startup.js"></script>
     <div class="filters" style="display: none">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <filter id="bloom-filter">
@@ -81,6 +67,14 @@
         </filter>
       </svg>
     </div>
+    <script src="pages/components/tag.js" type="module"></script>
+    <script src="pages/components/extension.js" type="module"></script>
+    <script src="pages/components/panel-modal.js" type="module"></script>
+    <script src="pages/scripts/extension-generator.js"></script>
+    <script src="pages/scripts/contributor-generator.js"></script>
+    <script src="pages/scripts/mobile-scaler.js"></script>
+    <script src="pages/scripts/auto-extension-labeler.js" type="module"></script>
+    <script src="pages/gallery-startup.js"></script>
   </body>
 </html>
 

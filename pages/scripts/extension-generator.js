@@ -1,91 +1,10 @@
+/**
+ * Generates extensions listed in the gallery
+ * and provides several utility functions.
+ */
+
+/* Public Variables */
 let _tagCache = [], _tagLoopNeedsInit = true;
-
-function displayExts(json, optDontFade) {
-  const oldDiv = document.querySelector(".ext-div");
-  if (oldDiv) oldDiv.remove();
-
-  let tagsHadCache = _tagCache.length, shouldSplit = currentTag === "all";
-  const main = document.createElement("div");
-  main.classList.add("ext-div");
-
-  _tagCache = [];
-  Object.entries(json).forEach((item) => {
-    const name = item[0], info = item[1];
-
-    /* Banner Setup */
-    const img = document.createElement("img");
-    img.setAttribute("loading", "lazy");
-    img.setAttribute("draggable", "false");
-    img.id = name;
-    img.style.width = "300px";
-    img.src = name === "override404" ? "pages/404.svg" : info.banner;
-
-    /* Data Setup */
-    let dataDiv = "";
-    if (name !== "override404") {
-      const desc = document.createElement("pre");
-      desc.textContent = info.desc;
-      const descBreaker = document.createElement("div");
-      descBreaker.classList.add("desc-breaker");
-
-      const creator = document.createElement("pre");
-      creator.innerHTML = `<b>Creator${info.creator.includes(",") ? "s" : ""}: </b>${info.creator}`;
-
-      const date = document.createElement("pre");
-      date.classList.add("update-date");
-      date.textContent = info.date;
-      
-      // this is just to help people who use Control + F
-      const hiddenTitle = document.createElement("pre");
-      hiddenTitle.classList.add("update-date");
-      hiddenTitle.style.opacity = 0;
-      hiddenTitle.textContent = `${name} ${name.replaceAll("-", " ")}`;
-
-      dataDiv = document.createElement("div");
-      dataDiv.classList.add("ext-data");
-      dataDiv.append(desc, descBreaker, creator, date, hiddenTitle);
-    }
-
-    /* Tag Setup */
-    const tag = info.status ? genTag(info.status) : "";
-    if (tag) _tagCache.push(tag);
-
-    const holderDiv = document.createElement("div");
-    if (name !== "override404") holderDiv.classList.add("ext-holder");
-    holderDiv.append(img, dataDiv, tag);
-    if (!pins.includes(name)) {
-      if (shouldSplit && !tag) {
-        const breaker = document.createElement("div");
-        breaker.classList.add("ext-breaker");
-        main.append(breaker, document.createElement("br"));
-        shouldSplit = false;
-      }
-    }
-    main.appendChild(holderDiv);
-
-    if (optDontFade) holderDiv.style.opacity = "1";
-    else img.onload = () => {
-      holderDiv.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 400, easing: "ease-in-out" });
-      holderDiv.style.opacity = "1";
-    };
-    if (name === "override404") return;
-
-    /* Event Setup */
-    holderDiv.addEventListener("mouseenter", () => holderDiv.appendChild(genPin(name)));
-    holderDiv.addEventListener("mouseleave", () => {
-      const pin = holderDiv.lastChild;
-      const animation = pin.animate([{ opacity: "1" }, { opacity: "0" }], { duration: 200, easing: "ease-in-out" });
-      animation.onfinish = () => pin.remove();
-      removeText();
-    });
-    holderDiv.addEventListener("click", (e) => {
-      downloadExt(name, info);
-      e.stopImmediatePropagation();
-    });
-  });
-  document.body.appendChild(main);
-  if (_tagLoopNeedsInit) updateTags();
-}
 
 function updateTags() {
   _tagLoopNeedsInit = false;
@@ -100,4 +19,91 @@ function updateTags() {
     requestAnimationFrame(animate);
   };
   animate();
+}
+
+function displayExts(json, optFadeIn) {
+  const oldDiv = document.querySelector(".ext-div");
+  if (oldDiv) oldDiv.remove();
+
+  let shouldSplit = currentTags[0] === "all";
+  const main = document.createElement("div");
+  main.classList.add("ext-div");
+
+  _tagCache = [];
+  Object.entries(json).forEach((item) => {
+    const isOverride = item[0] === "override404";
+    const info = {
+      ...item[1],
+      id: item[0],
+      isOverride, optFadeIn
+    };
+    if (isOverride) info.banner = "pages/main-assets/404.svg";
+
+    const status = info.status;
+    if (!pins.includes(info.id) && shouldSplit && !status) {
+      const breaker = document.createElement("div");
+      breaker.classList.add("ext-breaker");
+      main.append(breaker, document.createElement("br"));
+      shouldSplit = false;
+    }
+
+    const extensionDiv = document.createElement("extension-div");
+    extensionDiv.metaData = info;
+    main.appendChild(extensionDiv);
+  });
+
+  document.body.appendChild(main);
+  if (_tagLoopNeedsInit) updateTags();
+}
+
+async function downloadExt(name, url) {
+  if (isPenguinMod) {
+    const messager = window.opener || window.parent;
+    if (!messager) return alert("Failed to request to PenguinMod!");
+    messager.postMessage({
+      loadExt: `https://sharkpools-extensions.vercel.app/${url}`
+    }, "https://studio.penguinmod.com");
+
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    genText(
+      "center-notif",
+      `Copied to PenguinMod!${isMobile ? "<br>" : " " }Check the Editor`
+    );
+    return;
+  }
+
+  if (downloadType === "url") {
+    window.open(url);
+    return;
+  }
+
+  let extCode = await (await fetch(url)).text();
+  if (eraseDeprecation) {
+    const regex = new RegExp(`\\s*/\\* Deprecation Marker \\*/[\\s\\S]*?/\\* Marker End \\*/`, "g");
+    extCode = extCode.replace(regex, "").replace(/\n{3,}/g, "\n\n");
+  }
+  if (compress) {
+    // compress extCode
+    name += "-minified";
+    try {
+      extCode = (await Terser.minify(extCode)).code;
+    } catch(e) {
+      console.warn("Couldnt Compress Extension: " + name, e);
+    }
+  }
+
+  if (downloadType === "clipboard") {
+    navigator.clipboard.writeText(extCode)
+      .then(() => genText("center-notif", "Copied to Clipboard!"))
+      .catch(() => window.open(url));
+  } else {
+    const blobUrl = URL.createObjectURL(new Blob([extCode]));
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = name + ".js";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  }
 }
