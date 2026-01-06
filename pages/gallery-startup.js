@@ -68,7 +68,7 @@ function initGUI() {
     e.stopImmediatePropagation();
   });
 
-  /* Refresh Tags Button */
+  /* Refresh Status Button */
   const refreshBtn = document.querySelector(`img[class="navImgBig"][id="refreshTags"]`);
   refreshBtn.addEventListener("click", async (e) => {
     /* 2 min cooldown */
@@ -123,8 +123,9 @@ function genTag(type) {
 function genPin(extName) {
   const pin = document.createElement("img");
   pin.classList.add("ext-pin");
-  pin.src = `pages/main-assets/pin-${pins.includes(extName)}.svg`;
+  pin.src = "pages/main-assets/pin.svg";
   pin.style.opacity = "0";
+  if (pins.includes(extName)) pin.toggleAttribute("pinned");
   pin.onload = () => {
     if (pin.getAttribute("alrExists")) return;
     pin.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 300, easing: "ease-in-out" });
@@ -135,7 +136,7 @@ function genPin(extName) {
     const ind = pins.indexOf(extName);
     if (ind > -1) pins.splice(ind, 1);
     else pins.push(extName);
-    pin.src = `pages/main-assets/pin-${pins.includes(extName)}.svg`;
+    pin.toggleAttribute("pinned");
     updateStorage();
     e.stopImmediatePropagation();
   });
