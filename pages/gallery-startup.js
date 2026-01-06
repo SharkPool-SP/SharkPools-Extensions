@@ -206,7 +206,7 @@ function filterExts(json, searchQ) {
       for (const tag of currentTags) {
         if (
           extTags.includes(tag) ||
-          (entry[1].isDeprecated && currentTags.includes("Deprecated"))
+          (entry[1].isDeprecated && tag === "Deprecated")
         ) bound++;
       }
       if (bound === currentTags.length) newEntries.push(entry);
