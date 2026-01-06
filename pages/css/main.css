@@ -126,6 +126,10 @@ body {
   top: 5px;
   transition: transform 200ms ease-in-out;
   transform: scale(0.8);
+  filter: grayscale(1);
+}
+.ext-pin[pinned] {
+  filter: grayscale(0) !important;
 }
 .ext-pin:hover {
   transform: scale(0.9);
