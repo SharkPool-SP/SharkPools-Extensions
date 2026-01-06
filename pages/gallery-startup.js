@@ -126,11 +126,10 @@ function genPin(extName) {
   pin.src = "pages/main-assets/pin.svg";
   pin.style.opacity = "0";
   if (pins.includes(extName)) pin.toggleAttribute("pinned");
+
   pin.onload = () => {
-    if (pin.getAttribute("alrExists")) return;
     pin.animate([{ opacity: "0" }, { opacity: "1" }], { duration: 300, easing: "ease-in-out" });
     pin.style.opacity = "1";
-    pin.setAttribute("alrExists", "true");
   };
   pin.addEventListener("click", (e) => {
     const ind = pins.indexOf(extName);
