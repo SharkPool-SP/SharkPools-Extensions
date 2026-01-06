@@ -2,17 +2,6 @@
 <html lang="en">
   <head>
     <title>SharkPools Extension Collection</title>
-    <script>
-      if (location.origin.includes("https://sharkpool-sp.github.io")) {
-        const base = document.createElement("base");
-        base.setAttribute("href", "/SharkPools-Extensions/");
-        document.head.appendChild(base);
-      }
-    </script>
-    <script type="module">
-      // Import the Terser Library for Code Compression
-      import("https://cdn.jsdelivr.net/npm/terser@5.30.0/+esm").then(module => window.Terser = module);
-    </script>
     <base href="https://sharkpools-extensions.vercel.app/">
     <meta charset="utf-8">
 
@@ -22,10 +11,24 @@
     <meta content="https://sharkpools-extensions.vercel.app/" property="og:url">
     <meta content="https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main/pages/SP_Text.png" property="og:image">
     <meta content="#00a6ff" data-react-helmet="true" name="theme-color">
-    <link rel="icon" href="Gallery%20Files/main-assets/SP.svg">
+
+    <script type="module">
+      // Fix base path when hosted on GitHub Pages
+      if (location.origin.includes("https://sharkpool-sp.github.io")) {
+        const base = document.createElement("base");
+        base.href = "/SharkPools-Extensions/";
+        document.head.appendChild(base);
+      }
+
+      // Import the Terser Library for Code Compression
+      import("https://cdn.jsdelivr.net/npm/terser@5.30.0/+esm").then(module => {
+        window.Terser = module;
+      });
+    </script>
+
+    <link rel="icon" href="pages/main-assets/SP.svg">
     <link href="pages/css/main.css" rel="stylesheet">
     <link href="pages/css/custom-scroller.css" rel="stylesheet">
-    <link href="pages/css/panel-ui.css" rel="stylesheet">
 
     <!-- Lilita One Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,41 +37,28 @@
   </head>
   <body style="background-color: #111111">
     <div class="navBar">
-      <img class="toHost" draggable="false" src="Gallery%20Files/main-assets/logo-TW.svg" onclick="window.open('https://turbowarp.org')">
+      <img class="toHost" draggable="false" src="pages/main-assets/logo-TW.svg" onclick="window.open('https://turbowarp.org')">
       <div class="navHeader">
         <span class="title">SharkPool's Extension Collection</span>
         <span class="header">SharkPool's collection of TurboWarp Extensions. Most either made by or contributed to by SharkPool. Hover for more Details. 
           <br><span style="color: pink">Please Load Extensions Unsandboxed, otherwise they will not Load.</span>
         </span>
       </div>
-      <img class="toSP" draggable="false" src="Gallery%20Files/main-assets/SP.svg" onclick="window.open('https://www.youtube.com/channel/UC26hvmetqYgNB3oFewV_gtg')">
+      <img class="toSP" draggable="false" src="pages/main-assets/SP.svg" onclick="window.open('https://www.youtube.com/channel/UC26hvmetqYgNB3oFewV_gtg')">
     </div>
     <div class="innerNav">
-      <img class="navImg" id="settings" draggable="false" src="Gallery%20Files/main-assets/settings.svg">
-      <div class="tagBar">
-        <div class="tag" id="all">All</div>
-        <div class="tag" id="expanded">Expanded</div>
-        <div class="tag" id="utilities">Utility</div>
-        <div class="tag" id="fetching">Fetching</div>
-        <div class="tag" id="category">Category</div>
-        <div class="tag" id="addon">Addon</div>
-        <div class="tag" id="search"><img width="30" draggable="false" src="Gallery%20Files/main-assets/search.svg"></div>
-      </div>
-      <img class="navImg" id="contributors" draggable="false" src="Gallery%20Files/main-assets/contributors.svg">
+      <img class="navImg" id="settings" draggable="false" src="pages/main-assets/settings.svg">
+      <div class="tagBar"></div>
+      <img class="navImg" id="contributors" draggable="false" src="pages/main-assets/contributors.svg">
     </div>
     <div class="innerNav">
-      <img class="navImgBig" draggable="false" src="Gallery%20Files/main-assets/refresh.svg">
+      <img class="navImgBig" draggable="false" id="refreshTags" src="pages/main-assets/refresh.svg">
       <button class="donateBtn">
         <img src="https://www.paypalobjects.com/marketing/web/logos/paypal-mark-color.svg" width="25px">
-        Donate to SharkPool
+        <span>Donate to SharkPool</span>
       </button>
-      <img class="navImgBig" draggable="false" src="Gallery%20Files/main-assets/logo-github.svg">
+      <img class="navImgBig" draggable="false" id="gitRepo" src="pages/main-assets/logo-github.svg">
     </div>
-    <script src="pages/scripts/extension-generator.js" defer=""></script>
-    <script src="pages/scripts/contributor-generator.js" defer=""></script>
-    <script src="pages/scripts/mobile-scaler.js" defer=""></script>
-    <script src="pages/scripts/auto-extension-labeler.js" defer="" type="module"></script>
-    <script src="pages/startup.js"></script>
     <div class="filters" style="display: none">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <filter id="bloom-filter">
@@ -77,7 +67,17 @@
         </filter>
       </svg>
     </div>
+    <script src="pages/components/tag.js" type="module"></script>
+    <script src="pages/components/extension.js" type="module"></script>
+    <script src="pages/components/panel-modal.js" type="module"></script>
+    <script src="pages/scripts/extension-generator.js"></script>
+    <script src="pages/scripts/contributor-generator.js"></script>
+    <script src="pages/scripts/mobile-scaler.js"></script>
+    <script src="pages/scripts/auto-extension-labeler.js" type="module"></script>
+    <script src="pages/gallery-startup.js"></script>
   </body>
 </html>
+
+
 
 

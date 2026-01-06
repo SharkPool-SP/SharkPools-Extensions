@@ -1,4 +1,4 @@
-/*
+/**
   Find recent commits to extension files so the gallery knows
   what to label as 'new' or 'update'
 */
