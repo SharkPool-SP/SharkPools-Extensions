@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.03
+// Version V.1.0.04
 
 (function (Scratch) {
   "use strict";
@@ -469,6 +469,16 @@
     return filters + "</defs>";
   }
 
+  function uint8ToBase64(uint8) {
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let i = 0; i < uint8.length; i += chunkSize) {
+      const chunk = uint8.subarray(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, chunk);
+    }
+    return btoa(binary);
+  }
+
   const textObjects = Object.create(null);
   let isInDebugMode = false;
 
@@ -879,6 +889,46 @@
       });
     }
 
+    injectFontToDOM(dom, textObj) {
+      // get all used font names
+      const fontsInUse = [];
+      const innerElement = textObj._elementInner;
+
+      if (innerElement.hasAttribute("font-family")) {
+        fontsInUse.push(innerElement.getAttribute("font-family"));
+      }
+      const children = Array.from(innerElement.querySelectorAll("tspan"));
+      for (const span of children) {
+        if (span.hasAttribute("font-family")) {
+          fontsInUse.push(span.getAttribute("font-family"));
+        }
+      }
+
+      // try and convert fonts to properly export
+      const fontStyles = document.createElementNS("http://www.w3.org/2000/svg", "style");
+
+      const basicFonts = document.querySelector(`style[id="scratch-font-styles`);
+      fontStyles.textContent = basicFonts.textContent;
+
+      const customFonts = runtime.fontManager.fonts.filter(f => !f.system);
+      for (const font of customFonts) {
+        const properName = `"${font.family}", ${font.fallback}`;
+        if (!font.asset || !fontsInUse.includes(properName)) continue;
+
+        const base64 = uint8ToBase64(font.asset.data);
+
+        // normalize format for browser compatibility
+        let format = font.asset.dataFormat.toLowerCase();
+        if (format === "otf") format = "opentype";
+        if (format === "ttf") format = "truetype";
+        
+        fontStyles.textContent += `@font-face {font-family: "${font.family}";`;
+        fontStyles.textContent += `src: url('data:font/${format};base64,${base64}') format('${format}');}`;
+      }
+
+      dom.appendChild(fontStyles);
+    }
+
     markdownTutorial() {
       alert([
         "How to use Markdown in Display Text V2",
@@ -960,7 +1010,8 @@
         clone.setAttribute("height", bounds.height);
         clone.setAttribute("viewBox", `${bounds.x} ${bounds.y} ${bounds.width} ${bounds.height}`);
         clone.style.transform = "";
-        
+        this.injectFontToDOM(clone, textObj);
+
         let image = clone.outerHTML;
         clone.remove();
 
