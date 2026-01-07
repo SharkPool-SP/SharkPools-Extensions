@@ -166,7 +166,7 @@ function removeText() {
 }
 
 /* Internal Utils */
-function filterExts(json, searchQ) {
+function filterExts(json, searchQ = "") {
   let entries = Object.entries(json);
   let newEntries = [];
 
@@ -176,7 +176,6 @@ function filterExts(json, searchQ) {
   }
 
   if (currentTags[0] === "search") {
-    if (searchQ === undefined) searchQ = "";
     searchQ = searchQ.toLowerCase();
 
     // order by query
