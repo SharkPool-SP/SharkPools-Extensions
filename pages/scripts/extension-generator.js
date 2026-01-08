@@ -38,6 +38,7 @@ function displayExts(json, optFadeIn) {
       isOverride, optFadeIn
     };
     if (isOverride) info.banner = "pages/main-assets/404.svg";
+    else info.banner = "extension-thumbs/" + info.banner;
 
     const status = info.status;
     if (!pins.includes(info.id) && shouldSplit && !status) {
@@ -57,6 +58,7 @@ function displayExts(json, optFadeIn) {
 }
 
 async function downloadExt(name, url) {
+  url = "extension-code/" + url;
   if (isPenguinMod) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
