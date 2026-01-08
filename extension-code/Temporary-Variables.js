@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.03
+// Version V.1.0.04
 
 (function (Scratch) {
   "use strict";
@@ -13,6 +13,7 @@
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwLDAsMTI4LDEyOCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE3NiwtMTE2KSI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMTc2LDE4MGMwLC0zNS4zNDYyMiAyOC42NTM3OCwtNjQgNjQsLTY0YzM1LjM0NjIyLDAgNjQsMjguNjUzNzggNjQsNjRjMCwzNS4zNDYyMiAtMjguNjUzNzgsNjQgLTY0LDY0Yy0zNS4zNDYyMiwwIC02NCwtMjguNjUzNzggLTY0LC02NHoiIGZpbGw9IiNkYjZlMDAiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSJOYU4iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTE4NC4yMzgxLDE4MGMwLC0zMC43OTY0NSAyNC45NjU0NiwtNTUuNzYxOSA1NS43NjE5LC01NS43NjE5YzMwLjc5NjQ1LDAgNTUuNzYxOSwyNC45NjU0NiA1NS43NjE5LDU1Ljc2MTljMCwzMC43OTY0NSAtMjQuOTY1NDYsNTUuNzYxOSAtNTUuNzYxOSw1NS43NjE5Yy0zMC43OTY0NSwwIC01NS43NjE5LC0yNC45NjU0NiAtNTUuNzYxOSwtNTUuNzYxOXoiIGZpbGw9IiNmZjhjMWEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0yMDEuNjQ3NzEsMTgzLjYxMjcyYy0wLjA2NzM3LC0xMi40MzA3NSA2LjMwNDMxLC0yNC4wMTA2OCAxNi44NDA5LC0zMC42MDY3NWwtMC4wMTg1NywtMy40NDExMmMtMC4wMTE0NSwtMi4zMzE2OSAwLjkwNDExLC00LjU3MjQgMi41NDUxMywtNi4yMjg5MmMxLjY0MTAyLC0xLjY1NjUxIDMuODczLC0yLjU5MzA2IDYuMjA0NzEsLTIuNjAzNTJsMjAuMjk2MjIsLTAuMDkyNWMyLjMzMTY5LC0wLjAxMTQ1IDQuNTcyNCwwLjkwNDA5IDYuMjI4OTIsMi41NDUxYzEuNjU2NTEsMS42NDEwMiAyLjU5MzA2LDMuODczMDIgMi42MDM1Miw2LjIwNDczbDAuMDE1MTMsMy40NDEzN2MyLjgzNTY2LDEuNzQxMjcgNS4zNTUxMywzLjgyMzgyIDcuNTMwOTksNi4xNjY5bDIuNjE1NzUsLTEuNjc5MTJjMi4zNDE0OCwtMS41MDMwNiA1LjQ1ODExLC0wLjgyMzM5IDYuOTYxMTcsMS41MTgxbDQuMDgyMyw2LjM1OTQ1YzEuNTAzMDYsMi4zNDE0OCAwLjgyMzM5LDUuNDU4MTEgLTEuNTE4MSw2Ljk2MTE3bC0zLjY3NDc3LDIuMzU4OTNjMS43OTk1MSw3LjAwOTIxIDEuNDk1ODQsMTQuNTkzIC0xLjI0NzM0LDIxLjc2MDY1Yy02LjE3ODgxLDE2LjE0NDU4IC0yMi45ODEzOSwyNS41OTc3MSAtMzkuOTg3NTcsMjIuNDk3MDdjLTE3LjAwNjE4LC0zLjEwMDY0IC0yOS4zOTE0MiwtMTcuODc1NDUgLTI5LjQ3NDk0LC0zNS4xNjE4MXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0yMjMuMjQ5MzYsMTk3LjM2Nzk1aDAuMzA2YzIuMjI5ODYsMCA0LjM0ODMxLC0wLjk3OTQzIDUuNzk5NDgsLTIuNjgxM2wxOC4zNDI1NiwtMjEuNTExODZjMS40NTEwNSwtMS43MDE4NyAzLjU2OTYyLC0yLjY4MTM5IDUuNzk5NDQsLTIuNjgxMzloMC4zMDU3OE0yNDkuOTgzODgsMTk3LjM2Nzk1aC00Ljc1NzU1Yy0xLjcwNTI5LDAgLTMuMjAzNzksLTEuMTM2NDEgLTMuNjcyMzUsLTIuNzg0MzZsLTYuMDU1MzgsLTIxLjMwNTY2Yy0wLjQ2ODU2LC0xLjY0ODIgLTEuOTY3MDQsLTIuNzg0NTEgLTMuNjcyMzUsLTIuNzg0NTFoLTQuNzU3NDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmOGMxYSIgc3Ryb2tlLXdpZHRoPSI4LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+";
 
+  const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
@@ -159,19 +160,19 @@
       if (value === "") return "";
       if (typeof value === "object") return value;
       if (isNaN(Number(value))) return value;
-      return Scratch.Cast.toNumber(value);
+      return Cast.toNumber(value);
     }
 
     // Block Funcs
     setVar(args, util) {
-      const name = Scratch.Cast.toString(args.NAME);
+      const name = Cast.toString(args.NAME);
       if (args.TYPE === "global") projectVars[name] = args.VALUE;
       else if (args.TYPE === "sprite") this.initSprite(util.target)[name] = args.VALUE;
       else this.initThread(util.thread)[name] = args.VALUE;
     }
 
     changeVar(args, util) {
-      const name = Scratch.Cast.toString(args.NAME);
+      const name = Cast.toString(args.NAME);
       const value = this.castType(args.VALUE);
       const defaultValue = value?.constructor?.name === "String" ? "" : 0;
       if (args.TYPE === "global") {
@@ -186,8 +187,8 @@
     }
 
     swapVar(args, util) {
-      const name1 = Scratch.Cast.toString(args.NAME1);
-      const name2 = Scratch.Cast.toString(args.NAME2);
+      const name1 = Cast.toString(args.NAME1);
+      const name2 = Cast.toString(args.NAME2);
 
       const obj1 = args.TYPE1 === "global" ? projectVars :
         args.TYPE1 === "sprite" ? this.initSprite(util.target) : this.initThread(util.thread);
@@ -200,16 +201,20 @@
     }
 
     forVar(args, util) {
+      const incrementVal = Cast.toNumber(args.INC_VALUE);
       if (util.stackFrame.index === undefined) {
-        util.stackFrame.incrementVal = Scratch.Cast.toNumber(args.INC_VALUE);
-        util.stackFrame.index = Scratch.Cast.toNumber(args.START);
-        util.stackFrame.endIndex = Scratch.Cast.toNumber(args.END);
-        this.setVar({ ...args, VALUE: util.stackFrame.index - util.stackFrame.incrementVal }, util);
+        util.stackFrame.index = Cast.toNumber(args.START);
+        util.stackFrame.endIndex = Cast.toNumber(args.END);
+        this.setVar({ ...args, VALUE: util.stackFrame.index - incrementVal }, util);
       }
 
-      util.stackFrame.index = this.getVar(args, util) + util.stackFrame.incrementVal;
+      util.stackFrame.index = this.getVar(args, util) + incrementVal;
       this.setVar({ ...args, VALUE: util.stackFrame.index }, util);
-      util.startBranch(1, util.stackFrame.endIndex > util.stackFrame.index);
+      if (incrementVal < 0) {
+        util.startBranch(1, util.stackFrame.endIndex < util.stackFrame.index);
+      } else {
+        util.startBranch(1, util.stackFrame.endIndex > util.stackFrame.index);
+      }
     }
 
     scopeVar(_, util) {
@@ -228,14 +233,14 @@
     }
 
     varExists(args, util) {
-      const name = Scratch.Cast.toString(args.NAME);
+      const name = Cast.toString(args.NAME);
       if (args.TYPE === "global") return projectVars[name] !== undefined;
       else if (args.TYPE === "sprite") return this.initSprite(util.target)[name] !== undefined;
       else return this.initThread(util.thread)[name] !== undefined;
     }
 
     getVar(args, util) {
-      const name = Scratch.Cast.toString(args.NAME);
+      const name = Cast.toString(args.NAME);
       if (args.TYPE === "global") return projectVars[name] ?? "";
       else if (args.TYPE === "sprite") return this.initSprite(util.target)[name] ?? "";
       else return this.initThread(util.thread)[name] ?? "";
@@ -260,7 +265,7 @@
     }
 
     deleteVar(args, util) {
-      const name = Scratch.Cast.toString(args.NAME);
+      const name = Cast.toString(args.NAME);
       if (args.TYPE === "global") delete projectVars[name];
       else if (args.TYPE === "sprite") delete this.initSprite(util.target)[name];
       else delete this.initThread(util.thread)[name];
