@@ -2,8 +2,9 @@
 // ID: SPtts
 // Description: Text to Speech using TikTok API
 // By: SharkPool
+// License: MIT
 
-// Version 1.1.0
+// Version 1.1.01
 
 (function (Scratch) {
   "use strict";
@@ -15,19 +16,11 @@
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI5NS43Nzk5MSIgaGVpZ2h0PSI5NS43Nzk5MSIgdmlld0JveD0iMCwwLDk1Ljc3OTkxLDk1Ljc3OTkxIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTkyLjExMDA0LC0xMzIuMTEwMDQpIj48ZyBkYXRhLXBhcGVyLWRhdGE9InsmcXVvdDtpc1BhaW50aW5nTGF5ZXImcXVvdDs6dHJ1ZX0iIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTkyLjExMDA0LDIyNy44ODk5NXYtOTUuNzc5OTFoOTUuNzc5OTF2OTUuNzc5OTF6IiBmaWxsPSIjMGZiZDhjIi8+PHBhdGggZD0iTTIyMC40NzEyOSwxNzkuNDU0MDdjMCwtMTUuNzEyMTkgMTIuNzM3MjQsLTI4LjQ0OTQzIDI4LjQ0OTQzLC0yOC40NDk0M2MxNS43MTIxOSwwIDI4LjQ0OTQzLDEyLjczNzI0IDI4LjQ0OTQzLDI4LjQ0OTQzYzAsMTUuNzEyMTkgLTEyLjczNzI0LDI4LjQ0OTQzIC0yOC40NDk0MywyOC40NDk0M2MtMTUuNzEyMTksMCAtMjguNDQ5NDMsLTEyLjczNzI0IC0yOC40NDk0MywtMjguNDQ5NDN6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyNi4yMzAxOSwxNzkuNDU0MDdjMCwtMTIuNTMxNjMgMTAuMTU4OSwtMjIuNjkwNTMgMjIuNjkwNTMsLTIyLjY5MDUzYzEyLjUzMTYzLDAgMjIuNjkwNTMsMTAuMTU4OSAyMi42OTA1MywyMi42OTA1M2MwLDEyLjUzMTYzIC0xMC4xNTg5LDIyLjY5MDUzIC0yMi42OTA1MywyMi42OTA1M2MtMTIuNTMxNjMsMCAtMjIuNjkwNTMsLTEwLjE1ODkgLTIyLjY5MDUzLC0yMi42OTA1M3oiIGZpbGw9IiMwZmJkOGMiLz48cGF0aCBkPSJNMjMwLjEyMzc3LDE3OS40NTQwN2MwLC0xMC4zODEyNyA4LjQxNTY4LC0xOC43OTY5NSAxOC43OTY5NSwtMTguNzk2OTVjMTAuMzgxMjcsMCAxOC43OTY5NSw4LjQxNTY4IDE4Ljc5Njk1LDE4Ljc5Njk1YzAsMTAuMzgxMjcgLTguNDE1NjgsMTguNzk2OTUgLTE4Ljc5Njk1LDE4Ljc5Njk1Yy0xMC4zODEyNywwIC0xOC43OTY5NSwtOC40MTU2OCAtMTguNzk2OTUsLTE4Ljc5Njk1eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMzYuNzMzMzksMTc5LjQ1NDA3YzAsLTYuNzMwODggNS40NTY0NiwtMTIuMTg3MzQgMTIuMTg3MzQsLTEyLjE4NzM0YzYuNzMwODgsMCAxMi4xODczMyw1LjQ1NjQ2IDEyLjE4NzMzLDEyLjE4NzM0YzAsNi43MzA4OCAtNS40NTY0NSwxMi4xODczMyAtMTIuMTg3MzMsMTIuMTg3MzNjLTYuNzMwODgsMCAtMTIuMTg3MzQsLTUuNDU2NDUgLTEyLjE4NzM0LC0xMi4xODczM3oiIGZpbGw9IiMwZmJkOGMiLz48cGF0aCBkPSJNMjQxLjE5ODczLDE3OS40NTQwN2MwLC00LjI2NDc0IDMuNDU3MjUsLTcuNzIxOTkgNy43MjE5OSwtNy43MjE5OWM0LjI2NDc0LDAgNy43MjE5OSwzLjQ1NzI1IDcuNzIxOTksNy43MjE5OWMwLDQuMjY0NzQgLTMuNDU3MjUsNy43MjE5OSAtNy43MjE5OSw3LjcyMTk5Yy00LjI2NDc0LDAgLTcuNzIxOTksLTMuNDU3MjUgLTcuNzIxOTksLTcuNzIxOTl6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTE5Mi4xOTcxMiwyMTkuOTYzODJ2LTc5LjkyNzY0aDUzLjI4ODQ2djc5LjkyNzY0eiIgZmlsbD0iIzBmYmQ4YyIvPjxwYXRoIGQ9Ik0yMDMuMTUwMjIsMTg3Ljk4NDAzYzAsLTUuNjY3NTkgLTAuMDA4NDMsLTkuNjAwOTEgMCwtMTUuNzQ1OTdjMC4wMDg0NywtNi4xNzYwNyA0LjkwNzc3LC0xMS41OTE2OCA4LjMzNjIsLTExLjU5MTY4YzUuNTIwODYsMCAyMS42MTY3OSwwIDIxLjYxNjc5LDB2MzcuNjE1MzhjMCwwIC0xNi40NTY0MywwIC0yMS45NjUwOSwwYy0zLjMyMTk3LDAgLTcuOTg3OSwtNC42OTY3MiAtNy45ODc5LC0xMC4yNzc3M3oiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjQ4Ljc3NDgyLDE0MS42NjUyNWMwLDkuODIwNzYgMCw2MS4xNDIxNSAwLDc2Ljk3MjIyYzAsMi45Mzg2MiAtMi4yMTY4MSwyLjQzNzM4IC00LjQyNzUsMC4yMjY2OWMtNi41OTU1NywtNi41OTU1NyAtMzkuNDEwMSwtMzkuNDEwMSAtMzkuNDEwMSwtMzkuNDEwMWMwLDAgMzAuODg4MDIsLTMwLjg4ODAyIDM4LjAxNjIyLC0zOC4wMTYyMmMyLjc4OTM4LC0yLjc4OTM4IDUuODIxMzcsLTIuOTQyMjcgNS44MjEzNywwLjIyNzQxeiIgZmlsbD0iI2ZmZmZmZiIvPjwvZz48L2c+PC9zdmc+";
 
+  const proxy = "https://corsproxy.io?url=";
+
   const vm = Scratch.vm;
   let voice = "en_us_010";
   let data;
-
-  //this script was ripped from the Files Extension. Thanks GarboMuffin :D
-  const downloadURL = (url, file) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = file;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
 
   class SPtts {
     getInfo() {
@@ -116,7 +109,7 @@
       const url = "https://tiktok-tts.weilnet.workers.dev/api/generation";
       const requestBody = { text: args.TEXT, voice: voice };
       try {
-        const response = await Scratch.fetch(url, {
+        const response = await Scratch.fetch(proxy + url, {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify(requestBody)
         });
@@ -128,7 +121,9 @@
       } catch (error) { console.error("Error:", error) }
     }
 
-    setVoice(args) { voice = Scratch.Cast.toString(args.VOICE) }
+    setVoice(args) {
+      voice = Scratch.Cast.toString(args.VOICE)
+    }
 
     cVoice() {
       if (voice === undefined) voice = "en_us_006";
@@ -144,7 +139,7 @@
       if (data) {
         let target = args.SPRITE;
         if (target === "Stage") {
-          target = vm.runtime.getTargetForStage().id
+          target = vm.runtime.getTargetForStage().id;
         } else {
           target = this.findID(target);
         }
@@ -172,21 +167,21 @@
       if (data) {
         const audioData = `data:audio/${args.TYPE};base64,${data}`;
         const fileName = `${Scratch.Cast.toString(args.NAME)}.${args.TYPE}`;
-        downloadURL(audioData, fileName);
+        Scratch.download(audioData, fileName);
       }
     }
 
     playSpeechAudio(args) {
       if (data) {
         const audio = new Audio(`data:audio/mp3;base64,${data}`);
-        audio.playbackRate = args.PITCH === 0 ? 1 : Math.abs(args.PITCH / 100);
+        audio.playbackRate = args.PITCH === 0 ? 1 : Math.abs(Scratch.Cast.toNumber(args.PITCH) / 100);
         audio.play();
       }
     }
 
     _getTargets() {
       const spriteNames = [];
-      const targets = Scratch.vm.runtime.targets;
+      const targets = vm.runtime.targets;
       for (let index = 0; index < targets.length; index++) {
         const target = targets[index];
         if (target.isOriginal) spriteNames.push(target.getName());
@@ -195,7 +190,7 @@
     }
 
     findID(sprite) {
-      const targets = Scratch.vm.runtime.targets;
+      const targets = vm.runtime.targets;
       if (targets.length > 0) {
         for (let index = 1; index < targets.length; index++) {
           const target = targets[index];
@@ -262,3 +257,4 @@
 
   Scratch.extensions.register(new SPtts());
 })(Scratch);
+
