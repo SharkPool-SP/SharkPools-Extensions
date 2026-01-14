@@ -2,8 +2,10 @@
 // ID: DICandSPmonitorsPlus
 // Description: Expansion of Monitor Types and Variable Blocks.
 // By: SharkPool and DogeIsCut
+// License: MIT
 
-// Version 1.4.2 (Duplicate)
+// Version 1.4.2
+// DEPRECATED, please view '/extension-code/Variables-Expanded.js'
 
 (function (Scratch) {
   "use strict";
