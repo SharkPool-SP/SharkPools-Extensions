@@ -21,12 +21,11 @@ function updateTags() {
   animate();
 }
 
-
 function displayExts(json, optFadeIn) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
 
-  let shouldSplit = currentTags[0] === "all";
+  let shouldSplit = currentTags[0] === "all" && pins.length;
   const main = document.createElement("div");
   main.classList.add("ext-div");
 
@@ -42,19 +41,16 @@ function displayExts(json, optFadeIn) {
     else info.banner = "extension-thumbs/" + info.banner;
     const status = info.status;
 
-    const extensionDiv = document.createElement("extension-div");
-    extensionDiv.metaData = info;
-    main.appendChild(extensionDiv);
-
     if (shouldSplit && !status && !pins.includes(info.id)) {
-      shouldSplit = false;
-    }
-    if (shouldSplit) {
       const breaker = document.createElement("div");
       breaker.classList.add("ext-breaker");
       main.append(breaker, document.createElement("br"));
       shouldSplit = false;
     }
+  
+    const extensionDiv = document.createElement("extension-div");
+    extensionDiv.metaData = info;
+    main.appendChild(extensionDiv);
   });
 
   document.body.appendChild(main);
