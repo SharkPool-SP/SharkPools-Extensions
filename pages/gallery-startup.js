@@ -171,8 +171,8 @@ function filterExts(json, searchQ) {
   let newEntries = [];
 
   if (!currentTags.includes("Deprecated")) {
-    // hide all deprecated extensions
-    entries = entries.filter((e) => !e[1].isDeprecated);
+    // hide all deprecated extensions unless pinned
+    entries = entries.filter((e) => !e[1].isDeprecated || pins.includes(e[0]));
   }
 
   if (currentTags[0] === "search") {
