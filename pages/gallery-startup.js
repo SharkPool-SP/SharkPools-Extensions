@@ -76,6 +76,7 @@ function initGUI() {
       e.target.setAttribute("delay", Date.now() + (2000 * 60));
       _cachedExtTags = undefined;
       await window.fetchAutoLabeler();
+      cleanupExtList(galleryData.extensions);
       document.querySelector(`div[class="tagBar"] ext-tag[id="All"]`).click();
       e.stopImmediatePropagation();
     }
