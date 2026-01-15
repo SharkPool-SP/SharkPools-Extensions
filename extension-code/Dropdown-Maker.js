@@ -6,7 +6,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // License: MIT AND LGPLv3
 
-// Version V.1.0.1
+// Version V.1.0.11
 
 (function (Scratch) {
   "use strict";
@@ -52,7 +52,10 @@
       const menuBlock = `SP0zMenuMaker_menu_${xmlEscape(menuName)}`;
       return `<block type="${menuBlock}" id="${menuBlock}"></block>`;
     }).join("") || `<label text="Try creating some menus!" />`;
-    vm.extensionManager.refreshBlocks("SP0zMenuMaker").then(() => vm.refreshWorkspace());
+
+    if (vm.extensionManager._loadedExtensions.has("SP0zMenuMaker")) {
+      vm.extensionManager.refreshBlocks("SP0zMenuMaker").then(() => vm.refreshWorkspace());
+    }
   }
 
   function patchDivColor(container, isDark) {
