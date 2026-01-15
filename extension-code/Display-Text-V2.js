@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.04
+// Version V.1.0.05
 
 (function (Scratch) {
   "use strict";
@@ -318,7 +318,14 @@
       this._elementInner.innerHTML = this.cleansedText;
       this._element.appendChild(this._elementInner);
       textDiv.appendChild(this._element);
-      this.setPosition(0, 0);
+
+	  // if there is a position preset for us, use it
+	  if (presetPositions[this.id]) {
+		this.setPosition(...presetPositions[this.id]);
+		delete presetPositions[this.id];
+	  } else {
+		this.setPosition(0, 0);
+	  }
     }
 
     updateElement(isStyleUpdate, isSpecialUpdate) {
@@ -480,6 +487,7 @@
   }
 
   const textObjects = Object.create(null);
+  const presetPositions = Object.create(null);
   let isInDebugMode = false;
 
   class SPdisplayTextV2 {
@@ -1271,10 +1279,17 @@
     }
 
     setTextPosition(args) {
-      const textObj = textObjects[Cast.toString(args.ID)];
-      if (textObj) textObj.setPosition(
-        Cast.toNumber(args.x), Cast.toNumber(args.y)
-      );
+	  const id = Cast.toString(args.ID);
+      const textObj = textObjects[id];
+      if (textObj) {
+		textObj.setPosition(
+          Cast.toNumber(args.x), Cast.toNumber(args.y)
+      	);
+	  } else {
+		presetPositions[id] = [
+		  Cast.toNumber(args.x), Cast.toNumber(args.y)
+		];
+	  }
     }
 
     textPosition(args) {
