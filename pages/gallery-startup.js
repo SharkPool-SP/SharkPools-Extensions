@@ -233,7 +233,7 @@ function cleanupExtList(json) {
   for (const extData of values) {
     if (extData.overrideLabeler) continue;
 
-    const cached = tagCache.find((e) => e.ID === extData.url);
+    const cached = tagCache.find((e) => e.ID.endsWith(extData.url));
     if (cached) {
       const properDate = cached.date.replaceAll("-", "/");
       extData.status = cached.isNew ? "new" : "update";
