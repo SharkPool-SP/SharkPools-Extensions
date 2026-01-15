@@ -375,9 +375,9 @@
         varFind = sprite.target.variables[name].name;
         if (varFind === varName) return sprite.target.variables[name].id;
       }
-      const ID = runtime.getTargetForStage().lookupVariableByNameAndType(varName, "");
-      if (!ID) return "";
-      return ID.id;
+
+      const variable = runtime.getTargetForStage().lookupVariableByNameAndType(varName, "");
+      return variable ? variable.id : "";
     }
 
     resetEffects(variableId, curTransform) {
@@ -413,11 +413,13 @@
         "month", "time", "button", "file", "image", "audio"
       ];
       const isHexRegex = /^#([0-9A-F]{3}){1,2}$/i;
-      const addVarListener = (id, inp, func) => { varUpdateListener[id] = { inp, func } }
+      const addVarListener = (id, inp, func) => {
+        varUpdateListener[id] = { inp, func };
+      };
       const buttonClick = (ID, down) => {
         if (down) monitorButtons[ID] = { varName : ID, isDown : down, timeClick : Date.now() };
         else delete monitorButtons[ID];
-      }
+      };
 
       let varId = this.findVariable(nameID, util);
       if (!varId) return;
@@ -554,7 +556,11 @@
       } else {
         varMonitor.firstChild.style.display = "";
         if (baseMonitors[type] === undefined) type = "normal readout";
-        runtime.requestUpdateMonitor(state.set("mode", baseMonitors[type]));
+        if (isPM) {
+          runtime.requestUpdateMonitor(state.set("mode", baseMonitors[type]));
+        } else {
+          runtime.requestUpdateMonitor({ "id": varId, "mode": baseMonitors[type] });
+        }
       }
     }
 
@@ -621,8 +627,8 @@
       varMonitor.setAttribute("SPposition", `[${Cast.toNumber(args.X)}, ${Cast.toNumber(args.Y)}]`);
       let x = Cast.toNumber(args.X) + canvas[0] - (varMonitor.offsetWidth / 2);
       let y = (Cast.toNumber(args.Y) - canvas[1] + (varMonitor.offsetHeight / 2)) * -1;
-      x = x - (parseInt(varMonitor.style.left) || 5);
-      y = y - (parseInt(varMonitor.style.top) || 5);
+      x = x - (parseFloat(varMonitor.style.left) || 5);
+      y = y - (parseFloat(varMonitor.style.top) || 5);
 
       let styleAtts = varMonitor.getAttribute("style");
       const transformRegex = /transform:([^;]+);/;
@@ -648,8 +654,8 @@
       if (!styleAttribute) return "";
       const match = styleAttribute.match(/transform\s*:\s*translate\((-?\d+(?:\.\d+)?px),\s*(-?\d+(?:\.\d+)?px)\)/);
       if (match) {
-        if (args.POSITION === "x") return Math.round(parseInt(match[1]) - canvas[0] + (varMonitor.offsetWidth / 2)) + parseInt(varMonitor.style.left);
-        else return Math.round(((parseInt(match[2]) * -1) + canvas[1]) - (varMonitor.offsetHeight / 2) - parseInt(varMonitor.style.top)) - 1;
+        if (args.POSITION === "x") return Math.round(parseFloat(match[1]) - canvas[0] + (varMonitor.offsetWidth / 2)) + parseFloat(varMonitor.style.left);
+        else return Math.round(((parseFloat(match[2]) * -1) + canvas[1]) - (varMonitor.offsetHeight / 2) - parseFloat(varMonitor.style.top)) - 1;
       }
     }
 
@@ -673,11 +679,20 @@
         }
         var state = runtime.getMonitorState().get(varId);
         if (!state) return;
-        state = state.set("mode", "slider");
-        runtime.requestUpdateMonitor(state);
-        runtime.requestUpdateMonitor(new Map([
-          ["id", varId], ["sliderMin", margins[0]], ["sliderMax", margins[1]]
-        ]));
+
+        if (isPM) {
+          state = state.set("mode", "slider");
+          runtime.requestUpdateMonitor(state);
+          runtime.requestUpdateMonitor(new Map([
+            ["id", varId], ["sliderMin", margins[0]], ["sliderMax", margins[1]]
+          ]));
+        } else {
+          runtime.requestUpdateMonitor({
+            "id": varId,
+            "mode": "slider",
+            "sliderMin": margins[0], "sliderMax": margins[1]
+          });
+        }
       }
     }
 
