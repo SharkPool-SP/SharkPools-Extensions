@@ -119,9 +119,7 @@
         const sounds = Object.values(tempBank);
 
         const getTargetName = (name) => {
-          return runtime.targets.find((t) => {
-            return t.getName().replaceAll("/", "") === name;
-          });
+          return runtime.targets.find((t) => t.getName().replaceAll("/", "") === name);
         };
         const loadEndHandler = (index) => {
           if (index >= sounds.length - 1) soundBank = tempBank;
@@ -147,9 +145,7 @@
               continue;
             }
 
-            const scratchSound = target.sprite.sounds.find((i) => {
-              return i.name.replaceAll("/", "") === info[1];
-            });
+            const scratchSound = target.sprite.sounds.find((i) => i.name.replaceAll("/", "") === info[1]);
             if (scratchSound === undefined) {
               alert(
                 Scratch.translate(
@@ -581,6 +577,22 @@
             },
           },
           {
+            opcode: "joinSound",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("join sound [NAME1] and [NAME2]"),
+            blockIconURI: extraIcons.set,
+            arguments: {
+              NAME1: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("MySound"),
+              },
+              NAME2: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("MySound2"),
+              },
+            },
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
             text: Scratch.translate("Audio Effects"),
           },
@@ -932,7 +944,6 @@
         loaded: true,
         reversed: false,
         currentTime: 0,
-        vol: 100,
         gain: 1,
         pitch: 1,
         detune: 0,
@@ -1051,6 +1062,7 @@
           effect.time = values.time;
           effect.decay = values.decay;
           effect.mix = values.mix;
+          break;
         }
         case "BITCRUSH": {
           effect.frequency = values.frequency;
@@ -1266,9 +1278,7 @@
     importMenu(args, util) {
       const name = Cast.toString(args.SOUND);
       const target = util.target.sprite;
-      const sound = target.sounds.find((i) => {
-        return i.name === name;
-      });
+      const sound = target.sounds.find((i) => i.name === name);
 
       if (sound) {
         this.deleteSound(args);
@@ -1360,9 +1370,11 @@
     ctrlSounds(args) {
       const controlFuncs = {
         "start": (sound) => this.playSound(sound.context, 0, sound),
-        "stop": (sound) => sound.context.stop(),
         "pause": (sound) => this.audioControlDo(sound, "pause"),
-        "unpause": (sound) => this.audioControlDo(sound, "unpause")
+        "unpause": (sound) => this.audioControlDo(sound, "unpause"),
+        "stop": (sound) => {
+          if (sound.context.playing) sound.context.stop();
+        },
       };
 
       const func = controlFuncs[Cast.toString(args.CONTROL)];
@@ -1429,7 +1441,6 @@
       const sound = soundBank[args.NAME];
       if (sound) {
         this.stopSound(args);
-        sound.vol = 0;
 
         const ctx = sound.context;
         ctx.volume = 0;
@@ -1502,16 +1513,17 @@
           return src.buffer.numberOfChannels;
         case "samples":
           return src.buffer.sampleRate;
-        case "fft":
+        case "fft": {
           const dataArray = new Uint8Array(sound.analyser.frequencyBinCount);
           sound.analyser.getByteFrequencyData(dataArray);
           return JSON.stringify(Array.from(dataArray));
+        }
         case "source":
           return sound.src;
         case "binds":
           return JSON.stringify(Object.keys(sound.binds));
         case "volume":
-          return sound.vol;
+          return sound.context.volume * 100;
         case "pitch":
           return Math.round((sound.pitch - 1) * 100);
         case "detune":
@@ -1618,7 +1630,7 @@
       return isNaN(value) ? 0 : value * sound.gain;
     }
 
-    async cropSound(args) {
+    cropSound(args) {
       const sound = soundBank[args.NAME];
       const start = Cast.toNumber(args.START);
       const end = Cast.toNumber(args.END);
@@ -1647,10 +1659,46 @@
       });
     }
 
+    joinSound(args) {
+      const sound1 = soundBank[args.NAME1];
+      const sound2 = soundBank[args.NAME2];
+      if (sound1 === undefined || sound2 === undefined) return "";
+
+      const context = sound1.context.sourceNode;
+      const buffer1 = context.buffer;
+      const buffer2 = sound2.context.sourceNode.buffer;
+
+      if (
+        buffer1.sampleRate !== buffer2.sampleRate ||
+        buffer1.numberOfChannels !== buffer2.numberOfChannels
+      ) {
+        console.warn("Cannot join sounds! Sample rate or channel count doesnt match.");
+        return "";
+      }
+
+      const joinedBuffer = context.context.createBuffer(
+        buffer1.numberOfChannels,
+        buffer1.length + buffer2.length,
+        buffer1.sampleRate
+      );
+      for (let i = 0; i < buffer1.numberOfChannels; i++) {
+        const channel = joinedBuffer.getChannelData(i);
+        channel.set(buffer1.getChannelData(i), 0);
+        channel.set(buffer2.getChannelData(i), buffer1.length);
+      }
+
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve("");
+        reader.readAsDataURL(this.bufferToWavBlob(joinedBuffer));
+      });
+    }
+
     setVol(args) {
       const sound = soundBank[args.NAME];
       if (sound) {
-        sound.vol = clamp(0, 100, Cast.toNumber(args.NUM));
+        sound.context.volume = clamp(0, 1, Cast.toNumber(args.NUM) / 100);
       }
     }
 
@@ -1791,7 +1839,7 @@
           sound, "TREMOLO", args,
           {
             speed: Cast.toNumber(args.SPEED) / 5,
-            depth: Cast.toNumber(args.DEPTH) / 100,
+            depth: clamp(0, 1, Cast.toNumber(args.DEPTH) / 100),
             mix: Cast.toNumber(args.MIX) / 100,
           }
         );
