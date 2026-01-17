@@ -31,9 +31,7 @@
       "url": "Tune-Shark-V3.js",
       "banner": "Tune-Shark-V3.svg",
       "tags": ["Utility", "Sound", "Category Expansion"],
-      "status": "",
-      "overrideLabeler": true,
-      "date": "Last Updated: 12/25/2025"
+      "date": "Last Updated: 01/17/2026"
     },
     "Tune-Shark": {
       "desc": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3",
@@ -141,7 +139,7 @@
       "url": "Sprite-Effects-V2.js",
       "banner": "Sprite-Effects.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 10/24/2025"
+      "date": "Last Updated: 01/11/2026"
     },
     "Image-Effects": {
       "desc": "Apply Effects and Filters to Images",
@@ -229,7 +227,7 @@
       "url": "Variables-Expanded.js",
       "banner": "Variables-Expanded.svg",
       "tags": ["Utility", "Data Management", "Category Expansion"],
-      "date": "Last Updated: 11/30/2024"
+      "date": "Last Updated: 01/14/2026"
     },
     "Sty-Lists": {
       "desc": "Customize and Organize List Monitors",
@@ -269,7 +267,7 @@
       "url": "Text-to-Speech.js",
       "banner": "Text-to-Speech.svg",
       "tags": ["Sound", "Online", "Category Expansion"],
-      "date": "Last Updated: 01/02/2024"
+      "date": "Last Updated: 01/08/2026"
     },
     "Font-Manager": {
       "desc": "Manage, Create, and Delete Fonts from your Project",
@@ -381,7 +379,7 @@
       "url": "Display-Text-V2.js",
       "banner": "Display-Text.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Re-Released: 12/25/2025"
+      "date": "Re-Released: 01/15/2026"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
@@ -558,7 +556,7 @@
       "url": "Dropdown-Maker.js",
       "banner": "Dropdown-Maker.svg",
       "tags": ["Utility", "Data Management", "Editor Tool", "Configuration"],
-      "date": "Last Updated: 07/13/2025"
+      "date": "Last Updated: 01/14/2026"
     },
     "Turbo-Skins": {
       "desc": "Improved Skins extension, inspired by LilyMakesThings",
