@@ -114,7 +114,7 @@
       "url": "Particle-Engine.js",
       "banner": "Particle-Engine.svg",
       "tags": ["Utility", "Graphics", "Data Management"],
-      "date": "Last Updated: 10/05/2025"
+      "date": "Last Updated: 01/17/2026"
     },
     "Particle-Tools": {
       "desc": "Tools that make creating Particle Systems easy",
@@ -243,7 +243,7 @@
       "url": "Gamepad-Expanded.js",
       "banner": "Gamepad-Expanded.svg",
       "tags": ["Hardware", "Dangerous"],
-      "date": "Released: 10/??/2023"
+      "date": "Released: 10/03/2023"
     },
     "Tile-Grids": {
       "desc": "Position Sprites on Tile Grids",
