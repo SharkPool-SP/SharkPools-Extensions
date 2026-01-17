@@ -259,7 +259,7 @@
             arguments: {
               URL: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "https://extensions.turbowarp.org/meow.mp3",
+                defaultValue: "https://sharkpools-extensions.vercel.app/extension-utils/TS/Resonance-Home.mp3",
               },
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -1935,3 +1935,4 @@
 
   Scratch.extensions.register(new SPtuneShark3());
 })(Scratch);
+
