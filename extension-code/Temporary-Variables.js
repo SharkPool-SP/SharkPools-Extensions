@@ -6,6 +6,15 @@
 
 // Version V.1.0.04
 
+/* 
+  - tried my best to make changes clear and not as cluttered
+  - changes are highlighted with "MT - " something
+  - weakmaps are referenced in "spriteVarMap" and "threadVarMap" constants
+  - added weakmaps and also minor adjustments to some functions (forVar, scopeVar, setVar)
+  - take the other function changes with a grain of salt, i did not code the extension so idk if my changes are wrong or not what you want
+  - if anything is off or weird contact me
+  -MTUnixic
+*/
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Temporary Variables must run unsandboxed!");
@@ -19,17 +28,25 @@
 
   let projectVars;
 
+  // MT - initialize lazyloading for per-sprite and per-thread variables with weakmaps
+  // (allows garbage collection when destroyed, better impact on memory and prevents leaking)
+  const spriteVarMap = new WeakMap();
+  const threadVarMap = new WeakMap();
+
   function initTempVariables() {
     projectVars = Object.create(null);
-    const targets = runtime.targets;
-    for (let i = 0; i < targets.length; i++) {
-      const target = targets[i];
-      target.SPtempVars = Object.create(null);
-    }
+    // MT - the rest is no longer needed since weakmaps handle that now
   }
 
-  runtime.on("PROJECT_START", initTempVariables);
-  runtime.on("PROJECT_STOP_ALL", initTempVariables);
+  // MT - a bit long, but prevents duplicates on reloads
+  // (optional)
+  if (!runtime._SPtempVarsListenersAdded) {
+      runtime._SPtempVarsListenersAdded = true;
+      runtime._SPtempVars_onStart = initTempVariables;
+      runtime._SPtempVars_onStop = initTempVariables;
+      runtime.on("PROJECT_START", runtime._SPtempVars_onStart);
+      runtime.on("PROJECT_STOP_ALL", runtime._SPtempVars_onStop);
+  }
   initTempVariables();
 
   class SPtempVars {
@@ -41,11 +58,12 @@
         color2: "#f07800",
         color3: "#DB6E00",
         menuIconURI,
+        // MT - these are optional, they just look nicer to use imo
         blocks: [
           {
             opcode: "setVar",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set [TYPE] var [NAME] to [VALUE]",
+            text: "set [TYPE] [NAME] to [VALUE]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
@@ -55,7 +73,7 @@
           {
             opcode: "changeVar",
             blockType: Scratch.BlockType.COMMAND,
-            text: "change [TYPE] var [NAME] by [VALUE]",
+            text: "change [TYPE] [NAME] by [VALUE]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
@@ -65,7 +83,7 @@
           {
             opcode: "swapVar",
             blockType: Scratch.BlockType.COMMAND,
-            text: "swap [TYPE1] var [NAME1] with [TYPE2] var [NAME2]",
+            text: "swap [TYPE1] [NAME1] with [TYPE2] [NAME2]",
             arguments: {
               TYPE1: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME1: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
@@ -77,7 +95,7 @@
           {
             opcode: "forVar",
             blockType: Scratch.BlockType.LOOP,
-            text: ["for each [TYPE] var [NAME] from [START] to [END]", "increment by [INC_VALUE]"],
+            text: ["for [TYPE] [NAME] : [START] to [END] step [INC_VALUE]"],
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
@@ -95,7 +113,7 @@
           {
             opcode: "varExists",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "[TYPE] var [NAME] exists?",
+            text: "[TYPE] [NAME] exists?",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
@@ -105,7 +123,7 @@
             opcode: "getVar",
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
-            text: "get [TYPE] var [NAME]",
+            text: "[TYPE] ‎ [NAME]", // added "‎" so u can grab it easily
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" },
@@ -132,28 +150,31 @@
           {
             opcode: "deleteVar",
             blockType: Scratch.BlockType.COMMAND,
-            text: "delete [TYPE] var [NAME]",
+            text: "delete [TYPE] [NAME]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPES" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" }
             },
           }
         ],
+        // MT - re-ordered since threads are more commonly used
         menus: {
-          VAR_TYPES: ["global", "sprite", "thread"]
+          VAR_TYPES: ["thread", "sprite", "global"]
         },
       };
     }
 
     // Helper Funcs
     initSprite(target) {
-      if (target.SPtempVars === undefined) target.SPtempVars = Object.create(null);
-      return target.SPtempVars;
+      // MT - changed to use weakmaps instead
+      if (!spriteVarMap.has(target)) spriteVarMap.set(target, Object.create(null));
+      return spriteVarMap.get(target);
     }
 
     initThread(thread) {
-      if (thread.SPtempVars === undefined) thread.SPtempVars = Object.create(null);
-      return thread.SPtempVars;
+      // MT - this too
+      if (!threadVarMap.has(thread)) threadVarMap.set(thread, Object.create(null));
+      return threadVarMap.get(thread);
     }
 
     castType(value) {
@@ -165,10 +186,13 @@
 
     // Block Funcs
     setVar(args, util) {
+      // MT - (minor) args.value uses castType() to store numbers instead of always strings
+      // because this doesn't do that while changeVar() does, thought it'll make sense to add it in
       const name = Cast.toString(args.NAME);
-      if (args.TYPE === "global") projectVars[name] = args.VALUE;
-      else if (args.TYPE === "sprite") this.initSprite(util.target)[name] = args.VALUE;
-      else this.initThread(util.thread)[name] = args.VALUE;
+      const value = this.castType(args.VALUE);
+      if (args.TYPE === "global") projectVars[name] = value;
+      else if (args.TYPE === "sprite") this.initSprite(util.target)[name] = value;
+      else this.initThread(util.thread)[name] = value;
     }
 
     changeVar(args, util) {
@@ -200,35 +224,63 @@
       obj2[name2] = tempVal;
     }
 
+    // MT - fixed edge cases (zero step, modified loop variable)
     forVar(args, util) {
-      const incrementVal = Cast.toNumber(args.INC_VALUE);
+      const inc = util.stackFrame.incrementVal;
+      const end = util.stackFrame.endIndex;
+
       if (util.stackFrame.index === undefined) {
-        util.stackFrame.index = Cast.toNumber(args.START);
-        util.stackFrame.endIndex = Cast.toNumber(args.END);
-        this.setVar({ ...args, VALUE: util.stackFrame.index - incrementVal }, util);
+        // MT - normalize step/start/end to integers, falls back to 1 if falsy
+        util.stackFrame.incrementVal = Math.round(Scratch.Cast.toNumber(args.INC_VALUE)) || 1;
+        util.stackFrame.index = Math.round(Scratch.Cast.toNumber(args.START));
+        util.stackFrame.endIndex = Math.round(Scratch.Cast.toNumber(args.END));
       }
 
-      util.stackFrame.index = this.getVar(args, util) + incrementVal;
-      this.setVar({ ...args, VALUE: util.stackFrame.index }, util);
-      if (incrementVal < 0) {
-        util.startBranch(1, util.stackFrame.endIndex < util.stackFrame.index);
-      } else {
-        util.startBranch(1, util.stackFrame.endIndex > util.stackFrame.index);
+      // keepGoing handles both pre-decrement hacks and separate branch logic for negative/positive increments
+      const keepGoing = inc > 0 ? util.stackFrame.index <= end : util.stackFrame.index >= end;
+      if (!keepGoing) {
+        // MT - clear state so future runs can reinitialize (just in case)
+        delete util.stackFrame.index;
+        delete util.stackFrame.endIndex;
+        delete util.stackFrame.incrementVal;
+        return;
       }
+
+      // setup the main loop for the iteration, run body
+      this.setVar({ ...args, VALUE: util.stackFrame.index }, util);
+      util.startBranch(1, true);
+      // after body, re-read value (could be changed), then cast to number and continue
+      util.stackFrame.index = Math.round(Scratch.Cast.toNumber(this.getVar(args, util)));
+      util.stackFrame.index += inc;
     }
 
+    // MT - tightened up support for nested scopes because it could clone entire variable objects uncontrollably
     scopeVar(_, util) {
+      if (util.stackFrame.scopeStack === undefined) {
+        // MT - each stackFrame keeps its own stack for nested scopes first before entering
+        util.stackFrame.scopeStack = [];
+      }
+      const threadVars = this.initThread(util.thread);
+      // entering scope 
       if (util.stackFrame.initialized === undefined) {
         util.stackFrame.initialized = true;
-        util.stackFrame.oldVars = structuredClone(this.initThread(util.thread));
+        util.stackFrame.scopeStack.push(new Set(Object.keys(threadVars)));
         util.startBranch(1, true);
+        return;
+      }
+      // MT - exiting scope (remove variables inside scope)
+      // (curVars replaced with threadVars)
+      const oldKeys = util.stackFrame.scopeStack.pop();
+      if (oldKeys) {
+        Object.keys(threadVars).forEach((k) => { if (!oldKeys.has(k)) delete threadVars[k]; });
+      }
+      // MT - cleanup after just in case
+      if (util.stackFrame.scopeStack.length === 0) {
+        delete util.stackFrame.scopeStack;
+        delete util.stackFrame.initialized;
       } else {
-        // remove variables from scope
-        const oldVars = util.stackFrame.oldVars;
-        const curVars = this.initThread(util.thread);
-        Object.keys(curVars).forEach((key) => {
-          if (oldVars[key] === undefined) delete curVars[key];
-        })
+        // MT - keep the stackFrame for nested scopes
+        util.stackFrame.initialized = true;
       }
     }
 
