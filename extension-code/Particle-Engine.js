@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.4
+// Version V.2.0.41
 
 (function (Scratch) {
   "use strict";
@@ -302,7 +302,7 @@ void main() {
       ratioX: 1,
       ratioY: 1,
       emitters: Object.create(null),
-      interpolate: false,
+      interpolate: runtime.interpolationEnabled,
       paused: false,
       noTrails: true,
     };
@@ -926,10 +926,6 @@ void main() {
             { text: Scratch.translate("hide"), value: "hide" },
           ],
           ENGINE_OPS: [
-            {
-              text: Scratch.translate("interpolation"),
-              value: "interpolation",
-            },
             { text: Scratch.translate("freeze"), value: "freeze" },
             { text: Scratch.translate("particle trails"), value: "trails" },
           ],
@@ -1181,10 +1177,12 @@ void main() {
       if (target && engine) {
         const toggle = args.TYPE === "on";
         switch (args.OPT) {
+          /* Deprecation Marker */
           case "interpolation":
             if (toggle) runtime.setInterpolation(true);
             engine.interpolate = toggle;
             break;
+          /* Marker End */
           case "freeze":
             engine.paused = toggle;
             break;
@@ -1229,25 +1227,42 @@ void main() {
     }
 
     deleteEmitterWait(args, util) {
-      let target, emitter;
-      if (util.stackFrame.emitterCallback) {
-        [target, emitter] = util.stackFrame.emitterCallback;
-        if (emitter.data.size > 0) {
-          util.yield();
+      const target = this.getSprite(args.TARGET);
+      if (!target || !target[engineTag]) return;
+
+      const emitter = target[engineTag].emitters[args.NAME];
+      if (!emitter) return;
+      emitter.opts.emission = { val: 0, inf: 0 };
+
+      /*
+        we must return a promise, no special 'util.yield()' magic
+        as it breaks engines with interpolation
+      */
+      let callback;
+      return new Promise((resolve) => {
+        if (target[engineTag].interpolate) {
+          callback = () => {
+            if (emitter.data.size > 0) {
+              requestAnimationFrame(callback);
+            } else {
+              delete target[engineTag].emitters[args.NAME];
+              resolve();
+            }
+          };
+
+          callback();
         } else {
-          delete target[engineTag].emitters[args.NAME];
+          callback = () => {
+            if (emitter.data.size < 1) {
+              runtime.off("BEFORE_EXECUTE", callback);
+              delete target[engineTag].emitters[args.NAME];
+              resolve();
+            }
+          };
+
+          runtime.on("BEFORE_EXECUTE", callback);
         }
-      } else {
-        target = this.getSprite(args.TARGET);
-        if (!target || !target[engineTag]) return;
-
-        emitter = target[engineTag].emitters[args.NAME];
-        if (!emitter) return;
-
-        emitter.opts.emission = { val: 0, inf: 0 };
-        util.stackFrame.emitterCallback = [target, emitter];
-        util.yield();
-      }
+      });
     }
 
     emitterExist(args) {
