@@ -195,7 +195,7 @@
       "url": "Rigidbodies.js",
       "banner": "Rigidbodies.svg",
       "tags": ["Utility", "Graphics", "Math", "Category Expansion"],
-      "date": "Released: 02/28/2025"
+      "date": "Last Updated: 01/29/2026"
     },
     "Lazy-Collisions": {
       "desc": "Utility Blocks that make detecting box Collisions easy and fast",
