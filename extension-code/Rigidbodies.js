@@ -1,14 +1,14 @@
-// Name: Rigid Bodies
+// Name: Rigidbodies
 // ID: SPrigidBody
-// Description: Fast Collisions using Math-Based Rigidbodies!
+// Description: Fast collisions using math-based Rigidbodies.
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.1
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) throw new Error("Rigid Bodies must run unsandboxed!");
+  if (!Scratch.extensions.unsandboxed) throw new Error("Rigidbodies must run unsandboxed!");
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTYuNDA3IiBoZWlnaHQ9IjExNi40MDciIHZpZXdCb3g9IjAgMCAxMTYuNDA3IDExNi40MDciPjxnIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMCA1OC4yMDRDMCAyNi4wNTkgMjYuMDU4LjAwMSA1OC4yMDMuMDAxczU4LjIwNCAyNi4wNTggNTguMjA0IDU4LjIwMy0yNi4wNiA1OC4yMDQtNTguMjA0IDU4LjIwNFMwIDkwLjM0OCAwIDU4LjIwNCIgZmlsbD0iIzM0Njg3ZCIvPjxwYXRoIGQ9Ik02LjY4NyA1OC4yMDRjMC0yOC40NTEgMjMuMDY1LTUxLjUxNiA1MS41MTYtNTEuNTE2czUxLjUxNiAyMy4wNjYgNTEuNTE2IDUxLjUxNi0yMy4wNjYgNTEuNTE2LTUxLjUxNiA1MS41MTZTNi42ODcgODYuNjU0IDYuNjg3IDU4LjIwNCIgZmlsbD0iIzRhOTNiMCIvPjxwYXRoIGQ9Ik0yMy4yODQgNDguMDk2YzAtMTMuMTk1IDEwLjY5Ny0yMy44OTIgMjMuODkyLTIzLjg5MnMyMy44OTIgMTAuNjk3IDIzLjg5MiAyMy44OTItMTAuNjk3IDIzLjg5Mi0yMy44OTIgMjMuODkyLTIzLjg5Mi0xMC42OTctMjMuODkyLTIzLjg5MiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik00NS4zMzggNjguMzEyYzAtMTMuMTk1IDEwLjY5Ny0yMy44OTIgMjMuODkyLTIzLjg5MnMyMy44OTIgMTAuNjk3IDIzLjg5MiAyMy44OTJTODIuNDI1IDkyLjIwNCA2OS4yMyA5Mi4yMDQgNDUuMzM4IDgxLjUwNyA0NS4zMzggNjguMzEyIiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTcxLjA2OCA0OC4wOTZjMCAxMy4xOTUtMTAuNjk3IDIzLjg5Mi0yMy44OTIgMjMuODkycS0uNzg4IDAtMS41NjUtLjA1YTI0IDI0IDAgMCAxLS4yNzMtMy42MjZjMC0xMy4xOTUgMTAuNjk3LTIzLjg5MiAyMy44OTItMjMuODkycS43ODggMCAxLjU2NS4wNWEyNCAyNCAwIDAgMSAuMjczIDMuNjI2IiBmaWxsPSIjNGE5M2IwIi8+PC9nPjwvc3ZnPg==";
@@ -19,75 +19,492 @@
   const isPM = Scratch.extensions.isPenguinMod;
   const isEditor = typeof scaffolding === "undefined";
 
-  const bodyTypes = ["square", "circle", "triangle", "hexagon"];
   const defaultBlock = {
     opcode: "body...", text: "...",
-    blockType: Scratch.BlockType.REPORTER
+    disableMonitor: true,
+    blockType: Scratch.BlockType.REPORTER,
+    blockShape: isPM ? Scratch.BlockShape.OCTAGONAL : Scratch.BlockShape.ROUND
   };
 
+  const BODY_TYPES = [
+    "square",
+    "circle",
+    "triangle",
+    "polygon"
+  ];
+
   const bodyMonitors = Object.create(null);
-  let bodies = Object.create(null);
+  let allRigidbodies = Object.create(null);
   let blocks = [];
   let hideBlocks = true;
 
-  const radianConverter = Math.PI / 180;
-  const defaultBody = {
-    type: "square", x: 0, y: 0,
-    scale: [1, 1], dir: 0, circAccuracy: 20
-  };
+  // Rigidbody Class, made by me
+  class Rigidbody {
+    /** Body Types */
+    static BODY_SQUARE = 0;
+    static BODY_CIRCLE = 1;
+    static BODY_TRIANGLE = 2; // for clarity this is a left-facing right triangle
+    static BODY_POLYGON = 3;
 
-  // Internals & Monitors
-  function updateAllBodyMonitors() {
-    if (!isEditor) return;
-    const monitorBlocks = runtime.monitorBlocks._blocks;
-    const entries = Object.entries(bodyMonitors);
-    for (let i = 0; i < entries.length; i++) {
-      const entry = entries[i];
-      const body = bodies[entry[0]];
-      const div = entry[1];
-      const isShowing = monitorBlocks[`SPrigidBody_body${entry[0]}`]?.isMonitored;
-      if (!isShowing || !body) {
-        vm.renderer.removeOverlay(div);
-        delete bodyMonitors[entry[0]];
-        return;
+    /** Constants */
+    static DEFAULT_POLY_SIDES = 6; // hexagon
+    static MIN_POLY_SIDES = 3; // isosceles triangle
+    static CIRCLE_ACCURACY = 20;
+    static TO_RADIAN = Math.PI / 180;
+
+    /** Class Utilities */
+
+    /**
+     * Transforms a coordinate around a center coordinate.
+     *
+     * @param {number} x horizontal point position
+     * @param {number} y vertical point position
+     * @param {number} centerX horizontal center to transform around
+     * @param {number} centerY vertical center to transform around
+     * @param {number} cosAngle angle to transform around in cosine
+     * @param {number} sinAngle angle to transform around in sine
+     * @returns object containing transformed coordinates
+     */
+    static transformPoint(x, y, centerX, centerY, cosAngle, sinAngle) {
+      const dx = x - centerX;
+      const dy = y - centerY;
+      return {
+        x: dx * cosAngle + dy * sinAngle,
+        y: -dx * sinAngle + dy * cosAngle,
+      };
+    }
+
+    /**
+     * Projects the range of a polygons' points on a specified axis.
+     *
+     * @param {number[]} axis array of coordinate objects that specify the axis
+     * @param {number[]} polyPoints array of point objects in a polygon
+     * @returns object min and max points of a polygon on an axis
+     */
+    static projectPolygon(axis, polyPoints) {
+      let min = Infinity;
+      let max = -Infinity;
+      for (let point of polyPoints) {
+        let proj = point.x * axis.x + point.y * axis.y;
+        if (proj < min) min = proj;
+        if (proj > max) max = proj;
       }
-      div.style.left = `${body.x}px`; div.style.top = `${body.y * -1}px`;
-      div.firstChild.style.transform = `rotate(${body.dir}deg) scale(${body.scale[0]}, ${body.scale[1]})`;
+      return { min, max };
+    }
+
+    /** Body Specific Utilities */
+    /**
+     * Constructs a Rigidbody object.
+     *
+     * @param {number} bodyType the rigidbody shape type (BODY_POLYGON, BODY_SQUARE, etc.)
+     * @param {number} optPolySides (optional) number of sides on this polygon
+     */
+    constructor(bodyType, optPolySides) {
+      if (
+        typeof bodyType !== "number" ||
+        bodyType < 0 ||
+        bodyType > Rigidbody.BODY_POLYGON
+      ) {
+        throw new Error("Rigidbody body type is unknown");
+      }
+
+      this._type = bodyType;
+      this._polyPoints = null;
+      this._axesProjection = null;
+
+      this._x = 0;
+      this._y = 0;
+      this._direction = 0;
+      this._scale = [1, 1];
+
+      if (this._type === Rigidbody.BODY_POLYGON) {
+        this.polySides =
+          optPolySides >= Rigidbody.MIN_POLY_SIDES
+            ? Math.round(optPolySides) : Rigidbody.DEFAULT_POLY_SIDES;
+      }
+
+      this._updatePolyPoints();
+    }
+
+    /** Setters and Getters */
+    get x() {
+      return this._x;
+    }
+    set x(v) {
+      if (this._x !== v) {
+        this._x = v;
+        this._updatePolyPoints();
+      }
+    }
+
+    get y() {
+      return this._y;
+    }
+    set y(v) {
+      if (this._y !== v) {
+        this._y = v;
+        this._updatePolyPoints();
+      }
+    }
+
+    get direction() {
+      return this._direction;
+    }
+    set direction(v) {
+      if (this._direction !== v) {
+        this._direction = v;
+        this._updatePolyPoints();
+      }
+    }
+
+    get scale() {
+      return this._scale;
+    }
+    set scale(v) {
+      if (!Array.isArray(v) || v.length !== 2) {
+        throw new Error("scale must be [x, y]");
+      }
+
+      if (this._scale[0] !== v[0] || this._scale[1] !== v[1]) {
+        this._scale = v;
+        this._updatePolyPoints();
+      }
+    }
+
+    /**
+     * Constructs this body's polygon points and projections.
+     * Used when updating body attributes (x, y, direction, scale).
+     */
+    _updatePolyPoints() {
+      this._polyPoints = [];
+      this._axesProjection = [];
+
+      const rad = this.direction * Rigidbody.TO_RADIAN;
+      const cos = Math.cos(rad);
+      const sin = Math.sin(rad);
+
+      const scaledX = 50 * this.scale[0];
+      const scaledY = 50 * this.scale[1];
+
+      const addPoint = (px, py) => {
+        const rx = this.x + (px * cos - py * sin);
+        const ry = this.y * -1 + (px * sin + py * cos);
+        this._polyPoints.push({ x: rx, y: ry });
+      };
+
+      // construct the rigidbody's shape points
+      switch (this._type) {
+        case Rigidbody.BODY_SQUARE:
+          addPoint(-scaledX, -scaledY);
+          addPoint(scaledX, -scaledY);
+          addPoint(scaledX, scaledY);
+          addPoint(-scaledX, scaledY);
+          break;
+        case Rigidbody.BODY_TRIANGLE:
+          addPoint(scaledX, scaledY);
+          addPoint(-scaledX, scaledY);
+          addPoint(-scaledX, -scaledY);
+          break;
+        case Rigidbody.BODY_CIRCLE:
+          for (let i = 0; i < this.CIRCLE_ACCURACY; i++) {
+            const angle = i * (360 / this.CIRCLE_ACCURACY) * Rigidbody.TO_RADIAN;
+            addPoint(Math.cos(angle) * scaledX, Math.sin(angle) * scaledY);
+          }
+          break;
+        case Rigidbody.BODY_POLYGON:
+          for (let i = 0; i < this.polySides; i++) {
+            const angle = i * (360 / this.polySides) * Rigidbody.TO_RADIAN;
+            addPoint(Math.cos(angle) * scaledX, Math.sin(angle) * scaledY);
+          }
+          break;
+      }
+
+      // construct the axes projections
+      for (let i = 0; i < this._polyPoints.length; i++) {
+        const p1 = this._polyPoints[i];
+        const p2 = this._polyPoints[(i + 1) % this._polyPoints.length];
+
+        const edgeNormal = {
+          x: (p2.y - p1.y) * -1,
+          y: p2.x - p1.x,
+        };
+        const mag = Math.sqrt(edgeNormal.x * edgeNormal.x + edgeNormal.y * edgeNormal.y);
+
+        this._axesProjection.push({
+          x: edgeNormal.x / mag,
+          y: edgeNormal.y / mag,
+        });
+      }
+    }
+
+    /**
+     * Changes the number of sides of this POLYGON Rigidbody.
+     *
+     * @param {number} sides new number of sides of this polygon
+     */
+    setPolygonSides(sides) {
+      if (this._type === Rigidbody.BODY_POLYGON) {
+        this.polySides =
+          sides >= Rigidbody.MIN_POLY_SIDES
+            ? Math.round(sides) : Rigidbody.DEFAULT_POLY_SIDES;
+        this._updatePolyPoints();
+      }
+    }
+
+    /**
+     * Computes the distance from this body to a given coordinate.
+     *
+     * @param {number} x horizontal position
+     * @param {number} y vertical position
+     * @returns the distance from this body to a coordinate
+     */
+    distanceToXY(x, y) {
+      const dx = this.x - x;
+      const dy = this.y - y;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * Computes this body's bounding box.
+     *
+     * @returns bounding box object
+     */
+    getBounds() {
+      const width = 100 * this.scale[0];
+      const height = 100 * this.scale[1];
+      const rads = -this.direction * Rigidbody.TO_RADIAN;
+      const rotWidth = Math.abs(width * Math.cos(rads)) + Math.abs(height * Math.sin(rads));
+      const rotHeight = Math.abs(width * Math.sin(rads)) + Math.abs(height * Math.cos(rads));
+
+      return {
+        width: rotWidth,
+        height: rotHeight,
+        left: this.x - rotWidth / 2,
+        right: this.x + rotWidth / 2,
+        top: -this.y + rotHeight / 2,
+        bottom: -this.y - rotHeight / 2,
+      };
+    }
+
+    /**
+     * Checks if this body is colliding with a given coordinate.
+     *
+     * @param {number} x horizontal point position
+     * @param {number} y horizontal point position
+     * @returns true if the given coordinate is within this body
+     */
+    isTouchingXY(x, y) {
+      // first check if we're even inside this bodies bounding box
+      const bounds = this.getBounds();
+      if (
+        x > bounds.right || x < bounds.left ||
+        y > bounds.top || y < bounds.bottom
+      ) {
+        return false;
+      }
+
+      // now do hard point check
+      const angle = this.direction * Rigidbody.TO_RADIAN;
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      const halfWidth = 50 * this.scale[0];
+      const halfHeight = 50 * this.scale[1];
+
+      // transform point to fixate the body direction
+      const localPoint = Rigidbody.transformPoint(
+        x, y * -1,
+        this.x, this.y * -1,
+        cos, sin,
+      );
+
+      switch (this._type) {
+        case Rigidbody.BODY_SQUARE: {
+          return (
+            localPoint.x >= -halfWidth &&
+            localPoint.x <= halfWidth &&
+            localPoint.y >= -halfHeight &&
+            localPoint.y <= halfHeight
+          );
+        }
+        case Rigidbody.BODY_CIRCLE: {
+          if (this.scale[0] === this.scale[1]) {
+            // non-stretched circle
+            const dx = x - this.x;
+            const dy = y - this.y * -1;
+            return dx * dx + dy * dy <= halfWidth * halfWidth;
+          } else {
+            const dx = localPoint.x / halfWidth;
+            const dy = localPoint.y / halfHeight;
+            return dx * dx + dy * dy <= 1;
+          }
+        }
+        case Rigidbody.BODY_POLYGON: {
+          if (!this._polyPoints || !this._axesProjection) {
+            this._updatePolyPoints();
+          }
+
+          let inside = false;
+          for (
+            let i = 0, j = this._polyPoints.length - 1;
+            i < this._polyPoints.length;
+            j = i++
+          ) {
+            // transform polygon points into local space
+            const pi = Rigidbody.transformPoint(
+              this._polyPoints[i].x, this._polyPoints[i].y,
+              this.x, this.y * -1,
+              cos, sin,
+            );
+            const pj = Rigidbody.transformPoint(
+              this._polyPoints[j].x, this._polyPoints[j].y,
+              this.x, this.y * -1,
+              cos, sin,
+            );
+
+            const intersect =
+              pi.y > localPoint.y !== pj.y > localPoint.y &&
+              localPoint.x < ((pj.x - pi.x) * (localPoint.y - pi.y)) / (pj.y - pi.y) + pi.x;
+
+            if (intersect) inside = !inside;
+          }
+          return inside;
+        }
+        case Rigidbody.BODY_TRIANGLE: {
+          const p1 = [-halfWidth, -halfHeight]; // bottom-left
+          const p2 = [halfWidth, halfHeight]; // bottom-right
+          const p3 = [-halfWidth, halfHeight]; // top-left
+
+          const wholeArea =
+            Math.abs(
+              p1[0] * (p2[1] - p3[1]) +
+                p2[0] * (p3[1] - p1[1]) +
+                p3[0] * (p1[1] - p2[1]),
+            ) / 2;
+
+          const area1 =
+            Math.abs(
+              localPoint.x * (p2[1] - p3[1]) +
+                p2[0] * (p3[1] - localPoint.y) +
+                p3[0] * (localPoint.y - p2[1]),
+            ) / 2;
+          const area2 =
+            Math.abs(
+              p1[0] * (localPoint.y - p3[1]) +
+                localPoint.x * (p3[1] - p1[1]) +
+                p3[0] * (p1[1] - localPoint.y),
+            ) / 2;
+          const area3 =
+            Math.abs(
+              p1[0] * (p2[1] - localPoint.y) +
+                p2[0] * (localPoint.y - p1[1]) +
+                localPoint.x * (p1[1] - p2[1]),
+            ) / 2;
+          return Math.abs(wholeArea - (area1 + area2 + area3)) < 0.001;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Checks if this body is colliding with another body.
+     *
+     * @param {Rigidbody} body other Rigidbody object to check collision with
+     * @returns true if this body is intersecting with another body
+     */
+    isTouchingBody(body) {
+      if (!body || !(body instanceof Rigidbody)) {
+        throw new Error("Rigidbody object must be passed in collision check!");
+      }
+
+      // first check if we're even inside this bodies bounding box
+      const bounds1 = this.getBounds();
+      const bounds2 = body.getBounds();
+      if (
+        bounds1.right < bounds2.left || bounds1.left > bounds2.right ||
+        bounds1.bottom > bounds2.top || bounds1.top < bounds2.bottom
+      ) {
+        return false;
+      }
+
+      // now do a hard collision check
+      if (!this._polyPoints || !this._axesProjection) this._updatePolyPoints();
+      if (!body._polyPoints || !body._axesProjection) body._updatePolyPoints();
+
+      const axes = [...this._axesProjection, ...body._axesProjection];
+      for (let axis of axes) {
+        const proj1 = Rigidbody.projectPolygon(axis, this._polyPoints);
+        const proj2 = Rigidbody.projectPolygon(axis, body._polyPoints);
+        if (!(proj1.min <= proj2.max && proj2.min <= proj1.max)) return false;
+      }
+      return true;
     }
   }
 
-  if (isEditor) {
-    ReduxStore.subscribe(() => {
-      // our 'monitors' should show the rigid body instead
-      const monitors = document.querySelectorAll(`div[data-id^="SPrigidBody_body"][class*="monitor"]`);
-      for (let i = 0; i < monitors.length; i++) {
-        const monitor = monitors[i];
-        if (monitor.style.display === "none") continue;
-        monitor.style.display = "none";
-        const name = monitor.getAttribute("data-id").replace("SPrigidBody_body", "");
-        const body = bodies[name];
-        if (!body) continue;
-        vm.renderer.removeOverlay(bodyMonitors[name]);
+  // Custom Monitors
+  const monitorContainer = document.createElement("div");
+  monitorContainer.classList.add("SPrigidBody_monitorContainer");
+  vm.renderer.addOverlay(monitorContainer, "scale-centered");
 
-        const bodyHolder = document.createElement("div");
-        bodyHolder.style.transform = "translate(-50%, -50%)";
-        bodyHolder.style.position = "absolute";
-        const bodyShape = document.createElement("svg");
-        bodyShape.id = "SPrigidBody_display";
-        bodyHolder.appendChild(bodyShape);
-        bodyMonitors[name] = bodyHolder;
-        vm.renderer.addOverlay(bodyHolder, "scale-centered");
-
-        let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">`;
-        if (body.type === "square") svg += `<g fill="#00f"><path d="M5.068 94.931V5.068h89.863v89.863z" fill-opacity=".25"/><path d="M0 100V0h100v100zm94.932-5.067V5.067H5.067v89.865z" fill-opacity=".75"/></g>`;
-        else if (body.type === "circle") svg += `<g fill="red"><path d="M5 50C5 25 25 5 50 5S95 25 95 50 74.816 95 50 95 5 74.816 5 50" fill-opacity=".25"/><path d="M0 50C0 22.385 22.385 0 50 0s50 22.385 50 50-22.385 50-50 50S0 77.614 0 50m50 45c24.816 0 45-20.116 45-45S74.815 5 50 5 5 25 5 50 25 95 50 95" fill-opacity=".75"/></g>`;
-        else if (body.type === "triangle") svg += `<g fill="#f0f"><path d="M5.068 94.931v-82.43l82.431 82.432z" fill-opacity=".25"/><path d="M0 100V0l100 100zm87.5-5.067L5.067 12.5v82.432z" fill-opacity=".75"/></g>`;
-        else if (body.type === "hexagon") svg += `<g fill="#0f0"><path d="M5 27.5 50 5l45 22.467v45L50 95 5 72.5z" fill-opacity=".25"/><path d="M0 25 50 0l50 25v50l-50 25L0 75zm5 47.467L50 95l45-22.467v-45L50 5 5 27.5z" fill-opacity=".75"/></g>`;
-        bodyShape.outerHTML = svg + "</svg>";
-      }
-      updateAllBodyMonitors();
+  const closeAllBodyMonitors = () => {
+    Object.values(bodyMonitors).forEach((monitor) => {
+      delete bodyMonitors[monitor.rigidbody.name];
+      monitor.remove();
     });
+  };
+
+  const createBodyMonitor = (rigidbody) => {
+    const monitor = document.createElement("div");
+    monitor.id = rigidbody.name;
+    monitor.rigidbody = rigidbody;
+    bodyMonitors[rigidbody.name] = monitor;
+
+    monitor.style.transform = "translate(-50%, -50%)";
+    monitor.style.position = "absolute";
+
+    monitorContainer.appendChild(monitor);
+
+    updateAllBodyMonitors();
+  };
+  
+  const updateAllBodyMonitors = () => {
+    for (const monitor of Object.values(bodyMonitors)) {
+      const rigidbody = monitor.rigidbody;
+      const name = rigidbody.name;
+
+      // set shape
+      if (
+        monitor.currentType !== rigidbody._type ||
+        monitor.polygonSides !== rigidbody.polySides
+      ) {
+        monitor.currentType = rigidbody._type;
+        monitor.polygonSides = rigidbody.polySides;
+        
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="-5 -5 100 100" stroke-linejoin="round">`;
+        if (rigidbody._type === Rigidbody.BODY_SQUARE) svg += `<g fill="#00f"><rect width="90" height="90" fill-opacity=".25" stroke-width="10" stroke="#00f" stroke-opacity=".5"></rect></g>`;
+        else if (rigidbody._type === Rigidbody.BODY_CIRCLE) svg += `<g fill="red"><circle cx="45" cy="45" r="45" fill-opacity=".25" stroke="red" stroke-width="10" stroke-opacity=".5"/></g>`;
+        else if (rigidbody._type === Rigidbody.BODY_TRIANGLE) svg += `<g fill="#f0f"><polygon points="0,0 90,90 0,90 0,0" fill-opacity=".25" stroke="#f0f" stroke-width="10" stroke-opacity=".5"/></g>`;
+        else if (rigidbody._type === Rigidbody.BODY_POLYGON) {
+          const points = [];
+          for (let i = 0; i < monitor.polygonSides; i++) {
+            const angle = (i * (360 / monitor.polygonSides) + 90) * Rigidbody.TO_RADIAN;
+            points.push(`${45 + Math.cos(angle) * 45},${45 + Math.sin(angle) * 45}`);
+          }
+
+          svg += `<g fill="#0f0"><polygon points="${points.join(" ")}" fill-opacity=".25" stroke="#0f0" stroke-width="10" stroke-opacity=".5"/></g>`;
+        }
+        monitor.innerHTML = svg + "</svg>";
+      }
+
+      // apply transforms
+      monitor.style.left = `${rigidbody.x}px`;
+      monitor.style.top = `${rigidbody.y * -1}px`;
+      monitor.firstChild.style.transform = `rotate(${rigidbody.direction}deg) scale(${rigidbody.scale[0]}, ${rigidbody.scale[1]})`;
+    }
   }
+
+  runtime.on("PROJECT_START", closeAllBodyMonitors);
+  runtime.on("PROJECT_STOP_ALL", closeAllBodyMonitors);
 
   // Custom GUI & ScratchBlocks
   function openModal(titleName, addSelector, func) {
@@ -107,17 +524,22 @@
       newLabel.textContent = "Body Type:";
       const selector = document.createElement("select");
       selector.setAttribute("class", input.getAttribute("class"));
-      selector.addEventListener("input", (e) => { bodyType = e.target.value });
-      bodyTypes.forEach((option) => {
-        let opt = document.createElement("option");
-        opt.value = option; opt.text = option;
+      selector.addEventListener("input", (e) => {
+        bodyType = e.target.value
+      });
+
+      BODY_TYPES.forEach((option) => {
+        const opt = document.createElement("option");
+        opt.value = option.toUpperCase();
+        opt.text = option;
         selector.appendChild(opt);
       });
       input.parentNode.append(newLabel, selector);
     }
   }
 
-  if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
+  // Octagon Block Shape for Turbowarp
+  if (Scratch.gui && !isPM) Scratch.gui.getBlockly().then(SB => {
     // Custom Octagon Block Shape
     const makeShape = (width, height) => {
       width -= 18;
@@ -167,19 +589,19 @@
     getInfo() {
       return {
         id: "SPrigidBody",
-        name: "Rigidbodies",
+        name: Scratch.translate("Rigidbodies"),
         color1: "#4a93b0",
         menuIconURI,
         blocks: [
           {
             func: "createBtn",
             blockType: Scratch.BlockType.BUTTON,
-            text: "Make a Rigidbody"
+            text: Scratch.translate("Make a Rigidbody")
           },
           {
             func: "deleteBtn",
             blockType: Scratch.BlockType.BUTTON,
-            text: "Remove a Rigidbody"
+            text: Scratch.translate("Remove a Rigidbody")
           },
           "---",
           ...blocks,
@@ -188,18 +610,19 @@
             opcode: "isColliding",
             blockType: Scratch.BlockType.BOOLEAN,
             hideFromPalette: hideBlocks,
-            text: "is [OCT_SHAPE1] touching [OCT_SHAPE2] ?",
+            text: Scratch.translate("is [OCT_SHAPE1] touching [OCT_SHAPE2] ?"),
             arguments: {
-              OCT_SHAPE1: {}, OCT_SHAPE2: {}
+              OCT_SHAPE1: { shape: Scratch.BlockShape.OCTAGONAL },
+              OCT_SHAPE2: { shape: Scratch.BlockShape.OCTAGONAL }
             }
           },
           {
             opcode: "isCollidingPoint",
             blockType: Scratch.BlockType.BOOLEAN,
             hideFromPalette: hideBlocks,
-            text: "is [OCT_SHAPE] touching x: [x] y: [y] ?",
+            text: Scratch.translate("is [OCT_SHAPE] touching x: [x] y: [y] ?"),
             arguments: {
-              OCT_SHAPE: {},
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
               x: { type: Scratch.ArgumentType.NUMBER },
               y: { type: Scratch.ArgumentType.NUMBER }
             }
@@ -208,18 +631,19 @@
             opcode: "distance",
             blockType: Scratch.BlockType.REPORTER,
             hideFromPalette: hideBlocks,
-            text: "distance from [OCT_SHAPE1] to [OCT_SHAPE2]",
+            text: Scratch.translate("distance from [OCT_SHAPE1] to [OCT_SHAPE2]"),
             arguments: {
-              OCT_SHAPE1: {}, OCT_SHAPE2: {}
+              OCT_SHAPE1: { shape: Scratch.BlockShape.OCTAGONAL },
+              OCT_SHAPE2: { shape: Scratch.BlockShape.OCTAGONAL }
             }
           },
           {
             opcode: "boundsOfBox",
             blockType: Scratch.BlockType.REPORTER,
             hideFromPalette: hideBlocks,
-            text: "bounding box of [OCT_SHAPE]",
+            text: Scratch.translate("bounding box of [OCT_SHAPE]"),
             arguments: {
-              OCT_SHAPE: {}
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL }
             }
           },
           "---",
@@ -227,20 +651,24 @@
             opcode: "setBodyType",
             blockType: Scratch.BlockType.COMMAND,
             hideFromPalette: hideBlocks,
-            text: "set body type of [OCT_SHAPE] to [OCT_SHAPES]",
+            text: Scratch.translate("set body type of [OCT_SHAPE] to [OCT_SHAPES]"),
             arguments: {
-              OCT_SHAPE: {},
-              OCT_SHAPES: { type: Scratch.ArgumentType.STRING, menu: "BODY_SHAPES" }
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
+              OCT_SHAPES: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "BODY_SHAPES",
+                shape: Scratch.BlockShape.OCTAGONAL
+              }
             }
           },
           {
             opcode: "setCircAccuracy",
             blockType: Scratch.BlockType.COMMAND,
             hideFromPalette: hideBlocks,
-            text: "set accuracy of circle body [OCT_SHAPE] to [VALUE]",
+            text: Scratch.translate("set sides of polygon body [OCT_SHAPE] to [VALUE]"),
             arguments: {
-              OCT_SHAPE: {},
-              VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 16 }
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
+              VALUE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 8 }
             }
           },
           "---",
@@ -248,9 +676,9 @@
             opcode: "setBodyPos",
             blockType: Scratch.BlockType.COMMAND,
             hideFromPalette: hideBlocks,
-            text: "set position of [OCT_SHAPE] to x: [x] y: [y]",
+            text: Scratch.translate("set position of [OCT_SHAPE] to x: [x] y: [y]"),
             arguments: {
-              OCT_SHAPE1: {},
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
               x: { type: Scratch.ArgumentType.NUMBER },
               y: { type: Scratch.ArgumentType.NUMBER }
             }
@@ -259,9 +687,9 @@
             opcode: "setBodyDir",
             blockType: Scratch.BlockType.COMMAND,
             hideFromPalette: hideBlocks,
-            text: "set direction of [OCT_SHAPE] to [ANGLE]",
+            text: Scratch.translate("set direction of [OCT_SHAPE] to [ANGLE]"),
             arguments: {
-              OCT_SHAPE1: {},
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
               ANGLE: { type: Scratch.ArgumentType.ANGLE, defaultValue: 90 }
             }
           },
@@ -269,21 +697,38 @@
             opcode: "setBodySize",
             blockType: Scratch.BlockType.COMMAND,
             hideFromPalette: hideBlocks,
-            text: "set scale of [OCT_SHAPE] to x: [x] y: [y]",
+            text: Scratch.translate("set scale of [OCT_SHAPE] to x: [x] y: [y]"),
             arguments: {
-              OCT_SHAPE1: {},
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
               x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
           },
           "---",
           {
+            opcode: "toggleMonitor",
+            blockType: Scratch.BlockType.COMMAND,
+            hideFromPalette: hideBlocks,
+            text: Scratch.translate("toggle monitor of [OCT_SHAPE] to [TOGGLE]"),
+            arguments: {
+              OCT_SHAPE: { shape: Scratch.BlockShape.OCTAGONAL },
+              TOGGLE: { type: Scratch.ArgumentType.STRING, menu: "TOGGLER" }
+            }
+          },
+          {
             opcode: "bodyTemporary",
             blockType: Scratch.BlockType.REPORTER,
+            blockShape: isPM ? Scratch.BlockShape.OCTAGONAL : Scratch.BlockShape.ROUND,
             hideFromPalette: hideBlocks,
-            text: "temporary [OCT_SHAPES] body at x: [x] y: [y] direction [ANGLE] scale x: [sX] y: [sY]",
+            text: Scratch.translate(
+              "temporary [OCT_SHAPES] body at x: [x] y: [y] direction [ANGLE] scale x: [sX] y: [sY]"
+            ),
             arguments: {
-              OCT_SHAPES: { type: Scratch.ArgumentType.STRING, menu: "BODY_SHAPES" },
+              OCT_SHAPES: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "BODY_SHAPES",
+                shape: Scratch.BlockShape.OCTAGONAL
+              },
               x: { type: Scratch.ArgumentType.NUMBER },
               y: { type: Scratch.ArgumentType.NUMBER },
               ANGLE: { type: Scratch.ArgumentType.ANGLE, defaultValue: 90 },
@@ -293,13 +738,28 @@
           },
         ],
         menus: {
-          BODY_SHAPES: { acceptReporters: true, items: bodyTypes }
+          BODY_SHAPES: { acceptReporters: true, items: "_bodyTypes" },
+          TOGGLER: [
+            { text: Scratch.translate("on"), value: "on" }, 
+            { text: Scratch.translate("off"), value: "off" }, 
+          ]
         },
       };
     }
 
     // Helper Funcs
-    addBlock(opcode) {
+    _bodyTypes() {
+      return BODY_TYPES.map((b) => ({
+        text: Scratch.translate(b),
+        value: b.toUpperCase(),
+      }));
+    }
+
+    _bodyTypeFromName(name) {
+      return Rigidbody["BODY_" + name.toUpperCase()] ?? Rigidbody.BODY_SQUARE;
+    }
+
+    _addBlock(opcode) {
       Object.defineProperty(SPrigidBody.prototype, opcode, {
         value: function (_, util, blockInfo) {
           return this.thisBody("", util, blockInfo);
@@ -314,16 +774,19 @@
         if (!value) return;
         const newBlock = {
           ...defaultBlock,
-          opcode: "body" + value, text: value
+          opcode: "body" + value,
+          text: value
         };
-        this.addBlock(newBlock.opcode);
+        this._addBlock(newBlock.opcode);
 
-        const block = blocks.find((i) => { return i.text == value });
+        const block = blocks.find((i) => i.text == value);
         if (block) block.hideFromPalette = false;
         else blocks.push(newBlock);
-        const body = structuredClone(defaultBody);
-        body.name = value; body.type = type;
-        bodies[value] = body;
+
+        const body = new Rigidbody(this._bodyTypeFromName(type));
+        body.name = value;
+        body.type = type;
+        allRigidbodies[value] = body;
 
         hideBlocks = false;
         this.serialize();
@@ -333,320 +796,241 @@
 
     deleteBtn() {
       openModal("Remove a Rigidbody:", false, (value) => {
-        const block = blocks.find((i) => { return i.text == value });
+        const block = blocks.find((i) => i.text == value);
         if (!block) return;
-        block.hideFromPalette = true;
-        delete bodies[value];
-        runtime.monitorBlocks.changeBlock({ id: `SPrigidBody_body${value}`, element: "checkbox", value: false }, runtime);
 
-        if (Object.keys(bodies).length === 0) hideBlocks = true;
+        block.hideFromPalette = true;
+        delete allRigidbodies[value];
+        runtime.monitorBlocks.changeBlock(
+          { id: `SPrigidBody_body${value}`, element: "checkbox", value: false },
+          runtime
+        );
+
+        if (Object.keys(allRigidbodies).length === 0) hideBlocks = true;
         this.serialize();
         vm.extensionManager.refreshBlocks("SPrigidBody");
       });
     }
 
-    getPrevBlock(util) {
+    _getPrevBlock(util) {
       const contain = util.thread.blockContainer;
       const block = contain.getBlock(util.thread.isCompiled ? util.thread.peekStack() : util.thread.peekStackFrame().op?.id);
       return contain.getBlock(block?.parent);
     }
 
-    getBody(obj) {
-      if (obj?.name) {
-        // allow for custom bodies using JSON
-        return bodies[obj.name] ?? { 
-          ...structuredClone(defaultBody),
-          ...obj
-        };
+    getBody(body) {
+      if (body instanceof Rigidbody) {
+        return body;
+      }
+      if (body?.name) {
+        // allow referencing or creating custom bodies from JSON
+        if (allRigidbodies[body.name]) return allRigidbodies[body.name];
+        else return this.constructBodyFromJSON(body);
       } else {
-        console.warn("Error: Expected Pure JSON!");
+        console.warn("SP Rigidbodies Warning: Expected Rigidbody!");
         return "";
       }
     }
 
-    getBoundingBox(info) {
-      const width = 100 * info.scale[0];
-      const height = 100 * info.scale[1];
-      const rads = -info.dir * radianConverter;
-      const rotWidth = Math.abs(width * Math.cos(rads)) + Math.abs(height * Math.sin(rads));
-      const rotHeight = Math.abs(width * Math.sin(rads)) + Math.abs(height * Math.cos(rads));
+    deconstructBody(rigidbody) {
       return {
-        width: rotWidth, height: rotHeight,
-        left: info.x - rotWidth / 2, right: info.x + rotWidth / 2,
-        top: -info.y + rotHeight / 2, bottom: -info.y - rotHeight / 2,
+        _type: rigidbody._type,
+        type: rigidbody.type,
+        x: rigidbody.x,
+        y: rigidbody.y,
+        direction: rigidbody.direction + 90,
+        scale: rigidbody.scale.map(s => s * 100),
+        polySides: rigidbody.polySides ?? 0
       };
     }
 
-    /* Point Collision */
-    transformPoint(px, py, cx, cy, cosA, sinA) {
-      const dx = px - cx;
-      const dy = py - cy;
-      return {
-        x: dx * cosA + dy * sinA,
-        y: -dx * sinA + dy * cosA
-      }
-    }
+    constructBodyFromJSON(json) {
+      if (typeof json === "object") {
+        const bodyName = json.type;
+        const typeID = json._type ?? this._bodyTypeFromName(bodyName);
+        
+        const body = new Rigidbody(typeID);
+        body.type = bodyName;
+        body.name = json.name;
 
-    collisionPoint(bodyInfo, bounds, x, y) {
-      const bx = bodyInfo.x;
-      const by = bodyInfo.y * -1;
-      const [scaleX, scaleY] = bodyInfo.scale;
-      const angle = bodyInfo.dir * radianConverter;
-      const cosA = Math.cos(angle), sinA = Math.sin(angle);
-      const localPoint = this.transformPoint(x, y, bx, by, cosA, sinA);
-      const halfW = 50 * scaleX, halfH = 50 * scaleY;
-      switch (bodyInfo.type) {
-        case "square": {
-          return (
-            localPoint.x >= -halfW && localPoint.x <= halfW && localPoint.y >= -halfH && localPoint.y <= halfH
-          );
+        if (json.x) body._x = json.x;
+        if (json.y) body._y = json.y;
+        if (json.scale) body._scale = json.scale.map(s => s * 0.01);
+        if (json.dir || json.direction) body._direction = (json.dir ?? json.direction) - 90;
+        if (json.circAccuracy || json.polySides) {
+          body.polySides = json.circAccuracy ?? json.polySides;
         }
-        case "circle": {
-          const radX = 50 * scaleX, radY = 50 * scaleY;
-          if (scaleX === scaleY) {
-            const dx = x - bx;
-            const dy = y - by;
-            return dx * dx + dy * dy <= radX * radX;
-          }
-          const dx = localPoint.x / radX;
-          const dy = localPoint.y / radY;
-          return dx * dx + dy * dy <= 1;
-        }
-        case "triangle": {
-          const p1 = { x: -halfW, y: -halfH }; // Bottom-left
-          const p2 = { x: halfW, y: halfH }; // Bottom-right
-          const p3 = { x: -halfW, y: halfH }; // Top-left
 
-          const area = Math.abs(p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2;
-          const area1 = Math.abs(localPoint.x * (p2.y - p3.y) + p2.x * (p3.y - localPoint.y) + p3.x * (localPoint.y - p2.y)) / 2;
-          const area2 = Math.abs(p1.x * (localPoint.y - p3.y) + localPoint.x * (p3.y - p1.y) + p3.x * (p1.y - localPoint.y)) / 2;
-          const area3 = Math.abs(p1.x * (p2.y - localPoint.y) + p2.x * (localPoint.y - p1.y) + localPoint.x * (p1.y - p2.y)) / 2;
-          return Math.abs(area - (area1 + area2 + area3)) < 0.001;
-        }
-        case "hexagon": {
-          const sideH = halfH / 2;
-          if (Math.abs(localPoint.y) > halfH) return false;
-          if (Math.abs(localPoint.y) <= sideH) return Math.abs(localPoint.x) <= halfW;
-
-          const maxX = halfW - ((Math.abs(localPoint.y) - sideH) * (halfW / sideH));
-          return Math.abs(localPoint.x) <= maxX;
-        }
+        body._updatePolyPoints();
+        return body;
       }
-      return false;
-    }
 
-    /* Object Collision */
-    genShapePoints(bodyInfo) {
-      const { x, dir, scale, circAccuracy } = bodyInfo;
-      const y = bodyInfo.y * -1;
-      const points = [];
-      const addPoint = (px, py) => {
-        const rad = dir * radianConverter;
-        const cos = Math.cos(rad), sin = Math.sin(rad);
-        const rx = x + (px * cos - py * sin);
-        const ry = y + (px * sin + py * cos);
-        points.push({ x: rx, y: ry });
-      };
-
-      const scaledX = 50 * scale[0], scaledY = 50 * scale[1];
-      switch (bodyInfo.type) {
-        case "square":
-          addPoint(-scaledX, -scaledY);
-          addPoint(scaledX, -scaledY);
-          addPoint(scaledX, scaledY);
-          addPoint(-scaledX, scaledY);
-          break;
-        case "triangle":
-          addPoint(scaledX, scaledY);
-          addPoint(-scaledX, scaledY);
-          addPoint(-scaledX, -scaledY);
-          break;
-        case "hexagon":
-          const sideH = scaledY / 2;
-          addPoint(0, -scaledY);
-          addPoint(scaledX, -sideH);
-          addPoint(scaledX, sideH);
-          addPoint(0, scaledY);
-          addPoint(-scaledX, sideH);
-          addPoint(-scaledX, -sideH);
-          break;
-        case "circle":
-          for (let i = 0; i < circAccuracy; i++) {
-            const angle = (i * (360 / circAccuracy)) * radianConverter;
-            addPoint(Math.cos(angle) * scaledX, Math.sin(angle) * scaledY);
-          }
-          break;
-      }
-      return points;
-    }
-
-    projectPolygon(axis, poly) {
-      let min = Infinity, max = -Infinity;
-      for (let p of poly) {
-        let proj = (p.x * axis.x + p.y * axis.y);
-        if (proj < min) min = proj;
-        if (proj > max) max = proj;
-      }
-      return { min, max };
-    }
-
-    getAxes(poly) {
-      let axes = [];
-      for (let i = 0; i < poly.length; i++) {
-        const p1 = poly[i], p2 = poly[(i + 1) % poly.length];
-        const edge = { x: p2.x - p1.x, y: p2.y - p1.y };
-        const normal = { x: -edge.y, y: edge.x };
-        const mag = Math.sqrt(normal.x * normal.x + normal.y * normal.y);
-        axes.push({ x: normal.x / mag, y: normal.y / mag });
-      }
-      return axes;
-    }
-
-    polygonsCollide(poly1, poly2) {
-      let axes = [...this.getAxes(poly1), ...this.getAxes(poly2)];
-      for (let axis of axes) {
-        let proj1 = this.projectPolygon(axis, poly1);
-        let proj2 = this.projectPolygon(axis, poly2);
-        if (!(proj1.min <= proj2.max && proj2.min <= proj1.max)) return false;
-      }
-      return true;
+      return "";
     }
 
     // Block Funcs
     thisBody(_, util, blockInfo) {
-      const isInExtBlock = this.getPrevBlock(util)?.opcode.startsWith("SPrigidBody_");
-      const bodyInfo = bodies[blockInfo.text];
-      return bodyInfo ? isInExtBlock ? bodyInfo : JSON.stringify(bodyInfo) : "";
+      const isInExtBlock = this._getPrevBlock(util)?.opcode.startsWith("SPrigidBody_");
+      const rigidbody = allRigidbodies[blockInfo.text];
+      if (rigidbody) {
+        return isInExtBlock ? rigidbody : JSON.stringify(this.deconstructBody(rigidbody));
+      }
+      return "";
     }
 
     isColliding(args) {
-      const info1 = this.getBody(args.OCT_SHAPE1);
-      const info2 = this.getBody(args.OCT_SHAPE2);
-      if (!info1 || !info2) return false;
-
-      const bounds1 = this.getBoundingBox(info1);
-      const bounds2 = this.getBoundingBox(info2);
-      if (
-        bounds1.right < bounds2.left || bounds1.left > bounds2.right ||
-        bounds1.bottom > bounds2.top || bounds1.top < bounds2.bottom
-      ) return false;
-
-      const poly1 = this.genShapePoints(info1);
-      const poly2 = this.genShapePoints(info2);
-      return this.polygonsCollide(poly1, poly2);
+      const body1 = this.getBody(args.OCT_SHAPE1);
+      const body2 = this.getBody(args.OCT_SHAPE2);
+      if (body1 && body2) return body1.isTouchingBody(body2);
+      else return false;
     }
 
     isCollidingPoint(args) {
-      const info = this.getBody(args.OCT_SHAPE);
+      const body = this.getBody(args.OCT_SHAPE);
       const x = Cast.toNumber(args.x);
       const y = Cast.toNumber(args.y) * -1;
-      if (!info) return false;
+      if (!body) return false;
 
-      const bounds = this.getBoundingBox(info);
-      if (
-        x > bounds.right || x < bounds.left ||
-        y > bounds.top || y < bounds.bottom
-      ) return false;
-      return this.collisionPoint(info, bounds, x, y);
+      return body.isTouchingXY(
+        Cast.toNumber(args.x),
+        Cast.toNumber(args.y) * -1
+      );
     }
 
     distance(args) {
-      const info1 = this.getBody(args.OCT_SHAPE1);
-      const info2 = this.getBody(args.OCT_SHAPE2);
-      if (!info1 || !info2) return "";
-
-      const dx = info1.x - info2.x;
-      const dy = info1.y - info2.y;
-      return Math.sqrt((dx * dx) + (dy * dy));
+      const body1 = this.getBody(args.OCT_SHAPE1);
+      const body2 = this.getBody(args.OCT_SHAPE2);
+      if (body1 && body2) return body1.distanceToXY(body2.x, body2.y);
+      else return "";
     }
 
     boundsOfBox(args) {
-      const info = this.getBody(args.OCT_SHAPE);
-      if (!info) return "{}";
-      return JSON.stringify(this.getBoundingBox(info));
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return "{}";
+      return JSON.stringify(body.getBounds());
     }
 
     setBodyType(args) {
-      const info = this.getBody(args.OCT_SHAPE);
-      if (!info) return;
-      const newBody = bodyTypes.indexOf(args.OCT_SHAPES);
-      if (newBody === -1 || info.type === args.OCT_SHAPES) return;
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return;
 
-      const id = "SPrigidBody_body" + info.name;
-      const isVisible = runtime.getMonitorState().get(id)?.visible || false;
-      const onVisUpdate = () => {
-        runtime.once("AFTER_EXECUTE", () => { 
-          runtime.monitorBlocks.changeBlock({ id, element: "checkbox", value: true }, runtime);
-          runtime.off("MONITORS_UPDATE", onVisUpdate);
-        });
-      };
-      runtime.once("MONITORS_UPDATE", onVisUpdate);
-      info.type = args.OCT_SHAPES;
-      runtime.monitorBlocks.changeBlock({ id, element: "checkbox", value: false }, runtime);
+      const shapeName = Cast.toString(args.OCT_SHAPES);
+      const shapeType = this._bodyTypeFromName(shapeName);
+      if (body._type === shapeType) return;
+
+      body._type = shapeType;
+      body.type = shapeName;
+      if (shapeType === Rigidbody.BODY_POLYGON && !body.polySides) {
+        body.polySides = Rigidbody.DEFAULT_POLY_SIDES;
+      }
+      body._updatePolyPoints();
+
+      updateAllBodyMonitors();
     }
 
     setCircAccuracy(args) {
-      const info = this.getBody(args.OCT_SHAPE);
-      if (!info) return;
-      info.circAccuracy = Math.max(5, Math.min(100, Cast.toNumber(args.VALUE)));
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return;
+      body.setPolygonSides(Math.max(Rigidbody.MIN_POLY_SIDES, Math.min(100, Cast.toNumber(args.VALUE))));
       updateAllBodyMonitors();
     }
 
     setBodyPos(args) {
-      const info = this.getBody(args.OCT_SHAPE);
-      if (!info) return;
-      info.x = Cast.toNumber(args.x);
-      info.y = Cast.toNumber(args.y);
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return;
+      body.x = Cast.toNumber(args.x);
+      body.y = Cast.toNumber(args.y);
       updateAllBodyMonitors();
     }
 
     setBodyDir(args) {
-      const info = this.getBody(args.OCT_SHAPE);
-      if (!info) return;
-      info.dir = Cast.toNumber(args.ANGLE) - 90;
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return;
+      body.direction = Cast.toNumber(args.ANGLE) - 90;
       updateAllBodyMonitors();
     }
 
     setBodySize(args) {
-      const info = this.getBody(args.OCT_SHAPE);
-      if (!info) return;
-      info.scale = [
-        Cast.toNumber(args.x) / 100, Cast.toNumber(args.y) / 100
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return;
+      body.scale = [
+        Cast.toNumber(args.x) / 100,
+        Cast.toNumber(args.y) / 100
       ];
       updateAllBodyMonitors();
     }
 
+    toggleMonitor(args) {
+      const body = this.getBody(args.OCT_SHAPE);
+      if (!body) return;
+
+      const enabled = Cast.toString(args.TOGGLE) === "on";
+      const monitor = bodyMonitors[body.name];
+      if (enabled) {
+        if (monitor) monitor.style.display = "";
+        else createBodyMonitor(body);
+      } else {
+        if (monitor) monitor.style.display = "none";
+      }
+    }
+
     bodyTemporary(args, util) {
-      const type = args.OCT_SHAPES;
-      if (bodyTypes.indexOf(type) === -1) return "";
+      const type = Cast.toString(args.OCT_SHAPES);
+      const isInExtBlock = this._getPrevBlock(util)?.opcode.startsWith("SPrigidBody_");
 
-      const bodyInfo = {
-        name: `temporaryBody-${Math.random()}`, type, circAccuracy: 20,
-        x: Cast.toNumber(args.x), y: Cast.toNumber(args.y),
-        scale: [Cast.toNumber(args.sX) / 100, Cast.toNumber(args.sY) / 100],
-        dir: Cast.toNumber(args.ANGLE) - 90,
-      };
+      let body = {};
+      if (isInExtBlock) {
+        body = new Rigidbody(this._bodyTypeFromName(type));
+        body.name = `temporaryBody-${Math.random()}`;
+      }
 
-      const isInExtBlock = this.getPrevBlock(util)?.opcode.startsWith("SPrigidBody_");
-      return isInExtBlock ? bodyInfo : JSON.stringify(bodyInfo);
+      body.type = type;
+      body.x = Cast.toNumber(args.x);
+      body.y = Cast.toNumber(args.y);
+      body.direction = Cast.toNumber(args.ANGLE) - 90;
+      body.scale = [
+        Cast.toNumber(args.sX) / 100,
+        Cast.toNumber(args.sY) / 100,
+      ];
+
+      return isInExtBlock ? body : JSON.stringify(body);
     }
 
     // PenguinMod & Turbowarp Storage
     serialize() {
-      const cleanBlocks = blocks.filter((b) => { return b.hideFromPalette === undefined || b.hideFromPalette === false });
-      if (!isPM) runtime.extensionStorage["SPrigidBody"] = { blocks: cleanBlocks, bodies };
-      else return { SPrigidBody: { blocks, bodies } };
+      const bodyEntries = Object.entries(allRigidbodies);
+      for (const entry of bodyEntries) {
+        entry[1] = this.deconstructBody(entry[1]);
+      }
+      const cleanedBodies = Object.fromEntries(bodyEntries);
+
+      if (!isPM) {
+        const cleanedBlocks = blocks.filter((b) => !b.hideFromPalette);
+
+        runtime.extensionStorage["SPrigidBody"] = {
+          blocks: cleanedBlocks, bodies: cleanedBodies
+        };
+      } else {
+        return {
+          SPrigidBody: { blocks, bodies: cleanedBodies }
+        };
+      }
     }
     deserialize(data) {
       const stored = data.SPrigidBody;
       if (stored !== undefined) {
+        const bodyEntries = Object.entries(stored.bodies);
+        for (const entry of bodyEntries) {
+          entry[1] = this.constructBodyFromJSON(entry[1]);
+        }
+
         blocks = stored.blocks;
-        bodies = stored.bodies;
+        allRigidbodies = Object.fromEntries(bodyEntries);
 
-        if (Object.keys(bodies).length > 0) hideBlocks = false;
-        Object.values(blocks).forEach((b) => this.addBlock(b.opcode));
+        if (bodyEntries.length > 0) hideBlocks = false;
+        Object.values(blocks).forEach((b) => this._addBlock(b.opcode));
 
-        if (isPM && isEditor) runtime.on("PROJECT_LOADED", () => runtime.requestBlocksUpdate());
+        if (isPM && isEditor) runtime.on("PROJECT_LOADED", runtime.requestBlocksUpdate);
       }
     }
   }
