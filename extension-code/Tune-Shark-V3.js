@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.5.2
+// Version V.3.5.21
 // Thanks to HOME for the song "Resonance" being used as the default audio url
 
 (function (Scratch) {
@@ -1449,9 +1449,11 @@
         this.stopSound(args);
 
         const ctx = sound.context;
-        ctx.volume = 0;
-        ctx.sourceNode.disconnect();
-        ctx.disconnect();
+        if (ctx && ctx.sourceNode) {
+          ctx.volume = 0;
+          ctx.sourceNode.disconnect();
+          ctx.disconnect();
+        }
         delete soundBank[args.NAME];
       }
     }
@@ -1935,4 +1937,5 @@
 
   Scratch.extensions.register(new SPtuneShark3());
 })(Scratch);
+
 
