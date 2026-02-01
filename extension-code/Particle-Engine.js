@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.41
+// Version V.2.0.5
 
 (function (Scratch) {
   "use strict";
@@ -18,6 +18,7 @@
   const Cast = Scratch.Cast;
   const runtime = vm.runtime;
   const render = vm.renderer;
+  const gl = render.gl;
   const { Drawable, Skin, twgl } = render.exports;
   const engineTag = Symbol("particleEngine");
 
@@ -67,8 +68,6 @@
   };
 
   // ripped from Clipping and Blening extension
-  // prettier-ignore
-  const gl = render.gl;
   const Blendings = Object.assign(Object.create(null), {
     default: [
       gl.ONE,
@@ -104,55 +103,73 @@
     mask: [gl.ZERO, gl.SRC_ALPHA, gl.ZERO, gl.SRC_ALPHA, gl.FUNC_ADD],
   });
 
-  let engineCount = 0,
-    deltaTime = 0,
-    prevTime = 0;
+  let deltaTime = 0;
+  let prevTime = 0;
 
   const allEngines = new Map();
 
-  // Custom Skin
+  // Custom Skin using framebuffers
   class particleSkin extends Skin {
-    constructor(id, renderer) {
+    constructor(id, renderer, width, height) {
       super(id, renderer);
       const gl = renderer.gl;
       this._texture = twgl.createTexture(gl, {
         min: gl.NEAREST,
         mag: gl.NEAREST,
         wrap: gl.CLAMP_TO_EDGE,
-        src: [0, 0, 0, 0], // Dummy pixel
+        width: width,
+        height: height
       });
-      this._size = [runtime.stageWidth || 480, runtime.stageHeight || 360];
-      this._rotationCenter = [this._size[0] / 2, this._size[1] / 2];
+      this._size = [width, height];
+      this._rotationCenter = [width / 2, height / 2];
+
+      // Create framebuffer
+      this._framebuffer = twgl.createFramebufferInfo(gl, [{
+        format: gl.RGBA,
+        attachment: this._texture
+      }], width, height);
     }
     dispose() {
+      const gl = this._renderer.gl;
       if (this._texture) {
-        this._renderer.gl.deleteTexture(this._texture);
+        gl.deleteTexture(this._texture);
         this._texture = null;
+      }
+      if (this._framebuffer) {
+        gl.deleteFramebuffer(this._framebuffer.framebuffer);
+        this._framebuffer = null;
       }
       super.dispose();
     }
     set size(value) {
+      if (this._size[0] === value[0] && this._size[1] === value[1]) return;
+
+      const gl = this._renderer.gl;
       this._size = value;
       this._rotationCenter = [value[0] / 2, value[1] / 2];
+
+      // Recreate texture and framebuffer
+      if (this._texture) gl.deleteTexture(this._texture);
+      if (this._framebuffer) gl.deleteFramebuffer(this._framebuffer.framebuffer);
+
+      this._texture = twgl.createTexture(gl, {
+        mag: gl.NEAREST,
+        min: gl.NEAREST,
+        wrap: gl.CLAMP_TO_EDGE,
+        width: value[0],
+        height: value[1]
+      });
+
+      this._framebuffer = twgl.createFramebufferInfo(gl, [{
+        format: gl.RGBA,
+        attachment: this._texture
+      }], value[0], value[1]);
     }
     get size() {
       return this._size;
     }
     getTexture(scale) {
       return this._texture || super.getTexture();
-    }
-    setContent(textureData) {
-      const gl = this._renderer.gl;
-      gl.bindTexture(gl.TEXTURE_2D, this._texture);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        textureData
-      );
-      this.emitWasAltered();
     }
   }
 
@@ -174,12 +191,6 @@
   };
 
   // Constants
-  /* 
-    browsers have a maximum number of webgl contexts (8-16),
-    we will warn the user in the editor if they pass this limit
-  */
-  const ENGINE_CAP = 7;
-
   const FPS_NORM = 100 / 3; // 33.333 FPS
   const radianConvert = Math.PI / 180;
   const vertices = [
@@ -190,8 +201,8 @@
   /* allows sin/cos computations to be faster */
   const TWO_PI = Math.PI * 2;
   const INV_TWO_PI = 8192 / TWO_PI;
-  const sinTable = new Float32Array(8192),
-    cosTable = new Float32Array(8192);
+  const sinTable = new Float32Array(8192);
+  const cosTable = new Float32Array(8192);
   for (let i = 0; i < 8192; i++) {
     const angle = (i / 8192) * TWO_PI;
     sinTable[i] = Math.sin(angle);
@@ -204,19 +215,29 @@
 
   const rng = (val, inf) => val + (Math.random() * 2 - 1) * inf;
 
-  const newTexture = (url, gl, callback) => {
+  const newTexture = (url, callback) => {
     Scratch.canFetch(url).then((canFetch) => {
       if (!canFetch) return;
       // eslint-disable-next-line extension/check-can-fetch
       const img = new Image();
       img.crossOrigin = "Anonymous";
       img.src = url;
-      img.onerror = (e) => console.error("Error loading texture:", e);
+      img.onerror = (e) => {
+        console.error("Error loading texture:", e);
+      };
       img.onload = () => {
+        const texture = twgl.createTexture(gl, { 
+          src: img, 
+          flipY: true,
+          min: gl.LINEAR,
+          mag: gl.LINEAR,
+          wrap: gl.CLAMP_TO_EDGE
+        });
+
         callback({
           tWidth: img.width,
           tHeight: img.height,
-          texture: twgl.createTexture(gl, { src: img, flipY: true }),
+          texture: texture,
         });
       };
     });
@@ -257,36 +278,44 @@ varying vec2 v_texcoord;
 
 void main() {
   vec4 tex = texture2D(u_texture, v_texcoord);
-  gl_FragColor = tex * u_tintColor;
+  vec4 color = tex * u_tintColor;
+  gl_FragColor = vec4(color.rgb * color.a, color.a);
 }`;
 
+  // Shared program info and buffer (created once, reused by all engines)
+  const sharedProgramInfo = twgl.createProgramInfo(gl, [
+    engineVertShader,
+    engineFragShader,
+  ]);
+  const sharedBufferInfo = twgl.createBufferInfoFromArrays(gl, {
+    a_position: { numComponents: 2, data: vertices },
+    a_texcoord: { numComponents: 2, data: texcoords },
+  });
+
   const makeEngine = (target) => {
-    const canvas = document.createElement("canvas");
-    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-    canvas.width = runtime.stageWidth || 480;
-    canvas.height = runtime.stageHeight || 360;
+    const width = runtime.stageWidth || 480;
+    const height = runtime.stageHeight || 360;
 
     const targetName = target.getName();
     const drawableId = render.createDrawable("sprite");
     const drawable = render._allDrawables[drawableId];
     const skinId = render._nextSkinId++;
-    const skin = new particleSkin(skinId, render);
+    const skin = new particleSkin(
+      skinId,
+      render,
+      width * 2,
+      height * 2
+    );
     render._allSkins[skinId] = skin;
 
-    const projection = twgl.m4.ortho(0, canvas.width, canvas.height, 0, -1, 1);
-    const programInfo = twgl.createProgramInfo(gl, [
-      engineVertShader,
-      engineFragShader,
-    ]);
-    const bufferInfo = twgl.createBufferInfoFromArrays(gl, {
-      a_position: { numComponents: 2, data: vertices },
-      a_texcoord: { numComponents: 2, data: texcoords },
-    });
-
-    gl.useProgram(programInfo.program);
-    twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    const projection = twgl.m4.ortho(
+      0,
+      width,
+      height,
+      0,
+      -1,
+      1
+    );
 
     const engine = {
       drawableId,
@@ -294,13 +323,15 @@ void main() {
       skinId,
       skin,
       target,
-      canvas,
-      gl,
-      programInfo,
-      bufferInfo,
+      quality: 2,
+      stageWidth: width,
+      stageHeight: height,
+      renderWidth: width * 2,
+      renderHeight: height * 2,
+      drawableScale: [50, -50],
       projection,
-      ratioX: 1,
-      ratioY: 1,
+      programInfo: sharedProgramInfo,
+      bufferInfo: sharedBufferInfo,
       emitters: Object.create(null),
       interpolate: runtime.interpolationEnabled,
       paused: false,
@@ -308,47 +339,55 @@ void main() {
     };
     target[engineTag] = engine;
     allEngines.set(targetName, engine);
+
+    drawable.updateScale(engine.drawableScale);
     render.updateDrawableSkinId(drawableId, skinId);
     drawable.customDrawableName = `${targetName} Particle Engine (SP)`;
     drawable[engineTag] = "default";
-    drawable.stageSZChange = (() => {
-      const size = [runtime.stageWidth || 480, runtime.stageHeight || 360];
+    drawable.onStageSZChange = ((event) => {
+      const size = event.newSize;
+
       skin.size = size;
-      canvas.width = size[0];
-      canvas.height = size[1];
-      engine.projection = twgl.m4.ortho(0, size[0], size[1], 0, -1, 1);
+      engine.stageWidth = size[0];
+      engine.stageHeight = size[1];
+      engine.renderWidth = size[0];
+      engine.renderHeight = size[1];
+      engine.projection = twgl.m4.ortho(
+        0,
+        size[0],
+        size[1],
+        0,
+        -1,
+        1
+      );
     }).bind(this);
-    vm.on("STAGE_SIZE_CHANGED", drawable.stageSZChange);
+    render.on("NativeSizeChanged", drawable.onStageSZChange);
     runtime.requestRedraw();
   };
 
   const disposeEngine = (target) => {
     const engine = target[engineTag];
     if (!engine) return;
-    vm.off("STAGE_SIZE_CHANGED", engine.drawable.stageSZChange);
+    render.removeListener("NativeSizeChanged", engine.drawable.onStageSZChange);
     render.destroyDrawable(engine.drawableId, "sprite");
     render.destroySkin(engine.skinId);
     runtime.requestRedraw();
 
-    engine.gl.deleteProgram(engine.programInfo.program);
-    const glExtension = engine.gl.getExtension("WEBGL_lose_context");
-    if (glExtension) glExtension.loseContext();
-    engine.canvas.remove();
     target[engineTag] = undefined;
     allEngines.delete(target.getName());
   };
 
   const updateEngine = (engine, delta) => {
     const {
-      canvas,
-      gl,
+      skin,
       programInfo,
       bufferInfo,
       projection,
       emitters,
       noTrails,
     } = engine;
-    const { width, height } = canvas;
+    const width = engine.stageWidth;
+    const height = engine.stageHeight;
     const lifeRate = 0.01 * delta;
 
     // update engine position
@@ -356,12 +395,18 @@ void main() {
     drawable.updatePosition([engine.target.x, engine.target.y]);
 
     // Clear canvas
-    twgl.bindFramebufferInfo(gl, null);
-    gl.viewport(0, 0, width, height);
+    twgl.bindFramebufferInfo(gl, skin._framebuffer);
+    gl.viewport(0, 0, engine.renderWidth, engine.renderHeight);
     if (noTrails) {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
     }
+
+    gl.useProgram(programInfo.program);
+    twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
     for (const key in emitters) {
       const emitter = emitters[key];
@@ -535,23 +580,58 @@ void main() {
         particle.streY += (eStreY - streY) * progress;
       }
     }
+
+    twgl.bindFramebufferInfo(gl, null);
+    skin.emitWasAltered();
   };
 
-  const resetFrameCnts = () => {
+  const applyEngineQuality = (engine, quality) => {
+    engine.quality = quality;
+    engine.renderWidth = engine.stageWidth * quality;
+    engine.renderHeight = engine.stageHeight * quality;
+    engine.skin.size = [engine.renderWidth, engine.renderHeight];
+
+    const inverse = (1 / quality);
+    engine.drawable.updateScale([
+      engine.drawableScale[0] * inverse,
+      engine.drawableScale[1] * inverse,
+    ]);
+  };
+
+  const removeAllEmitters = () => {
     allEngines.forEach((engine) => {
-      const emitters = Object.values(engine.emitters);
-      for (const emitter of emitters) {
-        emitter.frameCnt = 0;
+      const emitters = Object.entries(engine.emitters);
+      for (const entry of emitters) {
+        const emitter = entry[1];
         emitter.data.clear();
         emitter.tintCache.clear();
+        delete engine.emitters[entry[0]];
       }
     });
   };
-  runtime.on("PROJECT_START", resetFrameCnts);
-  runtime.on("PROJECT_STOP_ALL", resetFrameCnts);
+  runtime.on("PROJECT_START", removeAllEmitters);
+  runtime.on("PROJECT_STOP_ALL", removeAllEmitters);
   runtime.on("PROJECT_LOADED", () =>
     allEngines.forEach((engine) => disposeEngine(engine.target))
   );
+  runtime.on("INTERPOLATION_CHANGED", (isEnabled) => {
+    // toggle interpolation for all enginges
+    allEngines.forEach((engine) => {
+      engine.interpolate = isEnabled;
+    });
+  });
+
+  let wasHighQualityEnabled;
+  render.on("UseHighQualityRenderChanged", (isEnabled) => {
+    // toggle high-quality rendering for all enginges
+    if (wasHighQualityEnabled === isEnabled) return;
+    wasHighQualityEnabled = isEnabled;
+
+    const quality = isEnabled ? 5 : 1;
+    allEngines.forEach((engine) =>
+      applyEngineQuality(engine, quality)
+    );
+  });
 
   // update non-interpolated engines
   runtime.on("AFTER_EXECUTE", () => {
@@ -562,7 +642,6 @@ void main() {
       // 30 FPS is a normal delta, anything else would need normalization
       const normalizedDelta = runtime.currentStepTime / FPS_NORM;
       updateEngine(engine, normalizedDelta);
-      engine.skin.setContent(engine.canvas);
     });
   });
 
@@ -580,7 +659,6 @@ void main() {
     allEngines.forEach((engine) => {
       if (!engine.interpolate || engine.paused) return;
       updateEngine(engine, deltaTime);
-      engine.skin.setContent(engine.canvas);
       hasReasonToRefresh = true;
     });
 
@@ -652,15 +730,14 @@ void main() {
             },
           },
           {
-            opcode: "setCanvasSize",
+            opcode: "setCanvasQuality",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "set stage size of [TARGET] engine to width [w] height [h]"
+              "set quality of [TARGET] engine to [QUALITY]"
             ),
             arguments: {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
-              w: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 },
-              h: { type: Scratch.ArgumentType.NUMBER, defaultValue: 360 },
+              QUALITY: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
             },
           },
           "---",
@@ -900,6 +977,18 @@ void main() {
               TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
             },
           },
+          /* Deprecation Marker */
+          {
+            opcode: "setCanvasSize", hideFromPalette: true,
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set stage size of [TARGET] engine to width [w] height [h]",
+            arguments: {
+              TARGET: { type: Scratch.ArgumentType.STRING, menu: "TARGETS" },
+              w: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 },
+              h: { type: Scratch.ArgumentType.NUMBER, defaultValue: 360 },
+            },
+          },
+          /* Marker End */
         ],
         menus: {
           TARGETS: { acceptReporters: true, items: "getTargets" },
@@ -1038,32 +1127,11 @@ void main() {
       return runtime.getSpriteTargetByName(name);
     }
 
-    checkEngineContexts() {
-      // its fair to trust that the user knows what theyre doing if they ingore this
-      if (engineCount > ENGINE_CAP) {
-        const warningText = Scratch.translate(
-          "WARNING: Particle Engine - reached unstable number of engines!"
-        );
-        if (typeof scaffolding === "undefined") {
-          /* global ReduxStore */
-          const state = ReduxStore.getState().scratchGui;
-          if (!state.mode.isPlayerOnly && !state.mode.isFullScreen) {
-            // only alert in the editor
-            alert(warningText);
-            return;
-          }
-        }
-        console.warn(warningText);
-      }
-    }
-
     // Block Funcs
     createEngine(args) {
       const target = this.getSprite(args.TARGET);
       if (target && target[engineTag] === undefined) {
-        this.checkEngineContexts();
         makeEngine(target);
-        engineCount++;
       }
     }
 
@@ -1071,12 +1139,10 @@ void main() {
       const target = this.getSprite(args.TARGET);
       if (target === "_all_") {
         allEngines.forEach((engine) => disposeEngine(engine.target));
-        engineCount = 0;
         return;
       }
       if (target && target[engineTag] !== undefined) {
         disposeEngine(target);
-        engineCount--;
       }
     }
 
@@ -1104,48 +1170,23 @@ void main() {
 
     setEngineSize(args) {
       const target = this.getSprite(args.TARGET);
-      if (target && target[engineTag]) {
-        target[engineTag].drawable.updateScale(
-          new Float32Array([Cast.toNumber(args.x), Cast.toNumber(args.y)])
-        );
+      const engine = target[engineTag];
+      if (target && engine) {
+        const scale = [
+          Cast.toNumber(args.x),
+          Cast.toNumber(args.y) * -1,
+        ];
+        engine.drawableScale = scale;
+        applyEngineQuality(engine, engine.quality);
       }
     }
 
-    setCanvasSize(args) {
+    setCanvasQuality(args) {
       const target = this.getSprite(args.TARGET);
-      if (target && target[engineTag]) {
-        const engine = target[engineTag];
-        const canvas = engine.canvas;
-        const ogScale = [canvas.width, canvas.height];
-        canvas.width = Math.min(5000, Math.max(1, Cast.toNumber(args.w)));
-        canvas.height = Math.min(5000, Math.max(1, Cast.toNumber(args.h)));
-        if (ogScale[0] === canvas.width && ogScale[1] === canvas.height) {
-          // unchanged
-          return;
-        }
-
-        engine.projection = twgl.m4.ortho(
-          0,
-          canvas.width,
-          canvas.height,
-          0,
-          -1,
-          1
-        );
-
-        // update position of all emitters
-        engine.ratioX =
-          canvas.width === runtime.stageWidth ? 1 : canvas.width / ogScale[0];
-        engine.ratioY =
-          canvas.height === runtime.stageHeight
-            ? 1
-            : canvas.height / ogScale[1];
-
-        const emitters = Object.values(engine.emitters);
-        for (const emitter of emitters) {
-          emitter.pos[0] *= engine.ratioX;
-          emitter.pos[1] *= engine.ratioY;
-        }
+      const engine = target[engineTag];
+      if (target && engine) {
+        const quality = Math.max(1, Cast.toNumber(args.QUALITY)) / 25;
+        applyEngineQuality(engine, quality);
       }
     }
 
@@ -1177,12 +1218,6 @@ void main() {
       if (target && engine) {
         const toggle = args.TYPE === "on";
         switch (args.OPT) {
-          /* Deprecation Marker */
-          case "interpolation":
-            if (toggle) runtime.setInterpolation(true);
-            engine.interpolate = toggle;
-            break;
-          /* Marker End */
           case "freeze":
             engine.paused = toggle;
             break;
@@ -1213,8 +1248,11 @@ void main() {
         tintCache: new Map(),
         data: new Set(),
       };
-      newTexture(PRESET_SHAPES["square"], engine.gl, (t) => {
-        engine.emitters[args.NAME].texture = t;
+      newTexture(PRESET_SHAPES["square"], (t) => {
+        const emitter = engine.emitters[args.NAME];
+        if (emitter) {
+          emitter.texture = t;
+        }
       });
       runtime.requestRedraw();
     }
@@ -1281,8 +1319,8 @@ void main() {
         if (emitter) {
           emitter.rawPos = [Cast.toNumber(args.x), Cast.toNumber(args.y)];
           emitter.pos = [
-            emitter.rawPos[0] * engine.ratioX,
-            emitter.rawPos[1] * engine.ratioY * -1,
+            emitter.rawPos[0],
+            emitter.rawPos[1] * -1,
           ];
         }
       }
@@ -1306,7 +1344,7 @@ void main() {
         const engine = target[engineTag];
         const space = engine.emitters[args.NAME];
         if (space) {
-          newTexture(args.IMG, engine.gl, (texture) => {
+          newTexture(args.IMG, (texture) => {
             space.texture = texture;
           });
           runtime.requestRedraw();
@@ -1368,36 +1406,7 @@ void main() {
           try {
             const rawOpts = JSON.parse(args.DATA);
             if (rawOpts.constructor.name !== "Object") return;
-            const whiteKeys = [
-              "maxP",
-              "emission",
-              "time",
-              "speed",
-              "xPos",
-              "yPos",
-              "gravX",
-              "gravY",
-              "sDir",
-              "eDir",
-              "sSpin",
-              "eSpin",
-              "sSize",
-              "eSize",
-              "sStreX",
-              "eStreX",
-              "sStreY",
-              "eStreY",
-              "accelRad",
-              "accelTan",
-              "sinW",
-              "cosW",
-              "sinS",
-              "cosS",
-              "fIn",
-              "fOut",
-              "sCol",
-              "eCol",
-            ];
+            const whiteKeys = Object.keys(DEFAULT_BEHAVIOURS);
             const entries = Object.entries(rawOpts);
             if (whiteKeys.length !== entries.length) return;
             for (let i = 0; i < entries.length; i++) {
@@ -1428,6 +1437,14 @@ void main() {
       }
       return "{}";
     }
+
+    /* Deprecation Marker */
+    setCanvasSize(args) {
+      this.setCanvasQuality({
+        TARGET: args.TARGET, QUALITY: (Cast.toNumber(args.w) + Cast.toNumber(args.h)) / 2
+      });
+    }
+    /* Marker End */
   }
 
   if (Scratch.gui)
