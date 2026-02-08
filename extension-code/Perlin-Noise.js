@@ -1,24 +1,27 @@
 // Name: Perlin Noise
 // ID: SPperlin
 // Description: Generate Perlin Noise
-// By: SharkPool (Optimized)
+// By: SharkPool
+// License: MIT
 
-// Version V.1.1.0 (Optimized)
+// Version V.1.1.0
 
 (function(Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Perlin Noise must run unsandboxed");
 
-  const menuIconURI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NC4yODQiIGhlaWdodD0iODQuMjg0IiB2aWV3Qm94PSIwIDAgODQuMjg0IDg0LjI4NCI+PHBhdGggZD0iTTIgNDIuMTQyQzIgMTkuOTcyIDE5Ljk3MiAyIDQyLjE0MiAyczQwLjE0MiAxNy45NzIgNDAuMTQyIDQwLjE0Mi0xNy45NzIgNDAuMTQyLTQwLjE0MiA0MC4xNDJTMiA2NC4zMTIgMiA0Mi4xNDJ6IiBmaWxsPSIjYjY3MzczIiBzdHJva2U9IiM4MjUyNTIiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Im0xMy45MDUgNTAuNzI1IDEyLjQ2LTE3LjYwM2MxLjYzMi0yLjMwNiA0LjI3OC0yLjMwNiA1LjkxIDBsMTIuNDYgMTcuNjAzYzEuNjMxIDIuMzA2LTguMzE1IDYuMzctMTQuODggNi4zNy02LjU2MyAwLTE3LjU4Mi00LjA2NC0xNS45NS02LjM3IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0ibTMwLjU2MiA0MS45MzYgMTQuNjQzLTIwLjY4N2MxLjkxOC0yLjcxIDUuMDI3LTIuNzEgNi45NDUgMGwxNy45NSAyNy42MmMuOTEgMS4zOTkuNDQgMy4yMjgtMS42NDggMy44ODMtMy45OCAxLjI1LTEwLjYyNiAzLjE4Ny0xNS42MjUgMy44ODMtNy42MiAxLjA2Mi0xOC40MTggMS4yMjgtMjEuNTQ2LjQ0LTEyLjEzNi0zLjA2Mi0yLjYzNi0xMi40My0uNzE4LTE1LjEzOSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Im0zMS40NjUgMzIuMTg0IDIuMS0xLjQ0N3MyLjU2NyAzLjA2NyA0LjI5NSA1Ljc2N2MyLjAzIDMuMTc0IDMuOTA0IDkuNTQzIDMuOTA0IDkuNTQzcy01LjUxNC03LjQ4My03LjQtMTAuMDIzYy0xLjM5Ny0xLjg3OS0yLjg5OS0zLjg0LTIuODk5LTMuODQiIGZpbGw9IiNiNjczNzMiLz48L3N2Zz4=";
-  const blockIconURI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1Ni43OTkiIGhlaWdodD0iNTYuNzk5IiB2aWV3Qm94PSIwIDAgNTYuNzk5IDU2Ljc5OSI+PHBhdGggZD0ibS4xNjMgMzYuOTgzIDEyLjQ2LTE3LjYwM2MxLjYzMi0yLjMwNiA0LjI3OC0yLjMwNiA1LjkxIDBsMTIuNDYgMTcuNjAzYzEuNjMxIDIuMzA2LTguMzE1IDYuMzctMTQuODggNi4zNy02LjU2MyAwLTE3LjU4Mi00LjA2NC0xNS45NS02LjM3IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE2LjgyIDI4LjE5NCAzMS40NjMgNy41MDdjMS45MTgtMi43MSA1LjAyNy0yLjcxIDYuOTQ1IDBsMTcuOTUgMjcuNjJjLjkxIDEuMzk5LjQ0IDMuMjI4LTEuNjQ4IDMuODgzLTMuOTggMS4yNS0xMC42MjYgMy4xODctMTUuNjI1IDMuODgzLTcuNjIgMS4wNjItMTguNDE4IDEuMjI4LTIxLjU0Ni40NC0xMi4xMzYtMy4wNjItMi42MzYtMTIuNDMtLjcxOC0xNS4xMzkiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJtMTcuNzIzIDE4LjQ0MiAyLjEtMS40NDdzMi41NjcgMy4wNjcgNC4yOTUgNS43NjdjMi4wMyAzLjE3NCAzLjkwNCA5LjU0MyAzLjkwNCA5LjU0M3MtNS41MTQtNy40ODMtNy40LTEwLjAyM2MtMS4zOTYtMS44NzktMi44OTktMy44NC0yLjg5OS0zLjg0IiBmaWxsPSIjYjY3MzczIi8+PC9zdmc+";
+  const menuIconURI =
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NC4yODQiIGhlaWdodD0iODQuMjg0IiB2aWV3Qm94PSIwIDAgODQuMjg0IDg0LjI4NCI+PHBhdGggZD0iTTIgNDIuMTQyQzIgMTkuOTcyIDE5Ljk3MiAyIDQyLjE0MiAyczQwLjE0MiAxNy45NzIgNDAuMTQyIDQwLjE0Mi0xNy45NzIgNDAuMTQyLTQwLjE0MiA0MC4xNDJTMiA2NC4zMTIgMiA0Mi4xNDJ6IiBmaWxsPSIjYjY3MzczIiBzdHJva2U9IiM4MjUyNTIiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Im0xMy45MDUgNTAuNzI1IDEyLjQ2LTE3LjYwM2MxLjYzMi0yLjMwNiA0LjI3OC0yLjMwNiA1LjkxIDBsMTIuNDYgMTcuNjAzYzEuNjMxIDIuMzA2LTguMzE1IDYuMzctMTQuODggNi4zNy02LjU2MyAwLTE3LjU4Mi00LjA2NC0xNS45NS02LjM3IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0ibTMwLjU2MiA0MS45MzYgMTQuNjQzLTIwLjY4N2MxLjkxOC0yLjcxIDUuMDI3LTIuNzEgNi45NDUgMGwxNy45NSAyNy42MmMuOTEgMS4zOTkuNDQgMy4yMjgtMS42NDggMy44ODMtMy45OCAxLjI1LTEwLjYyNiAzLjE4Ny0xNS42MjUgMy44ODMtNy42MiAxLjA2Mi0xOC40MTggMS4yMjgtMjEuNTQ2LjQ0LTEyLjEzNi0zLjA2Mi0yLjYzNi0xMi40My0uNzE4LTE1LjEzOSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Im0zMS40NjUgMzIuMTg0IDIuMS0xLjQ0N3MyLjU2NyAzLjA2NyA0LjI5NSA1Ljc2N2MyLjAzIDMuMTc0IDMuOTA0IDkuNTQzIDMuOTA0IDkuNTQzcy01LjUxNC03LjQ4My03LjQtMTAuMDIzYy0xLjM5Ny0xLjg3OS0yLjg5OS0zLjg0LTIuODk5LTMuODQiIGZpbGw9IiNiNjczNzMiLz48L3N2Zz4=";
+  const blockIconURI =
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1Ni43OTkiIGhlaWdodD0iNTYuNzk5IiB2aWV3Qm94PSIwIDAgNTYuNzk5IDU2Ljc5OSI+PHBhdGggZD0ibS4xNjMgMzYuOTgzIDEyLjQ2LTE3LjYwM2MxLjYzMi0yLjMwNiA0LjI3OC0yLjMwNiA1LjkxIDBsMTIuNDYgMTcuNjAzYzEuNjMxIDIuMzA2LTguMzE1IDYuMzctMTQuODggNi4zNy02LjU2MyAwLTE3LjU4Mi00LjA2NC0xNS45NS02LjM3IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE2LjgyIDI4LjE5NCAzMS40NjMgNy41MDdjMS45MTgtMi43MSA1LjAyNy0yLjcxIDYuOTQ1IDBsMTcuOTUgMjcuNjJjLjkxIDEuMzk5LjQ0IDMuMjI4LTEuNjQ4IDMuODgzLTMuOTggMS4yNS0xMC42MjYgMy4xODctMTUuNjI1IDMuODgzLTcuNjIgMS4wNjItMTguNDE4IDEuMjI4LTIxLjU0Ni40NC0xMi4xMzYtMy4wNjItMi42MzYtMTIuNDMtLjcxOC0xNS4xMzkiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJtMTcuNzIzIDE4LjQ0MiAyLjEtMS40NDdzMi41NjcgMy4wNjcgNC4yOTUgNS43NjdjMi4wMyAzLjE3NCAzLjkwNCA5LjU0MyAzLjkwNCA5LjU0M3MtNS41MTQtNy40ODMtNy40LTEwLjAyM2MtMS4zOTYtMS44NzktMi44OTktMy44NC0yLjg5OS0zLjg0IiBmaWxsPSIjYjY3MzczIi8+PC9zdmc+";
 
-  // Reusable resources (Prevents GC stutter and memory leaks)
-  const cachedCanvas = document.createElement("canvas");
-  const cachedCtx = cachedCanvas.getContext("2d", { willReadFrequently: true }); // Optimized for getImageData
+  const Cast = Scratch.Cast;
+
+  const _canvasCache = document.createElement("canvas");
+  const _ctxCache = _canvasCache.getContext("2d", { willReadFrequently: true });
   const cachedImage = new Image();
 
   let curNoise = "";
-  // pixelInfo is now a TypedArray for massive speed performance
   let pixelInfo = new Uint8Array(0); 
   
   // [Seed, FreqX, FreqY, {w, h}]
@@ -86,15 +89,42 @@
       }
     }
 
+    // Helper Funcs
+    _processImage(src) {
+      return new Promise((resolve) => {
+        cachedImage.onload = () => {
+          const w = cachedImage.width;
+          const h = cachedImage.height;
+          if (_canvasCache.width !== w || _canvasCache.height !== h) {
+            _canvasCache.width = w;
+            _canvasCache.height = h;
+          }
+
+          _ctxCache.drawImage(cachedImage, 0, 0);
+          
+          const imageData = _ctxCache.getImageData(0, 0, w, h);
+          const data = imageData.data;
+          pixelInfo = new Uint8Array(data.length / 4);
+          for (let i = 0, j = 0; i < data.length; i += 4, j++) {
+            pixelInfo[j] = (data[i] / 2.55) | 0; 
+          }
+
+          resolve();
+        };
+        cachedImage.src = src;
+      });
+    }
+
+    // Block Funcs
     genNoise(args) {
-      const w = Math.max(1, Scratch.Cast.toNumber(args.W));
-      const h = Math.max(1, Scratch.Cast.toNumber(args.H));
+      const w = Math.max(1, Cast.toNumber(args.W));
+      const h = Math.max(1, Cast.toNumber(args.H));
       noiseInfo[3] = { w, h };
 
       const vals = [
         w, h,
         Math.abs(noiseInfo[1] / 100), Math.abs(noiseInfo[2] / 100),
-        Math.min(Scratch.Cast.toNumber(args.O), 100)
+        Math.min(Cast.toNumber(args.O), 100)
       ];
 
       curNoise =
@@ -108,94 +138,42 @@
         </svg>
       `;
 
-      // Return the Promise! This ensures Scratch waits for the image to process 
-      // before moving to the next block, preventing "0" values.
       return this._processImage(`data:image/svg+xml;base64,${btoa(curNoise)}`);
     }
 
     setSeed(args) { 
-        noiseInfo[0] = Scratch.Cast.toNumber(args.SEED); 
+      noiseInfo[0] = Cast.toNumber(args.SEED); 
     }
 
-    setFreq(args) { 
-        // Fixed bug in original: Original wiped out the {w,h} object here.
-        noiseInfo[1] = Scratch.Cast.toNumber(args.x);
-        noiseInfo[2] = Scratch.Cast.toNumber(args.y);
+    setFreq(args) {
+      noiseInfo[1] = Cast.toNumber(args.x);
+      noiseInfo[2] = Cast.toNumber(args.y);
     }
 
     returnNoise(args) {
       if (args.TYPE === "encoded svg") return `data:image/svg+xml;base64,${btoa(curNoise)}`;
-      
+
       if (args.TYPE === "png") {
         if (!curNoise) return "";
-        // We can just return the cached canvas data directly since it's already painted
-        return cachedCanvas.toDataURL();
+        return _canvasCache.toDataURL();
       }
 
       if (args.TYPE === "pixel array") {
         if (pixelInfo.length === 0) return "[]";
-        // Convert TypedArray back to standard array for JSON output
         return JSON.stringify(Array.from(pixelInfo));
       }
-      
+
       return curNoise.trim();
-    }
-
-    // Internal optimization helper
-    _processImage(src) {
-      return new Promise((resolve) => {
-        cachedImage.onload = () => {
-          const w = cachedImage.width;
-          const h = cachedImage.height;
-
-          // Resize canvas only if necessary (expensive operation)
-          if (cachedCanvas.width !== w || cachedCanvas.height !== h) {
-            cachedCanvas.width = w;
-            cachedCanvas.height = h;
-          }
-
-          cachedCtx.drawImage(cachedImage, 0, 0);
-          
-          const imageData = cachedCtx.getImageData(0, 0, w, h);
-          const data = imageData.data;
-          
-          // Re-allocate TypedArray
-          pixelInfo = new Uint8Array(data.length / 4);
-          
-          // Optimized Loop:
-          // 1. Iterate by 4 (RGBA)
-          // 2. Use integer multiplication/division logic
-          for (let i = 0, j = 0; i < data.length; i += 4, j++) {
-            // data[i] is Red channel. Since it's grayscale, R=G=B.
-            // (R / 255) * 100  approx equals R / 2.55
-            pixelInfo[j] = (data[i] / 2.55) | 0; 
-          }
-          
-          resolve();
-        };
-        cachedImage.src = src;
-      });
-    }
-
-    // Deprecated but kept for backward compatibility if internally called
-    analyze(noise, dontStringify) {
-        return this._processImage(noise).then(() => {
-            if (dontStringify) return pixelInfo;
-            return JSON.stringify(Array.from(pixelInfo));
-        });
     }
 
     returnVal(args) {
       if (!curNoise || pixelInfo.length === 0) return 0;
-      
-      const x = Math.round(Scratch.Cast.toNumber(args.x) + (noiseInfo[3].w / 2));
-      const y = Math.round((Scratch.Cast.toNumber(args.y) * -1) + (noiseInfo[3].h / 2));
-      
-      // Bounds check to prevent undefined returns
-      if (x < 0 || x >= noiseInfo[3].w || y < 0 || y >= noiseInfo[3].h) return 0;
+
+      const x = Math.round(Cast.toNumber(args.x) + (noiseInfo[3].w / 2));
+      const y = Math.round((Cast.toNumber(args.y) * -1) + (noiseInfo[3].h / 2));
 
       const index = y * noiseInfo[3].w + x;
-      return pixelInfo[index];
+      return pixelInfo[index] ?? 0;
     }
   }
   
