@@ -160,7 +160,10 @@
 
       if (args.TYPE === "pixel array") {
         if (pixelInfo.length === 0) return "[]";
-        return JSON.stringify(Array.from(pixelInfo));
+
+        const pixelArray = Array.from(pixelInfo);
+        return vm.extensionManager._loadedExtensions.has("SPjson") ?
+          pixelArray : JSON.stringify(pixelArray);
       }
 
       return curNoise.trim();
