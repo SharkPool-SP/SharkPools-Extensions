@@ -1,7 +1,7 @@
 /**!
  * Since 2000
  * @author 0znzw (@link https://scratch.mit.edu/users/0znzw/)
- * @author ionslayer (@link https://scratch.mit.edu/users/ionslayer/)
+ * @author Ammunimium (@link https://scratch.mit.edu/users/ionslayer/)
  * @version 2.0
  * @license MIT AND LGPL-3.0
  */
@@ -245,4 +245,5 @@
   if (Scratch.extensions.unsandboxed) Scratch.vm.runtime[`cext_${extId}`] = ext;
   Scratch.extensions.register(ext);
 })(Scratch);
+
 
