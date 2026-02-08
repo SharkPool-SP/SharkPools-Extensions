@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.64
+// Version V.1.2.65
 
 (function(Scratch) {
   "use strict";
@@ -1833,7 +1833,7 @@
 
     const menuMaker = runtime.ext_SP0zMenuMaker;
     const allMenus = menuMaker.getMenus();
-    const values = Object.values(inputs);
+    const values = inputs ? Object.values(inputs) : [];
 
     let output = { menus: {} };
     for (const input of values) {
