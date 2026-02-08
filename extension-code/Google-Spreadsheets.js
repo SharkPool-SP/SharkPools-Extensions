@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version 1.2.3
+// Version 1.2.31
 
 (function (Scratch) {
   "use strict";
@@ -12,7 +12,6 @@
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2My4xNjciIGhlaWdodD0iNjMuMTY3IiB2aWV3Qm94PSIwIDAgNjMuMTY3IDYzLjE2NyI+PGcgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0wIDMxLjU4M0MwIDE0LjE0IDE0LjE0IDAgMzEuNTgzIDBzMzEuNTgzIDE0LjE0IDMxLjU4MyAzMS41ODMtMTQuMTQgMzEuNTgzLTMxLjU4MyAzMS41ODNTMCA0OS4wMjYgMCAzMS41ODMiIGZpbGw9IiMzNGE4NTMiLz48cGF0aCBkPSJNMyAzMS41ODNDMyAxNS43OTcgMTUuNzk3IDMgMzEuNTgzIDNzMjguNTgzIDEyLjc5NyAyOC41ODMgMjguNTgzLTEyLjc5NyAyOC41ODMtMjguNTgzIDI4LjU4M1MzIDQ3LjM2OSAzIDMxLjU4MyIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0xNS41ODMgNTAuMzM4VjEzLjAwNWMwLTEuNzYyIDIuMTg1LTMuNDA5IDMuOTY3LTMuNDA5aDE2LjkybDExLjExMyAxMS4wNXYyOS4zNTljMCAxLjc3NC0xLjYzIDMuNTkxLTQuMTE3IDMuNTkxSDE5LjU1Yy0xLjkyMiAwLTMuOTY3LTEuMjI3LTMuOTY3LTMuMjU4IiBmaWxsPSIjMzRhODUzIi8+PHBhdGggZD0iTTM2LjUzIDIwLjU2N1Y5LjU3bDEwLjk5NyAxMC45OTd6IiBmaWxsPSIjMTg4MDM4Ii8+PHBhdGggZD0iTTIxLjU0MSA0MS41MDVWMjYuNjcxaDIwdjE0LjgzNHoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjMuNjMzIDMyLjY3MXYtNGg2LjgzM3Y0em05IDB2LTRoNi44MzN2NHptLTkgNi4wODR2LTRoNi44MzN2NHptOSAwdi00aDYuODMzdjR6IiBmaWxsPSIjMzRhODUzIi8+PC9nPjwvc3ZnPg==";
-
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MC44OTkiIGhlaWdodD0iNTAuODk5IiB2aWV3Qm94PSIwIDAgNTAuODk5IDUwLjg5OSI+PGcgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0wIDUwLjg5OXYtNTAuOWg1MC45djUwLjl6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTkuNDUgNDQuMTkxVjYuODU4YzAtMS43NjIgMi4xODUtMy40MDkgMy45NjctMy40MDloMTYuOTJsMTEuMTEzIDExLjA1djI5LjM1OWMwIDEuNzc0LTEuNjMgMy41OTEtNC4xMTcgMy41OTFIMTMuNDE3Yy0xLjkyMiAwLTMuOTY3LTEuMjI3LTMuOTY3LTMuMjU4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTMwLjM5NyAxNC40MlYzLjQyM0w0MS4zOTQgMTQuNDJ6TTE1LjQwOCAzNS4zNThWMjAuNTI0aDIwdjE0LjgzNHoiIGZpbGw9InNpbHZlciIvPjxwYXRoIGQ9Ik0xNy41IDI2LjUyNHYtNGg2LjgzM3Y0em05IDB2LTRoNi44MzN2NHptLTkgNi4wODR2LTRoNi44MzN2NHptOSAwdi00aDYuODMzdjR6IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg==";
 
@@ -120,7 +119,9 @@
     }
 
     // Helper Funcs
-    disclaimer() { alert(`Please Enable the "Anyone With Link" option in Share > General Access`) }
+    disclaimer() {
+      alert(`Please Enable the "Anyone With Link" option in Share > General Access`);
+    }
 
     setup() {
       const confirm = window.confirm(`To Write Rows and Columns in Spreadsheets, You Must install this Spreads Addon. Do you want to open the link?\n
@@ -128,14 +129,14 @@
       if (confirm) Scratch.openWindow("https://workspace.google.com/u/0/marketplace/app/webhooks_for_sheets/860288437469", "_blank");
     }
     setup2() {
-      alert(`To interact with Your Spread in this Project, import the extensions "Couplers" and "TurboHook" or "HTTP"`);
-      const importExt = (NAME) => { vm.extensionManager.loadExtensionURL(NAME) };
-      const confirm1 = window.confirm(`Import "Couplers" by "True-Fantom"?`);
-      if (confirm1) importExt("https://extensions.turbowarp.org/true-fantom/couplers.js");
-      const confirm2 = window.confirm(`Import "TurboHook" by "Cubester"?`);
-      if (confirm2) importExt("https://extensions.turbowarp.org/CubesterYT/TurboHook.js");
-      const confirm3 = window.confirm(`Import "HTTP" by "godslayerakp"?`);
-      if (confirm3) importExt("https://extensions.turbowarp.org/godslayerakp/http.js");
+      alert(`To interact with Your Spread in this Project, import the "TurboHook" or "HTTP" extension`);
+      const importExt = (NAME) => {
+        vm.extensionManager.loadExtensionURL(NAME);
+      };
+      const confirm1 = window.confirm(`Import "TurboHook" by "Cubester"?`);
+      if (confirm1) importExt("https://extensions.turbowarp.org/CubesterYT/TurboHook.js");
+      const confirm2 = window.confirm(`Import "HTTP" by "godslayerakp"?`);
+      if (confirm2) importExt("https://extensions.turbowarp.org/godslayerakp/http.js");
     }
 
     tsvParser(tsv) {
@@ -156,9 +157,9 @@
       let obj = {};
       if (encodingType === "2D Array") {
         obj = [];
-        columns.forEach((item, i) => { obj.push([fixName(item), toItems(rows, i, false)]) });
+        columns.forEach((item, i) => obj.push([fixName(item), toItems(rows, i, false)]));
       } else {
-        columns.forEach((item, i) => { obj[fixName(item)] = toItems(rows, i, encodingType === "Object") });
+        columns.forEach((item, i) => obj[fixName(item)] = toItems(rows, i, encodingType === "Object"));
       }
       return obj;
     }
@@ -189,14 +190,19 @@
         const content = await response.text();
 
         if (encodingType == "TSV") return content;
-        else return JSON.stringify(this.tsvParser(content));
+        else {
+          const parsed = this.tsvParser(content);
+          return vm.extensionManager._loadedExtensions.has("SPjson") ? parsed : JSON.stringify(parsed);
+        }
       } catch (e) {
         console.warn(e);
         return defaultReturn;
       }
     }
 
-    setEncodeType(args) { encodingType = args.TYPE }
+    setEncodeType(args) {
+      encodingType = args.TYPE;
+    }
 
     async write2Sheet(args) {
       const url = Scratch.Cast.toString(args.URL);
