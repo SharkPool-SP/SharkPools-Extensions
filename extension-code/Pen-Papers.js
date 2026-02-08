@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.32
+// Version V.1.0.33
 
 (function (Scratch) {
   "use strict";
@@ -182,6 +182,7 @@
         papers[name] = { skin, drawable };
         render.updateDrawableSkinId(drawable, skin);
         render._allDrawables[drawable].customDrawableName = "Pen Paper: " + name;
+        render._allDrawables[drawable].interactive = false;
         if (isEditor) runtime.once("BEFORE_EXECUTE", () => runtime.requestBlocksUpdate());
       }
     }
