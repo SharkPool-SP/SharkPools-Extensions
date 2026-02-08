@@ -1,7 +1,8 @@
 // Name: Timezones
 // ID: iStimezones
 // Description: Utilities for Timezones and Time Convertion
-// By: ionslayer
+// By: Ammunimium
+// License: MIT
 
 // Version V.1.0.0
 
@@ -105,3 +106,4 @@
 
   Scratch.extensions.register(new iStimezones());
 })(Scratch);
+
