@@ -2,9 +2,10 @@
 // ID: SPperlin
 // Description: Generate Perlin Noise
 // By: SharkPool
+// License: MIT
 
-// Version V.1.0.1
-  
+// Version V.1.1.0
+
 (function(Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Perlin Noise must run unsandboxed");
@@ -14,7 +15,16 @@
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1Ni43OTkiIGhlaWdodD0iNTYuNzk5IiB2aWV3Qm94PSIwIDAgNTYuNzk5IDU2Ljc5OSI+PHBhdGggZD0ibS4xNjMgMzYuOTgzIDEyLjQ2LTE3LjYwM2MxLjYzMi0yLjMwNiA0LjI3OC0yLjMwNiA1LjkxIDBsMTIuNDYgMTcuNjAzYzEuNjMxIDIuMzA2LTguMzE1IDYuMzctMTQuODggNi4zNy02LjU2MyAwLTE3LjU4Mi00LjA2NC0xNS45NS02LjM3IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE2LjgyIDI4LjE5NCAzMS40NjMgNy41MDdjMS45MTgtMi43MSA1LjAyNy0yLjcxIDYuOTQ1IDBsMTcuOTUgMjcuNjJjLjkxIDEuMzk5LjQ0IDMuMjI4LTEuNjQ4IDMuODgzLTMuOTggMS4yNS0xMC42MjYgMy4xODctMTUuNjI1IDMuODgzLTcuNjIgMS4wNjItMTguNDE4IDEuMjI4LTIxLjU0Ni40NC0xMi4xMzYtMy4wNjItMi42MzYtMTIuNDMtLjcxOC0xNS4xMzkiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJtMTcuNzIzIDE4LjQ0MiAyLjEtMS40NDdzMi41NjcgMy4wNjcgNC4yOTUgNS43NjdjMi4wMyAzLjE3NCAzLjkwNCA5LjU0MyAzLjkwNCA5LjU0M3MtNS41MTQtNy40ODMtNy40LTEwLjAyM2MtMS4zOTYtMS44NzktMi44OTktMy44NC0yLjg5OS0zLjg0IiBmaWxsPSIjYjY3MzczIi8+PC9zdmc+";
 
-  let curNoise = "", pixelInfo = [];
+  const Cast = Scratch.Cast;
+
+  const _canvasCache = document.createElement("canvas");
+  const _ctxCache = _canvasCache.getContext("2d", { willReadFrequently: true });
+  const cachedImage = new Image();
+
+  let curNoise = "";
+  let pixelInfo = new Uint8Array(0); 
+  
+  // [Seed, FreqX, FreqY, {w, h}]
   let noiseInfo = [1, 5, 5, { w: 100, h: 100 }];
 
   class SPperlin {
@@ -79,13 +89,44 @@
       }
     }
 
+    // Helper Funcs
+    _processImage(src) {
+      return new Promise((resolve) => {
+        cachedImage.onload = () => {
+          const w = cachedImage.width;
+          const h = cachedImage.height;
+          if (_canvasCache.width !== w || _canvasCache.height !== h) {
+            _canvasCache.width = w;
+            _canvasCache.height = h;
+          }
+
+          _ctxCache.drawImage(cachedImage, 0, 0);
+          
+          const imageData = _ctxCache.getImageData(0, 0, w, h);
+          const data = imageData.data;
+          pixelInfo = new Uint8Array(data.length / 4);
+          for (let i = 0, j = 0; i < data.length; i += 4, j++) {
+            pixelInfo[j] = (data[i] / 2.55) | 0; 
+          }
+
+          resolve();
+        };
+        cachedImage.src = src;
+      });
+    }
+
+    // Block Funcs
     genNoise(args) {
-      noiseInfo[3] = { w: Scratch.Cast.toNumber(args.W), h: Scratch.Cast.toNumber(args.H) };
+      const w = Math.max(1, Cast.toNumber(args.W));
+      const h = Math.max(1, Cast.toNumber(args.H));
+      noiseInfo[3] = { w, h };
+
       const vals = [
-        noiseInfo[3].w, noiseInfo[3].h,
+        w, h,
         Math.abs(noiseInfo[1] / 100), Math.abs(noiseInfo[2] / 100),
-        Math.min(Scratch.Cast.toNumber(args.O), 100)
+        Math.min(Cast.toNumber(args.O), 100)
       ];
+
       curNoise =
       `<svg width="${vals[0]}" height="${vals[1]}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <filter id="a">
@@ -96,68 +137,43 @@
           <rect width="100%" height="100%" style="filter: url(#a)" />
         </svg>
       `;
-      this.analyze(`data:image/svg+xml;base64,${btoa(curNoise)}`, true).then((e) => { pixelInfo = e });
+
+      return this._processImage(`data:image/svg+xml;base64,${btoa(curNoise)}`);
     }
 
-    setSeed(args) { noiseInfo[0] = Scratch.Cast.toNumber(args.SEED) }
+    setSeed(args) { 
+      noiseInfo[0] = Cast.toNumber(args.SEED); 
+    }
 
-    setFreq(args) { noiseInfo = [noiseInfo[0], Scratch.Cast.toNumber(args.x), Scratch.Cast.toNumber(args.y)] }
+    setFreq(args) {
+      noiseInfo[1] = Cast.toNumber(args.x);
+      noiseInfo[2] = Cast.toNumber(args.y);
+    }
 
     returnNoise(args) {
       if (args.TYPE === "encoded svg") return `data:image/svg+xml;base64,${btoa(curNoise)}`;
-      if (args.TYPE === "png" && curNoise) {
-        // eslint-disable-next-line
-        const img = new Image();
-        img.src = `data:image/svg+xml;base64,${btoa(curNoise)}`;
-        return new Promise((resolve) => {
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL());
-          };
-        });
+
+      if (args.TYPE === "png") {
+        if (!curNoise) return "";
+        return _canvasCache.toDataURL();
       }
+
       if (args.TYPE === "pixel array") {
-        if (!curNoise) return "[]";
-        return this.analyze(`data:image/svg+xml;base64,${btoa(curNoise)}`, false);
+        if (pixelInfo.length === 0) return "[]";
+        return JSON.stringify(Array.from(pixelInfo));
       }
+
       return curNoise.trim();
     }
 
-    analyze(noise, dontStringify) {
-      // eslint-disable-next-line
-      const image = new Image();
-      image.src = noise;
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      return new Promise((resolve, reject) => {
-        image.onload = () => {
-          canvas.width = image.width;
-          canvas.height = image.height;
-          ctx.drawImage(image, 0, 0, image.width, image.height);
-          const imageData = ctx.getImageData(0, 0, image.width, image.height);
-          const data = imageData.data;
-          const pixelValues = [];
-          for (let i = 0; i < data.length; i += 4) {
-            const grayValue = data[i];
-            const normValue = Math.round((grayValue / 255) * 100);
-            pixelValues.push(normValue);
-          }
-          if (dontStringify) resolve(pixelValues);
-          else resolve(JSON.stringify(pixelValues));
-        };
-      });
-    }
-
     returnVal(args) {
-      if (!curNoise) return "";
-      const x = Math.round(Scratch.Cast.toNumber(args.x) + (noiseInfo[3].w / 2));
-      const y = Math.round((Scratch.Cast.toNumber(args.y) * -1) + (noiseInfo[3].h / 2));
+      if (!curNoise || pixelInfo.length === 0) return 0;
+
+      const x = Math.round(Cast.toNumber(args.x) + (noiseInfo[3].w / 2));
+      const y = Math.round((Cast.toNumber(args.y) * -1) + (noiseInfo[3].h / 2));
+
       const index = y * noiseInfo[3].w + x;
-      return pixelInfo[index] || 0;
+      return pixelInfo[index] ?? 0;
     }
   }
   
