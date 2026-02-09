@@ -41,7 +41,7 @@ function displayExts(json, optFadeIn) {
     else info.banner = "extension-thumbs/" + info.banner;
     const status = info.status;
 
-    if (shouldSplit && !status && !pins.includes(info.id)) {
+    if (shouldSplit && (!status || !pins.includes(info.id))) {
       const breaker = document.createElement("div");
       breaker.classList.add("ext-breaker");
       main.append(breaker, document.createElement("br"));
