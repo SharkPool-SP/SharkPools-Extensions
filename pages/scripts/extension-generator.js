@@ -25,12 +25,15 @@ function displayExts(json, optFadeIn) {
   const oldDiv = document.querySelector(".ext-div");
   if (oldDiv) oldDiv.remove();
 
-  let shouldSplit = currentTags[0] === "all" && pins.length;
+  const extEntries = Object.entries(json);
+  const hasTags = extEntries.some(e => e[1].status);
+
+  let shouldSplit = currentTags[0] === "all" && (hasTags || pins.length);
   const main = document.createElement("div");
   main.classList.add("ext-div");
 
   _tagCache = [];
-  Object.entries(json).forEach((item) => {
+  extEntries.forEach((item) => {
     const isOverride = item[0] === "override404";
     const info = {
       ...item[1],
@@ -41,7 +44,7 @@ function displayExts(json, optFadeIn) {
     else info.banner = "extension-thumbs/" + info.banner;
     const status = info.status;
 
-    if (shouldSplit && (!status || !pins.includes(info.id))) {
+    if (shouldSplit && !(status || pins.includes(info.id))) {
       const breaker = document.createElement("div");
       breaker.classList.add("ext-breaker");
       main.append(breaker, document.createElement("br"));
