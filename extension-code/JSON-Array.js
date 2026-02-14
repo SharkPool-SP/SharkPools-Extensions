@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.21
+// Version V.1.1.22
 
 (function (Scratch) {
   "use strict";
@@ -85,7 +85,7 @@
               `c -4 0 -4 -9 0 -9 c 10 0 0 ${-12 - height} 11 ${-12 - height}`
             ];
           } else {
-            const ogShape = block.edgeShape_;
+            const ogShape = block.originalOutputShape_ ?? block.edgeShape_;
             const steps = [];
             block.edgeShape_ = objShape;
             block.renderDrawLeft_(steps, 0);
@@ -103,7 +103,7 @@
               `c -10 0 0 ${12 + height} -11 ${12 + height} l ${-offset} 0`
             ];
           } else {
-            const ogShape = block.edgeShape_;
+            const ogShape = block.originalOutputShape_ ?? block.edgeShape_;
             const steps = [];
             block.edgeShape_ = objShape;
             block.renderDrawRight_(steps, 0);
