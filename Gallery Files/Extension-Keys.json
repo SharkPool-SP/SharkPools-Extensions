@@ -267,7 +267,8 @@
       "url": "Text-to-Speech.js",
       "banner": "Text-to-Speech.svg",
       "tags": ["Sound", "Online", "Category Expansion"],
-      "date": "Last Updated: 01/08/2026"
+      "isDeprecated": true,
+      "date": "Last Updated: 02/14/2026"
     },
     "Font-Manager": {
       "desc": "Manage, Create, and Delete Fonts from your Project",
