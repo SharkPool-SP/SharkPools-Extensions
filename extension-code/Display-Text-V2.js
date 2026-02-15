@@ -44,16 +44,13 @@
     };
   }
 
-  const BUILT_IN_FONTS = [];
+  let BUILT_IN_FONTS = new Set();
   iteratorForEach(
     document.fonts.keys(),
-    (font) => {
-      BUILT_IN_FONTS.push({
-        text: Scratch.translate(font.family),
-        value: font.family
-      });
-    }
+    (font) => BUILT_IN_FONTS.add(font.family)
   );
+  BUILT_IN_FONTS = [...BUILT_IN_FONTS]
+	.map((f) => ({ text: Scratch.translate(f), value: f }));
 
   // Slightly modified version of Markdown for svg
   const MARKDOWN_CONSTS = {
