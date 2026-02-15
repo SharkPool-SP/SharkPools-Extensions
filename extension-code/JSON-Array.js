@@ -85,11 +85,9 @@
               `c -4 0 -4 -9 0 -9 c 10 0 0 ${-12 - height} 11 ${-12 - height}`
             ];
           } else {
-            const ogShape = block.originalOutputShape_ ?? block.edgeShape_;
             const steps = [];
             block.edgeShape_ = objShape;
             block.renderDrawLeft_(steps, 0);
-            block.edgeShape_ = ogShape;
             return [steps[1]];
           }
         },
@@ -103,11 +101,9 @@
               `c -10 0 0 ${12 + height} -11 ${12 + height} l ${-offset} 0`
             ];
           } else {
-            const ogShape = block.originalOutputShape_ ?? block.edgeShape_;
             const steps = [];
             block.edgeShape_ = objShape;
             block.renderDrawRight_(steps, 0);
-            block.edgeShape_ = ogShape;
             return [steps[0]];
           }
         },
@@ -125,7 +121,7 @@
         "SPjson_jsonMap", "SPjson_jsonMake", "objBlank"
       ];
       const igoreOuter = [
-        "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
+        "SPjson_getKey", "SPjson_getPath", "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
       ];
 
       const makeShape = (width) => {
@@ -476,6 +472,7 @@
       ];
       this.alwaysCast = true; this.alwaysParse = true;
       this.alwaysTryParse = true; this.useNewObj = true;
+
       this.initParser();
     }
     getInfo() {
@@ -522,7 +519,6 @@
           {
             opcode: "getKey",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: objShape,
             allowDropAnywhere: true,
             text: "get [KEY] from [OBJ]",
             arguments: {
@@ -533,7 +529,6 @@
           {
             opcode: "getPath",
             blockType: Scratch.BlockType.REPORTER,
-            blockShape: objShape,
             allowDropAnywhere: true,
             text: "get path [PATH] from [OBJ]",
             arguments: {
