@@ -1941,6 +1941,3 @@
 
   Scratch.extensions.register(new SPtuneShark3());
 })(Scratch);
-
-
-
