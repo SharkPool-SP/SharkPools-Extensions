@@ -210,13 +210,13 @@
     let funcString = `(o) => {\n`;
 
     if (type === undefined) funcString += `if (typeof o === "object") return o;\n`;
-    else if (type === 0) funcString += `if (o.constructor?.name === "Object") return o;\n`;
+    else if (type === 0) funcString += `if (!Array.isArray(o)) return o;\n`;
     else funcString += `if (Array.isArray(o)) return o;\n`;
 
     funcString += `try {\n`;
     funcString += `const p = JSON.parse(o);\n`;
     if (type === undefined) funcString += `return p;\n`;
-    else if (type === 0) funcString += `return p.constructor?.name === "Object" ? p : ${defaultV};\n`;
+    else if (type === 0) funcString += `return !Array.isArray(p) ? p : ${defaultV};\n`;
     else funcString += `return Array.isArray(p) ? p : ${defaultV};\n`;
     funcString += `} catch {return ${defaultV}}\n`;
     return funcString + "}";
@@ -425,7 +425,7 @@
             function* generator() {
               const p = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj});
               const e = Object.entries(p);
-              const isO = p.constructor?.name === "Object";
+              const isO = !Array.isArray(p);
 
               if (${node.type === "filter"}) {
                 if (isO) {
@@ -1124,7 +1124,7 @@
         this.tryParse = (obj, optType) => {
           if (
             (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === 0 && !Array.isArray(obj)) ||
             (optType === undefined && typeof obj === "object")
           ) return fixedClone(obj);
           const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
@@ -1132,7 +1132,7 @@
             const parsed = JSON.parse(obj);
             return (
               (optType === 1 && Array.isArray(parsed)) ||
-              (optType === 0 && parsed.constructor?.name === "Object") ||
+              (optType === 0 && !Array.isArray(parsed)) ||
               optType === undefined
             ) ? parsed : defaultV;
           } catch {
@@ -1146,7 +1146,7 @@
         this.tryParse = (obj, optType) => {
           if (
             (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === 0 && !Array.isArray(obj)) ||
             (optType === undefined && typeof obj === "object")
           ) return obj;
           const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
@@ -1154,7 +1154,7 @@
             const parsed = JSON.parse(obj);
             return (
               (optType === 1 && Array.isArray(parsed)) ||
-              (optType === 0 && parsed.constructor?.name === "Object") ||
+              (optType === 0 && !Array.isArray(parsed)) ||
               optType === undefined
             ) ? parsed : defaultV;
           } catch {
@@ -1168,7 +1168,7 @@
         this.tryParse = (obj, optType) => {
           if (
             (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === 0 && !Array.isArray(obj)) ||
             (optType === undefined && typeof obj === "object")
           ) return fixedClone(obj);
           return optType === undefined ? obj : optType === 0 ? {} : [];
@@ -1180,7 +1180,7 @@
         this.tryParse = (obj, optType) => {
           if (
             (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && obj.constructor?.name === "Object") ||
+            (optType === 0 && !Array.isArray(obj)) ||
             (optType === undefined && typeof obj === "object")
           ) return obj;
           return optType === undefined ? obj : optType === 0 ? {} : [];
@@ -1298,7 +1298,7 @@
 
     objValid(args) {
       const obj = this.tryParse(args.OBJ);
-      return typeof obj === "object" && obj.constructor?.name === "Object";
+      return typeof obj === "object" && !Array.isArray(obj);
     }
 
     jsonBuilder(args) { return { [args.KEY] : this.toSafe(args.VAL) } }
