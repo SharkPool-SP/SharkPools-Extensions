@@ -185,7 +185,10 @@
   const ogVisReport = runtime.visualReport;
   if (isPM) {
     runtime.visualReport = function (blockId, value) {
-      if (value.constructor?.name === "Object" || value.constructor?.name === "Array") {
+      if (
+        value && 
+        (value.constructor?.name === "Object" || value.constructor?.name === "Array")
+      ) {
         // PM custom return constructors have a different name
         value = JSON.stringify(value, circularReplacer());
       }
