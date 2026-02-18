@@ -1118,15 +1118,16 @@
         try { return structuredClone(obj) } catch { return obj }
       };
 
+      const isValidObject = (obj, type) => {
+        return obj !== null && typeof obj === "object" &&
+          (type ? (type === 1 ? Array.isArray(obj) : !Array.isArray(obj)) : true);
+      };
+
       if (!this.alwaysTryParse) return this.tryParse = (obj) => obj;
 
       if (this.useNewObj && this.alwaysParse) {
         this.tryParse = (obj, optType) => {
-          if (
-            (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && !Array.isArray(obj)) ||
-            (optType === undefined && typeof obj === "object")
-          ) return fixedClone(obj);
+          if (isValidObject(obj, optType)) return fixedClone(obj);
           const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
           try {
             const parsed = JSON.parse(obj);
@@ -1144,11 +1145,7 @@
 
       if (!this.useNewObj && this.alwaysParse) {
         this.tryParse = (obj, optType) => {
-          if (
-            (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && !Array.isArray(obj)) ||
-            (optType === undefined && typeof obj === "object")
-          ) return obj;
+          if (isValidObject(obj, optType)) return obj;
           const defaultV = optType === undefined ? obj : optType === 0 ? {} : [];
           try {
             const parsed = JSON.parse(obj);
@@ -1166,11 +1163,7 @@
 
       if (this.useNewObj && !this.alwaysParse) {
         this.tryParse = (obj, optType) => {
-          if (
-            (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && !Array.isArray(obj)) ||
-            (optType === undefined && typeof obj === "object")
-          ) return fixedClone(obj);
+          if (isValidObject(obj, optType)) return fixedClone(obj);
           return optType === undefined ? obj : optType === 0 ? {} : [];
         };
         return;
@@ -1178,11 +1171,7 @@
 
       if (!this.useNewObj && !this.alwaysParse) {
         this.tryParse = (obj, optType) => {
-          if (
-            (optType === 1 && Array.isArray(obj)) ||
-            (optType === 0 && !Array.isArray(obj)) ||
-            (optType === undefined && typeof obj === "object")
-          ) return obj;
+          if (isValidObject(obj, optType)) return obj;
           return optType === undefined ? obj : optType === 0 ? {} : [];
         };
         return;
