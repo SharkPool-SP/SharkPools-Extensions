@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.05
+// Version V.1.1.0
 
 (function (Scratch) {
   "use strict";
@@ -193,6 +193,7 @@
       this._clickEvent = (e) => {
         e.stopPropagation();
         this.clickTime = e.timeStamp;
+        runHatEvents("whenAnyTextClicked", this.id);
         runHatEvents("whenTextClicked", this.id);
       };
     }
@@ -814,6 +815,18 @@
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: TRANSLATIONS.id }
             },
           },
+          {
+            opcode: "whenAnyTextClicked",
+            blockType: Scratch.BlockType.EVENT,
+            isEdgeActivated: false,
+            text: Scratch.translate("when any text clicked")
+          },
+          {
+            opcode: "clickedId",
+            blockType: Scratch.BlockType.REPORTER,
+            disableMonitor: true,
+            text: Scratch.translate("clicked text ID")
+          },
         ],
         menus: {
           FONTS: { acceptReporters: true, items: "_getFonts", isTypeable: true },
@@ -871,6 +884,7 @@
               { text: Scratch.translate("display height"), value: "boxH" },
               { text: Scratch.translate("letter spacing"), value: "letter" },
               { text: Scratch.translate("line spacing"), value: "line" },
+              { text: Scratch.translate("printed text"), value: "text" },
             ]
           }
         }
@@ -1124,6 +1138,7 @@
       if (textObj) {
         const styles = textObj.styles;
         switch (Cast.toString(args.ATT)) {
+          case "text": return textObj.rawText;
           case "lineCount": return textObj._elementInner.children.length;
           case "font": return styles.get("font-family") || "Arial";
           case "size": return styles.get("font-size") || 16;
@@ -1444,6 +1459,11 @@
     whenTextClicked(args, util) {
       const clickedId = util.thread[THREAD_KEY];
       return clickedId && clickedId === Cast.toString(args.ID);
+    }
+
+    clickedId(args, util) {
+      const clickedId = util.thread[THREAD_KEY];
+      return clickedId ?? "";
     }
   }
 
