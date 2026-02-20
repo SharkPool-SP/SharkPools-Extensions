@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.0
+// Version V.1.1.01
 
 (function (Scratch) {
   "use strict";
@@ -248,10 +248,10 @@
       this._clickable = clickable;
       if (clickable) {
         this.toggleInteract(true);
-        this._element.addEventListener("click", this._clickEvent);
+        this._elementInner.addEventListener("click", this._clickEvent);
       } else {
         this.toggleInteract(false);
-        this._element.removeEventListener("click", this._clickEvent);
+        this._elementInner.removeEventListener("click", this._clickEvent);
       }
     }
 
