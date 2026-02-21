@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.01
+// Version V.1.1.1
 
 (function (Scratch) {
   "use strict";
@@ -50,7 +50,7 @@
     (font) => BUILT_IN_FONTS.add(font.family)
   );
   BUILT_IN_FONTS = [...BUILT_IN_FONTS]
-	.map((f) => ({ text: Scratch.translate(f), value: f }));
+    .map((f) => ({ text: Scratch.translate(f), value: f }));
 
   // Slightly modified version of Markdown for svg
   const MARKDOWN_CONSTS = {
@@ -232,9 +232,23 @@
       if (!this._element) return;
 
       const bounds = this._elementInner.getBBox();
-      y += bounds.height / 2;
+      let rotCenterY;
+
+      const vertAlign = this.specialStyles.get("vert-align");
+      if (vertAlign === "top") {
+        // dont change the y position
+        rotCenterY = bounds.y;
+      } else if (vertAlign === "bottom") {
+        y += bounds.height;
+        rotCenterY = bounds.y + bounds.height;
+      } else {
+        // "center" or undefined
+        y += bounds.height / 2;
+        rotCenterY = bounds.y + bounds.height / 2;
+      }
+
       this._element.style.transform = `translate(${x}px, ${y * -1}px)`;
-      this._elementInner.setAttribute("transform-origin", `0 ${bounds.y + bounds.height / 2}`);
+      this._elementInner.setAttribute("transform-origin", `0 ${rotCenterY}`);
     }
 
     toggleInteract(interactable) {
@@ -302,10 +316,12 @@
       this._element.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
       this._element.setAttribute("style", `overflow: visible; pointer-events: none; position: absolute;`);
 
-      if (typeof scaffolding === "undefined") {
-        // inject filters for Debug Mode
-        this._element.insertAdjacentHTML("afterBegin", generateDebugFilters());
-      }
+      this._debugBox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      this._debugBox.setAttribute("width", 0);
+      this._debugBox.setAttribute("height", 0);
+      this._debugBox.setAttribute("stroke-width", 3);
+      this._debugBox.setAttribute("stroke", "none");
+      this._debugBox.setAttribute("fill", "none");
 
       this._elementInner = document.createElementNS("http://www.w3.org/2000/svg", "text");
       this._elementInner.setAttribute("paint-order", "stroke");
@@ -314,16 +330,33 @@
       this._elementInner.style.whiteSpace = "pre";
 
       this._elementInner.innerHTML = this.cleansedText;
-      this._element.appendChild(this._elementInner);
+      this._element.append(this._debugBox, this._elementInner);
       textDiv.appendChild(this._element);
 
-	  // if there is a position preset for us, use it
-	  if (presetPositions[this.id]) {
-		this.setPosition(...presetPositions[this.id]);
-		delete presetPositions[this.id];
-	  } else {
-		this.setPosition(0, 0);
-	  }
+      // if there is a position preset for us, use it
+      if (presetPositions[this.id]) {
+        this.setPosition(...presetPositions[this.id]);
+        delete presetPositions[this.id];
+      } else {
+        this.setPosition(0, 0);
+      }
+    }
+
+    updateDebugBox() {
+      const bounds = this._elementInner.getBBox();
+      const alignment = this._elementInner.getAttribute("text-anchor");
+      const stroke = alignment === "middle" ? "00ff00" : alignment === "end" ? "0000ff" : "ff0000";
+      this._debugBox.setAttribute("stroke", "#" + stroke);
+      this._debugBox.setAttribute("width", bounds.width);
+      this._debugBox.setAttribute("height", bounds.height);
+      this._debugBox.setAttribute("x", bounds.x);
+      this._debugBox.setAttribute("y", bounds.y);
+
+      const transform = this._elementInner.getAttribute("transform");
+      if (transform) {
+        this._debugBox.setAttribute("transform", transform);
+        this._debugBox.setAttribute("transform-origin", this._elementInner.getAttribute("transform-origin"));
+      }
     }
 
     updateElement(isStyleUpdate, isSpecialUpdate) {
@@ -336,12 +369,6 @@
 
         if (specialStyles.has("text-shadow")) {
           this._element.style.textShadow = specialStyles.get("text-shadow");
-        }
-
-        if (specialStyles.has("width")) {
-          const wrapWidth = specialStyles.get("width");
-          if (wrapWidth > 0) this.wrapText(wrapWidth);
-          else this._elementInner.innerHTML = this.cleansedText;
         }
 
         if (specialStyles.has("effects")) {
@@ -419,14 +446,17 @@
       } else {
         this._elementInner.innerHTML = this.cleansedText;
       }
-      
-      if (isInDebugMode) {
-        const alignment = this._elementInner.getAttribute("text-anchor");
-        this._elementInner.setAttribute(
-          "filter",
-          `url(#border${alignment === "middle" ? "G" : alignment === "end" ? "B" : "R"})`
-        );
+
+      if (isSpecialUpdate) {
+        const specialStyles = this.specialStyles;
+        if (specialStyles.has("width")) {
+          const wrapWidth = specialStyles.get("width");
+          if (wrapWidth > 0) this.wrapText(wrapWidth);
+          else this._elementInner.innerHTML = this.cleansedText;
+        }
       }
+
+      if (isInDebugMode) this.updateDebugBox();
 
       this.setPosition(...this.position);
     }
@@ -452,26 +482,6 @@
         if (optData) thread[THREAD_KEY] = optData;
       }
     );
-  }
-
-  function generateDebugFilters() {
-    // SVG texts have no box border visual, so we have to fake it with filters
-    const outlineFilters = [
-      ["borderR", "#ff0000"],
-      ["borderG", "#00ff00"],
-      ["borderB", "#0000ff"]
-    ];
-    
-    let filters = "<defs>";
-    for (const filter of outlineFilters) {
-      filters += `<filter id="${filter[0]}">`;
-      filters += `<feFlood x="-50%" y="0" width="100%" height="100%" flood-color="${filter[1]}" flood-opacity="1" result="flood"></feFlood>`;
-			filters += `<feMorphology in="flood" operator="erode" radius="2" result="line"></feMorphology>`;
-			filters += `<feComposite in="flood" in2="line" operator="out" result="border"></feComposite>`;
-			filters += `<feMerge><feMergeNode in="border"></feMergeNode>`;
-			filters += `<feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>`;
-    }
-    return filters + "</defs>";
   }
 
   function uint8ToBase64(uint8) {
@@ -586,6 +596,15 @@
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: TRANSLATIONS.id },
               ALIGNMENT: { type: Scratch.ArgumentType.STRING, menu: "ALIGNMENTS" }
+            },
+          },
+          {
+            opcode: "setVertAlign",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set vertical alignment of [ID] to [ALIGNMENT]"),
+            arguments: {
+              ID: { type: Scratch.ArgumentType.STRING, defaultValue: TRANSLATIONS.id },
+              ALIGNMENT: { type: Scratch.ArgumentType.STRING, menu: "ALIGNMENTS_Y" }
             },
           },
           {
@@ -865,6 +884,14 @@
               { text: Scratch.translate("center"), value: "middle" }
             ]
           },
+          ALIGNMENTS_Y: {
+            acceptReporters: true,
+            items: [
+              { text: Scratch.translate("top"), value: "top" },
+              { text: Scratch.translate("bottom"), value: "bottom" },
+              { text: Scratch.translate("center"), value: "center" }
+            ]
+          },
           LINE_TYPE: {
             acceptReporters: true,
             items: [
@@ -975,7 +1002,7 @@
       } else {
         textObj = textObjects[id];
         textObj.setText(text);
-        textObj.updateElement(false);
+        textObj.updateElement(false, true);
       }
     }
 
@@ -990,7 +1017,7 @@
       } else {
         textObj = textObjects[id];
         textObj.setText(textObj.rawText + "\n" + text);
-        textObj.updateElement(false);
+        textObj.updateElement(false, true);
       }
     }
 
@@ -1085,6 +1112,14 @@
       if (textObj) {
         textObj.setAttribute("text-anchor", Cast.toString(args.ALIGNMENT));
         textObj.updateElement(true);
+      }
+    }
+
+    setVertAlign(args) {
+      const textObj = textObjects[Cast.toString(args.ID)];
+      if (textObj) {
+        textObj.setAttribute("vert-align", Cast.toString(args.ALIGNMENT), true);
+        textObj.setPosition(...textObj.position);
       }
     }
 
@@ -1291,17 +1326,15 @@
     }
 
     setTextPosition(args) {
-	  const id = Cast.toString(args.ID);
+      const id = Cast.toString(args.ID);
       const textObj = textObjects[id];
       if (textObj) {
-		textObj.setPosition(
+        textObj.setPosition(
           Cast.toNumber(args.x), Cast.toNumber(args.y)
-      	);
-	  } else {
-		presetPositions[id] = [
-		  Cast.toNumber(args.x), Cast.toNumber(args.y)
-		];
-	  }
+        );
+      } else {
+        presetPositions[id] = [Cast.toNumber(args.x), Cast.toNumber(args.y)];
+      }
     }
 
     textPosition(args) {
@@ -1355,6 +1388,8 @@
         textObj.specialStyles.delete("effects");
         textObj._elementInner.removeAttribute("transform");
         textObj._elementInner.removeAttribute("filter");
+
+        if (isInDebugMode) textObj.updateDebugBox();
       }
     }
 
@@ -1363,12 +1398,7 @@
       if (args.TOGGLE === "on") {
         if (xyMap) return;
         for (const textObj of Object.values(textObjects)) {
-          const alignment = textObj._elementInner.getAttribute("text-anchor");
-          textObj.oldFilter = textObj._elementInner.getAttribute("filter");
-          textObj._elementInner.setAttribute(
-            "filter",
-            `url(#border${alignment === "middle" ? "G" : alignment === "end" ? "B" : "R"})`
-          );
+          textObj.updateDebugBox();
         }
 
         xyMap = document.createElement("img");
@@ -1381,8 +1411,7 @@
       } else {
         if (xyMap) xyMap.remove();
         for (const textObj of Object.values(textObjects)) {
-          textObj._elementInner.setAttribute("filter", textObj.oldFilter);
-          delete textObj.oldFilter;
+          textObj._debugBox.setAttribute("stroke", "none");
         }
         isInDebugMode = false;
       }
