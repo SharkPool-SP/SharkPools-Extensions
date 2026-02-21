@@ -345,7 +345,7 @@
     updateDebugBox() {
       const bounds = this._elementInner.getBBox();
       const alignment = this._elementInner.getAttribute("text-anchor");
-      const stroke = alignment === "middle" ? "00ff00" : alignment === "end" ? "0000ff" : "ff0000";
+      const stroke = alignment === "start" ? "ff0000" : alignment === "end" ? "0000ff" : "00ff00";
       this._debugBox.setAttribute("stroke", "#" + stroke);
       this._debugBox.setAttribute("width", bounds.width);
       this._debugBox.setAttribute("height", bounds.height);
@@ -353,10 +353,8 @@
       this._debugBox.setAttribute("y", bounds.y);
 
       const transform = this._elementInner.getAttribute("transform");
-      if (transform) {
-        this._debugBox.setAttribute("transform", transform);
-        this._debugBox.setAttribute("transform-origin", this._elementInner.getAttribute("transform-origin"));
-      }
+      this._debugBox.setAttribute("transform", transform ?? "");
+      this._debugBox.setAttribute("transform-origin", this._elementInner.getAttribute("transform-origin"));
     }
 
     updateElement(isStyleUpdate, isSpecialUpdate) {
