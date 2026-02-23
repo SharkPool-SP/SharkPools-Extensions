@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     allTags = [
       "Expand", // keyword
       ...galleryData["extension-tags"], // real tags
-      "Deprecated", "Search" // keyword
+      "Newest", "Oldest", "Deprecated", "Search" // keywords
     ];
 
     const params = new URLSearchParams(location.search);
