@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.1
+// Version V.1.1.11
 
 (function (Scratch) {
   "use strict";
@@ -272,40 +272,51 @@
     wrapText(maxWidth) {
       if (!this._elementInner) return;
       const lineSpace = this.specialStyles.get("line-height") ?? 1;
-      const tspans = Array.from(this._elementInner.children);
-      const newTspans = [];
 
-      let line = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-      line.setAttribute("x", "0");
+      this._elementInner.innerHTML = this.cleansedText;
+      const originalSpans = Array.from(this._elementInner.children);
+      this._elementInner.innerHTML = "";
+
+      const newLine = () => {
+        line = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+        line.setAttribute("x", "0");
+        line.setAttribute("dy", `${lineSpace}em`);
+        this._elementInner.appendChild(line);
+      };
+
+      let line;
+      newLine();
       line.setAttribute("dy", ".85em");
 
-      this._elementInner.innerHTML = "";
-      this._elementInner.appendChild(line);
-      for (const span of tspans) {
+      for (const span of originalSpans) {
         for (const node of span.childNodes) {
           if (node.nodeType !== Node.TEXT_NODE) {
             line.appendChild(node.cloneNode(true));
             continue;
           }
 
-          const words = node.textContent.split(/(\s+)/);
-          for (const word of words) {
-            if (word === "") continue;
-            const testNode = document.createTextNode(word);
-            line.appendChild(testNode);
+          const lines = node.textContent.split("\n");
+          for (let i = 0; i < lines.length; i++) {
+            const segment = lines[i];
+            const words = segment.split(/(\s+)/);
+            for (const word of words) {
+              if (!word) continue;
 
-            if (line.getComputedTextLength() > maxWidth) {
-              line.removeChild(testNode);
-
-              line = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-              line.setAttribute("x", "0");
-              line.setAttribute("dy", `${lineSpace}em`);
+              const testNode = document.createTextNode(word);
               line.appendChild(testNode);
 
-              this._elementInner.appendChild(line);
+              if (line.getComputedTextLength() > maxWidth) {
+                line.removeChild(testNode);
+                newLine();
+                line.appendChild(testNode);
+              }
             }
+
+            if (i < lines.length - 1) newLine();
           }
         }
+
+        if (originalSpans.length > 1) newLine();
       }
     }
 
