@@ -17,7 +17,10 @@ const cleanupTagSelects = (tagList) => {
 };
 
 const addTag = (name) => {
-  if (currentTags[0] === "all" || currentTags[0] === "search") {
+  if (
+    (currentTags[0] === "all" || currentTags[0] === "search") &&
+    (name !== "Newest" && name !== "Oldest")
+  ) {
     keyTags["all"]?.removeAttribute("selected");
     keyTags["search"]?.removeAttribute("selected");
     currentTags = [name];
