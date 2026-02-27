@@ -168,8 +168,8 @@ function removeText() {
 
 /* Internal Utils */
 function filterExts(json, searchQ) {
-  const sortNewest = currentTags.includes("newest");
-  const sortOldest = currentTags.includes("oldest");
+  const sortNewest = currentTags.includes("Newest");
+  const sortOldest = currentTags.includes("Oldest");
   
   let entries = Object.entries(json);
   let newEntries = [];
