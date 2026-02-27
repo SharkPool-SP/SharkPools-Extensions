@@ -110,9 +110,11 @@ class Tag extends HTMLElement {
           if (this.hasAttribute("selected")) {
             if (name === "Newest") {
               removeTag("Oldest");
+              this.setAttribute("selected", "");
               keyTags["oldest"]?.removeAttribute("selected");
             } else if (name === "Oldest") {
               removeTag("Newest");
+              this.setAttribute("selected", "");
               keyTags["newest"]?.removeAttribute("selected");
             }
 
