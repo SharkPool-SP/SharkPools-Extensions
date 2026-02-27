@@ -223,18 +223,10 @@ function filterExts(json, searchQ) {
   // order by newest/oldest if requested
   if (sortNewest || sortOldest) {
     newEntries = newEntries.sort((e1, e2) => {
-      const date1 = e1[1].date.split(": ")[1].replaceAll("/", "");
-      const date2 = e2[1].date.split(": ")[1].replaceAll("/", "");
+      const date1 = new Date(e1[1].date.split(": ")[1]);
+      const date2 = new Date(e2[1].date.split(": ")[1]);
 
-      if (sortNewest) {
-        return
-          (date2.split("").reduce((acc, a) => acc + a.charCodeAt(), 0)) -
-          (date1.split("").reduce((acc, a) => acc + a.charCodeAt(), 0));
-      } else {
-        return
-          (date1.split("").reduce((acc, a) => acc + a.charCodeAt(), 0)) -
-          (date2.split("").reduce((acc, a) => acc + a.charCodeAt(), 0));
-      }
+      return sortNewest ? date2 - date1 : date1 - date2;
     });
   }
 
