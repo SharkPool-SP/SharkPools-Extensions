@@ -168,6 +168,9 @@ function removeText() {
 
 /* Internal Utils */
 function filterExts(json, searchQ) {
+  const sortNewest = currentTags.includes("newest");
+  const sortOldest = currentTags.includes("oldest");
+  
   let entries = Object.entries(json);
   let newEntries = [];
 
@@ -177,21 +180,21 @@ function filterExts(json, searchQ) {
   }
 
   if (currentTags[0] === "search") {
-    if (!searchQ) searchQ = "";
-    searchQ = searchQ.toLowerCase();
-
     // order by query
+    searchQ = (searchQ ?? "").toLowerCase();
     entries.forEach((entry) => {
       const extData = entry[1];
       if (
         entry[0].toLowerCase().includes(searchQ.replaceAll(" ", "-")) ||
-        extData.desc.toLowerCase().includes(searchQ) || extData.creator.includes(searchQ)
+        extData.desc.toLowerCase().includes(searchQ) ||
+        extData.creator.includes(searchQ)
       ) newEntries.push(entry);
     });
+
     if (newEntries.length === 0) return { "override404": {} };
     else return Object.fromEntries(newEntries);
   } else if (currentTags[0] === "all") {
-    // order by newest => updated => old
+    // order tagged extensions by newest => updated => none
     entries.forEach((entry) => {
       if (entry[1].status === "update") newEntries.unshift(entry);
     });
@@ -201,6 +204,8 @@ function filterExts(json, searchQ) {
     });
   } else {
     // order by tag
+    const boundCap = currentTags.length - sortNewest - sortOldest;
+
     entries.forEach((entry) => {
       const extTags = entry[1].tags;
       let bound = 0;
@@ -210,7 +215,26 @@ function filterExts(json, searchQ) {
           (entry[1].isDeprecated && tag === "Deprecated")
         ) bound++;
       }
-      if (bound === currentTags.length) newEntries.push(entry);
+
+      if (bound === boundCap) newEntries.push(entry);
+    });
+  }
+
+  // order by newest/oldest if requested
+  if (sortNewest || sortOldest) {
+    newEntries = newEntries.sort((e1, e2) => {
+      const date1 = e1[1].date.split(": ")[1].replaceAll("/", "");
+      const date2 = e2[1].date.split(": ")[1].replaceAll("/", "");
+
+      if (sortNewest) {
+        return
+          (date2.split("").reduce((acc, a) => acc + a.charCodeAt(), 0)) -
+          (date1.split("").reduce((acc, a) => acc + a.charCodeAt(), 0));
+      } else {
+        return
+          (date1.split("").reduce((acc, a) => acc + a.charCodeAt(), 0)) -
+          (date2.split("").reduce((acc, a) => acc + a.charCodeAt(), 0));
+      }
     });
   }
 
@@ -263,7 +287,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     allTags = [
       "Expand", // keyword
       ...galleryData["extension-tags"], // real tags
-      "Deprecated", "Search" // keyword
+      "Newest", "Oldest", "Deprecated", "Search" // keywords
     ];
 
     const params = new URLSearchParams(location.search);

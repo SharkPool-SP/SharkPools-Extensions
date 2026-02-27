@@ -6,6 +6,8 @@ const STATIC_TAGS = [
   "Online", "Search"
 ];
 
+const keyTags = {};
+
 const cleanupTagSelects = (tagList) => {
   const children = Array.from(tagList);
   for (let i = 1; i < children.length; i++) {
@@ -14,9 +16,28 @@ const cleanupTagSelects = (tagList) => {
   }
 };
 
+const addTag = (name) => {
+  if (currentTags[0] === "all" || currentTags[0] === "search") {
+    keyTags["all"]?.removeAttribute("selected");
+    keyTags["search"]?.removeAttribute("selected");
+    currentTags = [name];
+  } else {
+    currentTags.push(name);
+  }
+};
+
+const removeTag = (name) => {
+  const index = currentTags.indexOf(name);
+
+  if (index > -1) currentTags.splice(index, 1);
+  if (currentTags.length === 0) keyTags["all"]?.click();
+};
+
 class Tag extends HTMLElement {
   connectedCallback() {
     const name = this.id;
+    keyTags[name.toLowerCase()] = this;
+
     let innerVisual = `<span>${name}</span>`;
     if (name === "Expand") {
       innerVisual = `<img draggable="false" width="20" src="pages/main-assets/expand-arrow.svg">`;
@@ -25,6 +46,7 @@ class Tag extends HTMLElement {
     }
 
     if (!STATIC_TAGS.includes(name)) this.toggleAttribute("hideOnContract");
+
     this.innerHTML = `
       <style>
         ext-tag {
@@ -67,32 +89,37 @@ class Tag extends HTMLElement {
     this.addEventListener("click", (e) => {
       const children = this.parentNode.children;
       this.toggleAttribute("selected");
-  
-      if (name === "Expand") {
-        this.parentNode.toggleAttribute("expanded");
-        this.toggleAttribute("expanded");
-      } else if (name === "Search") {
-        cleanupTagSelects(children);
-        this.toggleAttribute("selected");
-        currentTags = ["search"];
-        openSearch();
-      } else if (name === "All") {
-        cleanupTagSelects(children);
-        currentTags = ["all"];
-        this.setAttribute("selected", "");
-      } else {
-        if (this.hasAttribute("selected")) {
-          if (currentTags[0] === "all" || currentTags[0] === "search") {
-            children[1].removeAttribute("selected");
-            children[children.length - 1].removeAttribute("selected");
-            currentTags = [name];
+
+      switch (name) {
+        case "Expand":
+          this.parentNode.toggleAttribute("expanded");
+          this.toggleAttribute("expanded");
+          break;
+        case "Search":
+          cleanupTagSelects(children);
+          this.toggleAttribute("selected");
+          currentTags = ["search"];
+          openSearch();
+          break;
+        case "All":
+          cleanupTagSelects(children);
+          currentTags = ["all"];
+          this.setAttribute("selected", "");
+          break;
+        default: {
+          if (this.hasAttribute("selected")) {
+            if (name === "Newest") {
+              removeTag("Oldest");
+              keyTags["oldest"]?.removeAttribute("selected");
+            } else if (name === "Oldest") {
+              removeTag("Newest");
+              keyTags["newest"]?.removeAttribute("selected");
+            }
+
+            addTag(name);
           } else {
-            currentTags.push(name);
+            removeTag(name);
           }
-        } else {
-          const index = currentTags.indexOf(name);
-          if (index > -1) currentTags.splice(index, 1);
-          if (currentTags.length === 0) children[1].click();
         }
       }
 
@@ -105,6 +132,7 @@ class Tag extends HTMLElement {
         displayExts(filterExts(galleryData.extensions), false);
         updateStorage();
       }
+
       e.stopImmediatePropagation();
     });
   }
