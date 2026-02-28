@@ -609,6 +609,7 @@
       const clientX = Math.round((((runtime.stageWidth / 2) + x) / runtime.stageWidth) * render._gl.canvas.clientWidth);
       const clientY = Math.round((((runtime.stageHeight / 2) - y) / runtime.stageHeight) * render._gl.canvas.clientHeight);
       const rgb = render.extractColor(clientX, clientY, 20).color;
+ 
       return `#${rgb.r.toString(16).padStart(2, "0")}${rgb.g.toString(16).padStart(2, "0")}${rgb.b.toString(16).padStart(2, "0")}`;
     }
 
@@ -661,7 +662,9 @@
 
         const button = box.querySelector(`button[class*="question-submit-button"]`);
         button.addEventListener("click", () => {
-          setTimeout(() => { sensingCore._answer = askInput.value }, 10);
+          setTimeout(() => {
+            sensingCore._answer = askInput.value;
+          }, 10);
         });
       } else {
         if (input.value) askInput.value = input.value;
@@ -764,6 +767,7 @@
       runtime.ext_scratch3_motion.pointTowards({ TOWARDS: args.SPRITE2 }, { ...util, target, ioQuery: util.ioQuery });
       const newDir = target.direction;
       target.setDirection(oldDir);
+
       return Math.round(newDir) === Math.round(oldDir);
     }
 
@@ -777,6 +781,7 @@
       const target1 = this.getTarget(args.SPRITE1, util, true, true);
       const target2 = runtime.getSpriteTargetByName(args.SPRITE2);
       if (!target1 || !target2) return false;
+
       if (args.TYPE === "parent") {
         if (target1 === "_mouse_") return target2.isTouchingObject("_mouse_");
         else return render.isTouchingDrawables(target1.drawableID, [target2.drawableID]);
@@ -807,6 +812,7 @@
           }
         }
       }
+
       return false;
     }
 
@@ -830,6 +836,7 @@
           if (render.isTouchingDrawables(thisSprite.drawableID, [target.drawableID])) list.push(name);
         }
       }
+
       return JSON.stringify(list);
     }
 
@@ -843,6 +850,7 @@
         if (!nameTarget) return "[]";
         pos = [nameTarget.x, nameTarget.y, nameTarget.id];
       }
+
       const targets = runtime.targets;
       for (let i = 1; i < targets.length; i++) {
         const target = targets[i];
@@ -850,10 +858,13 @@
         const dy = pos[1] - target.y;
         if (Math.sqrt((dx * dx) + (dy * dy)) <= circ && target.id !== pos[2]) list.push(`${target.getName()}${target.isOriginal ? "" : " (Clone)"}`);
       }
+
       return JSON.stringify(list);
     }
 
-    colorAtPosition(args) { return this.colorAtPos(Cast.toNumber(args.x), Cast.toNumber(args.y)) }
+    colorAtPosition(args) {
+      return this.colorAtPos(Cast.toNumber(args.x), Cast.toNumber(args.y));
+    }
     objTouchingColor(args, util) {
       if (args.SPRITE === "_mouse_") return this.colorAtPos(util.ioQuery("mouse", "getScratchX"), util.ioQuery("mouse", "getScratchY"));
       else {
@@ -863,6 +874,7 @@
         target.setVisible(false);
         const hex = this.colorAtPos(target.x, target.y);
         target.setVisible(wasVisible);
+ 
         return hex;
       }
     }
@@ -892,7 +904,7 @@
     }
 
     askReporter(args, util) {
-      return this.advancedAsk(args, util).then(() => { return sensingCore.getAnswer() });
+      return this.advancedAsk(args, util).then(() => sensingCore.getAnswer());
     }
 
     stopAsking() {
@@ -905,7 +917,9 @@
       return box ? box.value : "";
     }
 
-    isAsking() { return Cast.toBoolean(document.querySelector(`div[class*="question-input"]`)) }
+    isAsking() {
+      return Cast.toBoolean(document.querySelector(`div[class*="question-input"]`));
+    }
 
     setAskDisplay(args) {
       askBoxSettings.width = Cast.toNumber(args.width);
