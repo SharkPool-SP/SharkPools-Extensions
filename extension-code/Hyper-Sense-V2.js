@@ -959,12 +959,17 @@
       if (loudnessCache.length >= 30) loudnessCache = [];
       loudnessCache.push(sensingCore.getLoudness());
       let sum = loudnessCache.reduce((accumulator, curValue) => accumulator + curValue, 0);
+
       return Math.round((sum / loudnessCache.length) * 100) / 100;
     }
 
-    getSpriteName(_, util) { return util.target.getName() }
+    getSpriteName(_, util) {
+      return util.target.getName();
+    }
 
-    allLayers() { return render._drawList.length - 1 }
+    allLayers() {
+      return render._drawList.length - 1;
+    }
 
     boolean(args) {
       return Cast.toBoolean(args.STRING) && args.STRING !== undefined;
@@ -973,10 +978,16 @@
     getAllString(args) {
       let regex;
       switch (args.TEXT) {
-        case "numbers": {regex = /[^0-9]/g; break }
-        case "special characters": {regex = /[A-Za-z0-9]/g; break }
-        default: regex = /[^A-Za-z]/g;
+        case "numbers":
+          regex = /[^0-9]/g;
+          break;
+        case "special":
+          regex = /[A-Za-z0-9]/g;
+          break;
+        default:
+          regex = /[^A-Za-z]/g;
       }
+
       return Cast.toString(args.STRING).replace(regex, "");
     }
   }
