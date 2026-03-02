@@ -1,10 +1,12 @@
 // Name: YouTube Operations
 // ID: SPyoutubeoperations
 // Description: Fetch and play Youtube videos and statistics in your project.
-// By: SharkPool and Nekl300
+// By: SharkPool
+// Contributed By: Nekl300
+// Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.7.23
+// Version V.1.8.0
 
 (function (Scratch) {
   "use strict";
@@ -12,40 +14,75 @@
 
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDUuMzU4IiBoZWlnaHQ9IjE0NS4zNTgiIHZpZXdCb3g9IjAgMCAxNDUuMzU4IDE0NS4zNTgiPjxwYXRoIGQ9Ik0wIDcyLjY3OUMwIDMyLjUzOSAzMi41NCAwIDcyLjY3OSAwczcyLjY3OSAzMi41NCA3Mi42NzkgNzIuNjc5LTMyLjU0IDcyLjY3OS03Mi42NzkgNzIuNjc5UzAgMTEyLjgxOCAwIDcyLjY3OSIgZmlsbD0iI2MzMDAwMCIvPjxwYXRoIGQ9Ik05LjA0MSA3Mi42NzljMC0zNS4xNDYgMjguNDkyLTYzLjYzOCA2My42MzgtNjMuNjM4czYzLjYzOCAyOC40OTIgNjMuNjM4IDYzLjYzOC0yOC40OTIgNjMuNjM4LTYzLjYzOCA2My42MzhTOS4wNDEgMTA3LjgyNSA5LjA0MSA3Mi42NzkiIGZpbGw9InJlZCIvPjxwYXRoIGQ9Ik05OS40MTQgNzYuNjQxYy0xMC41ODYgNS44Ni0zMC4xIDE2LjY1OS0zNi4yODcgMjAuMDgzLTMuNjk1IDIuMDQ1LTcuOTEyIDEuMDM5LTcuOTEyLTMuOTEzdi0zOS4zN2MwLTQuMTg1IDMuNTI0LTcuMDU1IDYuNzctNS4yNThsMzcuNDI5IDIwLjcxNWM0LjIwNiAyLjMyOCA0LjIgNS40MTkgMCA3Ljc0MyIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==";
+
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMy4yMDYiIGhlaWdodD0iMjUuMTk2IiB2aWV3Qm94PSIwIDAgMzMuMjA2IDI1LjE5NiI+PHBhdGggZD0iTTMzLjIwNiAxMi41OThzMCA1Ljg1OC0uNjk0IDguNjYzYy0uMzgzIDEuNTUtMS41MDcgMi43NjgtMi45MzYgMy4xODItMi41ODkuNzUzLTEyLjk3My43NTMtMTIuOTczLjc1M3MtMTAuMzg0IDAtMTIuOTczLS43NTNjLTEuNDMtLjQxNC0yLjU1My0xLjYzMi0yLjkzNi0zLjE4MkMwIDE4LjQ1NiAwIDEyLjU5OCAwIDEyLjU5OFMwIDYuNzQuNjk0IDMuOTM1QzEuMDc3IDIuMzg1IDIuMjAxIDEuMTY3IDMuNjMuNzUyIDYuMjE5IDAgMTYuNjAzIDAgMTYuNjAzIDBzMTAuMzg0IDAgMTIuOTczLjc1MmMxLjQzLjQxNSAyLjU1MyAxLjYzMyAyLjkzNiAzLjE4My42OTEgMi44MDUuNjk0IDguNjYzLjY5NCA4LjY2MyIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0zMC44ODggMTIuNTk4czAgNC42NS0uNTk3IDYuODc3YTMuNTggMy41OCAwIDAgMS0yLjUyNiAyLjUyNmMtMi4yMjcuNTk3LTExLjE2Mi41OTctMTEuMTYyLjU5N3MtOC45MzUgMC0xMS4xNjItLjU5N2EzLjU4IDMuNTggMCAwIDEtMi41MjYtMi41MjZjLS41OTctMi4yMjctLjU5Ny02Ljg3Ny0uNTk3LTYuODc3czAtNC42NS41OTctNi44NzdhMy41OCAzLjU4IDAgMCAxIDIuNTI2LTIuNTI2YzIuMjI3LS41OTcgMTEuMTYyLS41OTcgMTEuMTYyLS41OTdzOC45MzUgMCAxMS4xNjIuNTk3YTMuNTggMy41OCAwIDAgMSAyLjUyNiAyLjUyNmMuNTk1IDIuMjI3LjU5NyA2Ljg3Ny41OTcgNi44NzciIGZpbGw9InJlZCIvPjxwYXRoIGQ9Im0xMy43NDMgOC4zMTMgNy40MjMgNC4yODUtNy40MjMgNC4yODV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+";
 
+  const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
-  // For fetching, we use this to bypass cors
+  /*
+    To prevent server stress, we will cache fetch results.
+    I love this proxy and it has always been reliable and exceptional.
+  */
   const proxy = "https://api.codetabs.com/v1/proxy?quest=";
 
-  let player = "window", ytWindows = Object.create(null), iframe = null;
-  const createFrame = (src, args) => {
-    // Modified From iFrame (Turbowarp -- Garbomuffin)
-    iframe = document.createElement("iframe");
-    iframe.style.width = `${Scratch.Cast.toNumber(args.WIDTH)}px`;
-    iframe.style.height = `${Scratch.Cast.toNumber(args.HEIGHT)}px`;
-    iframe.style.border = "none";
-    iframe.style.position = "absolute";
-    iframe.style.transform =
-      `translate(${Scratch.Cast.toNumber(args.LEFT) - 50}%, ${Scratch.Cast.toNumber(args.TOP * -1) - 50}%)`;
-    iframe.setAttribute("allowtransparency", "true");
-    iframe.setAttribute("src", src);
-    iframe.style.pointerEvents = "auto";
-    vm.renderer.addOverlay(iframe, "scale-centered");
+  const YTCache_ = new Map();
+
+  const setCache = (id, value, omit_expiration) => {
+    // cache expires in 3 minutes
+    YTCache_.set(id, {
+      expires: omit_expiration ? NaN : Date.now() + (180 * 1000),
+      value: value
+    });
   };
-  const closeFrame = () => {
-    if (iframe) {
-      vm.renderer.removeOverlay(iframe);
-      iframe = null;
+
+  const getCache = (id) => {
+    if (YTCache_.has(id)) {
+      const item = YTCache_.get(id);
+      if (Date.now() > item.expires) {
+        YTCache_.delete(id);
+      }
+
+      return item.value;
+    }
+
+    return null;
+  };
+
+  let PLAYER_MODE = "canvas";
+  let canvasPlayer = null;
+  const ytWindows = [];
+
+  const createCanvasPlayer = (src, options) => {
+    canvasPlayer = document.createElement("iframe");
+    canvasPlayer.setAttribute("style", `width: ${options.width}px; height: ${options.height}px; position: absolute; transform: translate(${options.left}px, ${options.top}px); border: none; pointer-events: auto;`);
+    canvasPlayer.setAttribute("allowtransparency", "true");
+    canvasPlayer.setAttribute("src", src);
+
+    vm.renderer.addOverlay(canvasPlayer, "scale-centered");
+  };
+
+  const updateCanvasPlayer = (options) => {
+    if (!canvasPlayer) return;
+
+    canvasPlayer.style.width = options.width + "px";
+    canvasPlayer.style.height = options.height + "px";
+    canvasPlayer.style.transform = `translate(${options.left}px, ${options.top}px)`;
+  };
+
+  const closeCanvasPlayer = () => {
+    if (canvasPlayer) {
+      vm.renderer.removeOverlay(canvasPlayer);
+      canvasPlayer = null;
     }
   };
-  runtime.on("RUNTIME_DISPOSED", closeFrame);
-  runtime.on("PROJECT_STOP_ALL", closeFrame);
 
-  class SPyoutubeoperations {
+  runtime.on("RUNTIME_DISPOSED", closeCanvasPlayer);
+  runtime.on("PROJECT_STOP_ALL", closeCanvasPlayer);
+
+  class YTOperationsSP {
     getInfo() {
       return {
         id: "SPyoutubeoperations",
@@ -62,7 +99,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "extract video ID from [URL]",
             arguments: {
-              URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUJcmljayByb2xs" }
+              URL: { type: Scratch.ArgumentType.STRING, defaultValue: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }
             }
           },
           "---",
@@ -76,7 +113,8 @@
             }
           },
           {
-            opcode: "fetchtitle", //made with Nekl300
+            /* made by Nekl300 */
+            opcode: "fetchtitle",
             blockType: Scratch.BlockType.REPORTER,
             text: "get [STAT] of video [VIDEO_ID]",
             arguments: {
@@ -97,7 +135,7 @@
           {
             opcode: "getResults",
             blockType: Scratch.BlockType.REPORTER,
-            text: "get video results from search [QUERY]",
+            text: "search for videos with query [QUERY]",
             arguments: {
               QUERY: { type: Scratch.ArgumentType.STRING, defaultValue: "SharkPool" }
             }
@@ -124,7 +162,7 @@
           {
             opcode: "openYouTubeLinkInNewWindow",
             blockType: Scratch.BlockType.COMMAND,
-            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play from start",
+            text: "open video [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP]",
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" },
               WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 },
@@ -136,36 +174,44 @@
           {
             opcode: "openYouTubeLinkInNewWindowAtTime",
             blockType: Scratch.BlockType.COMMAND,
-            text: "open video window with ID: [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] and play video at [MINUTES]:[SECONDS]",
+            text: "open video [ID] with width: [WIDTH] height: [HEIGHT] x: [LEFT] y: [TOP] start from: [MINUTES]:[SECONDS]",
             arguments: {
               ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" },
               WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 480 },
               HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 360 },
               LEFT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               TOP: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              MINUTES: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              SECONDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+              MINUTES: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
+              SECONDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 30 }
             }
           },
           {
             opcode: "closeYouTubeWindow",
             blockType: Scratch.BlockType.COMMAND,
-            text: "close video window with ID: [VIDEO_ID]",
+            text: "close video [VIDEO_ID]",
             arguments: {
               VIDEO_ID: { type: Scratch.ArgumentType.STRING, defaultValue: "dQw4w9WgXcQ" }
             }
           }
         ],
         menus: {
-          DISPLAY: ["window", "canvas"],
+          DISPLAY: ["canvas", "window"],
           EXPORT_TYPES: ["mp4", "mp3"],
           STAT_OPTIONS: {
             acceptReporters: true,
-            items: ["like", "dislike", "view count", "rating", "date created"]
+            items: [
+              "like", "dislike",
+              "view", "rating"
+            ]
           },
           STAT_OPTION: {
             acceptReporters: true,
-            items: ["author", "title", "thumbnail", "length", "description"]
+            items: [
+              "title", "author", "author url",
+              "thumbnail", "release date",
+              "length", "raw length",
+              "description"
+            ]
           },
           USER_STUFF: {
             acceptReporters: true,
@@ -180,204 +226,304 @@
       };
     }
 
+    // Helper Funcs
+    async _fetch(url, cacheKey, type, omitProxy) {
+      const cached = getCache(cacheKey);
+      if (cached) return cached;
+
+      try {
+        if (await Scratch.canFetch(url)) {
+          // eslint-disable-next-line
+          if (!omitProxy) url = proxy + encodeURIComponent(url);
+          const response = await Scratch.fetch(url);
+          if (!response.ok) return null;
+
+          const value = await (response[type])();
+          if (cacheKey) setCache(cacheKey, value);
+          return value;
+        }
+
+        return null;
+      } catch(e) {
+        console.warn("YouTube Error: " + e);
+        return null;
+      }
+    }
+
+    // Block Funcs
     extractVideoID(args) {
-      const url = Scratch.Cast.toString(args.URL);
-      if (!url.includes("http")) return "Invalid Link";
+      const url = Cast.toString(args.URL);
+      if (!url.includes("http")) return "Invalid URL";
+
       const urlObj = new URL(url);
       const path = urlObj.pathname;
-      if (url.includes("?v=") || url.includes("&v=")) return urlObj.searchParams.get("v") || "Invalid Link";
-      else return path.slice(path.lastIndexOf("/") + 1, path.length) || "Invalid Link";
+      if (url.includes("?v=") || url.includes("&v=")) {
+        return urlObj.searchParams.get("v") || "Invalid URL";
+      } else {
+        return path.slice(path.lastIndexOf("/") + 1, path.length) || "Invalid URL";
+      }
     }
 
     async fetchStats(args) {
-      try {
-        const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${args.VIDEO_ID}`);
-        if (!response.ok) return "";
-        const jsonData = await response.json();
-        switch (args.STAT) {
-          case "like": return jsonData.likes;
-          case "dislike": return jsonData.dislikes;
-          case "view count": return jsonData.viewCount;
-          case "rating": return jsonData.rating;
-          case "date created": return jsonData.dateCreated;
-          default: return "";
-        }
-      } catch { return "Failed to Fetch" }
-    }
+      const id = Cast.toString(args.VIDEO_ID);
+      const attribute = Cast.toString(args.STAT);
+      const cacheKey = "count" + id;
+      const url = `https://returnyoutubedislikeapi.com/votes?videoId=${id}`;
 
-    async fetchDateCreated(videoId) {
-      try {
-        const response = await Scratch.fetch(`https://returnyoutubedislikeapi.com/video/${videoId}`);
-        if (response.ok) {
-          const jsonData = await response.json();
-          return jsonData.dateCreated;
-        }
-        return "";
-      } catch { return "Failed to Fetch" }
+      const jsonData = await this._fetch(url, cacheKey, "json", true);
+      if (!jsonData) return "";
+
+      switch (attribute) {
+        case "like": return jsonData.likes;
+        case "dislike": return jsonData.dislikes;
+        case "rating": return jsonData.rating;
+        case "view count": /* renamed item */
+        case "view": return jsonData.viewCount;
+        case "release date":
+        case "date created": return jsonData.dateCreated; /* moved to other block */
+        default: return "";
+      }
     }
 
     async fetchtitle(args) {
-      const stat = Scratch.Cast.toString(args.STAT).toLowerCase().replace(" ", "");
-      if (stat === "description" || stat === "length") return await this.fetchOthersVideo(args);
-      try {
-        const response = await Scratch.fetch(`https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${args.VIDEO_ID}&format=json`);
-        if (response.ok) {
-          const jsonData = await response.json();
-          if (stat == "author") return jsonData.author_url.slice(24);
-          else if (stat == "title") return jsonData.title; 
-          else return jsonData.thumbnail_url;
+      const attribute = Cast.toString(args.STAT);
+      if (attribute === "release date") return await this.fetchStats(args);
+      const isSpecialAtt = (
+        attribute === "description" ||
+        attribute === "length" || attribute === "raw length"
+      );
+
+      const id = Cast.toString(args.VIDEO_ID);
+      const cacheKey = "stat" + isSpecialAtt + id;
+      const url = isSpecialAtt ?
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${id}&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`
+        : `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
+
+      const data = await this._fetch(url, cacheKey, "json", true);
+      if (!data) return "";
+
+      let match;
+      switch (attribute) {
+        case "author": return data.author_name;
+        case "author url": return data.author_url;
+        case "title": return data.title; 
+        case "thumbnail": return data.thumbnail_url;
+        case "description":
+          if (!data.items) return "";
+          return data.items[0]?.snippet?.description ?? "";
+        case "raw length":
+        case "length": {
+          match = data.items[0]?.contentDetails?.duration;
+          if (!match) return -1;
+
+          const times = match.match(/(\d+)[HMS]/gi)?.map((t) => parseFloat(t));
+          if (!times) return -1;
+
+          let length = 0;
+          if (attribute === "length") {
+            length = "";
+            if (times.length < 3) length = "00:";
+            if (times.length < 2) length += "00:";
+            length += times.map((t) => t.toString().padStart(2, "0")).join(":");
+          } else {
+            if (times.length >= 1) length += times[times.length - 1];
+            if (times.length >= 2) length += times[times.length - 2] * 60;
+            if (times.length >= 3) length += times[times.length - 3] * 3600;
+          }
+
+          return length;
         }
-        return "";
-      } catch { return "Failed to Fetch" }
+        default:
+          return "";
+      }
     }
 
     async vid2MP4(args) {
-      const type = args.TYPE === "mp4" ? "getVideo" : "getAudio";
-      const url = `${proxy}https://youtubeapi.up.railway.app/${type}?videoId=${args.VIDEO_ID}&quality=480p`;
-      return url;
-    }
+      /* Thank you Clickertale2 */
+      const format = args.TYPE === "mp4" ? "480" : "mp3";
+      const cacheKey = format + args.VIDEO_ID;
+      const url = `https://dubs.io/wp-json/tools/v1/download-video?id=${args.VIDEO_ID}&format=${format}`;
 
+      const initData = await this._fetch(url, cacheKey, "json", true);
+      if (!initData || !initData.progressId) return "Failed to Fetch";
+
+      const statusURL = `https://dubs.io/wp-json/tools/v1/status-video?id=${initData.progressId}`;
+      let downloadData;
+
+      return new Promise((resolve) => {
+        let finished = false;
+        let attempts = 0;
+        const maxAttempts = 10; // 10 * 3s = 30 sec timeout
+
+        const interval = setInterval(async () => {
+          attempts++;
+          try {
+            const response = await Scratch.fetch(statusURL);
+            if (!response.ok) throw new Error("Bad status response");
+
+            const downloadData = await response.json();
+            if (downloadData.status === "Finished") {
+              finished = true;
+              clearInterval(interval);
+
+              setCache(cacheKey, downloadData, true);
+              resolve(downloadData.downloadUrl || "Failed to download video");
+            }
+          } catch {
+            clearInterval(interval);
+            resolve("Failed to download video");
+          }
+
+          if (!finished && attempts >= maxAttempts) {
+            clearInterval(interval);
+            resolve("Failed: Download timed out");
+          }
+        }, 3000);
+      });
+    }
+    
     async fetchUserThing(args) {
-      let url = Scratch.Cast.toString(args.URL);
-      if (url.split("/").slice(-1)[0].split("/").length > 3) {
-        url = url.substring(0, lastIndex) + url.substring(lastIndex + 1);
+      let id = Cast.toString(args.URL);
+
+      // handle if the user submitted a profile name or url
+      let url = id;
+      const ytUrl = "https://www.youtube.com/";
+      if (!id.startsWith("https://")) {
+        if (id.includes("@")) url = ytUrl + id;
+        else url = ytUrl + "channel/" + id;
       }
-      if (args.THING === "total view count" || args.THING === "joined date") url += "/about";
-      try {
-        const response = await Scratch.fetch(proxy + url);
-        if (response.ok) {
-          const text = await response.text();
-          let match, pattern;
-          switch (args.THING) {
-            case "profile":
-              pattern = /https:\/\/yt3\.googleusercontent\.com\/([a-zA-Z0-9_.+-=]+)/;
-              match = text.match(pattern);
-              return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
-            case "subscriber count":
-              pattern = /"metadataParts":\[\{"text":\{"content":"([^"]+)"/g;
-              match = [...text.matchAll(pattern)];
-              if (match && match[1]) {
-                let count = match[1][1];
-                count = count.split(/\s+/);
-                return count.length > 2 ? `${count[0]} ${count[1]}` : count[0];
-              }
-              return "";
-            case "video count":
-              pattern = /"metadataParts":\[\{"text":\{"content":"(\d+)[^"]*"\}\},\{"text":\{"content":"(\d+)[^"]*"/;
-              match = text.match(pattern);
-              return match && match[2] ? match[2] : "";
-            case "total view count":
-              pattern = /viewCountText":"([\d\s,]+)[^"]*","joinedDateText"/;
-              match = text.match(pattern);
-              return match && match[1] ? match[1] : "";
-            case "joined date":
-              pattern = /joinedDateText":{"content":"\w+\s([^"]*)/;
-              match = text.match(pattern);
-              return match && match[1] ? match[1].trim() : "";
-            case "name":
-              pattern = /<meta\s+property="og:title"\s+content="([^"]+)">/;
-              match = text.match(pattern);
-              return match && match[1] ? match[1] : "";
-            case "description":
-              pattern = /"description":"((?:[^"\\]|\\.)*)"/;
-              match = text.match(pattern);
-              return match && match[1] ? match[1].replace(/\\n/g, "\n") : "";
-            case "location":
-              pattern = /"country":\{"simpleText":"([^"]+)"\}/;
-              match = text.match(pattern);
-              return match && match[1] ? match[1] : "Not Available";
-            default: return "Invalid Selection";
-          }
-        }
-        return "";
-      } catch { return "Failed to Fetch" }
-    }
+      url += "/about";
 
-    async fetchOthersVideo(args) {
-      const url = encodeURIComponent(`https://www.youtube.com/watch?v=${args.VIDEO_ID}`);
-      try {
-        const response = await Scratch.fetch("https://corsproxy.io?url=" + url);
-        if (response.ok) {
-          const text = await response.text();
-          let pattern, match = "";
-          switch (args.STAT) {
-            case "description":
-              pattern = /attributedDescriptionBodyText":{"content":"((?:[^"\\]|\\.)*)"/;
-              match = text.match(pattern);
-              return match[1].replace(/\\n/g, "\n");
-            case "length":
-              pattern = /"approxDurationMs":"(\d+)"\s*,\s*"audioSampleRate"/;
-              match = text.match(pattern);
-              if (!match || !match[1]) return "";
+      const attribute = Cast.toString(args.THING);
 
-              const totalSecs = parseInt(match[1]) / 1000;
-              const hrs = Math.floor(totalSecs / 3600).toString().padStart(2, "0");
-              const secsLeft = totalSecs % 3600;
-              const mins = Math.floor(secsLeft / 60).toString().padStart(2, "0");
-              const secs = (secsLeft % 60).toString().padStart(2, "0");
-              return `${hrs}:${mins}:${secs}`;
-            default: return "Invalid Selection";
-          }
+      const text = await this._fetch(url, "profile" + id, "text");
+      if (!text) return "";
+
+      let match;
+      switch (attribute) {
+        case "profile": {
+          match = text.match(
+            /https:\/\/yt3\.googleusercontent\.com\/([a-zA-Z0-9_.+-=]+)/
+          );
+          return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
         }
-        return "";
-      } catch { return "Failed to Fetch" }
+        case "name": {
+          match = text.match(/<meta\s+property="og:title"\s+content="([^"]+)">/);
+          return match && match[1] ? match[1] : "";
+        }
+        case "description": {
+          match = text.match(/"description":"((?:[^"\\]|\\.)*)"/);
+          return match && match[1] ? match[1].replace(/\\n/g, "\n") : "";
+        }
+        case "subscriber count": {
+          match = [
+            ...text.matchAll(/"metadataParts":\[\{"text":\{"content":"([^"]+)"/g)
+          ];
+
+          if (match && match[1]) {
+            const count = match[1][1].split(/\s+/);
+            return count.length > 2 ? `${count[0]} ${count[1]}` : count[0];
+          }
+          return "";
+        }
+        case "video count": {
+          match = text.match(
+            /\},\{"text":\{"content":"(\d+)[^"]*","styleRuns":\[\{/
+          );
+          return match && match[1] ? match[1] : "";
+        }
+        case "total view count": {
+          match = text.match(/viewCountText":"([\d\s,]+)[^"]*","joinedDateText"/);
+          if (!match || !match[1]) return "";
+          else return match[1]
+            .replaceAll(" ", "")
+            .replace(",", "");
+        }
+        case "joined date": {
+          match = text.match(/joinedDateText":{"content":"\w+\s([^"]*)/);
+          return match && match[1] ? match[1].trim() : "";
+        }
+        case "location": {
+          match = text.match(/"country":\{"simpleText":"([^"]+)"\}/);
+          return match && match[1] ? match[1] : "Not Available";
+        }
+        default:
+          return "Invalid Selection";
+      }
     }
 
     async getResults(args) {
-      const query = encodeURIComponent(Scratch.Cast.toString(args.QUERY).replace(/ /g, "+"));
-      try {
-        const response = await Scratch.fetch(proxy + `https://www.youtube.com/results?search_query=${query}`);
-        if (response.ok) {
-          const text = await response.text();
-          const matchArray = text.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/g) || [];
-          return JSON.stringify(matchArray.map(match => match.slice(9)));
-        }
-        return "[]";
-      } catch { return "Failed to Fetch" }
+      const query = encodeURIComponent(Cast.toString(args.QUERY).replace(/ /g, "+"));
+
+      const text = await this._fetch(
+        `https://www.youtube.com/results?search_query=${query}`,
+        "query", "text"
+      );
+      if (!text) return "[]";
+
+      const matchArray = text.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/g) || [];
+      return JSON.stringify(matchArray.map(match => match.slice(9)));
     }
 
-    setPlayer(args) { player = args.TYPE }
+    setPlayer(args) {
+      PLAYER_MODE = args.TYPE;
+    }
 
     openYouTubeLinkInNewWindow(args) { this.openYouTubeLinkInNewWindowAtTime(args) }
-
     openYouTubeLinkInNewWindowAtTime(args) {
-      const minutes = Scratch.Cast.toNumber(args.MINUTES);
-      const seconds = Scratch.Cast.toNumber(args.SECONDS);
+      const id = Cast.toString(args.ID);
+      const minutes = Cast.toNumber(args.MINUTES);
+      const seconds = Cast.toNumber(args.SECONDS);
       const startTime = minutes * 60 + seconds;
-      let url = `https://www.yout-ube.com/watch?v=${args.ID}&t=${startTime}&fullscreen=yes`;
-      let params = `&width=${Math.max(100, Math.min(Scratch.Cast.toNumber(args.WIDTH), window.screen.width))}`;
-      params += `&height=${Math.max(100, Math.min(Scratch.Cast.toNumber(args.HEIGHT), window.screen.height))}`;
-      params += `&left=${Math.max(0, Math.min(Scratch.Cast.toNumber(args.LEFT), window.screen.width))}`;
-      params += `&top=${Math.max(0, Math.min(Scratch.Cast.toNumber(args.TOP), window.screen.height))}`;
-      url += params;
-      if (player === "window") {
-        const newWindow = window.open(url, "_blank", params.replaceAll("&", ","));
-        if (newWindow) {
-          ytWindows[args.ID] = newWindow;
-          const onWindLoad = () => {
-            newWindow.removeEventListener("load", onWindLoad);
-            newWindow.focus();
-          };
-          newWindow.addEventListener("load", onWindLoad);
+
+      const options = {
+        width: Math.max(100, Cast.toNumber(args.WIDTH)),
+        height: Math.max(100, Cast.toNumber(args.HEIGHT)),
+        left: Cast.toNumber(args.LEFT),
+        top: Cast.toNumber(args.TOP) * -1
+      };
+
+      options.left -= options.width / 2;
+      options.top -= options.height / 2;
+
+      const url = `https://www.yout-ube.com/watch?v=${id}&t=${startTime}&fullscreen=yes`;
+      if (PLAYER_MODE === "canvas") {
+        if (canvasPlayer?._ytVidId === id) updateCanvasPlayer(options);
+        else {
+          closeCanvasPlayer();
+          createCanvasPlayer(url, options);
+          canvasPlayer._ytVidId = id;
         }
       } else {
-        closeFrame();
-        createFrame(url, args);
+        options.left += window.screen.width / 2;
+        options.top += window.screen.height / 2;
+        const params = Object.entries(options)
+          .map((e) => e[0] + "=" + e[1])
+          .join(",");
+
+        const newWindow = window.open(url, "_blank", params);
+        if (newWindow) {
+          ytWindows.push([id, newWindow]);
+          newWindow.focus();
+        }
       }
     }
 
     closeYouTubeWindow(args) {
-      const id = args.VIDEO_ID;
-      if (player === "canvas") closeFrame();
+      const id = Cast.toString(args.VIDEO_ID);
+      if (PLAYER_MODE === "canvas") closeCanvasPlayer();
       else {
-        const selectWindow = ytWindows[id];
-        if (selectWindow) {
-          selectWindow.close();
-          delete ytWindows[id];
+        for (let i = ytWindows.length - 1; i >= 0; i--) {
+          const item = ytWindows[i];
+          if (item[1].closed) ytWindows.splice(i, 1);
+          if (item[0] === id) {
+            item[1]?.close();
+            ytWindows.splice(i, 1);
+          }
         }
       }
     }
   }
   
-  Scratch.extensions.register(new SPyoutubeoperations());
+  Scratch.extensions.register(new YTOperationsSP());
 })(Scratch);
