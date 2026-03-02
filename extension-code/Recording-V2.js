@@ -1,10 +1,10 @@
 // Name: Recording V2
 // ID: SPrecording2
-// Description: Record your voice while you run your projects!
+// Description: Record audio from the user's microphone.
 // By: SharkPool
 // License: MIT
 
-// Version 1.0.0
+// Version 1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -138,8 +138,8 @@
     _getTargets() {
       const spriteNames = [];
       const targets = runtime.targets;
-      for (let index = 0; index < targets.length; index++) {
-        const target = targets[index];
+      for (let i = 0; i < targets.length; i++) {
+        const target = targets[i];
         if (target.isOriginal) spriteNames.push(target.getName());
       }
       return spriteNames.length > 0 ? spriteNames : [""];
@@ -200,16 +200,18 @@
     }
 
     // Block Funcs
-    recordingSet(args) {
-      Scratch.canRecordAudio().then((canRecord) => {
-        if (canRecord) {
-          if (args.MODE === "stop") this.stopRecording();
-          else if (args.MODE === "start") this.startRecording();
+    async recordingSet(args, util) {
+      if (util.stackFrame.microphoneExecuted) return;
 
-          // redraw to Allow Time to Setup Mic/Save Recording Data/etc
-          runtime.requestRedraw();
-        }
-      });
+      const canRecord = await Scratch.canRecordAudio();
+      if (canRecord) {
+        if (args.MODE === "stop") this.stopRecording();
+        else if (args.MODE === "start") this.startRecording();
+
+        // delay a frame to handle start/stop delay
+        util.stackFrame.microphoneExecuted = true;
+        util.yield();
+      }
     }
 
     async recordForX(args, util) {
@@ -277,11 +279,12 @@
         const asset = new storage.Asset(
           storage.AssetType.Sound,
           null,
-          storage.DataFormat.MP3,
+          storage.DataFormat.WAV,
           new Uint8Array(arrayBuffer),
           true
         );
-        vm.addSound(
+
+        await vm.addSound(
           {
             md5: `${asset.assetId}.${asset.dataFormat}`,
             asset: asset,
