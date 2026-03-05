@@ -14,7 +14,7 @@
       "url": "YouTube-Operations.js",
       "banner": "YouTube-Operations.svg",
       "tags": ["Utility", "Sound", "Online"],
-      "date": "Last Updated: 03/2/2026"
+      "date": "Last Updated: 03/02/2026"
     },
     "Scratch-Utilities": {
       "desc": "Blocks for fetching Scratch statistics and assets, inspired by NexusKitten's S-Grab",
@@ -545,7 +545,7 @@
       "url": "JSON-Array.js",
       "banner": "JSON-Array.svg",
       "tags": ["Utility", "Data Management", "Math", "Category Expansion"],
-      "date": "Last Updated: 12/10/2025"
+      "date": "Last Updated: 03/04/2026"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
