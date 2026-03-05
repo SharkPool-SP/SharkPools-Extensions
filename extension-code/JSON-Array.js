@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.1.22
+// Version V.1.1.3
 
 (function (Scratch) {
   "use strict";
@@ -21,7 +21,7 @@
   const runtime = vm.runtime;
   const isPM = Scratch.extensions.isPenguinMod;
 
-  const defaults = {
+  const DEFAULT_ARGS = {
     "obj": `{"key": "value"}`,
     "arr1": `["a", "b", "c"]`,
     "arr2": `["a", "b", "b", "a"]`,
@@ -29,8 +29,18 @@
   };
 
   /* extension utilities */
-  const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
   let extClass;
+
+  const genArgument = (type, value) => {
+    return {
+      type: Scratch.ArgumentType.STRING,
+      exemptFromNormalization: true,
+      shape: type === "arr" ? Scratch.BlockShape.SQUARE : "SPjson_objShape",
+      defaultValue: value
+    }
+  };
+
+  const hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
   const circularReplacer = () => {
     const stack = new Set();
@@ -44,15 +54,6 @@
       }
       return value;
     };
-  };
-
-  const genArgument = (type, value) => {
-    return {
-      type: Scratch.ArgumentType.STRING,
-      exemptFromNormalization: true,
-      shape: type === "arr" ? Scratch.BlockShape.SQUARE : "SPjson_objShape",
-      defaultValue: value
-    }
   };
 
   /* block shapes and blockly patches */
@@ -73,6 +74,7 @@
 
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
     if (isPM) {
+      // TODO remove me on penguinmod port
       // custom object shape (penguinmod)
       SB.BlockSvg.registerCustomShape("SPjson_objShape", {
         emptyInputPath: "m 0 0 z", emptyInputWidth: 0, // unused
@@ -115,13 +117,13 @@
     } else {
       // custom object shape (turbowarp)
       const jsonBlocks = [
-        "SPjson_objValid", "SPjson_jsonBuilder", "SPjson_getKey", "SPjson_getPath",
-        "SPjson_setKey", "SPjson_setPath", "SPjson_deleteKey", "SPjson_jsonSize",
-        "SPjson_keyIndex", "SPjson_getEntry", "SPjson_extractJson", "SPjson_mergeJson",
-        "SPjson_jsonMap", "SPjson_jsonMake", "objBlank"
+        "objValid", "jsonBuilder", "getKey", "getPath",
+        "setKey", "setPath", "deleteKey", "jsonSize",
+        "keyIndex", "getEntry", "extractJson", "mergeJson",
+        "jsonMap", "jsonMake", "objBlank"
       ];
       const igoreOuter = [
-        "SPjson_getKey", "SPjson_getPath", "SPjson_jsonSize", "SPjson_jsonValid", "SPjson_objValid", "SPjson_extractJson"
+        "getKey", "getPath", "jsonSize", "jsonValid", "objValid", "extractJson"
       ];
 
       const makeShape = (width) => {
@@ -137,8 +139,10 @@
       const ogRender = SB.BlockSvg.prototype.render;
       SB.BlockSvg.prototype.render = function (...args) {
         const data = ogRender.call(this, ...args);
-        if (this.svgPath_ && jsonBlocks.includes(this.type)) {
-          if (!igoreOuter.includes(this.type)) {
+
+        const type = this.type.split("_")[1] ?? "";
+        if (this.svgPath_ && jsonBlocks.includes(type)) {
+          if (!igoreOuter.includes(type)) {
             const fixedWidth = this.width - 35;
             this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
             this.svgPath_.setAttribute("d", makeShape(this.width));
@@ -157,29 +161,6 @@
       }
     }
   });
-
-  // Patch Saving Pure Objects to Variables
-  // We must stringify them for it to work
-  const og2JSON = vm.constructor.prototype.toJSON;
-  vm.constructor.prototype.toJSON = function (...args) {
-    for (const target of runtime.targets) {
-      const vars = Object.values(target.variables);
-      for (const data of vars) {
-        if (data.type !== "broadcast_msg") {
-          const val = data.value;
-          if (data.type === "list") {
-            // Iterate through each list item
-            for (var i = 0; i < val.length; i++) {
-              if (typeof val[i] === "object") val[i] = JSON.stringify(val[i], circularReplacer());
-            }
-          } else {
-            if (typeof val === "object") data.value = JSON.stringify(val, circularReplacer());
-          }
-        }
-      }
-    }
-    return og2JSON.call(this, ...args);
-  }
 
   // Modify Visual Report to stringify JSON
   const ogVisReport = runtime.visualReport;
@@ -202,31 +183,31 @@
   }
 
   // Compiler Patches
-  // TODO remove this when there is a dedicated API for refreshing block arguments
-  const generateParser = (type, alwaysTryParse) => {
-    if (!alwaysTryParse) return `(o) => o`;
+  // TODO compile all blocks & use block argument refreshing API (if exists)
+  const insertParser = (type) => {
+    if (!extClass.alwaysTryParse) return `(o) => o`;
 
-    const defaultV = type === undefined ? "o" : type === 0 ? "{}" : "[]";
+    const defaultValue = type === undefined ? "o" : type === 0 ? "{}" : "[]";
     let funcString = `(o) => {\n`;
 
+    // raw values
     if (type === undefined) funcString += `if (typeof o === "object") return o;\n`;
-    else if (type === 0) funcString += `if (!Array.isArray(o)) return o;\n`;
+    else if (type === 0) funcString += `if (typeof o === "object" && !Array.isArray(o)) return o;\n`;
     else funcString += `if (Array.isArray(o)) return o;\n`;
 
+    // parser
     funcString += `try {\n`;
     funcString += `const p = JSON.parse(o);\n`;
     if (type === undefined) funcString += `return p;\n`;
-    else if (type === 0) funcString += `return !Array.isArray(p) ? p : ${defaultV};\n`;
-    else funcString += `return Array.isArray(p) ? p : ${defaultV};\n`;
-    funcString += `} catch {return ${defaultV}}\n`;
+    else if (type === 0) funcString += `return !Array.isArray(p) ? p : ${defaultValue};\n`;
+    else funcString += `return Array.isArray(p) ? p : ${defaultValue};\n`;
+    funcString += `} catch {return ${defaultValue}}\n`;
+
     return funcString + "}";
   }
-  const generateCleanser = (type) => {
-    let funcString = `(() => {\n`;
-    funcString += `const t = typeof ${type};\n`;
-    funcString += `if (t === "undefined") return "";\n`;
-    funcString += `else return ${type};\n`;
-    return funcString + "})()";
+
+  const insertSafeReturn = (type) => {
+    return `(typeof ${type} === "undefined" ? "" : ${type})`;
   }
 
   function getCompiler() {
@@ -260,7 +241,7 @@
           const isArray = this.localVariables.next();
           const i = this.localVariables.next();
 
-          this.source += `let ${objVar} = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj})\n;`;
+          this.source += `let ${objVar} = (${insertParser(undefined)})(${safeObj})\n;`;
           this.source += `const ${isArray} = Array.isArray(${objVar})\n;`;
           this.source += `${objVar} = Object.entries(${objVar})\n;`;
           this.source += `for (let ${i} = 0; ${i} < ${objVar}.length; ${i}++) {\n;`;
@@ -313,16 +294,16 @@
     JSGenerator.prototype.descendInput = function (node) {
       if (node === undefined) return;
       switch (node.kind) {
-        case "SPjson.arrValA": return new exp.TypedInput(generateCleanser("SParrA"), exp.TYPE_UNKNOWN);
-        case "SPjson.arrValB": return new exp.TypedInput(generateCleanser("SParrB"), exp.TYPE_UNKNOWN);
-        case "SPjson.objKey": return new exp.TypedInput(generateCleanser("SPobjK"), exp.TYPE_UNKNOWN);
-        case "SPjson.objVal": return new exp.TypedInput(generateCleanser("SPobjV"), exp.TYPE_UNKNOWN);
+        case "SPjson.arrValA": return new exp.TypedInput(insertSafeReturn("SParrA"), exp.TYPE_UNKNOWN);
+        case "SPjson.arrValB": return new exp.TypedInput(insertSafeReturn("SParrB"), exp.TYPE_UNKNOWN);
+        case "SPjson.objKey": return new exp.TypedInput(insertSafeReturn("SPobjK"), exp.TYPE_UNKNOWN);
+        case "SPjson.objVal": return new exp.TypedInput(insertSafeReturn("SPobjV"), exp.TYPE_UNKNOWN);
         case "SPjson.jsonMap": {
           const safeObj = this.descendInput(node.obj).asUnknown();
           const safeValue = this.descendInput(node.value).asUnknown();
           return new exp.TypedInput(`(function() {
             function* generator() {
-              const p = (${generateParser(0, extClass.alwaysTryParse)})(${safeObj});
+              const p = (${insertParser(0)})(${safeObj});
               const e = Object.entries(p);
               for (const [SPobjK, SPobjV] of e) yield [SPobjK, ${safeValue}];
             }
@@ -361,7 +342,7 @@
               return ${ node.type === "some" ? "false" : "true" };
             }
 
-            const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+            const p = (${insertParser(1)})(${safeObj});
             const result = yield* runGenerator(
               genCheck(p, function* (SPobjV, SPobjK) {
                 SPobjK++;
@@ -376,7 +357,7 @@
           const safeValue = this.descendInput(node.value).asUnknown();
           return new exp.TypedInput(`(function() {
             function* generator() {
-              const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
+              const p = (${insertParser(1)})(${safeObj});
               let SPobjK = 1;
               for (const SPobjV of p) {
                 yield ${safeValue};
@@ -392,17 +373,17 @@
           // this is a rough check, but its the best we can do
           if (safeValue.includes(`yield* executeInCompat`) && !safeValue.includes(`"yield* executeInCompat`)) {
             return new exp.TypedInput(`(function() {
+              const stringer = (v) => (typeof v === "object" ? JSON.stringify(v) : v.toString());
               function* generator() {
-                const stringer = (v) => { return typeof v === "object" ? JSON.stringify(v) : v.toString() };
+                const p = (${insertParser(1)})(${safeObj});
                 const s = {};
-                const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
                 for (let i = 0; i < p.length; i++) {
                   for (let j = 0; j < p.length; j++) {
                     const SParrA = p[i], SParrB = p[j];
                     s[stringer(p[i]) + stringer(p[j])] = ${safeValue};
                   }
                 }
-                const sorted = [...p].sort((a, b) => { return s[stringer(a) + stringer(b)] ?? 0 });
+                const sorted = [...p].sort((a, b) => (s[stringer(a) + stringer(b)] ?? 0));
                 for (const item of sorted) yield item;
               }
               return [...generator()];
@@ -410,8 +391,8 @@
           } else {
             return new exp.TypedInput(`(function() {
               function* generator() {
-                const p = (${generateParser(1, extClass.alwaysTryParse)})(${safeObj});
-                const sorted = [...p].sort((SParrA, SParrB) => { return ${safeValue}; });
+                const p = (${insertParser(1)})(${safeObj});
+                const sorted = [...p].sort((SParrA, SParrB) => ${safeValue});
                 for (const item of sorted) yield item;
               }
               return [...generator()];
@@ -423,7 +404,7 @@
           const safeBool = this.descendInput(node.bool).asBoolean();
           return new exp.TypedInput(`(function() {
             function* generator() {
-              const p = (${generateParser(undefined, extClass.alwaysTryParse)})(${safeObj});
+              const p = (${insertParser(undefined)})(${safeObj});
               const e = Object.entries(p);
               const isO = !Array.isArray(p);
 
@@ -504,7 +485,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is object [OBJ] valid?",
             arguments: {
-              OBJ: genArgument("obj", defaults.obj),
+              OBJ: genArgument("obj", DEFAULT_ARGS.obj),
             },
           },
           {
@@ -526,7 +507,7 @@
             text: "get [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: genArgument("obj", defaults.obj)
+              OBJ: genArgument("obj", DEFAULT_ARGS.obj)
             },
           },
           {
@@ -571,7 +552,7 @@
             text: "delete [KEY] from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: genArgument("obj", defaults.obj)
+              OBJ: genArgument("obj", DEFAULT_ARGS.obj)
             },
           },
           {
@@ -579,7 +560,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "size of [OBJ]",
             arguments: {
-              OBJ: genArgument("obj", defaults.obj)
+              OBJ: genArgument("obj", DEFAULT_ARGS.obj)
             },
           },
           "---",
@@ -589,7 +570,7 @@
             text: "index of [KEY] in [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: genArgument("obj", defaults.obj)
+              OBJ: genArgument("obj", DEFAULT_ARGS.obj)
             },
           },
           {
@@ -600,7 +581,7 @@
             text: "get [KEY] entry from [OBJ]",
             arguments: {
               KEY: { type: Scratch.ArgumentType.STRING, defaultValue: "key" },
-              OBJ: genArgument("obj", defaults.obj)
+              OBJ: genArgument("obj", DEFAULT_ARGS.obj)
             },
           },
           {
@@ -621,7 +602,7 @@
             allowDropAnywhere: true,
             text: "merge [OBJ1] and [OBJ2]",
             arguments: {
-              OBJ1: genArgument("obj", defaults.obj),
+              OBJ1: genArgument("obj", DEFAULT_ARGS.obj),
               OBJ2: genArgument("obj", `{"key2":"value2"}`)
             },
           },
@@ -639,7 +620,7 @@
             blockType: Scratch.BlockType.XML,
             xml: `
               <block type="SPjson_jsonMap">
-                <value name="OBJ"><shadow type="text"><field name="TEXT">${defaults.obj}</field></shadow></value>
+                <value name="OBJ"><shadow type="text"><field name="TEXT">${DEFAULT_ARGS.obj}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
                 <value name="VALUE"><shadow type="text"><field name="TEXT">value-2</field></shadow></value>
@@ -659,7 +640,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is array [ARR] valid?",
             arguments: {
-              ARR: genArgument("arr", defaults.arr1)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1)
             },
           },
           {
@@ -717,7 +698,7 @@
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               IND2: { type: Scratch.ArgumentType.STRING, defaultValue: 3 },
-              ARR: genArgument("arr", defaults.arr1)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1)
             },
           },
           {
@@ -728,7 +709,7 @@
             text: "delete item [IND] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ARR: genArgument("arr", defaults.arr1)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1)
             },
           },
           {
@@ -739,7 +720,7 @@
             text: "item [IND] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ARR: genArgument("arr", defaults.arr1)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1)
             },
           },
           {
@@ -751,7 +732,7 @@
             arguments: {
               IND1: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
               IND2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 },
-              ARR: genArgument("arr", defaults.arr1)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1)
             },
           },
           {
@@ -759,7 +740,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "length of [ARR]",
             arguments: {
-              ARR: genArgument("arr", defaults.arr1)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1)
             },
           },
           "---",
@@ -768,7 +749,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "[ARR] contains [ITEM] ?",
             arguments: {
-              ARR: genArgument("arr", defaults.arr1),
+              ARR: genArgument("arr", DEFAULT_ARGS.arr1),
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "b", exemptFromNormalization: true }
             },
           },
@@ -778,7 +759,7 @@
             text: "# of times [ITEM] appears in [ARR]",
             arguments: {
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: genArgument("arr", defaults.arr2)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr2)
             },
           },
           {
@@ -797,7 +778,7 @@
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
-              ARR: genArgument("arr", defaults.arr2)
+              ARR: genArgument("arr", DEFAULT_ARGS.arr2)
             },
           },
           "---",
@@ -808,7 +789,7 @@
             allowDropAnywhere: true,
             text: "merge array [ARR1] and [ARR2]",
             arguments: {
-              ARR1: genArgument("arr", defaults.arr3),
+              ARR1: genArgument("arr", DEFAULT_ARGS.arr3),
               ARR2: genArgument("arr", `["c", "d"]`)
             },
           },
@@ -819,7 +800,7 @@
             allowDropAnywhere: true,
             text: "repeat array [ARR] [NUM] times",
             arguments: {
-              ARR: genArgument("arr", defaults.arr3),
+              ARR: genArgument("arr", DEFAULT_ARGS.arr3),
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 3 }
             },
           },
@@ -830,7 +811,7 @@
             allowDropAnywhere: true,
             text: "fill array [ARR] to length [NUM]",
             arguments: {
-              ARR: genArgument("arr", defaults.arr3),
+              ARR: genArgument("arr", DEFAULT_ARGS.arr3),
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             },
           },
@@ -901,12 +882,12 @@
             xml: `
               <block type="SPjson_arrCheck">
                 <field name="TYPE">every</field>
-                <value name="ARR"><shadow type="text"><field name="TEXT">${defaults.arr1}</field></shadow></value>
+                <value name="ARR"><shadow type="text"><field name="TEXT">${DEFAULT_ARGS.arr1}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
               </block>
               <block type="SPjson_arrMap">
-                <value name="ARR"><shadow type="text"><field name="TEXT">${defaults.arr1}</field></shadow></value>
+                <value name="ARR"><shadow type="text"><field name="TEXT">${DEFAULT_ARGS.arr1}</field></shadow></value>
                 <value name="IND"><shadow type="SPjson_objKey"></shadow></value>
                 <value name="VAL"><shadow type="SPjson_objValue"></shadow></value>
                 <value name="VALUE"><shadow type="text"><field name="TEXT">d</field></shadow></value>
@@ -924,7 +905,7 @@
             blockType: Scratch.BlockType.BOOLEAN,
             text: "is JSON [OBJ] valid?",
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: defaults.obj, exemptFromNormalization: true }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_ARGS.obj, exemptFromNormalization: true }
             },
           },
           {
@@ -933,7 +914,7 @@
             text: "parse [OBJ]",
             allowDropAnywhere: true,
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: defaults.obj, exemptFromNormalization: true }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_ARGS.obj, exemptFromNormalization: true }
             },
           },
           {
@@ -942,7 +923,7 @@
             text: "copy [OBJ] to new",
             allowDropAnywhere: true,
             arguments: {
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: defaults.obj, exemptFromNormalization: true }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_ARGS.obj, exemptFromNormalization: true }
             },
           },
           {
