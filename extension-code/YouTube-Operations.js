@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.0
+// Version V.1.8.01
 
 (function (Scratch) {
   "use strict";
@@ -250,6 +250,20 @@
       }
     }
 
+    async extractVideoURI(vidDwnloadData) {
+      if (!vidDwnloadData || !vidDwnloadData.downloadUrl) return "";
+
+      const fileBlob = await this._fetch(vidDwnloadData.downloadUrl, false, "blob");
+      if (!fileBlob) return "";
+
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = (e) => resolve("Failed:" + e);
+        reader.readAsDataURL(fileBlob);
+      });
+    }
+
     // Block Funcs
     extractVideoID(args) {
       const url = Cast.toString(args.URL);
@@ -344,6 +358,9 @@
       const cacheKey = format + args.VIDEO_ID;
       const url = `https://dubs.io/wp-json/tools/v1/download-video?id=${args.VIDEO_ID}&format=${format}`;
 
+      const cached = getCache(cacheKey);
+      if (cached) return cached;
+
       const initData = await this._fetch(url, cacheKey, "json", true);
       if (!initData || !initData.progressId) return "Failed to Fetch";
 
@@ -366,8 +383,16 @@
               finished = true;
               clearInterval(interval);
 
-              setCache(cacheKey, downloadData, true);
-              resolve(downloadData.downloadUrl || "Failed to download video");
+              if (downloadData && downloadData.downloadUrl) {
+                const dataURL = await this.extractVideoURI(downloadData);
+                if (dataURL) {
+                  setCache(cacheKey, dataURL, true);
+                  resolve(dataURL);
+                  return;
+                }
+              }
+
+              resolve("Failed to download video");
             }
           } catch {
             clearInterval(interval);
