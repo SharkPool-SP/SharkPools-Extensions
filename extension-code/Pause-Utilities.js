@@ -130,6 +130,11 @@
             }
           },
           {
+            opcode: "pauseOtherScripts",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "pause other scripts in myself"
+          },
+          {
             opcode: "unpauseSprite",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("unpause [SPRITE]"),
@@ -304,6 +309,25 @@
         args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       if (!target) return;
       this.searchThreads(target.id, 0);
+    }
+    pauseOtherScripts(args, util) {
+      const myThread = util.thread;
+      const myTarget = util.target;
+
+      runtime.threads.forEach(thread => {
+        if (thread.target.id === myTarget.id && thread !== myThread) {
+          const oldData = pausedSprites.get(thread.getId());
+          if (!oldData) {
+            pausedSprites.set(thread.getId(), {
+              thread,
+              ogStatus: thread.status,
+              newStatus: 5
+            });
+          }
+        }
+      });
+
+      runtime.sequencer.stepThreads();
     }
 
     pauseClones(args, util) { this.modifyClones(args, util, 1) }
