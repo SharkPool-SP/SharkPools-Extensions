@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.8.1
+// Version V.1.8.2
 
 (function (Scratch) {
   "use strict";
@@ -241,6 +241,7 @@
         const target = targets[i];
         if (target.isOriginal && !target.isStage) spriteNames.push(target.getName());
       }
+
       return spriteNames.length > 0 ? spriteNames : [""];
     }
 
@@ -295,7 +296,9 @@
       }
     }
 
-    isProjectPaused() { return runtime.ioDevices.clock._paused }
+    isProjectPaused() {
+      return runtime.ioDevices.clock._paused;
+    }
 
     pauseSprite(args, util) {
       const target = args.SPRITE === "_stage_" ? runtime.getTargetForStage() :
@@ -304,12 +307,14 @@
       this.searchThreads(target.id, 1);
       runtime.sequencer.stepThreads();
     }
+
     unpauseSprite(args, util) {
       const target = args.SPRITE === "_stage_" ? runtime.getTargetForStage() :
         args.SPRITE === "_myself_" ? util.target : runtime.getSpriteTargetByName(args.SPRITE);
       if (!target) return;
       this.searchThreads(target.id, 0);
     }
+
     pauseOtherScripts(args, util) {
       const myThread = util.thread;
       const myTarget = util.target;
@@ -330,8 +335,12 @@
       runtime.sequencer.stepThreads();
     }
 
-    pauseClones(args, util) { this.modifyClones(args, util, 1) }
-    unpauseClones(args, util) { this.modifyClones(args, util, 0) }
+    pauseClones(args, util) {
+      this.modifyClones(args, util, 1);
+    }
+    unpauseClones(args, util) {
+      this.modifyClones(args, util, 0);
+    }
 
     pauseLoop(args, util) {
       const scriptName = Cast.toString(args.NAME);
@@ -355,9 +364,13 @@
       for (let i = 0; i < allScripts.length; i++) this.breakLoop({ NAME: allScripts[i] });
     }
 
-    isPaused(args) { return Cast.toString(args.NAME) in storedScripts }
+    isPaused(args) {
+      return Cast.toString(args.NAME) in storedScripts;
+    }
 
-    allPausedScripts() { return JSON.stringify(Object.keys(storedScripts)) }
+    allPausedScripts() {
+      return JSON.stringify(Object.keys(storedScripts));
+    }
 
     /* Deprecation Marker */
     pauseLoopCon(args, util) { if (Cast.toBoolean(args.CON)) this.pauseLoop(args, util) }
