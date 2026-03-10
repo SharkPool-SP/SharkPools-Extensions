@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.01
+// Version V.1.8.02
 
 (function (Scratch) {
   "use strict";
@@ -376,7 +376,10 @@
           attempts++;
           try {
             const response = await Scratch.fetch(statusURL);
-            if (!response.ok) throw new Error("Bad status response");
+            if (!response.ok) {
+              YTCache_.delete(cacheKey);
+              throw new Error("Failed to fetch");
+            }
 
             const downloadData = await response.json();
             if (downloadData.status === "Finished") {
@@ -392,14 +395,17 @@
                 }
               }
 
+              YTCache_.delete(cacheKey);
               resolve("Failed to download video");
             }
           } catch {
+            YTCache_.delete(cacheKey);
             clearInterval(interval);
             resolve("Failed to download video");
           }
 
           if (!finished && attempts >= maxAttempts) {
+            YTCache_.delete(cacheKey);
             clearInterval(interval);
             resolve("Failed: Download timed out");
           }
@@ -462,6 +468,7 @@
           if (!match || !match[1]) return "";
           else return match[1]
             .replaceAll(" ", "")
+            .replaceAll(" ", "") // this is a different character
             .replace(",", "");
         }
         case "joined date": {
@@ -480,14 +487,22 @@
     async getResults(args) {
       const query = encodeURIComponent(Cast.toString(args.QUERY).replace(/ /g, "+"));
 
-      const text = await this._fetch(
-        `https://www.youtube.com/results?search_query=${query}`,
-        "query", "text"
+      const data = await this._fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+        "query", "json", true
       );
-      if (!text) return "[]";
+      if (!data) return "[]";
 
-      const matchArray = text.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/g) || [];
-      return JSON.stringify(matchArray.map(match => match.slice(9)));
+      const results = (data?.items ?? []).map((item) => {
+        return {
+          videoId: item.id.videoId,
+          videoTitle: item.snippet.title,
+          channelId: item.snippet.channelId,
+          channelName: item.snippet.channelTitle
+        };
+      });
+
+      return JSON.stringify(results);
     }
 
     setPlayer(args) {
