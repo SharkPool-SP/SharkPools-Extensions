@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.04
+// Version V.1.0.1
 
 (function (Scratch) {
   "use strict";
@@ -17,20 +17,213 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
-  let projectVars;
+  const VAR_KEY = "SPtempVars";
 
-  function initTempVariables() {
-    projectVars = Object.create(null);
-    const targets = runtime.targets;
-    for (let i = 0; i < targets.length; i++) {
-      const target = targets[i];
-      target.SPtempVars = Object.create(null);
-    }
+  function initTempVarObjects() {
+    runtime[VAR_KEY] = Object.create(null);
+    for (const target of runtime.targets) target[VAR_KEY] = Object.create(null);
   }
 
-  runtime.on("PROJECT_START", initTempVariables);
-  runtime.on("PROJECT_STOP_ALL", initTempVariables);
-  initTempVariables();
+  runtime.on("PROJECT_START", initTempVarObjects);
+  runtime.on("PROJECT_STOP_ALL", initTempVarObjects);
+  initTempVarObjects();
+
+  function getCompiler() {
+    if (vm.exports.i_will_not_ask_for_help_when_these_break) return vm.exports.i_will_not_ask_for_help_when_these_break();
+    else if (vm.exports.JSGenerator && vm.exports.IRGenerator?.exports) return {
+      ...vm.exports, ScriptTreeGenerator: vm.exports.IRGenerator.exports.ScriptTreeGenerator
+    };
+  }
+  const compiler = getCompiler();
+  if (compiler) {
+    const { JSGenerator, ScriptTreeGenerator } = compiler;
+    const exp = JSGenerator.exports === undefined ? JSGenerator.unstable_exports : JSGenerator.exports;
+
+    const _locationToObj = (name) => {
+      let src;
+      switch (name) {
+        case "global":
+          src = "runtime";
+          break;
+        case "sprite":
+          src = "target";
+          break;
+        default:
+          src = "thread";
+      }
+      return "(" + src + `["${VAR_KEY}"] ??= Object.create(null))`;
+    };
+
+    const _castAppendicFunc = `((v) => v === undefined ? 0 : typeof v === "string" ? ("" + v) : Number(v))`;
+
+    const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
+    ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
+      switch (block.opcode) {
+        case "SPtempVars_setVar":
+          return {
+            kind: "SPtempVars.setVar",
+            obj: _locationToObj(block.fields.TYPE.value),
+            name: this.descendInputOfBlock(block, "NAME"),
+            value: this.descendInputOfBlock(block, "VALUE")
+          };
+        case "SPtempVars_changeVar":
+          return {
+            kind: "SPtempVars.changeVar",
+            obj: _locationToObj(block.fields.TYPE.value),
+            name: this.descendInputOfBlock(block, "NAME"),
+            value: this.descendInputOfBlock(block, "VALUE")
+          };
+        case "SPtempVars_swapVar":
+          return {
+            kind: "SPtempVars.swapVar",
+            obj1: _locationToObj(block.fields.TYPE1.value),
+            name1: this.descendInputOfBlock(block, "NAME1"),
+            obj2: _locationToObj(block.fields.TYPE2.value),
+            name2: this.descendInputOfBlock(block, "NAME2")
+          };
+        case "SPtempVars_forVar":
+          this.analyzeLoop();
+          return {
+            kind: "SPtempVars.forVar",
+            obj: _locationToObj(block.fields.TYPE.value),
+            branch: this.descendSubstack(block, "SUBSTACK"),
+            name: this.descendInputOfBlock(block, "NAME"),
+            start: this.descendInputOfBlock(block, "START"),
+            end: this.descendInputOfBlock(block, "END"),
+            inc: this.descendInputOfBlock(block, "INC_VALUE")
+          };
+        case "SPtempVars_scopeVar":
+          this.analyzeLoop();
+          return {
+            kind: "SPtempVars.scopeVar",
+            obj: _locationToObj("thread"),
+            branch: this.descendSubstack(block, "SUBSTACK")
+          };
+        case "SPtempVars_deleteAllVar":
+          return {
+            kind: "SPtempVars.deleteVars",
+            obj: _locationToObj(block.fields.TYPE.value)
+          };
+        case "SPtempVars_deleteVar":
+          return {
+            kind: "SPtempVars.deleteVar",
+            obj: _locationToObj(block.fields.TYPE.value),
+            name: this.descendInputOfBlock(block, "NAME")
+          };
+        default: return _ogIRdescendStack.call(this, block);
+      }
+    }
+    const _ogJSdescendStack = JSGenerator.prototype.descendStackedBlock;
+    JSGenerator.prototype.descendStackedBlock = function (node) {
+      switch (node.kind) {
+        case "SPtempVars.setVar": {
+          const name = this.descendInput(node.name).asString();
+          const value = this.descendInput(node.value).asUnknown();
+          this.source += `${node.obj}[${name}] = ${value};\n`;
+          break;
+        }
+        case "SPtempVars.changeVar": {
+          const name = this.descendInput(node.name).asString();
+          const value = this.descendInput(node.value).asUnknown();
+          this.source += `${node.obj}[${name}] = ${_castAppendicFunc}(${node.obj}[${name}]) + ${value}\n;`;
+          break;
+        }
+        case "SPtempVars.swapVar": {
+          const name1 = this.descendInput(node.name1).asString();
+          const name2 = this.descendInput(node.name2).asString();
+          const tempVar = this.localVariables.next();
+
+          this.source += `const ${tempVar} = ${node.obj1}[${name1}];\n`;
+          this.source += `${node.obj1}[${name1}] = ${node.obj2}[${name2}];\n`;
+          this.source += `${node.obj2}[${name2}] = ${tempVar};\n`;
+          break;
+        }
+        case "SPtempVars.forVar": {
+          const name = this.descendInput(node.name).asString();
+          const start = this.descendInput(node.start).asNumber();
+          const end = this.descendInput(node.end).asNumber();
+          const inc = this.descendInput(node.inc).asNumber();
+
+          this.source += `${node.obj}[${name}] = ${start} - ${inc};\n`;
+          this.source += `while (${inc} < 0 ? ${end} < ${node.obj}[${name}] : ${end} > ${node.obj}[${name}]) {\n`;
+          this.source += `${node.obj}[${name}] += ${inc};\n`;
+          this.descendStack(node.branch, new exp.Frame(true));
+          this.yieldLoop();
+          this.source += `}\n`;
+          break;
+        }
+        case "SPtempVars.scopeVar": {
+          const preScopeVar = this.localVariables.next();
+          const postScopeVar = this.localVariables.next();
+
+          this.source += `const ${preScopeVar} = structuredClone(${node.obj});\n`;
+          this.descendStack(node.branch, new exp.Frame(false));
+          this.source += `const ${postScopeVar} = ${node.obj};\n`;
+          this.source += `Object.keys(${postScopeVar}).forEach((k) => {\n`;
+          this.source += `if (${preScopeVar}[k] === undefined) delete ${postScopeVar}[k];\n`;
+          this.source += `else ${postScopeVar}[k] = ${preScopeVar}[k];\n`;
+          this.source += `});\n`;
+          break;
+        }
+        case "SPtempVars.deleteVars": {
+          const objVar = this.localVariables.next();
+          this.source += `const ${objVar} = ${node.obj};\n`;
+          this.source += `Object.keys(${objVar}).forEach(n => delete ${objVar}[n]);\n`;
+          break;
+        }
+        case "SPtempVars.deleteVar": {
+          const name = this.descendInput(node.name).asString();
+          this.source += `delete ${node.obj}[${name}];\n`;
+          break;
+        }
+        default: return _ogJSdescendStack.call(this, node);
+      }
+    }
+
+    const _ogIRdescendInp = ScriptTreeGenerator.prototype.descendInput;
+    ScriptTreeGenerator.prototype.descendInput = function (block) {
+      switch (block.opcode) {
+        case "SPtempVars_varExists":
+          return {
+            kind: "SPtempVars.varExist",
+            obj: _locationToObj(block.fields.TYPE.value),
+            name: this.descendInputOfBlock(block, "NAME")
+          };
+        case "SPtempVars_getVar":
+          return {
+            kind: "SPtempVars.getVar",
+            obj: _locationToObj(block.fields.TYPE.value),
+            name: this.descendInputOfBlock(block, "NAME")
+          };
+        case "SPtempVars_allVars":
+          return {
+            kind: "SPtempVars.allVars",
+            obj: _locationToObj(block.fields.TYPE.value)
+          };
+        default: return _ogIRdescendInp.call(this, block);
+      }
+    };
+    const _ogJSdescendInp = JSGenerator.prototype.descendInput;
+    JSGenerator.prototype.descendInput = function (node) {
+      switch (node.kind) {
+        case "SPtempVars.varExist": {
+          const name = this.descendInput(node.name).asString();
+          return new exp.TypedInput(`(${node.obj}[${name}] !== undefined)`, exp.TYPE_BOOLEAN);
+        }
+        case "SPtempVars.getVar": {
+          const name = this.descendInput(node.name).asString();
+          return new exp.TypedInput(`(${node.obj}[${name}] ?? "")`, exp.TYPE_UNKNOWN);
+        }
+        case "SPtempVars.allVars": {
+          return new exp.TypedInput(
+            `JSON.stringify(Object.keys(${node.obj}))`,
+            exp.TYPE_STRING
+          );
+        }
+        default: return _ogJSdescendInp.call(this, node);
+      }
+    };
+  }
 
   class SPtempVars {
     getInfo() {
@@ -146,54 +339,46 @@
     }
 
     // Helper Funcs
-    initSprite(target) {
-      if (target.SPtempVars === undefined) target.SPtempVars = Object.create(null);
-      return target.SPtempVars;
+    _getOrInitObject(obj) {
+      if (obj[VAR_KEY] === undefined) obj[VAR_KEY] = Object.create(null);
+      return obj[VAR_KEY];
     }
 
-    initThread(thread) {
-      if (thread.SPtempVars === undefined) thread.SPtempVars = Object.create(null);
-      return thread.SPtempVars;
+    _objFromLocation(location, util) {
+      // no need to init global variables as its already done and centeralized
+      switch (location) {
+        case "global": return runtime[VAR_KEY];
+        case "sprite": return this._getOrInitObject(util.target);
+        default: return this._getOrInitObject(util.thread);
+      }
     }
 
-    castType(value) {
-      if (value === "") return "";
-      if (typeof value === "object") return value;
-      if (isNaN(Number(value))) return value;
+    _castAppendic(value) {
+      // used for the change variable block to support both
+      // string appending and number iterating
+      if (value === undefined) return 0;
+      if (typeof value === "string") return Cast.toString(value);
       return Cast.toNumber(value);
     }
 
     // Block Funcs
     setVar(args, util) {
       const name = Cast.toString(args.NAME);
-      if (args.TYPE === "global") projectVars[name] = args.VALUE;
-      else if (args.TYPE === "sprite") this.initSprite(util.target)[name] = args.VALUE;
-      else this.initThread(util.thread)[name] = args.VALUE;
+      this._objFromLocation(args.TYPE, util)[name] = args.VALUE;
     }
 
     changeVar(args, util) {
       const name = Cast.toString(args.NAME);
-      const value = this.castType(args.VALUE);
-      const defaultValue = value?.constructor?.name === "String" ? "" : 0;
-      if (args.TYPE === "global") {
-        projectVars[name] = this.castType(projectVars[name] ?? defaultValue) + value;
-      } else if (args.TYPE === "sprite") {
-        const obj = this.initSprite(util.target);
-        obj[name] = this.castType(obj[name] ?? defaultValue) + value;
-      } else {
-        const obj = this.initThread(util.thread);
-        obj[name] = this.castType(obj[name] ?? defaultValue) + value;
-      }
+      const obj = this._objFromLocation(args.TYPE, util);
+      obj[name] = this._castAppendic(obj[name]) + args.VALUE;
     }
 
     swapVar(args, util) {
       const name1 = Cast.toString(args.NAME1);
       const name2 = Cast.toString(args.NAME2);
 
-      const obj1 = args.TYPE1 === "global" ? projectVars :
-        args.TYPE1 === "sprite" ? this.initSprite(util.target) : this.initThread(util.thread);
-      const obj2 = args.TYPE2 === "global" ? projectVars :
-        args.TYPE2 === "sprite" ? this.initSprite(util.target) : this.initThread(util.thread);
+      const obj1 = this._objFromLocation(args.TYPE1, util);
+      const obj2 = this._objFromLocation(args.TYPE2, util);
 
       const tempVal = obj1[name1];
       obj1[name1] = obj2[name2];
@@ -201,74 +386,61 @@
     }
 
     forVar(args, util) {
-      const incrementVal = Cast.toNumber(args.INC_VALUE);
+      const incrValue = Cast.toNumber(args.INC_VALUE);
       if (util.stackFrame.index === undefined) {
         util.stackFrame.index = Cast.toNumber(args.START);
         util.stackFrame.endIndex = Cast.toNumber(args.END);
-        this.setVar({ ...args, VALUE: util.stackFrame.index - incrementVal }, util);
+        this.setVar({ ...args, VALUE: util.stackFrame.index - incrValue }, util);
       }
 
-      util.stackFrame.index = this.getVar(args, util) + incrementVal;
+      util.stackFrame.index = this.getVar(args, util) + incrValue;
       this.setVar({ ...args, VALUE: util.stackFrame.index }, util);
-      if (incrementVal < 0) {
-        util.startBranch(1, util.stackFrame.endIndex < util.stackFrame.index);
-      } else {
-        util.startBranch(1, util.stackFrame.endIndex > util.stackFrame.index);
-      }
+      const shouldCallback = incrValue < 0 ? 
+        util.stackFrame.endIndex < util.stackFrame.index :
+        util.stackFrame.endIndex > util.stackFrame.index;
+      util.startBranch(1, shouldCallback);
     }
 
     scopeVar(_, util) {
+      const curThreadVars = this._getOrInitObject(util.thread);
       if (util.stackFrame.initialized === undefined) {
         util.stackFrame.initialized = true;
-        util.stackFrame.oldVars = structuredClone(this.initThread(util.thread));
+        util.stackFrame.preScopeVars = structuredClone(curThreadVars);
         util.startBranch(1, true);
       } else {
         // remove variables from scope
-        const oldVars = util.stackFrame.oldVars;
-        const curVars = this.initThread(util.thread);
-        Object.keys(curVars).forEach((key) => {
-          if (oldVars[key] === undefined) delete curVars[key];
-        })
+        const preScopeVars = util.stackFrame.preScopeVars;
+        Object.keys(curThreadVars).forEach((key) => {
+          if (preScopeVars[key] === undefined) delete curThreadVars[key];
+          else curThreadVars[key] = preScopeVars[key];
+        });
       }
     }
 
     varExists(args, util) {
       const name = Cast.toString(args.NAME);
-      if (args.TYPE === "global") return projectVars[name] !== undefined;
-      else if (args.TYPE === "sprite") return this.initSprite(util.target)[name] !== undefined;
-      else return this.initThread(util.thread)[name] !== undefined;
+      return this._objFromLocation(args.TYPE, util)[name] !== undefined;
     }
 
     getVar(args, util) {
       const name = Cast.toString(args.NAME);
-      if (args.TYPE === "global") return projectVars[name] ?? "";
-      else if (args.TYPE === "sprite") return this.initSprite(util.target)[name] ?? "";
-      else return this.initThread(util.thread)[name] ?? "";
+      return this._objFromLocation(args.TYPE, util)[name] ?? "";
     }
 
     allVars(args, util) {
       return JSON.stringify(Object.keys(
-        args.TYPE === "global" ? projectVars :
-        args.TYPE === "sprite" ? this.initSprite(util.target) :
-        this.initThread(util.thread)
+        this._objFromLocation(args.TYPE, util)
       ));
     }
 
     deleteAllVar(args, util) {
-      if (args.TYPE === "global") {
-        projectVars = Object.create(null);
-        return;
-      }
-
-      let obj = args.TYPE === "sprite" ? this.initSprite(util.target) : this.initThread(util.thread);
-      Object.keys(obj).forEach(key => delete obj[key]);
+      const obj = this._objFromLocation(args.TYPE, util);
+      Object.keys(obj).forEach(name => delete obj[name]);
     }
 
     deleteVar(args, util) {
       const name = Cast.toString(args.NAME);
-      if (args.TYPE === "global") delete projectVars[name];
-      else if (args.TYPE === "sprite") delete this.initSprite(util.target)[name];
-      else delete this.initThread(util.thread)[name];
+      delete this._objFromLocation(args.TYPE, util)[name];
     }
   }
 
