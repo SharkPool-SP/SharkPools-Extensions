@@ -293,7 +293,7 @@
     }
 
     allLogs() {
-      return JSON.stringify(markedScripts.keys().toArray());
+      return JSON.stringify(Array.from(markedScripts.keys()));
     }
 
     indexLog(args) {
