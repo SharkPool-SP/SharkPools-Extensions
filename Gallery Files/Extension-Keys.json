@@ -539,13 +539,13 @@
       "tags": ["Utility", "Graphics", "Data Management"],
       "date": "Released: 08/29/2024"
     },
-    "JSON-Array": {
+    "Swift-JSON": {
       "desc": "Super Fast JSON and Array extension",
       "creator": "SharkPool",
       "url": "JSON-Array.js",
       "banner": "JSON-Array.svg",
       "tags": ["Utility", "Data Management", "Math", "Category Expansion"],
-      "date": "Last Updated: 03/04/2026"
+      "date": "Last Updated: 04/17/2026"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
