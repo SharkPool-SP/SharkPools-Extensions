@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function (Scratch) {
   "use strict";
@@ -543,7 +543,7 @@
           const path = this.descendInput(node.path).asUnknown();
           const val = this.descendInput(node.val).asUnknown();
           return new exp.TypedInput(
-            `((spO,p,i=spO) => (p.forEach((k,idx) => i = (idx === p.length - 1 ? i[k] = ${_safeCast(val)} : i[k] = i[k] ?? {})), spO))(${_useParser("O", obj)},${_useParser("A", path)})`,
+            `((spO,p,i=spO,safe=1)=>(p.forEach((k,idx)=>safe && (i = ${_preventACE("i")} || "", safe = !!i, safe && (i = idx===p.length-1 ? (i[k]=${_safeCast(val)}) : (i[k]=${_preventACE(`i[k]`)} || i[k] || {})))), safe ? spO : ""))(${_useParser("O", obj)},${_useParser("A", path)})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -1759,9 +1759,11 @@
       let objPath = obj;
       for (let i = 0; i < path.length; i++) {
         const key = Cast.toString(path[i]);
-
-        if (i === path.length - 1) objPath[key] = this.toSafe(args.VAL);
-        else objPath = objPath[key] ?? {};
+        if (i === path.length - 1) {
+          if (this.preventACE(objVal)) objPath[key] = this.toSafe(args.VAL);
+        } else {
+          objPath = objPath[key] ?? {};
+        }
       }
 
       return obj;
