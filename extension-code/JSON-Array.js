@@ -266,8 +266,10 @@
     };
 
     const _preventACE = (imminentObj) => {
-      if (extContext._preventUnsafeAce) return `(${imminentObj}?.constructor?.name ? ${imminentObj} : "")`;
-      else return imminentObj;
+      if (extContext._preventUnsafeAce) {
+        return `(prop = ${imminentObj}, typeof prop === "object" ? prop.customId || prop?.constructor?.name === "Object" ? prop : "" : prop)`;
+      }
+      return imminentObj;
     };
 
     const _useParser = (type, test) => {
@@ -497,7 +499,8 @@
         case "SPjson.obj": return new exp.TypedInput("{}", exp.TYPE_UNKNOWN);
         case "SPjson.isObj": {
           const obj = this.descendInput(node.obj).asUnknown();
-          return new exp.TypedInput(`((spO = ${_useParser("", obj)}), typeof spO === "object" && !Array.isArray(spO))`, exp.TYPE_BOOLEAN);
+          const vObj = this.localVariables.next();
+          return new exp.TypedInput(`((${vObj} = ${_useParser("", obj)}), typeof ${vObj} === "object" && !Array.isArray(${vObj}))`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.jsonBuild": {
           const key = this.descendInput(node.key).asString();
@@ -507,7 +510,12 @@
         case "SPjson.getKey": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
-          return new exp.TypedInput(`(spO = ${_useParser("O", obj)}, ${OBJ_UTIL}.hasOwn(spO, ${key}) ? ${_preventACE(`spO[${key}]`)} ?? "" : "")`, exp.TYPE_UNKNOWN);
+          const vObj = this.localVariables.next();
+          const vKey = this.localVariables.next();
+          return new exp.TypedInput(
+            `(${vObj} = ${_useParser("O", obj)}, ${vKey} = ${key}, ${OBJ_UTIL}.hasOwn(${vObj}, ${vKey}) ? ${_preventACE(`${vObj}[${vKey}]`)} ?? "" : "")`,
+            exp.TYPE_UNKNOWN
+          );
         }
         case "SPjson.getPath": {
           const obj = this.descendInput(node.obj).asUnknown();
@@ -524,8 +532,9 @@
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
           const val = this.descendInput(node.val).asUnknown();
+          const vObj = this.localVariables.next();
           return new exp.TypedInput(
-            `((spO = ${_useParser("O", obj)}),spO[${key}] = ${_safeCast(val)}, spO)`,
+            `((${vObj} = ${_useParser("O", obj)}),${vObj}[${key}] = ${_safeCast(val)}, ${vObj})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -541,7 +550,8 @@
         case "SPjson.deleteKey": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
-          return new exp.TypedInput(`((spO = ${_useParser("O", obj)}), delete spO[${key}], spO)`, exp.TYPE_UNKNOWN);
+          const vObj = this.localVariables.next();
+          return new exp.TypedInput(`((${vObj} = ${_useParser("O", obj)}), delete ${vObj}[${key}], ${vObj})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.objSize": {
           const obj = this.descendInput(node.obj).asUnknown();
@@ -550,7 +560,8 @@
         case "SPjson.getEntry": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
-          return new exp.TypedInput(`{[${key}]:${_useParser("O", obj)}[${key}]}`, exp.TYPE_UNKNOWN);
+          const vKey = this.localVariables.next();
+          return new exp.TypedInput(`(${vKey} = ${key}, {[${vKey}]:${_useParser("O", obj)}[${vKey}]})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.extractObj": {
           const obj = this.descendInput(node.obj).asUnknown();
@@ -566,7 +577,8 @@
           const txt = this.descendInput(node.txt).asString();
           const split = this.descendInput(node.split).asString();
           const delim = this.descendInput(node.delim).asString();
-          return new exp.TypedInput(`(spO = {}, ${txt}.split(${split}).forEach((i) => { const v = i.split(${delim}); spO[v[0]] = v[1] ?? ""; }), spO)`, exp.TYPE_UNKNOWN);
+          const vObj = this.localVariables.next();
+          return new exp.TypedInput(`(${vObj} = {}, ${txt}.split(${split}).forEach((i) => {const v = i.split(${delim}); ${vObj}[v[0]] = v[1] ?? "";}), ${vObj})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.jsonMap": {
           const obj = this.descendInput(node.obj).asUnknown();
@@ -592,14 +604,17 @@
         case "SPjson.arrAdd": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
-          return new exp.TypedInput(`((spA = ${_useParser("A", arr)}), spA.push(${_safeCast(item)}), spA)`, exp.TYPE_UNKNOWN);
+          const vArr = this.localVariables.next();
+          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}), ${vArr}.push(${_safeCast(item)}), ${vArr})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrInsert": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
+          const vArr = this.localVariables.next();
+          const vIt = this.localVariables.next();
           return new exp.TypedInput(
-            `((spA = ${_useParser("A", arr)}, it = ${_safeCast(item)}, i = Math.max(0, ${ind} - 1)), i ? spA.splice(i, 0, it) : spA.unshift(it), spA)`,
+            `((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}, i = Math.max(0, ${ind} - 1)), i ? ${vArr}.splice(i, 0, ${vIt}) : ${vArr}.unshift(${vIt}), ${vArr})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -607,9 +622,9 @@
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
-
+          const vArr = this.localVariables.next();
           return new exp.TypedInput(
-            `((spA = ${_useParser("A", arr)}, i = ${ind} - 1), (() => {while(spA.length <= i) spA.push("")})(), spA[i] = ${_safeCast(item)}, spA)`,
+            `((${vArr} = ${_useParser("A", arr)}, i = ${ind} - 1), (() => {while(${vArr}.length <= i) ${vArr}.push("")})(), ${vArr}[i] = ${_safeCast(item)}, ${vArr})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -617,15 +632,17 @@
           const arr = this.descendInput(node.arr).asUnknown();
           const ind1 = this.descendInput(node.ind1).asNumber();
           const ind2 = this.descendInput(node.ind2).asNumber();
+          const vArr = this.localVariables.next();
           return new exp.TypedInput(
-            `((spA = ${_useParser("A", arr)}, i1 = Math.max(0, ${ind1} - 1), i2 = Math.max(0, ${ind2} - 1), m = Math.max(i1, i2)), (() => {while(spA.length <= m) spA.push("")})(), t = spA[i1], spA[i1] = spA[i2], spA[i2] = t, spA)`,
+            `((${vArr} = ${_useParser("A", arr)}, i1 = Math.max(0, ${ind1} - 1), i2 = Math.max(0, ${ind2} - 1), m = Math.max(i1, i2)), (() => {while(${vArr}.length <= m) ${vArr}.push("")})(), t = ${vArr}[i1], ${vArr}[i1] = ${vArr}[i2], ${vArr}[i2] = t, ${vArr})`,
             exp.TYPE_UNKNOWN
           );
         }
         case "SPjson.arrDelete": {
           const arr = this.descendInput(node.arr).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
-          return new exp.TypedInput(`((spA = ${_useParser("A", arr)}), spA.splice(${ind} - 1, 1), spA)`, exp.TYPE_UNKNOWN);
+          const vArr = this.localVariables.next();
+          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}), ${vArr}.splice(${ind} - 1, 1), ${vArr})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrGet": {
           const arr = this.descendInput(node.arr).asUnknown();
@@ -650,22 +667,28 @@
         case "SPjson.arrMatches": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
-          return new exp.TypedInput(`((spA = ${_useParser("A", arr)}, it = ${_safeCast(item)}), spA.filter(i => i == it).length)`, exp.TYPE_NUMBER);
+          const vArr = this.localVariables.next();
+          const vIt = this.localVariables.next();
+          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => i == ${vIt}).length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.arrContainers": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
-          return new exp.TypedInput(`((spA = ${_useParser("A", arr)}, it = ${_safeCast(item)}), spA.filter(i => ("" + i).includes(it)).length)`, exp.TYPE_NUMBER);
+          const vArr = this.localVariables.next();
+          const vIt = this.localVariables.next();
+          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => ("" + i).includes(${vIt})).length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.itemIndex": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
           const ind = this.descendInput(node.ind).asNumber();
+          const vArr = this.localVariables.next();
+          const vIt = this.localVariables.next();
 
-          let script = "((i = -1, c = 0), spA.some((I, idx) => {";
-          script += `if (I == it && ++c == ${ind}) {i = idx + 1;return true;}})`;
+          let script = `((i = -1, c = 0), ${vArr}.some((I, idx) => {`;
+          script += `if (I == ${vIt} && ++c == ${ind}) {i = idx + 1;return true;}})`;
           script += ",i > -1 ? i : 0)";
-          return new exp.TypedInput(`((spA = ${_useParser("A", arr)}, it = ${_safeCast(item)}), ${script})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}), ${script})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrMerge": {
           const arr1 = this.descendInput(node.arr1).asUnknown();
@@ -680,7 +703,8 @@
         case "SPjson.arrFill": {
           const arr = this.descendInput(node.arr).asUnknown();
           const amt = this.descendInput(node.amt).asNumber();
-          return new exp.TypedInput(`((spA = ${_useParser("A", arr)}), spA.concat(Array(Math.max(0, ${amt} - spA.length)).fill("")))`, exp.TYPE_UNKNOWN);
+          const vArr = this.localVariables.next();
+          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}), ${vArr}.concat(Array(Math.max(0, ${amt} - ${vArr}.length)).fill("")))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrFlat": {
           const arr = this.descendInput(node.arr).asUnknown();
@@ -882,8 +906,9 @@
         }
         case "SPjson.parse": {
           const obj = this.descendInput(node.obj).asUnknown();
+          const vObj = this.localVariables.next();
           return new exp.TypedInput(
-            `(typeof ${obj} === "object" ? ${obj} : (() => {try { return JSON.parse(${obj}); } catch { return ""; }})())`,
+            `(${vObj} = ${obj}, typeof ${vObj} === "object" ? ${vObj} : (() => {try { return JSON.parse(${vObj}); } catch { return ""; }})())`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -931,7 +956,7 @@
             blockType: Scratch.BlockType.BUTTON,
             text: "Usage Warning"
           },
-          { blockType: Scratch.BlockType.LABEL, text: "JSON" },
+          { blockType: Scratch.BlockType.LABEL, text: "Objects" },
           {
             opcode: "objBlank",
             blockType: Scratch.BlockType.REPORTER,
@@ -1398,7 +1423,7 @@
             text: "[TYPE] [OBJ] by [IND] [VAL] [IMG] [BOOL]", hideFromPalette: true,
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CUST_ORDER", defaultValue: "filter" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"JSON":"or array"}`, exemptFromNormalization: true },
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"Object":"or array"}`, exemptFromNormalization: true },
               IND: { fillIn: "objKey" }, VAL: {fillIn: "objValue" }, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
             },
@@ -1408,7 +1433,7 @@
             text: "for each [IND] [VAL] in [OBJ]", hideFromPalette: true,
             arguments: {
               IND: { fillIn: "objKey" }, VAL: { fillIn: "objValue" },
-              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"JSON":"or array"}`, exemptFromNormalization: true }
+              OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"Object":"or array"}`, exemptFromNormalization: true }
             },
           }),
           "---",
@@ -1486,7 +1511,7 @@
           ARRAY_CHECK: ["every", "some"],
           VAR_TYPE: ["variable", "list"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values", "entries"] },
-          CONVERTS: { acceptReporters: true, items: ["string", "pretty string", "array", "JSON"] },
+          CONVERTS: { acceptReporters: true, items: ["string", "pretty string", "array", "object"] },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
           SETTINGS: { acceptReporters: true, items: this._settings },
           ORDERING: {
@@ -1571,8 +1596,11 @@
     tryParse(obj, optType) { /* dynamically defined */ }
 
     preventACE(imminentObj) {
-      if (this._preventUnsafeAce) return (imminentObj?.constructor?.name ? imminentObj : "");
-      else return imminentObj;
+      if (this._preventUnsafeAce) {
+        if (typeof imminentObj === "object") return imminentObj.customId || imminentObj?.constructor?.name === "Object"
+          ? imminentObj : "";
+      }
+      return imminentObj;
     }
 
     toArrInd(num) {
@@ -1685,7 +1713,7 @@
       alert("Disabling these Settings will improve performance, but may lead to unexpected bugs or issues. These are intentional, do not report them.");
     }
 
-    // JSON Funcs
+    // Object Funcs
     objBlank() {
       return {};
     }
@@ -2068,7 +2096,8 @@
     convert(args) {
       switch (args.TYPE) {
         case "array": return Object.entries(this.tryParse(args.OBJ));
-        case "JSON": return Object.assign({}, this.tryParse(args.OBJ));
+        case "JSON":
+        case "object": return Object.assign({}, this.tryParse(args.OBJ));
         case "pretty string": return JSON.stringify(resolveCircular(this.tryParse(args.OBJ)), "\t");
         default: return JSON.stringify(resolveCircular(this.tryParse(args.OBJ)));
       }
