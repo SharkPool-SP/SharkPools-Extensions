@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.01
+// Version V.1.2.02
 
 (function (Scratch) {
   "use strict";
@@ -90,7 +90,7 @@
 
         seen.add(val);
         for (let k in val) {
-          if (val.hasOwnProperty(k)) detect(val[k], val, k);
+          if (hasOwn(val, k)) detect(val[k], val, k);
         }
       }
     }
@@ -172,7 +172,7 @@
         "keyIndex", "getEntry", "extractJson", "mergeJson",
         "jsonMap", "jsonMake", "objBlank"
       ];
-      const igoreOuter = [
+      const ignoreOuter = [
         "getKey", "getPath", "jsonSize", "jsonValid", "objValid", "extractJson"
       ];
 
@@ -192,7 +192,7 @@
 
         const type = this.type.split("_")[1] ?? "";
         if (this.svgPath_ && jsonBlocks.includes(type)) {
-          if (!igoreOuter.includes(type)) {
+          if (!ignoreOuter.includes(type)) {
             const fixedWidth = this.width - 35;
             this.svgPath_.setAttribute("transform", `scale(1, ${this.height / 40})`);
             this.svgPath_.setAttribute("d", makeShape(this.width));
@@ -272,9 +272,14 @@
       return imminentObj;
     };
 
-    const _useParser = (type, test) => {
-      if (extContext.alwaysTryParse) return `${OBJ_UTIL}.parse${type}(${test})`;
-      else return test;
+    const _objParser = (test) => {
+      return extContext.alwaysTryParse ? OBJ_UTIL + ".parseO(" + test + ")" : test;
+    };
+    const _arrParser = (test) => {
+      return extContext.alwaysTryParse ? OBJ_UTIL + ".parseA(" + test + ")" : test;
+    };
+    const _anyParser = (test) => {
+      return extContext.alwaysTryParse ? OBJ_UTIL + ".parse(" + test + ")" : test;
     };
 
     const _safeCast = (value) => {
@@ -322,7 +327,7 @@
       utilObj += "parseO: " + insertParser(0);
       utilObj += "parseA: " + insertParser(1);
       utilObj += `safeCast: (function(val) {\nreturn typeof val === "object" ? val : (isNaN(val) || val === Infinity || val === -Infinity) ? "" + val : val;\n}),\n`;
-      utilObj += `hasOwn: (function(obj, prop) {\nreturn Object.prototype.hasOwnProperty.call(obj,prop)\n}),\n`;
+      utilObj += "hasOwn: (function(obj, prop) {\nreturn Object.prototype.hasOwnProperty.call(obj,prop)\n}),\n";
       utilObj += insertArrayFreqSort();
       utilObj += "};\n";
 
@@ -356,7 +361,7 @@
           const isArray = this.localVariables.next();
           const i = this.localVariables.next();
 
-          this.source += `let ${objVar} = ${_useParser("", obj)};\n`;
+          this.source += `let ${objVar} = ${_anyParser(obj)};\n`;
           this.source += `const ${isArray} = Array.isArray(${objVar});\n`;
           this.source += `${objVar} = Object.entries(${objVar})\n;`;
           this.source += `for (let ${i} = 0; ${i} < ${objVar}.length; ${i}++) {;\n`;
@@ -487,7 +492,6 @@
     };
     const _ogJSdescendInp = JSGenerator.prototype.descendInput;
     JSGenerator.prototype.descendInput = function (node) {
-      if (node === undefined) return;
       switch (node.kind) {
         case "SPjson.arrValA": return new exp.TypedInput(_safeReturn("SParrA"), exp.TYPE_UNKNOWN);
         case "SPjson.arrValB": return new exp.TypedInput(_safeReturn("SParrB"), exp.TYPE_UNKNOWN);
@@ -500,33 +504,37 @@
         case "SPjson.isObj": {
           const obj = this.descendInput(node.obj).asUnknown();
           const vObj = this.localVariables.next();
-          return new exp.TypedInput(`((${vObj} = ${_useParser("", obj)}), typeof ${vObj} === "object" && !Array.isArray(${vObj}))`, exp.TYPE_BOOLEAN);
+          return new exp.TypedInput(`((${vObj} = ${_anyParser(obj)}), typeof ${vObj} === "object" && !Array.isArray(${vObj}))`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.jsonBuild": {
           const key = this.descendInput(node.key).asString();
           const val = this.descendInput(node.val).asUnknown();
-          return new exp.TypedInput(`{[${key}]:${_safeCast(val)}}`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`{${key}:${_safeCast(val)}}`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.getKey": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
           const vObj = this.localVariables.next();
           const vKey = this.localVariables.next();
-          return new exp.TypedInput(
-            `(${vObj} = ${_useParser("O", obj)}, ${vKey} = ${key}, ${OBJ_UTIL}.hasOwn(${vObj}, ${vKey}) ? ${_preventACE(`${vObj}[${vKey}]`)} ?? "" : "")`,
-            exp.TYPE_UNKNOWN
-          );
+          if (extContext.alwaysValidateKeys) {
+            return new exp.TypedInput(
+              `(${vObj} = ${_objParser(obj)}, ${vKey} = ${key}, ${OBJ_UTIL}.hasOwn(${vObj}, ${vKey}) ? ${_preventACE(vObj + "[" + vKey + "]")} ?? "" : "")`,
+              exp.TYPE_UNKNOWN
+            );
+          }
+          return new exp.TypedInput("(" + _preventACE(_objParser(obj) + "[" + key + "]") + ")", exp.TYPE_UNKNOWN);
         }
         case "SPjson.getPath": {
           const obj = this.descendInput(node.obj).asUnknown();
           const path = this.descendInput(node.path).asUnknown();
-          return new exp.TypedInput(`((spO,p) => {
-            for (const k of p) {
-              if (${OBJ_UTIL}.hasOwn(spO, ("" + k))) spO = spO[("" + k)];
-              else return "";
-            }
-            return ${_preventACE("spO")} ?? "";
-          })(${_useParser("O", obj)},${_useParser("A", path)})`, exp.TYPE_UNKNOWN);
+          let script = "((spO,p) => {";
+          script += "for (const k of p) {";
+          if (extContext.alwaysValidateKeys) script += `if (${OBJ_UTIL}.hasOwn(spO, ("" + k))) spO = spO[("" + k)];`;
+          else script += `if (spO[("" + k)]) spO = spO[("" + k)];`;
+          script += "else return '';";
+          script += "}return " + _preventACE("spO") + " ?? '';";
+          script += `})(${_objParser(obj)},${_arrParser(path)})`;
+          return new exp.TypedInput(script, exp.TYPE_UNKNOWN);
         }
         case "SPjson.setKey": {
           const obj = this.descendInput(node.obj).asUnknown();
@@ -534,7 +542,7 @@
           const val = this.descendInput(node.val).asUnknown();
           const vObj = this.localVariables.next();
           return new exp.TypedInput(
-            `((${vObj} = ${_useParser("O", obj)}),${vObj}[${key}] = ${_safeCast(val)}, ${vObj})`,
+            `((${vObj} = ${_objParser(obj)}),${vObj}[${key}] = ${_safeCast(val)}, ${vObj})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -543,7 +551,7 @@
           const path = this.descendInput(node.path).asUnknown();
           const val = this.descendInput(node.val).asUnknown();
           return new exp.TypedInput(
-            `((spO,p,i=spO,safe=1)=>(p.forEach((k,idx)=>safe && (i = ${_preventACE("i")} || "", safe = !!i, safe && (i = idx===p.length-1 ? (i[k]=${_safeCast(val)}) : (i[k]=${_preventACE(`i[k]`)} || i[k] || {})))), safe ? spO : ""))(${_useParser("O", obj)},${_useParser("A", path)})`,
+            `((spO,p,i=spO,safe=1)=>(p.forEach((k,idx)=>safe && (i = ${_preventACE("i")} || "", safe = !!i, safe && (i = idx===p.length-1 ? (i[k]=${_safeCast(val)}) : (i[k]=${_preventACE(`i[k]`)} || i[k] || {})))), safe ? spO : ""))(${_objParser(obj)},${_arrParser(path)})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -551,27 +559,27 @@
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
           const vObj = this.localVariables.next();
-          return new exp.TypedInput(`((${vObj} = ${_useParser("O", obj)}), delete ${vObj}[${key}], ${vObj})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`((${vObj} = ${_objParser(obj)}), delete ${vObj}[${key}], ${vObj})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.objSize": {
           const obj = this.descendInput(node.obj).asUnknown();
-          return new exp.TypedInput(`Object.keys(${_useParser("O", obj)}).length`, exp.TYPE_NUMBER);
+          return new exp.TypedInput(`Object.keys(${_objParser(obj)}).length`, exp.TYPE_NUMBER);
         }
         case "SPjson.getEntry": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
           const vKey = this.localVariables.next();
-          return new exp.TypedInput(`(${vKey} = ${key}, {[${vKey}]:${_useParser("O", obj)}[${vKey}]})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${vKey} = ${key}, {[${vKey}]:${_objParser(obj)}[${vKey}]})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.extractObj": {
           const obj = this.descendInput(node.obj).asUnknown();
           const type = this.descendInput(node.type).asString();
-          return new exp.TypedInput(`Object[${type} === "keys"?"keys":${type} === "values"?"values":"entries"](${_useParser("O", obj)})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`Object[${type} === "keys"?"keys":${type} === "values"?"values":"entries"](${_objParser(obj)})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.mergeObj": {
           const obj1 = this.descendInput(node.obj1).asUnknown();
           const obj2 = this.descendInput(node.obj2).asUnknown();
-          return new exp.TypedInput(`{...${_useParser("O", obj1)}, ...${_useParser("O", obj2)}}`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`{...${_objParser(obj1)}, ...${_objParser(obj2)}}`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.jsonMake": {
           const txt = this.descendInput(node.txt).asString();
@@ -585,7 +593,7 @@
           const safeValue = this.descendInput(node.value).asUnknown();
           return new exp.TypedInput(`(function() {
             function* generator() {
-              const p = ${_useParser("O", obj)};
+              const p = ${_objParser(obj)};
               for (const [SPobjK, SPobjV] of Object.entries(p)) yield [SPobjK, ${safeValue}];
             }
             return Object.fromEntries(generator());
@@ -595,7 +603,7 @@
         case "SPjson.arr": return new exp.TypedInput("[]", exp.TYPE_UNKNOWN);
         case "SPjson.arrValid": {
           const arr = this.descendInput(node.arr).asUnknown();
-          return new exp.TypedInput(`(Array.isArray(${_useParser("", arr)}))`, exp.TYPE_BOOLEAN);
+          return new exp.TypedInput(`(Array.isArray(${_anyParser(arr)}))`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.arrBuilder": {
           const val = this.descendInput(node.val).asUnknown();
@@ -605,7 +613,7 @@
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
           const vArr = this.localVariables.next();
-          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}), ${vArr}.push(${_safeCast(item)}), ${vArr})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}), ${vArr}.push(${_safeCast(item)}), ${vArr})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrInsert": {
           const arr = this.descendInput(node.arr).asUnknown();
@@ -614,7 +622,7 @@
           const vArr = this.localVariables.next();
           const vIt = this.localVariables.next();
           return new exp.TypedInput(
-            `((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}, i = Math.max(0, ${ind} - 1)), i ? ${vArr}.splice(i, 0, ${vIt}) : ${vArr}.unshift(${vIt}), ${vArr})`,
+            `((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}, i = Math.max(0, ${ind} - 1)), i ? ${vArr}.splice(i, 0, ${vIt}) : ${vArr}.unshift(${vIt}), ${vArr})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -624,7 +632,7 @@
           const ind = this.descendInput(node.ind).asNumber();
           const vArr = this.localVariables.next();
           return new exp.TypedInput(
-            `((${vArr} = ${_useParser("A", arr)}, i = ${ind} - 1), (() => {while(${vArr}.length <= i) ${vArr}.push("")})(), ${vArr}[i] = ${_safeCast(item)}, ${vArr})`,
+            `((${vArr} = ${_arrParser(arr)}, i = ${ind} - 1), (() => {while(${vArr}.length <= i) ${vArr}.push("")})(), ${vArr}[i] = ${_safeCast(item)}, ${vArr})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -634,7 +642,7 @@
           const ind2 = this.descendInput(node.ind2).asNumber();
           const vArr = this.localVariables.next();
           return new exp.TypedInput(
-            `((${vArr} = ${_useParser("A", arr)}, i1 = Math.max(0, ${ind1} - 1), i2 = Math.max(0, ${ind2} - 1), m = Math.max(i1, i2)), (() => {while(${vArr}.length <= m) ${vArr}.push("")})(), t = ${vArr}[i1], ${vArr}[i1] = ${vArr}[i2], ${vArr}[i2] = t, ${vArr})`,
+            `((${vArr} = ${_arrParser(arr)}, i1 = Math.max(0, ${ind1} - 1), i2 = Math.max(0, ${ind2} - 1), m = Math.max(i1, i2)), (() => {while(${vArr}.length <= m) ${vArr}.push("")})(), t = ${vArr}[i1], ${vArr}[i1] = ${vArr}[i2], ${vArr}[i2] = t, ${vArr})`,
             exp.TYPE_UNKNOWN
           );
         }
@@ -642,41 +650,41 @@
           const arr = this.descendInput(node.arr).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
           const vArr = this.localVariables.next();
-          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}), ${vArr}.splice(${ind} - 1, 1), ${vArr})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}), ${vArr}.splice(${ind} - 1, 1), ${vArr})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrGet": {
           const arr = this.descendInput(node.arr).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
-          return new exp.TypedInput(`(${_useParser("A", arr)}[${ind} - 1])`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${_arrParser(arr)}[${ind} - 1])`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrSlice": {
           const arr = this.descendInput(node.arr).asUnknown();
           const start = this.descendInput(node.ind1).asNumber();
           const end = this.descendInput(node.ind2).asNumber();
-          return new exp.TypedInput(`(${_useParser("A", arr)}.slice(${start} - 1, ${end}))`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${_arrParser(arr)}.slice(${start} - 1, ${end}))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrLength": {
           const arr = this.descendInput(node.arr).asUnknown();
-          return new exp.TypedInput(`(${_useParser("A", arr)}.length)`, exp.TYPE_NUMBER);
+          return new exp.TypedInput(`(${_arrParser(arr)}.length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.itemExists": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
-          return new exp.TypedInput(`(${_useParser("A", arr)}.indexOf(${_safeCast(item)}) > -1)`, exp.TYPE_BOOLEAN);
+          return new exp.TypedInput(`(${_arrParser(arr)}.indexOf(${_safeCast(item)}) > -1)`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.arrMatches": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
           const vArr = this.localVariables.next();
           const vIt = this.localVariables.next();
-          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => i == ${vIt}).length)`, exp.TYPE_NUMBER);
+          return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => i == ${vIt}).length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.arrContainers": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
           const vArr = this.localVariables.next();
           const vIt = this.localVariables.next();
-          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => ("" + i).includes(${vIt})).length)`, exp.TYPE_NUMBER);
+          return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => ("" + i).includes(${vIt})).length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.itemIndex": {
           const arr = this.descendInput(node.arr).asUnknown();
@@ -688,28 +696,28 @@
           let script = `((i = -1, c = 0), ${vArr}.some((I, idx) => {`;
           script += `if (I == ${vIt} && ++c == ${ind}) {i = idx + 1;return true;}})`;
           script += ",i > -1 ? i : 0)";
-          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}, ${vIt} = ${_safeCast(item)}), ${script})`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}), ${script})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrMerge": {
           const arr1 = this.descendInput(node.arr1).asUnknown();
           const arr2 = this.descendInput(node.arr2).asUnknown();
-          return new exp.TypedInput(`(${_useParser("A", arr1)}.concat(${_useParser("A", arr2)}))`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${_arrParser(arr1)}.concat(${_arrParser(arr2)}))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrRepeat": {
           const arr = this.descendInput(node.arr).asUnknown();
           const amt = this.descendInput(node.amt).asNumber();
-          return new exp.TypedInput(`(Array(${amt}).fill(${_useParser("A", arr)}).flat())`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(Array(${amt}).fill(${_arrParser(arr)}).flat())`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrFill": {
           const arr = this.descendInput(node.arr).asUnknown();
           const amt = this.descendInput(node.amt).asNumber();
           const vArr = this.localVariables.next();
-          return new exp.TypedInput(`((${vArr} = ${_useParser("A", arr)}), ${vArr}.concat(Array(Math.max(0, ${amt} - ${vArr}.length)).fill("")))`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}), ${vArr}.concat(Array(Math.max(0, ${amt} - ${vArr}.length)).fill("")))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrFlat": {
           const arr = this.descendInput(node.arr).asUnknown();
           const amt = this.descendInput(node.amt).asUnknown();
-          return new exp.TypedInput(`(${_useParser("A", arr)}.flat(${amt}))`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${_arrParser(arr)}.flat(${amt}))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrOrder": {
           const arr = this.descendInput(node.arr).asUnknown();
@@ -730,14 +738,14 @@
           script += "const j = Math.random() * i | 0;";
           script += "[spA[i - 1], spA[j]] = [spA[j], spA[i - 1]];}";
           script += "return spA;";
-          script += `}})(${_useParser("A", arr)})`;
+          script += `}})(${_arrParser(arr)})`;
           return new exp.TypedInput(script, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrMake": {
           const txt = this.descendInput(node.txt).asUnknown();
           const split = this.descendInput(node.split).asString();
           const type = this.descendInput(node.type).asString();
-          return new exp.TypedInput(`(${type} === "array" ? ${txt}.split(${split}) : ${_useParser("A", txt)}.join(${split}))`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${type} === "array" ? ${txt}.split(${split}) : ${_arrParser(txt)}.join(${split}))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrCheck": {
           const obj = this.descendInput(node.array).asUnknown();
@@ -770,7 +778,7 @@
               return ${ node.type === "some" ? "false" : "true" };
             }
 
-            const p = ${_useParser("A", obj)};
+            const p = ${_arrParser(obj)};
             const result = yield* runGenerator(
               genCheck(p, function* (SPobjV, SPobjK) {
                 SPobjK++;
@@ -785,7 +793,7 @@
           const safeValue = this.descendInput(node.value).asUnknown();
           return new exp.TypedInput(`(function() {
             function* generator() {
-              const p = ${_useParser("A", obj)};
+              const p = ${_arrParser(obj)};
               let SPobjK = 1;
               for (const SPobjV of p) {
                 yield ${safeValue};
@@ -802,7 +810,7 @@
           if (safeValue.includes(`yield* executeInCompat`) && !safeValue.includes(`"yield* executeInCompat`)) {
             return new exp.TypedInput(`(function() {
               function* generator() {
-                const p = ${_useParser("A", obj)};
+                const p = ${_arrParser(obj)};
                 const s = {};
                 for (let i = 0; i < p.length; i++) {
                   for (let j = 0; j < p.length; j++) {
@@ -822,7 +830,7 @@
           } else {
             return new exp.TypedInput(`(function() {
               function* generator() {
-                const p = ${_useParser("A", obj)};
+                const p = ${_arrParser(obj)};
                 const sorted = [...p].sort((SParrA, SParrB) => ${safeValue});
                 for (const item of sorted) yield item;
               }
@@ -836,7 +844,7 @@
           const safeBool = this.descendInput(node.bool).asBoolean();
           return new exp.TypedInput(`(function() {
             function* generator() {
-              const p = ${_useParser("", obj)};
+              const p = ${_anyParser(obj)};
               const e = Object.entries(p);
               const isO = !Array.isArray(p);
 
@@ -879,7 +887,7 @@
           const safeValue = this.descendInput(node.value).asUnknown();
           return new exp.TypedInput(`(function(SPaccum) {
             function* generator() {
-              const p = ${_useParser("A", obj)};
+              const p = ${_arrParser(obj)};
               let SPobjK = 1;
               for (const SPobjV of p) {
                 SPaccum = yield ${safeValue};
@@ -930,10 +938,14 @@
         { text: "always cast values", value: "alwaysCast" },
         { text: "always parse text objects", value: "alwaysParse" },
         { text: "always try parsing", value: "alwaysTryParse" },
+        { text: "always validate object keys", value: "alwaysValidateKeys" },
         { text: "dont edit source objects", value: "useNewObj" },
       ];
-      this.alwaysCast = true; this.alwaysParse = true;
-      this.alwaysTryParse = true; this.useNewObj = true;
+      this.alwaysCast = true;
+      this.alwaysParse = true;
+      this.alwaysTryParse = true;
+      this.useNewObj = true;
+      this.alwaysValidateKeys = true;
       this._preventUnsafeAce = true; // hidden option
 
       this.initParser();
@@ -1730,8 +1742,8 @@
     getKey(args) {
       const obj = this.tryParse(args.OBJ, 0);
       const key = Cast.toString(args.KEY);
-      if (hasOwn(obj, key)) return this.preventACE(obj[key]) ?? "";
-      return "";
+      const value = this.preventACE(obj[key]) ?? "";
+      return this.alwaysValidateKeys ? hasOwn(obj, key) ? value : "" : value;
     }
 
     getPath(args) {
@@ -2220,7 +2232,8 @@
       // these numbers arent accurate but represent what works well
       let optiLevel = 100;
 
-      if (this.alwaysCast) optiLevel -= 10;
+      if (this.alwaysCast) optiLevel -= 5;
+      if (this.alwaysValidateKeys) optiLevel -= 5;
 
       // alwaysTryParse removes a bunch of logic, so only evaluate this
       if (!this.alwaysTryParse) return `${optiLevel} [UNSAFE MODE]`;
