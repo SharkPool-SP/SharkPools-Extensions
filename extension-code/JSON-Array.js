@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.02
+// Version V.1.2.03
 
 (function (Scratch) {
   "use strict";
@@ -267,7 +267,7 @@
 
     const _preventACE = (imminentObj) => {
       if (extContext._preventUnsafeAce) {
-        return `(prop = ${imminentObj}, typeof prop === "object" ? prop.customId || prop?.constructor?.name === "Object" ? prop : "" : prop)`;
+        return `(prop = ${imminentObj}, propType = prop?.constructor?.name, typeof prop === "object"? prop.customId || propType === "Object" || propType === "Array" ? prop : "" : prop)`;
       }
       return imminentObj;
     };
@@ -1609,7 +1609,8 @@
 
     preventACE(imminentObj) {
       if (this._preventUnsafeAce) {
-        if (typeof imminentObj === "object") return imminentObj.customId || imminentObj?.constructor?.name === "Object"
+        const objectType = imminentObj?.constructor?.name;
+        if (typeof imminentObj === "object") return imminentObj.customId || objectType === "Object" || objectType === "Array"
           ? imminentObj : "";
       }
       return imminentObj;
