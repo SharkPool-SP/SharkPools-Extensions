@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.03
+// Version V.1.2.04
 
 (function (Scratch) {
   "use strict";
@@ -509,7 +509,7 @@
         case "SPjson.jsonBuild": {
           const key = this.descendInput(node.key).asString();
           const val = this.descendInput(node.val).asUnknown();
-          return new exp.TypedInput(`{${key}:${_safeCast(val)}}`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`{[${key}]:${_safeCast(val)}}`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.getKey": {
           const obj = this.descendInput(node.obj).asUnknown();
