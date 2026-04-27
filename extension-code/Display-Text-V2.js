@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.11
+// Version V.1.1.12
 
 (function (Scratch) {
   "use strict";
@@ -182,6 +182,8 @@
       this.specialStyles = new Map();
       this.clickTime = 0;
       this.position = [null, null];
+      this._bounds = null;
+      this._rotCenterY = 0;
       this._cachedImage = [null, null];
 
       this._dirty = false;
@@ -228,27 +230,28 @@
     }
 
     setPosition(x, y) {
-      this.position = [x, y];
-      if (!this._element) return;
+      if (x === this.position[0] && y === this.position[1]) return;
+      this.position[0] = x;
+      this.position[1] = y;
 
-      const bounds = this._elementInner.getBBox();
-      let rotCenterY;
+      if (!this._element) return;
+      if (this._bounds === null) this._bounds = this._elementInner.getBBox();
 
       const vertAlign = this.specialStyles.get("vert-align");
       if (vertAlign === "top") {
         // dont change the y position
-        rotCenterY = bounds.y;
+        this._rotCenterY = this._bounds.y;
       } else if (vertAlign === "bottom") {
-        y += bounds.height;
-        rotCenterY = bounds.y + bounds.height;
+        y += this._bounds.height;
+        this._rotCenterY = this._bounds.y + this._bounds.height;
       } else {
         // "center" or undefined
-        y += bounds.height / 2;
-        rotCenterY = bounds.y + bounds.height / 2;
+        y += this._bounds.height / 2;
+        this._rotCenterY = this._bounds.y + this._bounds.height / 2;
       }
 
-      this._element.style.transform = `translate(${x}px, ${y * -1}px)`;
-      this._elementInner.setAttribute("transform-origin", `0 ${rotCenterY}`);
+      this._element.style.transform = `translate(${x}px, ${-y}px)`;
+      this._elementInner.setAttribute("transform-origin", `0 ${this._rotCenterY}`);
     }
 
     toggleInteract(interactable) {
@@ -354,7 +357,8 @@
     }
 
     updateDebugBox() {
-      const bounds = this._elementInner.getBBox();
+      if (this._bounds === null) this._bounds = this._elementInner.getBBox();
+      const bounds = this._bounds;
       const alignment = this._elementInner.getAttribute("text-anchor");
       const stroke = alignment === "start" ? "ff0000" : alignment === "end" ? "0000ff" : "00ff00";
       this._debugBox.setAttribute("stroke", "#" + stroke);
@@ -465,6 +469,8 @@
         }
       }
 
+      this._bounds = this._elementInner.getBBox();
+
       if (isInDebugMode) this.updateDebugBox();
 
       this.setPosition(...this.position);
@@ -479,6 +485,7 @@
       this._element = null;
       this._elementInner = null;
       this._clickEvent = null;
+      this._bounds = null;
       this._cachedImage = [null, null];
     }
   }
@@ -1194,12 +1201,12 @@
           case "line": return textObj.specialStyles.get("line-height") || 1;
           case "width": return textObj.specialStyles.get("width") || -1;
           case "boxW": {
-            const bounds = textObj._elementInner.getBBox();
-            return bounds.width;
+            if (textObj._bounds === null) textObj._bounds = textObj._elementInner.getBBox();
+            return textObj._bounds.width;
           }
           case "boxH": {
-            const bounds = textObj._elementInner.getBBox();
-            return bounds.height;
+            if (textObj._bounds === null) textObj._bounds = textObj._elementInner.getBBox();
+            return textObj._bounds.height;
           }
           default: return "";
         }
