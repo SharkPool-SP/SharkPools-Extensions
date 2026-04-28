@@ -745,7 +745,7 @@
           const txt = this.descendInput(node.txt).asUnknown();
           const split = this.descendInput(node.split).asString();
           const type = this.descendInput(node.type).asString();
-          return new exp.TypedInput(`(${type} === "array" ? ${txt}.split(${split}) : ${_arrParser(txt)}.join(${split}))`, exp.TYPE_UNKNOWN);
+          return new exp.TypedInput(`(${type} === "array" ? ("" + ${txt}).split(${split}) : ${_arrParser(txt)}.join(${split}))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrCheck": {
           const obj = this.descendInput(node.array).asUnknown();
