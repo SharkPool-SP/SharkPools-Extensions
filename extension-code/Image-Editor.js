@@ -1,10 +1,10 @@
 // Name: Image Editor
 // ID: SPimgEditor
-// Description: Create and Edit the Pixel Data of Images
+// Description: Create and modify images and their pixel data.
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.22
+// Version V.1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -13,15 +13,47 @@
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NC45NzUiIGhlaWdodD0iODQuOTc1IiB2aWV3Qm94PSIwIDAgODQuOTc1IDg0Ljk3NSI+PGcgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0wIDQyLjQ4OEMwIDE5LjAyMyAxOS4wMjMgMCA0Mi40ODggMHM0Mi40ODggMTkuMDIzIDQyLjQ4OCA0Mi40ODgtMTkuMDIzIDQyLjQ4OC00Mi40ODggNDIuNDg4UzAgNjUuOTUzIDAgNDIuNDg4IiBmaWxsPSIjMzMzZDgwIi8+PHBhdGggZD0iTTUuMjY0IDQyLjQ4OGMwLTIwLjU1OCAxNi42NjYtMzcuMjI0IDM3LjIyNC0zNy4yMjRTNzkuNzEyIDIxLjkzIDc5LjcxMiA0Mi40ODggNjMuMDQ2IDc5LjcxMiA0Mi40ODggNzkuNzEyIDUuMjY0IDYzLjA0NiA1LjI2NCA0Mi40ODgiIGZpbGw9IiM0NzU2YjMiLz48cGF0aCBkPSJtNDguNzY4IDY0Ljk5OC04LjEwNS0yMy4yMjNjLS40MzMtMS4yNC40MDQtMS45OTQgMS42OTMtMS41NDRsMjIuNzUxIDcuOTRjMS44MTguNjM1IDIuMTk0IDEuODA4Ljk3NiAzLjAyNmwtMy4xMyAzLjEzIDMuMjggMy4yOGE0LjI4IDQuMjggMCAwIDEgMCA2LjA1M2wtMi4xMDIgMi4xMDJhNC4yOCA0LjI4IDAgMCAxLTYuMDUzIDBsLTMuMjgtMy4yOC0zLjUwOSAzLjUxYy0uODIuODItMS45Ni42MTQtMi41Mi0uOTk0IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTI0LjUzNCA2Mi43NDJhMy45NCAzLjk0IDAgMCAxLTQuMjQ1LTMuNjFsLTIuNzg3LTM0LjQ4NWEzLjk0IDMuOTQgMCAwIDEgMy42MTEtNC4yNDZsMzAuMDUzLTIuNDI4YTMuOTQgMy45NCAwIDAgMSA0LjI0NiAzLjYxMWwxLjUwNiAxOC42NDQtNC45NDUtMS43MjYtMS4yMzMtMTUuOTc3LTI4LjYyNCAyLjI5NCAyLjIxMSAyOC42MzQgMTQuNTQyLTEuMTY1IDMuMTU2IDkuMDQxeiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=";
 
+  const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  let imageBank = Object.create(null);
 
-  const regenReporters = ["SPimgEditor_pixelHex", "SPimgEditor_pixelIndex", "SPimgEditor_setPixel"];
+  const TO_RAD = Math.PI / 180;
+  const TEXTURE_BLEND_MODES = [
+    { text: "normal", value: "source-over" },
+    { text: "behind", value: "destination-over" },
+    { text: "mask in", value: "destination-in" },
+    { text: "mask out", value: "destination-out" },
+    { text: "light add", value: "lighter" },
+    { text: "multiply", value: "multiply" },
+    { text: "screen", value: "screen" },
+    { text: "overlay", value: "overlay" },
+    { text: "darken", value: "darken" },
+    { text: "lighten", value: "lighten" },
+    { text: "dodge", value: "color-dodge" },
+    { text: "burn", value: "color-burn" },
+    { text: "hard light", value: "hard-light" },
+    { text: "soft light", value: "soft-light" },
+    { text: "difference", value: "difference" },
+    { text: "exclusion", value: "exclusion" },
+    { text: "hue", value: "hue" },
+    { text: "saturation", value: "saturation" },
+    { text: "color", value: "color" },
+    { text: "luminosity", value: "luminosity" }
+  ];
+
+  const imageBank = new Map();
+  const globalCanvas = document.createElement("canvas");
+  const workerCanvas = document.createElement("canvas");
+  const globalCtx = globalCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
+  const workerCtx = workerCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
+  let imagePrintSmoothing = true;
+  let textureBlendMode = "source-over";
+
+  const regenReporters = ["SPimgEditor_pixelHex", "SPimgEditor_pixelIndex"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
-    const originalCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
+    const ogIsRegenReporter = SB.scratchBlocksUtils.isShadowArgumentReporter;
     SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-      const result = originalCheck(block);
+      const result = ogIsRegenReporter(block);
       if (result) return true;
       return block.isShadow() && regenReporters.includes(block.type);
     };
@@ -37,11 +69,6 @@
         color3: "#333d80",
         menuIconURI,
         blocks: [
-          {
-            func: "rectExts",
-            blockType: Scratch.BlockType.BUTTON,
-            text: "Recommended Extensions"
-          },
           { blockType: Scratch.BlockType.LABEL, text: "Image Bank" },
           {
             opcode: "makeImg",
@@ -68,37 +95,37 @@
             },
           },
           {
-            opcode: "modifyImg",
-            blockType: Scratch.BlockType.COMMAND,
-            text: "[TYPE] image named [NAME] to width [W] height [H] fill [COLOR]",
-            arguments: {
-              TYPE: { type: Scratch.ArgumentType.STRING, menu: "MOD_TYPE" },
-              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" },
-              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
-              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
-              COLOR: { type: Scratch.ArgumentType.COLOR }
-            },
-          },
-          {
             opcode: "imgAtts",
             blockType: Scratch.BlockType.REPORTER,
-            text: "[TYPE] of image named [NAME] ",
+            text: "[TYPE] of image named [NAME]",
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "IMG_ATTS" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }
             },
           },
+          {
+            opcode: "boxImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "crop image [NAME] width [W] height [H] x [x] y [y]",
+            arguments: {
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" },
+              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+            },
+          },
           "---",
+          {
+            opcode: "allImgs",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "all images"
+          },
           {
             opcode: "imgExists",
             blockType: Scratch.BlockType.BOOLEAN,
             text: "image named [NAME] exists?",
             arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" } },
-          },
-          {
-            opcode: "allImgs",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "all images"
           },
           {
             opcode: "deleteImg",
@@ -131,15 +158,54 @@
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }
             },
           },
+          {
+            opcode: "getIndexFromXY",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "pixel # at x [x] y [y] in image [NAME]",
+            arguments: {
+              x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }
+            },
+          },
           "---",
+          {
+            opcode: "modifyImg",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "[TYPE] image [NAME] to width [W] height [H] fill [COLOR]",
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "MOD_TYPE" },
+              NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" },
+              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
+              COLOR: { type: Scratch.ArgumentType.COLOR }
+            },
+          },
           {
             opcode: "rotateImg",
             blockType: Scratch.BlockType.COMMAND,
-            text: "point image named [NAME] in direction [DIR] fill [COLOR]",
+            text: "point image [NAME] in direction [DIR] fill [COLOR]",
             arguments: {
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" },
               DIR: { type: Scratch.ArgumentType.ANGLE, defaultValue: 90 },
               COLOR: { type: Scratch.ArgumentType.COLOR }
+            },
+          },
+          "---",
+          {
+            opcode: "toggleAlias",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "toggle image smoothing [TOGGLER]",
+            arguments: {
+              TOGGLER: { type: Scratch.ArgumentType.STRING, menu: "TOGGLERS" }
+            },
+          },
+          {
+            opcode: "setTextureBlend",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set texture blend mode to [MODE]",
+            arguments: {
+              MODE: { type: Scratch.ArgumentType.STRING, menu: "BLEND_MODES" }
             },
           },
           {
@@ -155,18 +221,6 @@
           },
           "---",
           {
-            opcode: "onEditCall", blockType: Scratch.BlockType.HAT,
-            isEdgeActivated: false, hideFromPalette: true,
-            text: "on [NAME] editor call pixel [PIXEL] [INDEX]",
-            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }, PIXEL: {}, INDEX: {} },
-          },
-          {
-            opcode: "editLoop", blockType: Scratch.BlockType.LOOP,
-            hideFromPalette: true,
-            text: "for each pixel [PIXEL] [INDEX] in [NAME]",
-            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }, PIXEL: {}, INDEX: {} },
-          },
-          {
             opcode: "pixelHex", blockType: Scratch.BlockType.REPORTER,
             hideFromPalette: true, text: "hex"
           },
@@ -175,10 +229,22 @@
             hideFromPalette: true, text: "index"
           },
           {
+            opcode: "editLoop", blockType: Scratch.BlockType.LOOP,
+            hideFromPalette: true,
+            text: "for each pixel [PIXEL] [INDEX] in [NAME]",
+            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }, PIXEL: {}, INDEX: {} },
+          },
+          {
             opcode: "setPixel", blockType: Scratch.BlockType.COMMAND,
             isTerminal: true, hideFromPalette: true,
             text: "set this pixel to [COLOR]",
             arguments: { COLOR: { type: Scratch.ArgumentType.COLOR } },
+          },
+          {
+            opcode: "onEditCall", blockType: Scratch.BlockType.HAT,
+            isEdgeActivated: false, hideFromPalette: true,
+            text: "on editor start for [NAME] pixel [PIXEL] [INDEX]",
+            arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" }, PIXEL: {}, INDEX: {} },
           },
           { blockType: Scratch.BlockType.XML,
             xml: `
@@ -195,283 +261,486 @@
                 <next><block type="SPimgEditor_setPixel">
                   <value name="COLOR"><shadow type="colour_picker"></shadow></value>
                 </block></next>
-              </block>
-            `
+              </block>`
           },
           {
             opcode: "callImgEdit",
             blockType: Scratch.BlockType.REPORTER,
-            text: "call image editor for [NAME]",
+            text: "start image [NAME] editor",
             arguments: { NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "image-1" } },
-          }
+          },
         ],
         menus: {
+          TOGGLERS: ["on", "off"],
           MOD_TYPE: ["expand", "stretch"],
+          BLEND_MODES: {
+            acceptReporters: true,
+            items: TEXTURE_BLEND_MODES
+          },
           IMG_ATTS: {
             acceptReporters: true,
-            items: ["width", "height", "pixel count", "data"]
+            items: [
+              "dataURI",
+              "width", "height",
+              "pixel count",
+              "pixel array"
+            ]
           }
         },
       };
     }
 
     // Helper Funcs
-    rectExts() {
-      alert(`This Extension works best with the Additional Extensions:\n"Image Effects" and "Color Master"\nThey can be Found at "https://sharkpools-extensions.vercel.app/"`);
+    _newImage(width, height, opt_data) {
+      return {
+        width, height,
+        imageData: null,
+        pixels: null,
+        dataURI: opt_data ?? "",
+        _pixelsChanged: false
+      };
     }
 
-    createCanvasCtx(w, h) {
-      const canvas = document.createElement("canvas");
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext("2d");
-      return { canvas, ctx };
+    _resizeCanvas(width, height, opt_reset) {
+      globalCanvas.width = width;
+      globalCanvas.height = height;
+      if (opt_reset) globalCtx.clearRect(0, 0, width, height);
+      globalCtx.imageSmoothingEnabled = imagePrintSmoothing;
     }
 
-    callEditor(data) {
-      let newThreads = [];
-      runtime.allScriptsByOpcodeDo("SPimgEditor_onEditCall", (script, target) => {
-        const thread = runtime._pushThread(script.blockId, target);
-        thread.SPimgData = data;
-        newThreads.push(thread);
+    _resizeWorker(width, height, opt_reset) {
+      workerCanvas.width = width;
+      workerCanvas.height = height;
+      if (opt_reset) workerCtx.clearRect(0, 0, width, height);
+      workerCtx.imageSmoothingEnabled = imagePrintSmoothing;
+    }
+
+    _prepImageData(image, opt_x, opt_y, opt_width, opt_height) {
+      image.imageData = globalCtx.getImageData(
+        opt_x ?? 0, opt_y ?? 0,
+        opt_width ?? image.width,
+        opt_height ?? image.height
+      );
+
+      // if individual pixels were edited, we should pre-prepare the pixel list
+      if (image.pixels) image.pixels = this._imgToPixels(image);
+    }
+
+    _textureHelper(url, callback) {
+      if (!url || !(url.startsWith("http") || url.startsWith("data:image/"))) return;
+
+      return new Promise((resolve) => {
+        const texture = new Image();
+        texture.crossOrigin = "Anonymous";
+        texture.onload = () => {
+          try {
+            callback(texture);
+            resolve();
+          } catch (e) {
+            console.warn(e);
+            resolve();
+          }
+        };
+        texture.onerror = (e) => {
+          console.warn(e);
+          resolve();
+        };
+        texture.src = url;
       });
-      return newThreads;
     }
 
-    getPixelData(storedImg) {
-      const { width, height } = storedImg.canvas;
-      const imageData = storedImg.ctx.getImageData(0, 0, width, height).data;
-      const pixelData = [];
-      for (let i = 0; i < imageData.length; i += 4) {
-        const r = imageData[i];
-        const g = imageData[i + 1];
-        const b = imageData[i + 2];
-        const a = imageData[i + 3];
-        const alphaHex = Math.round(a).toString(16).padStart(2, "0");
-        pixelData.push(`#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}${alphaHex}`);
-      }
-      return pixelData;
-    }
-
-    pixels2Img(storedImg) {
-      const { width, height } = storedImg.canvas;
-      const { canvas, ctx } = this.createCanvasCtx(width, height);
-      const imageData = ctx.createImageData(width, height);
-      for (let i = 0; i < storedImg.pixels.length; i++) {
-        const hex = storedImg.pixels[i] ?? "#000000";
-        imageData.data[i * 4 + 0] = parseInt(hex.substring(1, 3), 16);
-        imageData.data[i * 4 + 1] = parseInt(hex.substring(3, 5), 16);
-        imageData.data[i * 4 + 2] = parseInt(hex.substring(5, 7), 16);
-        imageData.data[i * 4 + 3] = hex.length === 9 ?  parseInt(hex.substring(7, 9), 16) : 255;
-      }
-      ctx.putImageData(imageData, 0, 0);
-      return canvas.toDataURL();
-    }
-
-    parseColor(hex) {
+    _parseHex(hex) {
       if (/^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(hex)) return hex;
       else return "#000000";
     }
 
-    // Block Funcs (Bank Manager)
-    makeImg(args) {
-      const width = Scratch.Cast.toNumber(args.W);
-      const height = Scratch.Cast.toNumber(args.H);
-      const { canvas, ctx } = this.createCanvasCtx(width, height);
-      ctx.fillStyle = this.parseColor(args.COLOR);
-      ctx.fillRect(0, 0, width, height);
-      imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false }
-    }
+    _imgToPixels(storedImg) {
+      const data = storedImg.imageData.data;
+      const pixelData = [];
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const a = data[i + 3];
 
-    makeImgImg(args) {
-      return new Promise((resolve) => {
-        if (!args.IMAGE) return resolve();
-        let width = Scratch.Cast.toNumber(args.W);
-        let height = Scratch.Cast.toNumber(args.H);
-        const { canvas, ctx } = this.createCanvasCtx(Math.abs(width), Math.abs(height));
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          try {
-            ctx.save();
-            if (width === 0 || height === 0) {
-              width = img.width; height = img.height;
-              canvas.width = width; canvas.height = height;
-            }
-            ctx.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
-            const x = Scratch.Cast.toNumber(args.x) - (width < 0 ? Math.abs(width) : 0);
-            const y = (Scratch.Cast.toNumber(args.y) * -1) - (height < 0 ? Math.abs(height) : 0);
-            ctx.drawImage(img, x, y, Math.abs(width), Math.abs(height));
-            ctx.restore();
-            imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
-            resolve();
-          } catch (e) {
-            console.warn(e);
-            resolve();
-          }
-        };
-        img.onerror = (e) => { console.warn(e); resolve() };
-        img.src = args.IMAGE;
-      });
-    }
-
-    modifyImg(args) {
-      if (imageBank[args.NAME] === undefined) this.makeImg(args);
-      else {
-        const width = Scratch.Cast.toNumber(args.W);
-        const height = Scratch.Cast.toNumber(args.H);
-        const storedImg = imageBank[args.NAME];
-        const { canvas, ctx } = this.createCanvasCtx(Math.abs(width), Math.abs(height));
-        if (args.TYPE === "stretch") {
-          ctx.save();
-          ctx.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
-          ctx.drawImage(storedImg.canvas, width < 0 ? -Math.abs(width) : 0, height < 0 ? -Math.abs(height) : 0, Math.abs(width), Math.abs(height));
-          ctx.restore();
-        } else {
-          ctx.fillStyle = this.parseColor(args.COLOR);
-          ctx.fillRect(0, 0, width, height);
-          const xOffset = (width - storedImg.canvas.width) / 2;
-          const yOffset = (height - storedImg.canvas.height) / 2;
-          ctx.drawImage(storedImg.canvas, xOffset, yOffset);
-        }
-        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
+        const rgb = "#" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0");
+        const alpha = a.toString(16).padStart(2, "0");
+        pixelData.push(rgb + alpha);
       }
+
+      return pixelData;
+    }
+
+    _pixelsToURI(storedImg) {
+      const imageData = globalCtx.createImageData(storedImg.width, storedImg.height);
+      const data = imageData.data;
+      const pixels = storedImg.pixels;
+      for (let i = 0; i < pixels.length; i++) {
+        const hex = pixels[i];
+        const idx = i * 4;
+
+        data[idx] = parseInt(hex.substring(1, 3), 16);
+        data[idx + 1] = parseInt(hex.substring(3, 5), 16);
+        data[idx + 2] = parseInt(hex.substring(5, 7), 16);
+        data[idx + 3] = hex.length === 9 ? parseInt(hex.substring(7, 9), 16) : 255;
+      }
+
+      globalCtx.putImageData(imageData, 0, 0);
+      return globalCanvas.toDataURL();
+    }
+
+    _startEditors(data) {
+      const threads = [];
+      runtime.allScriptsByOpcodeDo("SPimgEditor_onEditCall", (script, target) => {
+        const allBlocks = script.container._blocks;
+        let startBlockId = script.blockId;
+
+        const editorHatBlock = allBlocks[startBlockId];
+        const nameBlock = allBlocks[editorHatBlock.inputs.NAME.block];
+        if (nameBlock.opcode === "text") {
+          // we can read a raw value, thus we can run the block as an event
+          const editorName = nameBlock.fields.TEXT.value;
+          if (editorName === data.name) startBlockId = editorHatBlock.next;
+          if (!startBlockId) return;
+        }
+
+        const thread = runtime._pushThread(startBlockId, target);
+        thread.stackFrames[0].SPimgData = data;
+        threads.push(thread);
+      });
+
+      return threads;
+    }
+
+    // Block Funcs
+    makeImg(args) {
+      const width = Math.max(1, Cast.toNumber(args.W));
+      const height = Math.max(1, Cast.toNumber(args.H));
+      this._resizeCanvas(width, height);
+
+      globalCtx.fillStyle = this._parseHex(args.COLOR);
+      globalCtx.fillRect(0, 0, width, height);
+      const image = this._newImage(width, height, globalCanvas.toDataURL());
+      imageBank.set(args.NAME, image);
+      this._prepImageData(image);
+    }
+
+    async makeImgImg(args) {
+      let width = Cast.toNumber(args.W);
+      let height = Cast.toNumber(args.H);
+
+      const flipX = width < 0;
+      const flipY = height < 0;
+      const x = Cast.toNumber(args.x);
+      const y = -Cast.toNumber(args.y);
+
+      await this._textureHelper(args.IMAGE, (texture) => {
+        if (width === 0) width = texture.width;
+        if (height === 0) height = texture.height;
+        const absWidth = Math.abs(width);
+        const absHeight = Math.abs(height);
+
+        this._resizeCanvas(absWidth, absHeight, true);
+        globalCtx.save();
+        globalCtx.translate(flipX ? absWidth : 0, flipY ? absHeight : 0);
+        globalCtx.scale(flipX ? -1 : 1, flipY ? -1 : 1);
+        globalCtx.drawImage(texture, flipX ? -x : x, flipY ? -y : y, absWidth, absHeight);
+        globalCtx.restore();
+
+        const image = this._newImage(absWidth, absHeight, globalCanvas.toDataURL());
+        imageBank.set(args.NAME, image);
+        this._prepImageData(image);
+      });
     }
 
     imgAtts(args) {
-      const storedImg = imageBank[args.NAME];
+      const storedImg = imageBank.get(args.NAME);
       if (storedImg === undefined) return 0;
-      const canvas = storedImg.canvas;
+
       switch (args.TYPE) {
-        case "width": return canvas.width;
-        case "height": return canvas.height;
-        case "pixel count": return canvas.width * canvas.height;
+        case "width": return storedImg.width;
+        case "height": return storedImg.height;
+        case "pixel count": return storedImg.width * storedImg.height;
+        case "pixel array": {
+          if (storedImg.pixels === null) storedImg.pixels = this._imgToPixels(storedImg);
+          return vm.extensionManager._loadedExtensions.has("SPjson")
+            ? storedImg.pixels
+            : JSON.stringify(storedImg.pixels);
+        }
         default: {
-          if (storedImg.needsRefresh) {
-            storedImg.data = this.pixels2Img(storedImg);
-            storedImg.needsRefresh = false;
+          if (storedImg._pixelsChanged) {
+            storedImg.dataURI = this._pixelsToURI(storedImg);
+            storedImg._pixelsChanged = false;
           }
-          return storedImg.data;
+
+          return storedImg.dataURI;
         }
       }
     }
 
-    imgExists(args) { return imageBank[args.NAME] !== undefined }
-    allImgs() { return JSON.stringify(Object.keys(imageBank)) }
+    boxImage(args) {
+      const storedImg = imageBank.get(args.NAME);
+      if (!storedImg) return "";
 
-    deleteImg(args) { delete imageBank[args.NAME] }
-    deleteAllImgs() { imageBank = Object.create(null) }
+      const width = Math.max(1, Cast.toNumber(args.W));
+      const height = Math.max(1, Cast.toNumber(args.H));
+      const centerX = Cast.toNumber(args.x);
+      const centerY = -Cast.toNumber(args.y);
 
-    // Block Funcs (Editing)
-    callImgEdit(args, util) {
-      const storedImg = imageBank[args.NAME];
-      if (storedImg === undefined) return "";
-      if (util.stackFrame.newThreads === undefined) {
-        storedImg.pixels = this.getPixelData(storedImg);
-        let newThreads = [];
-        // We shouldnt rely on runtime.startHats since we WANT to have multiple threads for pixel manipulation
-        for (var index = 0; index < storedImg.pixels.length; index++) {
-          newThreads = [...newThreads, ...this.callEditor({ name: args.NAME, index, hex: storedImg.pixels[index] })];
+      const src = storedImg.imageData.data;
+      const srcW = storedImg.width;
+      const srcH = storedImg.height;
+
+      const startX = Math.floor(centerX + srcW / 2 - width / 2);
+      const startY = Math.floor(centerY + srcH / 2 - height / 2);
+
+      workerCanvas.width = width;
+      workerCanvas.height = height;
+      const out = workerCtx.createImageData(width, height);
+      const outData = out.data;
+      for (let y = 0; y < height; y++) {
+        const srcY = startY + y;
+        if (srcY < 0 || srcY >= srcH) continue;
+
+        for (let x = 0; x < width; x++) {
+          const srcX = startX + x;
+          if (srcX < 0 || srcX >= srcW) continue;
+
+          const srcIndex = (srcY * srcW + srcX) * 4;
+          const dstIndex = (y * width + x) * 4;
+          outData[dstIndex] = src[srcIndex];
+          outData[dstIndex + 1] = src[srcIndex + 1];
+          outData[dstIndex + 2] = src[srcIndex + 2];
+          outData[dstIndex + 3] = src[srcIndex + 3];
         }
-        util.stackFrame.newThreads = newThreads;
-        util.yield();
-      } else {
-        if (util.stackFrame.newThreads.some((thread) => runtime.threads.indexOf(thread) !== -1)) {
-          if (util.stackFrame.newThreads.every((thread) => runtime.isWaitingThread(thread))) util.yieldTick();
-          else util.yield();
-        }
-        storedImg.data = this.pixels2Img(storedImg);
-        return storedImg.data;
       }
+
+      workerCtx.putImageData(out, 0, 0);
+      return workerCanvas.toDataURL();
     }
 
-    editLoop(args, util) {
-      const storedImg = imageBank[args.NAME];
-      if (storedImg === undefined) return "";
-      if (util.stackFrame.loopCounter === undefined) {
-        storedImg.pixels = this.getPixelData(storedImg);
-        util.stackFrame.loopCounter = storedImg.pixels.length;
-      }
-      const index = Math.abs(util.stackFrame.loopCounter - storedImg.pixels.length);
-      util.thread.SPimgData = { name: args.NAME, index, hex: storedImg.pixels[index] }
-      util.stackFrame.loopCounter--;
-      if (util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
-      else {
-        storedImg.data = this.pixels2Img(storedImg);
-        delete util.thread.SPimgData;
-      }
+    imgExists(args) {
+      return imageBank.has(args.NAME);
     }
 
-    onEditCall(args, util) { return util.thread.SPimgData?.name === args.NAME }
-
-    pixelHex(args, util) { return util.thread.SPimgData?.hex || "" }
-    pixelIndex(args, util) { return util.thread.SPimgData?.index + 1 || "" }
-    setPixel(args, util) {
-      const data = util.thread.SPimgData;
-      if (data !== undefined) {
-        this.setHex({ REFRESH: false, NAME: data.name, COLOR: args.COLOR, INDEX: data.index + 1 });
-        util.thread.stopThisScript();
-      }
+    allImgs() {
+      return JSON.stringify(Array.from(imageBank.keys()));
     }
+
+    deleteImg(args) {
+      imageBank.delete(args.NAME);
+    }
+
+    deleteAllImgs() {
+      imageBank.clear();
+    }
+
     setHex(args) {
-      const storedImg = imageBank[args.NAME];
+      const storedImg = imageBank.get(args.NAME);
       if (storedImg === undefined) return;
-      if (storedImg.pixels.length === 0) storedImg.pixels = this.getPixelData(storedImg);
-      storedImg.pixels[Scratch.Cast.toNumber(args.INDEX) - 1] = this.parseColor(args.COLOR);
-      if (args.REFRESH === undefined) storedImg.needsRefresh = true;
+
+      if (storedImg.pixels === null) storedImg.pixels = this._imgToPixels(storedImg);
+      const index = Math.min(storedImg.pixels.length - 1, Math.max(0, Cast.toNumber(args.INDEX) - 1));
+      storedImg.pixels[index] = this._parseHex(args.COLOR);
+      storedImg._pixelsChanged = true;
     }
+
     getHex(args) {
-      const storedImg = imageBank[args.NAME];
+      const storedImg = imageBank.get(args.NAME);
       if (storedImg === undefined) return "";
-      if (storedImg.pixels.length === 0) storedImg.pixels = this.getPixelData(storedImg);
-      return storedImg.pixels[Scratch.Cast.toNumber(args.INDEX) - 1] || "";
+
+      if (storedImg.pixels === null) storedImg.pixels = this._imgToPixels(storedImg);
+      return storedImg.pixels[Cast.toNumber(args.INDEX) - 1] || "";
+    }
+
+    getIndexFromXY(args) {
+      const storedImg = imageBank.get(args.NAME);
+      if (storedImg === undefined) return -1;
+
+      const width = storedImg.width;
+      const height = storedImg.height;
+      const x = Math.round(Cast.toNumber(args.x));
+      const y = -Math.round(Cast.toNumber(args.y));
+
+      const pixelX = x + Math.floor(width / 2);
+      const pixelY = y + Math.floor(height / 2);
+      if (
+        pixelX < 0 || pixelX >= width ||
+        pixelY < 0 || pixelY >= height
+      ) return -1;
+
+      return pixelY * width + pixelX + 1;
+    }
+
+    modifyImg(args) {
+      if (!imageBank.has(args.NAME)) this.makeImg(args);
+      else {
+        const width = Cast.toNumber(args.W);
+        const height = Cast.toNumber(args.H);
+        const absWidth = Math.abs(width);
+        const absHeight = Math.abs(height);
+        const storedImg = imageBank.get(args.NAME);
+
+        if (args.TYPE === "stretch") {
+          const flipX = width < 0;
+          const flipY = height < 0;
+
+          this._resizeCanvas(absWidth, absHeight, true);
+          this._resizeWorker(storedImg.width, storedImg.height, true);
+          workerCtx.putImageData(storedImg.imageData, 0, 0);
+          globalCtx.save();
+          globalCtx.translate(flipX ? absWidth : 0, flipY ? absHeight : 0);
+          globalCtx.scale( flipX ? -1 : 1, flipY ? -1 : 1);
+          globalCtx.drawImage(workerCanvas, 0, 0, absWidth, absHeight);
+          globalCtx.restore();
+        } else {
+          const xOffset = (width - storedImg.width) / 2;
+          const yOffset = (height - storedImg.height) / 2;
+
+          this._resizeCanvas(width, height, true);
+          globalCtx.putImageData(storedImg.imageData, xOffset, yOffset);
+          globalCtx.globalCompositeOperation = "destination-over";
+          globalCtx.fillStyle = this._parseHex(args.COLOR);
+          globalCtx.fillRect(0, 0, width, height);
+          globalCtx.globalCompositeOperation = "source-over";
+        }
+
+        storedImg.width = absWidth;
+        storedImg.height = absHeight;
+        storedImg.dataURI = globalCanvas.toDataURL();
+        this._prepImageData(storedImg);
+      }
     }
 
     rotateImg(args) {
-      if (imageBank[args.NAME] === undefined) this.makeImg(args);
+      if (!imageBank.has(args.NAME)) this.makeImg(args);
       else {
-        const storedImg = imageBank[args.NAME];
-        const { canvas, ctx } = storedImg;
-        const { width, height } = canvas;
-        const tempData = this.createCanvasCtx(width, height);
-        const tempCanvas = tempData.canvas;
-        tempData.ctx.drawImage(canvas, 0, 0);
+        const storedImg = imageBank.get(args.NAME);
+        const width = storedImg.width;
+        const height = storedImg.height;
 
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = this.parseColor(args.COLOR);
-        ctx.fillRect(0, 0, width, height);
-        ctx.save();
-        ctx.translate(width / 2, height / 2);
-        ctx.rotate(Scratch.Cast.toNumber(args.DIR) * (Math.PI / 180));
-        ctx.drawImage(tempCanvas, -tempCanvas.width / 2, -tempCanvas.height / 2);
-        ctx.restore();
-        imageBank[args.NAME] = { data: canvas.toDataURL(), canvas, ctx, pixels: [], needsRefresh: false };
+        workerCanvas.width = width;
+        workerCanvas.height = height;
+        this._resizeCanvas(width, height, true);
+        workerCtx.putImageData(storedImg.imageData, 0, 0);
+        globalCtx.save();
+        globalCtx.fillStyle = this._parseHex(args.COLOR);
+        globalCtx.fillRect(0, 0, width, height);
+        globalCtx.translate(width / 2, height / 2);
+        globalCtx.rotate((Cast.toNumber(args.DIR) - 90) * TO_RAD);
+        globalCtx.drawImage(workerCanvas, width / -2, height / -2);
+        globalCtx.restore();
+
+        storedImg.dataURI = globalCanvas.toDataURL();
+        this._prepImageData(storedImg);
       }
     }
 
-    addTexture(args) {
-      return new Promise((resolve) => {
-        const storedImg = imageBank[args.NAME];
-        if (storedImg === undefined || !args.IMAGE) return resolve();
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          try {
-            const xOffset = (storedImg.canvas.width - img.width) / 2;
-            const yOffset = (storedImg.canvas.height - img.height) / 2;
-            storedImg.ctx.drawImage(
-              img, Scratch.Cast.toNumber(args.x) + xOffset,
-              (Scratch.Cast.toNumber(args.y) * -1) + yOffset
-            );
-            storedImg.data = storedImg.canvas.toDataURL();
-            resolve();
-          } catch (e) {
-            console.warn(e);
-            resolve();
-          }
-        };
-        img.onerror = (e) => { console.warn(e); resolve() };
-        img.src = args.IMAGE;
+    toggleAlias(args) {
+      imagePrintSmoothing = args.TOGGLER === "on";
+    }
+
+    setTextureBlend(args) {
+      const mode = Cast.toString(args.MODE);
+      const found = TEXTURE_BLEND_MODES.find(m => m.text === mode || m.value === mode);
+      if (found) textureBlendMode = found.value;
+    }
+
+    async addTexture(args) {
+      const storedImg = imageBank.get(args.NAME);
+      if (storedImg === undefined) return;
+
+      this._resizeCanvas(storedImg.width, storedImg.height, true);
+      globalCtx.putImageData(storedImg.imageData, 0, 0);
+
+      await this._textureHelper(args.IMAGE, (texture) => {
+        const xOffset = (storedImg.width - texture.width) / 2;
+        const yOffset = (storedImg.height - texture.height) / 2;
+        globalCtx.globalCompositeOperation = textureBlendMode;
+        globalCtx.drawImage(
+          texture,
+          Cast.toNumber(args.x) + xOffset,
+          (Cast.toNumber(args.y) * -1) + yOffset
+        );
+        globalCtx.globalCompositeOperation = "source-over";
+
+        storedImg.dataURI = globalCanvas.toDataURL();
+        this._prepImageData(storedImg);
       });
+    }
+
+    editLoop(args, util) {
+      const storedImg = imageBank.get(args.NAME);
+      if (storedImg === undefined) return "";
+
+      if (util.stackFrame.loopCounter === undefined) {
+        storedImg._pixelsChanged = true;
+        storedImg.pixels = this._imgToPixels(storedImg);
+        util.stackFrame.loopCounter = storedImg.pixels.length;
+      }
+
+      const index = Math.abs(util.stackFrame.loopCounter - storedImg.pixels.length);
+      util.thread.stackFrames[0].SPimgData = {
+        pixelData: storedImg.pixels,
+        index,
+        hex: storedImg.pixels[index]
+      };
+
+      util.stackFrame.loopCounter--;
+      if (util.stackFrame.loopCounter >= 0) util.startBranch(1, true);
+      else {
+        storedImg.dataURI = this._pixelsToURI(storedImg);
+        storedImg._pixelsChanged = false;
+        delete util.thread.stackFrames[0].SPimgData;
+      }
+    }
+
+    setPixel(args, util) {
+      const data = util.thread.stackFrames[0].SPimgData;
+      if (data) {
+        data.pixelData[data.index] = this._parseHex(args.COLOR);
+        if (data.name !== undefined) util.thread.stopThisScript();
+      }
+    }
+
+    callImgEdit(args, util) {
+      const storedImg = imageBank.get(args.NAME);
+      if (storedImg === undefined) return "";
+
+      storedImg.pixels = this._imgToPixels(storedImg);
+      return new Promise((resolve) => {
+        // We shouldnt rely on runtime.startHats since we WANT to have multiple threads for pixel manipulation
+        const threads = [];
+        for (let i = 0; i < storedImg.pixels.length; i++) {
+          threads.push(...this._startEditors({
+            pixelData: storedImg.pixels,
+            name: args.NAME,
+            index: i,
+            hex: storedImg.pixels[i]
+          }));
+        }
+
+        const callback = () => {
+          if (!threads.every(t => runtime.isActiveThread(t))) {
+            runtime.off("AFTER_EXECUTE", callback);
+            resolve(this._pixelsToURI(storedImg));
+          }
+        }
+        if (threads.length) runtime.on("AFTER_EXECUTE", callback);
+        else resolve(storedImg.dataURI);
+      });
+    }
+
+    onEditCall(args, util) {
+      return util.thread.stackFrames[0].SPimgData?.name === args.NAME;
+    }
+
+    pixelHex(_, util) {
+      return util.thread.stackFrames[0].SPimgData?.hex ?? "";
+    }
+    pixelIndex(_, util) {
+      const index = util.thread.stackFrames[0].SPimgData?.index
+      return index ? index + 1 : "";
     }
   }
 
