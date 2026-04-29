@@ -155,7 +155,7 @@
       "url": "Image-Editor.js",
       "banner": "Image-Editor.svg",
       "tags": ["Utility", "Graphics", "Data Management", "Hardware"],
-      "date": "Last Updated: 04/10/2025"
+      "date": "Last Updated: 04/29/2026"
     },
     "Pixel-Utilities": {
       "desc": "Some Utility Blocks that Roltycore 2's Developer made for some reason",
@@ -437,7 +437,6 @@
       "banner": "Timezones.svg",
       "tags": ["Utility", "Math", "Time"],
       "status": "",
-      "overrideLabeler": true,
       "date": "Released: 01/25/2024"
     },
     "Since-2000": {
@@ -446,7 +445,6 @@
       "url": "Since-2000.js",
       "banner": "Since-2000.svg",
       "status": "",
-      "overrideLabeler": true,
       "tags": ["Utility", "Math", "Time"],
       "date": "Last Updated: 11/20/2025"
     },
