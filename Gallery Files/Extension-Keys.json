@@ -150,7 +150,7 @@
       "date": "Last Updated: 04/10/2025"
     },
     "Image-Editor": {
-      "desc": "Create and Edit the Pixel Data of Images",
+      "desc": "Create and modify images and their pixel data",
       "creator": "SharkPool",
       "url": "Image-Editor.js",
       "banner": "Image-Editor.svg",
