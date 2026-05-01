@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.04
+// Version V.1.2.05
 
 (function (Scratch) {
   "use strict";
@@ -260,6 +260,14 @@
     
     /* JSGen Helpers */
     const OBJ_UTIL = "SPjsonUtil";
+    const VAR_PREFIX = "spJ";
+
+    // we cant use 'this.localVariables.next()' because of mutable json and procedure scope issues 
+    let varCount = 0;
+    const nextLocalVar = () => VAR_PREFIX + varCount++;
+
+    runtime.on("PROJECT_START", () => varCount = 0);
+    runtime.on("PROJECT_STOP_ALL", () => varCount = 0);
 
     const _safeReturn = (type) => {
       return `(typeof ${type} === "undefined" ? "":${type})`;
@@ -503,7 +511,7 @@
         case "SPjson.obj": return new exp.TypedInput("{}", exp.TYPE_UNKNOWN);
         case "SPjson.isObj": {
           const obj = this.descendInput(node.obj).asUnknown();
-          const vObj = this.localVariables.next();
+          const vObj = nextLocalVar();
           return new exp.TypedInput(`((${vObj} = ${_anyParser(obj)}), typeof ${vObj} === "object" && !Array.isArray(${vObj}))`, exp.TYPE_BOOLEAN);
         }
         case "SPjson.jsonBuild": {
@@ -514,8 +522,8 @@
         case "SPjson.getKey": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
-          const vObj = this.localVariables.next();
-          const vKey = this.localVariables.next();
+          const vObj = nextLocalVar();
+          const vKey = nextLocalVar();
           if (extContext.alwaysValidateKeys) {
             return new exp.TypedInput(
               `(${vObj} = ${_objParser(obj)}, ${vKey} = ${key}, ${OBJ_UTIL}.hasOwn(${vObj}, ${vKey}) ? ${_preventACE(vObj + "[" + vKey + "]")} ?? "" : "")`,
@@ -540,7 +548,7 @@
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
           const val = this.descendInput(node.val).asUnknown();
-          const vObj = this.localVariables.next();
+          const vObj = nextLocalVar();
           return new exp.TypedInput(
             `((${vObj} = ${_objParser(obj)}),${vObj}[${key}] = ${_safeCast(val)}, ${vObj})`,
             exp.TYPE_UNKNOWN
@@ -558,7 +566,7 @@
         case "SPjson.deleteKey": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
-          const vObj = this.localVariables.next();
+          const vObj = nextLocalVar();
           return new exp.TypedInput(`((${vObj} = ${_objParser(obj)}), delete ${vObj}[${key}], ${vObj})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.objSize": {
@@ -568,7 +576,7 @@
         case "SPjson.getEntry": {
           const obj = this.descendInput(node.obj).asUnknown();
           const key = this.descendInput(node.key).asString();
-          const vKey = this.localVariables.next();
+          const vKey = nextLocalVar();
           return new exp.TypedInput(`(${vKey} = ${key}, {[${vKey}]:${_objParser(obj)}[${vKey}]})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.extractObj": {
@@ -585,7 +593,7 @@
           const txt = this.descendInput(node.txt).asString();
           const split = this.descendInput(node.split).asString();
           const delim = this.descendInput(node.delim).asString();
-          const vObj = this.localVariables.next();
+          const vObj = nextLocalVar();
           return new exp.TypedInput(`(${vObj} = {}, ${txt}.split(${split}).forEach((i) => {const v = i.split(${delim}); ${vObj}[v[0]] = v[1] ?? "";}), ${vObj})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.jsonMap": {
@@ -612,15 +620,15 @@
         case "SPjson.arrAdd": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
-          const vArr = this.localVariables.next();
+          const vArr = nextLocalVar();
           return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}), ${vArr}.push(${_safeCast(item)}), ${vArr})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrInsert": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
-          const vArr = this.localVariables.next();
-          const vIt = this.localVariables.next();
+          const vArr = nextLocalVar();
+          const vIt = nextLocalVar();
           return new exp.TypedInput(
             `((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}, i = Math.max(0, ${ind} - 1)), i ? ${vArr}.splice(i, 0, ${vIt}) : ${vArr}.unshift(${vIt}), ${vArr})`,
             exp.TYPE_UNKNOWN
@@ -630,7 +638,7 @@
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
-          const vArr = this.localVariables.next();
+          const vArr = nextLocalVar();
           return new exp.TypedInput(
             `((${vArr} = ${_arrParser(arr)}, i = ${ind} - 1), (() => {while(${vArr}.length <= i) ${vArr}.push("")})(), ${vArr}[i] = ${_safeCast(item)}, ${vArr})`,
             exp.TYPE_UNKNOWN
@@ -640,7 +648,7 @@
           const arr = this.descendInput(node.arr).asUnknown();
           const ind1 = this.descendInput(node.ind1).asNumber();
           const ind2 = this.descendInput(node.ind2).asNumber();
-          const vArr = this.localVariables.next();
+          const vArr = nextLocalVar();
           return new exp.TypedInput(
             `((${vArr} = ${_arrParser(arr)}, i1 = Math.max(0, ${ind1} - 1), i2 = Math.max(0, ${ind2} - 1), m = Math.max(i1, i2)), (() => {while(${vArr}.length <= m) ${vArr}.push("")})(), t = ${vArr}[i1], ${vArr}[i1] = ${vArr}[i2], ${vArr}[i2] = t, ${vArr})`,
             exp.TYPE_UNKNOWN
@@ -649,7 +657,7 @@
         case "SPjson.arrDelete": {
           const arr = this.descendInput(node.arr).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
-          const vArr = this.localVariables.next();
+          const vArr = nextLocalVar();
           return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}), ${vArr}.splice(${ind} - 1, 1), ${vArr})`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrGet": {
@@ -675,23 +683,23 @@
         case "SPjson.arrMatches": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
-          const vArr = this.localVariables.next();
-          const vIt = this.localVariables.next();
+          const vArr = nextLocalVar();
+          const vIt = nextLocalVar();
           return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => i == ${vIt}).length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.arrContainers": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
-          const vArr = this.localVariables.next();
-          const vIt = this.localVariables.next();
+          const vArr = nextLocalVar();
+          const vIt = nextLocalVar();
           return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => ("" + i).includes(${vIt})).length)`, exp.TYPE_NUMBER);
         }
         case "SPjson.itemIndex": {
           const arr = this.descendInput(node.arr).asUnknown();
           const item = this.descendInput(node.item).asString();
           const ind = this.descendInput(node.ind).asNumber();
-          const vArr = this.localVariables.next();
-          const vIt = this.localVariables.next();
+          const vArr = nextLocalVar();
+          const vIt = nextLocalVar();
 
           let script = `((i = -1, c = 0), ${vArr}.some((I, idx) => {`;
           script += `if (I == ${vIt} && ++c == ${ind}) {i = idx + 1;return true;}})`;
@@ -711,7 +719,7 @@
         case "SPjson.arrFill": {
           const arr = this.descendInput(node.arr).asUnknown();
           const amt = this.descendInput(node.amt).asNumber();
-          const vArr = this.localVariables.next();
+          const vArr = nextLocalVar();
           return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}), ${vArr}.concat(Array(Math.max(0, ${amt} - ${vArr}.length)).fill("")))`, exp.TYPE_UNKNOWN);
         }
         case "SPjson.arrFlat": {
@@ -914,7 +922,7 @@
         }
         case "SPjson.parse": {
           const obj = this.descendInput(node.obj).asUnknown();
-          const vObj = this.localVariables.next();
+          const vObj = nextLocalVar();
           return new exp.TypedInput(
             `(${vObj} = ${obj}, typeof ${vObj} === "object" ? ${vObj} : (() => {try { return JSON.parse(${vObj}); } catch { return ""; }})())`,
             exp.TYPE_UNKNOWN
