@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.12
+// Version V.1.1.13
 
 (function (Scratch) {
   "use strict";
@@ -44,13 +44,9 @@
     };
   }
 
-  let BUILT_IN_FONTS = new Set();
-  iteratorForEach(
-    document.fonts.keys(),
-    (font) => BUILT_IN_FONTS.add(font.family)
-  );
-  BUILT_IN_FONTS = [...BUILT_IN_FONTS]
-    .map((f) => ({ text: Scratch.translate(f), value: f }));
+  const BUILT_IN_FONTS = [...new Set(
+    Array.from(document.fonts.keys()).map(f => f.family)
+  )].map((f) => ({ text: Scratch.translate(f), value: f }));
 
   // Slightly modified version of Markdown for svg
   const MARKDOWN_CONSTS = {
@@ -513,6 +509,7 @@
   const textObjects = Object.create(null);
   const presetPositions = Object.create(null);
   let isInDebugMode = false;
+  let nextGradientID = 0;
 
   class SPdisplayTextV2 {
     constructor() {
@@ -1046,6 +1043,7 @@
     }
 
     removeAllTxt() {
+      nextGradientID = 0;
       for (const textObj of Object.values(textObjects)) {
         textObj.dispose();
         delete textObjects[textObj.id];
@@ -1220,9 +1218,10 @@
         let color = Cast.toString(args.COLOR);
         let isGradient = false;
         if (color.startsWith("<") && color.endsWith("Gradient>")) {
-          isGradient = true
-          textObj.setAttribute("gradient", [1, color], true);
-          color = "url(#gradColor1)";
+          const gradientID = "C" + nextGradientID++;
+          isGradient = true;
+          textObj.setAttribute("gradient", [gradientID, color], true);
+          color = `url(#gradColor${gradientID})`;
         }
         textObj.setAttribute("fill", color);
         textObj.updateElement(true, isGradient);
@@ -1252,9 +1251,10 @@
         let color = Cast.toString(args.COLOR);
         let isGradient = false;
         if (color.startsWith("<") && color.endsWith("Gradient>")) {
-          isGradient = true
-          textObj.setAttribute("gradient", [2, color], true);
-          color = "url(#gradColor2)";
+          const gradientID = "O" + nextGradientID++;
+          isGradient = true;
+          textObj.setAttribute("gradient", [gradientID, color], true);
+          color = `url(#gradColor${gradientID})`;
         }
         textObj.setAttribute("stroke", color);
         textObj.setAttribute("stroke-width", Cast.toNumber(args.THICKNESS) + "px");
