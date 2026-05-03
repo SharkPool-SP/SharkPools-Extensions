@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.65
+// Version V.1.4.0
 
 (function(Scratch) {
   "use strict";
