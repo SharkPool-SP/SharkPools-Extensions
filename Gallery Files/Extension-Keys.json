@@ -380,7 +380,7 @@
       "url": "Display-Text-V2.js",
       "banner": "Display-Text.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Laast Updated: 04/27/2026"
+      "date": "Laast Updated: 05/02/2026"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
@@ -543,7 +543,7 @@
       "url": "JSON-Array.js",
       "banner": "JSON-Array.svg",
       "tags": ["Utility", "Data Management", "Math", "Category Expansion"],
-      "date": "Last Updated: 04/17/2026"
+      "date": "Last Updated: 05/01/2026"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
