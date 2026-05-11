@@ -340,7 +340,7 @@
       "url": "Geolocation.js",
       "banner": "Geolocation.svg",
       "tags": ["Utility", "Hardware", "Online", "Math", "Dangerous"],
-      "date": "Last Updated: 12/21/2025"
+      "date": "Last Updated: 05/11/2026"
     },
     "Spotify": {
       "desc": "Fetch Statistics, Information, and Play Songs from Spotify",
