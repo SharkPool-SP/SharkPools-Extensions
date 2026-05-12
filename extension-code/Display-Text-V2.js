@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.13
+// Version V.1.1.14
 
 (function (Scratch) {
   "use strict";
@@ -183,6 +183,7 @@
       this._cachedImage = [null, null];
 
       this._dirty = false;
+      this._transformDirty = false;
       this._interactable = false;
       this._clickable = false;
 
@@ -226,12 +227,15 @@
     }
 
     setPosition(x, y) {
-      if (x === this.position[0] && y === this.position[1]) return;
+      if (
+        !this._transformDirty &&
+        x === this.position[0] && y === this.position[1]
+      ) return;
       this.position[0] = x;
       this.position[1] = y;
 
       if (!this._element) return;
-      if (this._bounds === null) this._bounds = this._elementInner.getBBox();
+      this.updateTextBounds();
 
       const vertAlign = this.specialStyles.get("vert-align");
       if (vertAlign === "top") {
@@ -352,11 +356,20 @@
       }
     }
 
+    updateTextBounds() {
+      if (this._transformDirty || !this._bounds) {
+        this._bounds = this._elementInner.getBBox();
+        this._transformDirty = false;
+      }
+
+      return this._bounds;
+    }
+
     updateDebugBox() {
-      if (this._bounds === null) this._bounds = this._elementInner.getBBox();
-      const bounds = this._bounds;
+      const bounds = this.updateTextBounds();
       const alignment = this._elementInner.getAttribute("text-anchor");
       const stroke = alignment === "start" ? "ff0000" : alignment === "end" ? "0000ff" : "00ff00";
+
       this._debugBox.setAttribute("stroke", "#" + stroke);
       this._debugBox.setAttribute("width", bounds.width);
       this._debugBox.setAttribute("height", bounds.height);
@@ -465,7 +478,7 @@
         }
       }
 
-      this._bounds = this._elementInner.getBBox();
+      this._transformDirty = true;
 
       if (isInDebugMode) this.updateDebugBox();
 
@@ -1198,17 +1211,12 @@
           case "letter": return styles.get("letter-spacing") || 0;
           case "line": return textObj.specialStyles.get("line-height") || 1;
           case "width": return textObj.specialStyles.get("width") || -1;
-          case "boxW": {
-            if (textObj._bounds === null) textObj._bounds = textObj._elementInner.getBBox();
-            return textObj._bounds.width;
-          }
-          case "boxH": {
-            if (textObj._bounds === null) textObj._bounds = textObj._elementInner.getBBox();
-            return textObj._bounds.height;
-          }
+          case "boxW": return textObj.updateTextBounds().width;
+          case "boxH": return textObj.updateTextBounds().height;
           default: return "";
         }
       }
+
       return "";
     }
 
