@@ -28,10 +28,10 @@
   const render = vm.renderer;
   const keyUtil = runtime.ioDevices.keyboard;
 
-  const defaultFonts = [
-    "Sans Serif", "Serif", "Handwriting",
-    "Marker", "Curly", "Pixel", "Scratch"
-  ];
+  const BUILT_IN_FONTS = [...new Set(
+    Array.from(document.fonts).map(f => f.family)
+  )].map((f) => ({ text: Scratch.translate(f), value: f }));
+  
   const translatedInputs = {
     popup: Scratch.translate("default-popup"),
     label: Scratch.translate("new-label"),
@@ -1060,7 +1060,7 @@
     // Helper Funcs
     getFonts() {
       const custFonts = runtime.fontManager ? runtime.fontManager.getFonts().map((i) => ({ text: i.name, value: i.family })) : [];
-      return [ ...defaultFonts, ...custFonts ];
+      return [ ...BUILT_IN_FONTS, ...custFonts ];
     }
 
     genElementList(addPopup, addRow, addButton) {
