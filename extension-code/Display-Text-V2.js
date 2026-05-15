@@ -950,7 +950,9 @@
         const customFonts = runtime.fontManager.getFonts().map((f) => ({
           text: Scratch.translate(f.name), value: f.family
         }));
-        return [...BUILT_IN_FONTS, ...customFonts];
+
+        const fonts = [...BUILT_IN_FONTS, ...customFonts];
+        return fonts.length ? fonts : [""];
       }
 
       return BUILT_IN_FONTS.length ? BUILT_IN_FONTS : [""];
