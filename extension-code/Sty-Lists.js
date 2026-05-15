@@ -14,10 +14,11 @@
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
-  const builtInFonts = [
-    "Scratch", "Sans Serif", "Serif",
-    "Handwriting", "Marker", "Curly", "Pixel"
-  ];
+
+  const BUILT_IN_FONTS = [...new Set(
+    Array.from(document.fonts).map(f => f.family)
+  )].map((f) => ({ text: Scratch.translate(f), value: f }));
+  
   let listDocs;
   if (typeof scaffolding !== "undefined") {
     listDocs = {
@@ -317,7 +318,7 @@
 
     getFonts() {
       const customFonts = runtime.fontManager ? runtime.fontManager.getFonts().map((i) => ({ text: i.name, value: i.family })) : [];
-      return [...builtInFonts, ...customFonts];
+      return [...BUILT_IN_FONTS, ...customFonts];
     }
 
     getEffects(enable) {
