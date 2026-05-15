@@ -42,6 +42,14 @@
       "isDeprecated": true,
       "date": "Last Updated: 10/07/2024"
     },
+    "Camera": {
+      "desc": "Use Cameras to move the visible part of the Stage",
+      "creator": "SharkPool",
+      "url": "Camera.js",
+      "banner": "Camera.svg",
+      "tags": ["Utility", "Graphics", "Category Expansion"],
+      "date": "Released: 05/14/2026"
+    },
     "Added-Motion": {
       "desc": "New Motion Blocks",
       "creator": "SharkPool",
