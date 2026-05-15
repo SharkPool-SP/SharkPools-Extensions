@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.15
+// Version V.1.1.16
 
 (function (Scratch) {
   "use strict";
@@ -45,7 +45,7 @@
   }
 
   const BUILT_IN_FONTS = [...new Set(
-    Array.from(document.fonts.keys()).map(f => f.family)
+    Array.from(document.fonts).map(f => f.family)
   )].map((f) => ({ text: Scratch.translate(f), value: f }));
 
   // Slightly modified version of Markdown for svg
