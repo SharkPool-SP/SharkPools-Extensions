@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.14
+// Version V.1.1.15
 
 (function (Scratch) {
   "use strict";
@@ -952,7 +952,8 @@
         }));
         return [...BUILT_IN_FONTS, ...customFonts];
       }
-      return BUILT_IN_FONTS;
+
+      return BUILT_IN_FONTS.length ? BUILT_IN_FONTS : [""];
     }
 
     _getEffects() {
