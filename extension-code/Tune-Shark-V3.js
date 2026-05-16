@@ -246,7 +246,7 @@
       return {
         id: "SPtuneShark3",
         name: Scratch.translate("Tune Shark V3"),
-        // docsURI: "https://extensions.turbowarp.org/SharkPool/Tune-Shark-V3", disabled until turbowarp PR is merged
+        docsURI: "https://extensions.turbowarp.org/SharkPool/Tune-Shark-V3",
         color1: "#666666",
         menuIconURI,
         blockIconURI,
@@ -1119,13 +1119,13 @@
           clone.sourceNode.playbackRate.value = sound.pitch;
           clone.sourceNode.gainSuccessor.gain.value = sound.gain;
 
-          const overlayIndex = sound.overlays.length;
           sound.overlays.push(clone);
           clone.on("end", () => {
             clone.sourceNode.disconnect();
             clone.disconnect();
 
-            sound.overlays.splice(overlayIndex, 1);
+            const overlayIndex = sound.overlays.indexOf(clone);
+            if (overlayIndex !== -1) sound.overlays.splice(overlayIndex, 1);
             delete soundBank[newName];
           });
         } else {
@@ -1269,7 +1269,10 @@
         };
 
         Scratch.canFetch(url).then((canFetch) => {
-          if (!canFetch) resolve();
+          if (!canFetch) {
+            resolve();
+            return;
+          }
 
           this.deleteSound(args);
           try {
@@ -1283,7 +1286,7 @@
                   handleError(errorStatus);
                   return;
                 }
-  
+
                 this.initSound(engine, args.NAME, url, false);
                 resolve();
               }
@@ -1369,9 +1372,14 @@
         this.playSound(sound, Cast.toNumber(args.TIME));
         util.yield();
       } else if (util.stackFrame.awaitingSound) {
-        if (sound.currentTime >= Cast.toNumber(args.MAX))
+        const ctx = sound.context;
+        if (
+          sound.currentTime >= Cast.toNumber(args.MAX) ||
+          // If the sound is shorter than MAX, current time will never reach MAX, so we should abort early at that point
+          (!ctx.playing && !ctx.paused)
+        ) {
           this.audioControlDo(sound, "stop");
-        else util.yield();
+        } else util.yield();
       }
     }
 
@@ -1435,16 +1443,31 @@
       this.audioControlDo(sound, "stop");
       sound._cache = { loudness: {}, tone: {} };
 
-      const node = sound.context.sourceNode;
-      const reverseBuffer = (buffer) => {
-        for (let i = 0; i < buffer.numberOfChannels; i++)
-          buffer.getChannelData(i).reverse();
-        return buffer;
-      };
+      const ctx = sound.context;
+      const src = ctx.sourceNode.buffer;
 
-      const bufferSource = node.context.createBufferSource();
-      bufferSource.buffer = reverseBuffer(node.buffer);
-      bufferSource.connect(node.context.destination);
+      // Reverse a private copy -- never mutate the source buffer, it may be
+      // shared with the project's Scratch sound or another Tune Shark sound
+      const reversed = Pizzicato.context.createBuffer(
+        src.numberOfChannels,
+        src.length,
+        src.sampleRate
+      );
+      for (let i = 0; i < src.numberOfChannels; i++) {
+        const channel = reversed.getChannelData(i);
+        channel.set(src.getChannelData(i));
+        channel.reverse();
+      }
+
+      // Pizzicato keeps the buffer in a closure with no setter, so point
+      // its source-node factory at the reversed copy
+      ctx.getRawSourceNode = function () {
+        const node = Pizzicato.context.createBufferSource();
+        node.loop = this.loop;
+        node.buffer = reversed;
+        return node;
+      };
+      ctx.sourceNode = ctx.getSourceNode();
     }
 
     loopParams(args) {
@@ -1587,12 +1610,13 @@
         return 0;
       }
 
+      const cacheKey = `${time}|${chan}`;
       let value = 0;
       if (
         args.TYPE !== "raw noise" &&
-        sound._cache[args.TYPE][`${time}${chan}`] !== undefined
+        sound._cache[args.TYPE]?.[cacheKey] !== undefined
       ) {
-        value = sound._cache[args.TYPE][`${time}${chan}`];
+        value = sound._cache[args.TYPE][cacheKey];
       } else {
         const sampleRate = buffer.sampleRate;
         const channelData = buffer.getChannelData(chan);
@@ -1632,7 +1656,7 @@
           }
 
           value = bestTau > 0 ? sampleRate / bestTau : 0;
-          sound._cache["tone"][`${time}${chan}`] = value;
+          sound._cache["tone"][cacheKey] = value;
           return value;
         } else if (args.TYPE === "loudness") {
           for (let i = startSample; i < endSample; i++) {
@@ -1642,7 +1666,7 @@
           const rms = Math.sqrt(value / (endSample - startSample));
           const dB = 20 * Math.log10(rms);
           value = clamp(0, 1, (dB + 50) / 50) * 100;
-          sound._cache["loudness"][`${time}${chan}`] = value;
+          sound._cache["loudness"][cacheKey] = value;
         } else {
           return "";
         }
