@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.05
+// Version V.1.2.06
 
 (function (Scratch) {
   "use strict";
@@ -682,7 +682,7 @@
         }
         case "SPjson.arrMatches": {
           const arr = this.descendInput(node.arr).asUnknown();
-          const item = this.descendInput(node.item).asString();
+          const item = this.descendInput(node.item).asUnknown();
           const vArr = nextLocalVar();
           const vIt = nextLocalVar();
           return new exp.TypedInput(`((${vArr} = ${_arrParser(arr)}, ${vIt} = ${_safeCast(item)}), ${vArr}.filter(i => i == ${vIt}).length)`, exp.TYPE_NUMBER);
@@ -696,7 +696,7 @@
         }
         case "SPjson.itemIndex": {
           const arr = this.descendInput(node.arr).asUnknown();
-          const item = this.descendInput(node.item).asString();
+          const item = this.descendInput(node.item).asUnknown();
           const ind = this.descendInput(node.ind).asNumber();
           const vArr = nextLocalVar();
           const vIt = nextLocalVar();
@@ -1264,7 +1264,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "# of times [ITEM] appears in [ARR]",
             arguments: {
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a", exemptFromNormalization: true },
               ARR: genArgument("arr", DEFAULT_ARGS.arr2)
             },
           },
@@ -1283,7 +1283,7 @@
             text: "index # [IND] of item [ITEM] in [ARR]",
             arguments: {
               IND: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a" },
+              ITEM: { type: Scratch.ArgumentType.STRING, defaultValue: "a", exemptFromNormalization: true },
               ARR: genArgument("arr", DEFAULT_ARGS.arr2)
             },
           },
@@ -1628,12 +1628,13 @@
       return Cast.toNumber(num) - 1;
     }
 
-    toSafe(val) {
+    toSafe(value) {
       if (this.alwaysCast) {
-        if (typeof val === "object") return val;
-        if (isNaN(val) || val === Infinity || val === -Infinity) return Cast.toString(val);
+        if (typeof value === "object") return value;
+        if (isNaN(value) || value === Infinity || value === -Infinity) return Cast.toString(value);
       }
-      return val;
+
+      return value;
     }
 
     stackFrameInit(util, opt_outerStack, initializers) {
