@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.06
+// Version V.1.2.07
 
 (function (Scratch) {
   "use strict";
@@ -222,9 +222,7 @@
       value && 
       (value.constructor?.name === "Object" || value.constructor?.name === "Array")
     ) {
-      args[valueArg] = JSON.stringify(
-        resolveCircular(structuredClone(value))
-      );
+      args[valueArg] = JSON.stringify(resolveCircular(value));
     }
 
     return ogVisReport.call(this, ...args);
@@ -300,9 +298,11 @@
       let script = "(function(o) {\n";
 
       // raw values
-      if (type === null) script += `if (typeof o === "object") return o;`;
-      else if (type === 0) script += `if (typeof o === "object" && !Array.isArray(o)) return o;`;
-      else script += `if (Array.isArray(o)) return o;`;
+      const rawValue = extContext.useNewObj && extContext.alwaysTryParse ? `${OBJ_UTIL}.safeCopy(o)` : "o";
+
+      if (type === null) script += `if (typeof o === "object") return ${rawValue};`;
+      else if (type === 0) script += `if (typeof o === "object" && !Array.isArray(o)) return ${rawValue};`;
+      else script += `if (Array.isArray(o)) return ${rawValue};`;
 
       // parser
       script += `try{`;
@@ -336,6 +336,7 @@
       utilObj += "parseA: " + insertParser(1);
       utilObj += `safeCast: (function(val) {\nreturn typeof val === "object" ? val : (isNaN(val) || val === Infinity || val === -Infinity) ? "" + val : val;\n}),\n`;
       utilObj += "hasOwn: (function(obj, prop) {\nreturn Object.prototype.hasOwnProperty.call(obj,prop)\n}),\n";
+      utilObj += `safeCopy: (function(obj) {\ntry { return structuredClone(obj) } catch { return obj }\n}),\n`;
       utilObj += insertArrayFreqSort();
       utilObj += "};\n";
 
@@ -559,7 +560,7 @@
           const path = this.descendInput(node.path).asUnknown();
           const val = this.descendInput(node.val).asUnknown();
           return new exp.TypedInput(
-            `((spO,p,i=spO,safe=1)=>(p.forEach((k,idx)=>safe && (i = ${_preventACE("i")} || "", safe = !!i, safe && (i = idx===p.length-1 ? (i[k]=${_safeCast(val)}) : (i[k]=${_preventACE(`i[k]`)} || i[k] || {})))), safe ? spO : ""))(${_objParser(obj)},${_arrParser(path)})`,
+            `((spO,p,value,i=spO,safe=1)=>(p.forEach((k,idx)=>safe && (i = ${_preventACE("i")} || "", safe = !!i, safe && (i = idx===p.length-1 ? (i[k]=value) : (i[k]=${_preventACE(`i[k]`)} || i[k] || {})))), safe ? spO : ""))(${_objParser(obj)},${_arrParser(path)},${_safeCast(val)})`,
             exp.TYPE_UNKNOWN
           );
         }
