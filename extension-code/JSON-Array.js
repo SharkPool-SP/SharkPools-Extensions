@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.07
+// Version V.1.2.08
 
 (function (Scratch) {
   "use strict";
@@ -1532,7 +1532,14 @@
           ARRAY_CHECK: ["every", "some"],
           VAR_TYPE: ["variable", "list"],
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values", "entries"] },
-          CONVERTS: { acceptReporters: true, items: ["string", "pretty string", "array", "object"] },
+          CONVERTS: {
+            acceptReporters: true,
+            items: [
+              "string", "pretty string",
+              "array", "object",
+              "object from entries"
+            ]
+          },
           CONVERTS2: { acceptReporters: true, items: ["array", "text"] },
           SETTINGS: { acceptReporters: true, items: this._settings },
           ORDERING: {
@@ -1783,7 +1790,7 @@
       for (let i = 0; i < path.length; i++) {
         const key = Cast.toString(path[i]);
         if (i === path.length - 1) {
-          if (this.preventACE(objVal)) objPath[key] = this.toSafe(args.VAL);
+          if (this.preventACE(objPath[key])) objPath[key] = this.toSafe(args.VAL);
         } else {
           objPath = objPath[key] ?? {};
         }
@@ -2122,7 +2129,14 @@
       switch (args.TYPE) {
         case "array": return Object.entries(this.tryParse(args.OBJ));
         case "JSON":
-        case "object": return Object.assign({}, this.tryParse(args.OBJ));
+        case "object": return Object.assign({}, this.tryParse(args.OBJ)); 
+        case "object from entries": {
+          try {
+            return Object.fromEntries(this.tryParse(args.OBJ, 1));
+          } catch {
+            return {};
+          }
+        }
         case "pretty string": return JSON.stringify(resolveCircular(this.tryParse(args.OBJ)), "\t");
         default: return JSON.stringify(resolveCircular(this.tryParse(args.OBJ)));
       }
