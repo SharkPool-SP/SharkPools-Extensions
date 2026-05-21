@@ -559,7 +559,8 @@
       "url": "My-Blocks-Plus.js",
       "banner": "My-Blocks-Plus.svg",
       "tags": ["Utility", "Category Expansion", "Editor Tool", "Configuration", "Runtime"],
-      "date": "Last Updated: 12/28/2025"
+      "overrideLabeler": true,
+      "date": "Last Updated: 05/21/2026"
     },
     "Dropdown-Maker": {
       "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
