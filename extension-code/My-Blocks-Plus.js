@@ -6,7 +6,7 @@
 // By: 0znzw <https://scratch.mit.edu/users/0znzw/>
 // License: MIT
 
-// Version V.1.2.65
+// Version V.1.2.66
 
 (function(Scratch) {
   "use strict";
@@ -1578,12 +1578,14 @@
             case Events.MOVE: {
               let block = mainWorkspace.getBlockById(e.blockId), parent = mainWorkspace.getBlockById(e.newParentId);
 
-              // fix field colours
+              // fix dropdown field colours
               if (
-                e.newInputName && block?.category_ === null &&
-                block.inputList[0].fieldRow[0]?.arrow_ !== undefined &&
-                parent?.type === "procedures_call"
-              ) block.setColour(parent.colour_);
+                parent?.type === "procedures_call" &&
+                e.newInputName && block?.isShadow() &&
+                block.inputList[0].fieldRow[0] instanceof SB.FieldDropdown
+              ) {
+                block.setColour(parent.colour_);
+              }
 
               // update global block cache for returns
               if (!isPM) {
