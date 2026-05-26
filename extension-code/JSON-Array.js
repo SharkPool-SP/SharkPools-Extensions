@@ -2137,7 +2137,10 @@
             return {};
           }
         }
-        case "pretty string": return JSON.stringify(resolveCircular(this.tryParse(args.OBJ)), "\t");
+        case "pretty string": return JSON.stringify(
+          resolveCircular(this.tryParse(args.OBJ)),
+          undefined, "\t"
+        );
         default: return JSON.stringify(resolveCircular(this.tryParse(args.OBJ)));
       }
     }
