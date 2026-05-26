@@ -169,9 +169,10 @@
       const ip = Cast.toString(args.IP);
       if (IP_INFO_CACHE.has(ip)) return IP_INFO_CACHE.get(ip)[args.TYPE] ?? "";
 
-      if (!await Scratch.canFetch(`${proxy}https://freeipapi.com/api/json/${ip}`)) return "";
+      const url = `https://free.freeipapi.com/api/json/${ip}`;
+      if (!await Scratch.canFetch(url)) return "";
       try {
-        const response = await Scratch.fetch(`${proxy}https://freeipapi.com/api/json/${ip}`);
+        const response = await Scratch.fetch(url);
         const data = await response.json();
         IP_INFO_CACHE.set(ip, data);
         return data[args.TYPE] ?? "";
@@ -179,9 +180,10 @@
     }
 
     async getCountryName(args) {
-      if (!await Scratch.canFetch(`${proxy}https://api.first.org/data/v1/countries?q=${args.CODE}`)) return "";
+      const url = `${proxy}https://api.first.org/data/v1/countries?q=${args.CODE}`;
+      if (!await Scratch.canFetch(url)) return "";
       try {
-        const response = await Scratch.fetch(`${proxy}https://api.first.org/data/v1/countries?q=${args.CODE}`);
+        const response = await Scratch.fetch(url);
         const data = await response.json();
         return data.data[args.CODE].country ?? "Invalid Country Code";
       } catch { return "" }
