@@ -66,9 +66,9 @@
       return {
         id: "SPspotlight",
         name: "Community Spotlight",
-        color1: "#00a1e6",
-        color2: "#0085e6",
-        color3: "#006fbf",
+        color1: "#14c490",
+        color2: "#00a674",
+        color3: "#01855d",
         menuIconURI,
         blocks: [
           {
