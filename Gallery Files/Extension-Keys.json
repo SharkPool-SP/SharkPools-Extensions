@@ -530,12 +530,12 @@
       "date": "Last Updated: 12/20/2024"
     },
     "Community-Spotlight": {
-      "desc": "Display and Promote Projects for Free",
+      "desc": "Display and Promote Projects for free",
       "creator": "SharkPool, Community Spotlight Team",
       "url": "Community-Spotlight.js",
       "banner": "Community-Spotlight.svg",
       "tags": ["Graphics", "Sound", "Data Management", "Online"],
-      "date": "Last Updated: 01/17/2025"
+      "date": "Last Updated: 06/03/2026"
     },
     "GIF-Manager": {
       "desc": "Create and Split GIF Frames",
