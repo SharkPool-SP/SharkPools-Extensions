@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.16
+// Version V.1.1.17
 
 (function (Scratch) {
   "use strict";
@@ -291,7 +291,8 @@
       newLine();
       line.setAttribute("dy", ".85em");
 
-      for (const span of originalSpans) {
+      for (let i = 0; i < originalSpans.length; i++) {
+        const span = originalSpans[i];
         for (const node of span.childNodes) {
           if (node.nodeType !== Node.TEXT_NODE) {
             line.appendChild(node.cloneNode(true));
@@ -299,8 +300,8 @@
           }
 
           const lines = node.textContent.split("\n");
-          for (let i = 0; i < lines.length; i++) {
-            const segment = lines[i];
+          for (let j = 0; j < lines.length; j++) {
+            const segment = lines[j];
             const words = segment.split(/(\s+)/);
             for (const word of words) {
               if (!word) continue;
@@ -311,15 +312,17 @@
               if (line.getComputedTextLength() > maxWidth) {
                 line.removeChild(testNode);
                 newLine();
-                line.appendChild(testNode);
+                if (word.trim()) line.appendChild(testNode);
               }
             }
 
-            if (i < lines.length - 1) newLine();
+            if (j < lines.length - 1) newLine();
           }
         }
 
-        if (originalSpans.length > 1) newLine();
+        if (originalSpans.length > 1 && i < originalSpans.length - 1) {
+          newLine();
+        }
       }
     }
 
