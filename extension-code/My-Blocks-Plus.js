@@ -1461,7 +1461,7 @@
 
       const isRecursive = thread.isRecursiveCall(procedureCode.proc);
       thread.pushStack(def);
-      if (thread.peekStackFrame().warpMode && thread.warpTimer.timeElapsed() > Sequencer.WARP_TIME) thread.status = Thread.STATUS_YIELD;
+      if (thread.peekStackFrame().warpMode && thread.warpTimer.timeElapsed() > 500) thread.status = Thread.STATUS_YIELD;
       else {
         const defBlock = ogTarget.blocks.getBlock(def);
         const innerBlock = ogTarget.blocks.getBlock(defBlock.inputs.custom_block.block);
