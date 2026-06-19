@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function (Scratch) {
   "use strict";
@@ -650,12 +650,12 @@
       const storedImg = imageBank.get(args.NAME);
       if (storedImg === undefined) return;
 
-      this._resizeCanvas(storedImg.width, storedImg.height, true);
-      globalCtx.putImageData(storedImg.imageData, 0, 0);
-
       await this._textureHelper(args.IMAGE, (texture) => {
         const xOffset = (storedImg.width - texture.width) / 2;
         const yOffset = (storedImg.height - texture.height) / 2;
+
+        this._resizeCanvas(storedImg.width, storedImg.height, true);
+        globalCtx.putImageData(storedImg.imageData, 0, 0);
         globalCtx.globalCompositeOperation = textureBlendMode;
         globalCtx.drawImage(
           texture,
