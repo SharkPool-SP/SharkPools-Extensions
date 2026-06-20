@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.02
+// Version V.1.8.03
 
 (function (Scratch) {
   "use strict";
@@ -485,17 +485,15 @@
     }
 
     async getResults(args) {
-		const queryStr = Cast.toString(args.QUERY);
-  
-		const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+			const queryStr = Cast.toString(args.QUERY);
+			const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+			const cacheKey = "query_" + queryStr; 
 
-		const cacheKey = "query_" + queryStr; 
-
-		const data = await this._fetch(
-			`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
-			cacheKey,
-			"json", 
-			true
+			const data = await this._fetch(
+				`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+				cacheKey,
+				"json", 
+				true
       );
       if (!data) return "[]";
 
