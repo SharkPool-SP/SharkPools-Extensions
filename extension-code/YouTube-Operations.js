@@ -485,15 +485,15 @@
     }
 
     async getResults(args) {
-			const queryStr = Cast.toString(args.QUERY);
-			const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
-			const cacheKey = "query_" + queryStr; 
+	  const queryStr = Cast.toString(args.QUERY);
+	  const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+	  const cacheKey = "query_" + queryStr; 
 
-			const data = await this._fetch(
-				`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
-				cacheKey,
-				"json", 
-				true
+	  const data = await this._fetch(
+		`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+		cacheKey,
+		"json", 
+		true
       );
       if (!data) return "[]";
 
