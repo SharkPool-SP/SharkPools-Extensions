@@ -5,7 +5,7 @@
 // By: CST1229 <https://scratch.mit.edu/users/CST1229/>
 // Licence: MIT
 
-// Version V.1.0.4
+// Version V.1.0.41
 
 (function (Scratch) {
   "use strict";
@@ -24,7 +24,7 @@
   const twgl = render.exports.twgl;
 
   const drawableKey = Symbol("SPlooksKey");
-  const MAX_REPLACERS = 15;
+  const MAX_REPLACERS = 25;
 
   const newSingleEffects = {
     saturation: 1, opaque: 0, contrast: 1,
@@ -112,7 +112,7 @@ void main() {
 uniform sampler2D u_maskTextureSP;
 uniform float u_shouldMaskSP;
 
-#define MAX_REPLACERS 15
+#define MAX_REPLACERS 25
 uniform vec3 u_replaceColorFromSP[MAX_REPLACERS];
 uniform vec4 u_replaceColorToSP[MAX_REPLACERS];
 uniform float u_replaceThresholdSP[MAX_REPLACERS];
