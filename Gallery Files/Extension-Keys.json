@@ -380,6 +380,7 @@
       "url": "Money-Utilities.js",
       "banner": "Money-Utilities.svg",
       "tags": ["Math", "Online"],
+      "isDeprecated": true,
       "date": "Last Updated: 04/04/2025"
     },
     "Display-Text": {
@@ -559,7 +560,6 @@
       "url": "My-Blocks-Plus.js",
       "banner": "My-Blocks-Plus.svg",
       "tags": ["Utility", "Category Expansion", "Editor Tool", "Configuration", "Runtime", "Dangerous"],
-      "overrideLabeler": true,
       "date": "Last Updated: 05/21/2026"
     },
     "Dropdown-Maker": {

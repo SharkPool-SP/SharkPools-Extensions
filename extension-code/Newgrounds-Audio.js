@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.1
+// Version V.2.0.11
 
 (function (Scratch) {
   "use strict";
@@ -15,8 +15,8 @@
   const blockIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzEuMTg5IiBoZWlnaHQ9IjEzMS4xODkiIHZpZXdCb3g9IjAgMCAxMzEuMTg5IDEzMS4xODkiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCB4MT0iMjQwIiB5MT0iMTQyLjUiIHgyPSIyNDAiIHkyPSIyNTcuNTE2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmOWQwMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmMGIzMyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik01Mi40MDQgMjguMDk0YTkuMDkgOS4wOSAwIDAgMSA5LjA4OCA5LjA4OHY2Mi4xMjVhMy43ODcgMy43ODcgMCAwIDEtMy43ODggMy43ODdoLTguMzNhMy43ODcgMy43ODcgMCAwIDEtMy43ODctMy43ODdWNDcuNjMxYTMuNzg3IDMuNzg3IDAgMCAwLTMuNzg3LTMuNzg3aC0xLjUxNWEzLjc4NyAzLjc4NyAwIDAgMC0zLjc4NiAzLjc4N3Y1MS42NzZhMy43ODcgMy43ODcgMCAwIDEtMy43ODcgMy43ODdoLTguMzMxYTMuNzg3IDMuNzg3IDAgMCAxLTMuNzg3LTMuNzg3VjMxLjg4MWEzLjc4NyAzLjc4NyAwIDAgMSAzLjc4Ny0zLjc4N3ptNDkuMTAyIDBhOS4wOSA5LjA5IDAgMCAxIDkuMDg4IDkuMDg4djE1LjYzM2EzLjAzIDMuMDMgMCAwIDEtMy4wMyAzLjAyOUg5Ni45NjJhMy4wMyAzLjAzIDAgMCAxLTMuMDI5LTMuMDN2LTYuNjk4YTIuMjcgMi4yNyAwIDAgMC0yLjI3Mi0yLjI3MmgtMy43ODdhMi4yNyAyLjI3IDAgMCAwLTIuMjcyIDIuMjcydjM4Ljk2M2MwIC44MzcuNjc4IDEuNTE1IDEuNTE1IDEuNTE1aDYuMDU5Yy44MzYgMCAxLjUxNC0uNjc4IDEuNTE0LTEuNTE1di03LjQ4NWgtMS41MTRhMy4wMyAzLjAzIDAgMCAxLTMuMDMtMy4wM3YtOS42OWEzLjAzIDMuMDMgMCAwIDEgMy4wMy0zLjAzaDE0LjM5YTMuMDMgMy4wMyAwIDAgMSAzLjAyOCAzLjAzdjI5LjEzMmE5LjA5IDkuMDkgMCAwIDEtOS4wODggOS4wODhINzguNzg0YTkuMDkgOS4wOSAwIDAgMS05LjA4OS05LjA4OFYzNy4xODJhOS4wOSA5LjA5IDAgMCAxIDkuMDktOS4wODh6IiBmaWxsPSJub25lIiBzdHJva2U9IiM0MDIwMDkiIHN0cm9rZS13aWR0aD0iMTUiLz48cGF0aCBkPSJNMjI2LjgxIDE0Mi41YTkuMDkgOS4wOSAwIDAgMSA5LjA4OCA5LjA4OHY2Mi4xMjVhMy43ODcgMy43ODcgMCAwIDEtMy43ODggMy43ODdoLTguMzNhMy43ODcgMy43ODcgMCAwIDEtMy43ODctMy43ODd2LTUxLjY3NmEzLjc4NyAzLjc4NyAwIDAgMC0zLjc4Ny0zLjc4N2gtMS41MTVhMy43ODcgMy43ODcgMCAwIDAtMy43ODYgMy43ODd2NTEuNjc2YTMuNzg3IDMuNzg3IDAgMCAxLTMuNzg3IDMuNzg3aC04LjMzMWEzLjc4NyAzLjc4NyAwIDAgMS0zLjc4Ny0zLjc4N3YtNjcuNDI2YTMuNzg3IDMuNzg3IDAgMCAxIDMuNzg3LTMuNzg3aDI4LjAyMnptNDkuMTAyIDBhOS4wOSA5LjA5IDAgMCAxIDkuMDg4IDkuMDg4djE1LjYzM2EzLjAzIDMuMDMgMCAwIDEtMy4wMyAzLjAyOWgtMTAuNjAyYTMuMDMgMy4wMyAwIDAgMS0zLjAyOS0zLjAzdi02LjY5OGEyLjI3IDIuMjcgMCAwIDAtMi4yNzItMi4yNzJoLTMuNzg3YTIuMjcgMi4yNyAwIDAgMC0yLjI3MiAyLjI3MnYzOC45NjNjMCAuODM3LjY3OCAxLjUxNSAxLjUxNSAxLjUxNWg2LjA1OWMuODM2IDAgMS41MTQtLjY3OCAxLjUxNC0xLjUxNVYxOTJoLTEuNTE0YTMuMDMgMy4wMyAwIDAgMS0zLjAzLTMuMDN2LTkuNjlhMy4wMyAzLjAzIDAgMCAxIDMuMDMtMy4wM2gxNC4zOWEzLjAzIDMuMDMgMCAwIDEgMy4wMjggMy4wM3YyOS4xMzJhOS4wOSA5LjA5IDAgMCAxLTkuMDg4IDkuMDg4SDI1My4xOWE5LjA5IDkuMDkgMCAwIDEtOS4wODktOS4wODh2LTU2LjgyNGE5LjA5IDkuMDkgMCAwIDEgOS4wOS05LjA4OHoiIGZpbGw9InVybCgjYSkiIGZpbGwtcnVsZT0iZXZlbm9kZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE3NC40MDYgLTExNC40MDYpIi8+PHBhdGggZD0iTTAgMTMxLjE4OFYwaDEzMS4xODh2MTMxLjE4OHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=";
 
-  const proxy = "https://api.codetabs.com/v1/proxy?quest=";
-  const proxy2 = "https://corsproxy.io?url=";
+  const scraperProxy = "https://reef-proxy.onrender.com/scrape?wait=3&url=";
+  const getProxy = "https://reef-proxy.onrender.com/get?url=";
 
   let lastNgResponse = "";
 
@@ -136,7 +136,7 @@
 
     // Block Funcs
     fetchID(args) {
-      const url = `${proxy2}https://www.newgrounds.com/audio/listen/${args.ID}`;
+      const url = `${scraperProxy}https://www.newgrounds.com/audio/listen/${args.ID}`;
       return Scratch.fetch(url).then(response => {
         if (!response.ok) throw new Error("Error 404");
         return response.text();
@@ -151,13 +151,13 @@
 
     findURL(args) {
       const html = lastNgResponse;
-      if (!html) return "Fetch an ID First!"
+      if (!html) return "Fetch an ID First!";
       const embedController = html.match(/new embedController\(\[{"url":"([^"]+)\?/);
-      return `${proxy}${embedController[1].replaceAll("\\", "")}`;
+      return `${getProxy}${embedController[1].replaceAll("\\", "")}`;
     }
 
     getTrackInfo(args) {
-      if (!lastNgResponse) return "Fetch an ID First!"
+      if (!lastNgResponse) return "Fetch an ID First!";
       const parser = new DOMParser();
       const doc = parser.parseFromString(lastNgResponse, "text/html");
       const scriptTags = doc.querySelectorAll("script");

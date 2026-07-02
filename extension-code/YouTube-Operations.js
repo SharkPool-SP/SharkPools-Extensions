@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.03
+// Version V.1.8.04
 
 (function (Scratch) {
   "use strict";
@@ -24,9 +24,9 @@
 
   /*
     To prevent server stress, we will cache fetch results.
-    I love this proxy and it has always been reliable and exceptional.
+    This is my own cors proxy.
   */
-  const proxy = "https://api.codetabs.com/v1/proxy?quest=";
+  const proxy = "https://reef-proxy.onrender.com/get?url=";
 
   const YTCache_ = new Map();
 
