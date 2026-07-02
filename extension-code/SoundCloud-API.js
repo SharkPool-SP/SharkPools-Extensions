@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.0
+// Version V.1.1.01
 
 (function (Scratch) {
   "use strict";
@@ -22,9 +22,9 @@
     We must use a proxy since the SoundCloud API does not work outside SoundCloud origins.
 
     To prevent server stress, we will cache fetch results.
-    I love this proxy and it has always been reliable and exceptional.
+    This is my own proxy.
   */
-  const proxy = "https://api.codetabs.com/v1/proxy?quest="
+  const proxy = "https://reef-proxy.onrender.com/get?url="
 
   const SoundCloudAPI = "https://api-v2.soundcloud.com/";
   const baseSoundCloudUrl = "https://soundcloud.com/";
