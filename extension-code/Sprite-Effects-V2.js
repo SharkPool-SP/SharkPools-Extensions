@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.02
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -1473,8 +1473,8 @@
       switch (type) {
         case "POS": {
           group += `translate(${x}px, ${y * -1}px)`;
-          xGrowth = x * 2;
-          yGrowth = y * 2;
+          xGrowth = Math.abs(x * 2);
+          yGrowth = Math.abs(y * 2);
           break;
         }
         case "DIR": {
