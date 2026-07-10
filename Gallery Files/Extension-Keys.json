@@ -14,7 +14,7 @@
       "url": "YouTube-Operations.js",
       "banner": "YouTube-Operations.svg",
       "tags": ["Utility", "Sound", "Online"],
-      "date": "Last Updated: 03/02/2026"
+      "date": "Last Updated: 07/09/2026"
     },
     "Scratch-Utilities": {
       "desc": "Blocks for fetching Scratch statistics and assets, inspired by NexusKitten's S-Grab",
@@ -147,7 +147,7 @@
       "url": "Sprite-Effects-V2.js",
       "banner": "Sprite-Effects.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 01/11/2026"
+      "date": "Last Updated: 07/09/2026"
     },
     "Image-Effects": {
       "desc": "Apply Effects and Filters to Images",
@@ -182,12 +182,12 @@
       "date": "Last Updated: 03/02/2026"
     },
     "Newgrounds-Audio": {
-      "desc": "Fetch Audio and Audio Information from Newgrounds. Works best with Tune Shark V3",
+      "desc": "Fetch audio and statistics from Newgrounds. Works best with Tune Shark V3",
       "creator": "SharkPool",
       "url": "Newgrounds-Audio.js",
       "banner": "Newgrounds-Audio.svg",
       "tags": ["Utility", "Sound", "Data Management", "Online"],
-      "date": "Last Updated: 12/06/2025"
+      "date": "Last Updated: 07/09/2026"
     },
     "Sprite-Parenting": {
       "desc": "Link Sprites together and make them follow their parent's movement",
@@ -351,20 +351,20 @@
       "date": "Last Updated: 05/11/2026"
     },
     "Spotify": {
-      "desc": "Fetch Statistics, Information, and Play Songs from Spotify",
+      "desc": "Fetch statistics, information, and play songs from Spotify",
       "creator": "SharkPool",
       "url": "Spotify.js",
       "banner": "Spotify.svg",
       "tags": ["Sound", "Data Management", "Online"],
-      "date": "Last Updated: 11/16/2024"
+      "date": "Last Updated: 07/09/2024"
     },
     "SoundCloud-API": {
-      "desc": "Fetch Tracks, Artists, and Statistics from Soundcloud",
+      "desc": "Fetch tracks, artists, and statistics from Soundcloud",
       "creator": "SharkPool",
       "url": "SoundCloud-API.js",
       "banner": "SoundCloud-API.svg",
       "tags": ["Sound", "Data Management", "Online"],
-      "date": "Last Updated: 02/08/2026"
+      "date": "Last Updated: 07/09/2026"
     },
     "Google-Spreadsheets": {
       "desc": "Read and Write Google Spreadsheets",
@@ -380,6 +380,7 @@
       "url": "Money-Utilities.js",
       "banner": "Money-Utilities.svg",
       "tags": ["Math", "Online"],
+      "isDeprecated": true,
       "date": "Last Updated: 04/04/2025"
     },
     "Display-Text": {
@@ -559,7 +560,6 @@
       "url": "My-Blocks-Plus.js",
       "banner": "My-Blocks-Plus.svg",
       "tags": ["Utility", "Category Expansion", "Editor Tool", "Configuration", "Runtime", "Dangerous"],
-      "overrideLabeler": true,
       "date": "Last Updated: 05/21/2026"
     },
     "Dropdown-Maker": {
