@@ -5,7 +5,7 @@
       "creator": "SharkPool",
       "url": "Sharktilities.js",
       "banner": "Sharktilities.svg",
-      "tags": ["Utility", "Dangerous", "Math"],
+      "tags": [ "Utility", "Dangerous", "Math" ],
       "date": "Last Updated: 07/21/2025"
     },
     "YouTube-Operations": {
@@ -13,7 +13,7 @@
       "creator": "SharkPool, Nekl300 (contributor)",
       "url": "YouTube-Operations.js",
       "banner": "YouTube-Operations.svg",
-      "tags": ["Utility", "Sound", "Online"],
+      "tags": [ "Utility", "Sound", "Online" ],
       "date": "Last Updated: 07/09/2026"
     },
     "Scratch-Utilities": {
@@ -21,7 +21,7 @@
       "creator": "SharkPool",
       "url": "Scratch-Utilities.js",
       "banner": "Scratch-Utilities.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Online", "Dangerous"],
+      "tags": [ "Utility", "Graphics", "Data Management", "Online", "Dangerous" ],
       "isDeprecated": true,
       "date": "Last Updated: 04/05/2024"
     },
@@ -30,7 +30,7 @@
       "creator": "SharkPool",
       "url": "Tune-Shark-V3.js",
       "banner": "Tune-Shark-V3.svg",
-      "tags": ["Utility", "Sound", "Category Expansion"],
+      "tags": [ "Utility", "Sound", "Category Expansion" ],
       "date": "Last Updated: 01/17/2026"
     },
     "Tune-Shark": {
@@ -38,7 +38,7 @@
       "creator": "SharkPool",
       "url": "Tune-Shark.js",
       "banner": "Tune-Shark.svg",
-      "tags": ["Utility", "Sound", "Category Expansion"],
+      "tags": [ "Utility", "Sound", "Category Expansion" ],
       "isDeprecated": true,
       "date": "Last Updated: 10/07/2024"
     },
@@ -47,7 +47,7 @@
       "creator": "SharkPool",
       "url": "Camera.js",
       "banner": "Camera.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Category Expansion" ],
       "date": "Released: 05/14/2026"
     },
     "Added-Motion": {
@@ -55,7 +55,7 @@
       "creator": "SharkPool",
       "url": "Added-Motion.js",
       "banner": "Added-Motion.svg",
-      "tags": ["Utility", "Category Expansion"],
+      "tags": [ "Utility", "Category Expansion" ],
       "date": "Last Updated: 12/12/2023"
     },
     "Geometry-Dash-API": {
@@ -63,7 +63,7 @@
       "creator": "SharkPool, thank you RobTopGames and GD Colon",
       "url": "Geometry-Dash-API.js",
       "banner": "Geometry-Dash-API.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Online"],
+      "tags": [ "Utility", "Graphics", "Data Management", "Online" ],
       "isDeprecated": true,
       "date": "Last Updated: 04/10/2025"
     },
@@ -72,7 +72,7 @@
       "creator": "SharkPool",
       "url": "Sound-Waves.js",
       "banner": "Sound-Waves.svg",
-      "tags": ["Sound", "Hardware"],
+      "tags": [ "Sound", "Hardware" ],
       "date": "Last Updated: 06/29/2025"
     },
     "Hyper-Sense": {
@@ -80,7 +80,7 @@
       "creator": "SharkPool",
       "url": "Hyper-Sense-V2.js",
       "banner": "Hyper-Sense.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
+      "tags": [ "Utility", "Data Management", "Category Expansion" ],
       "date": "Last Updated: 08/08/2025"
     },
     "Keys-Plus-V2": {
@@ -88,7 +88,7 @@
       "creator": "StackOverflow",
       "url": "KeysPlusV2.js",
       "banner": "Keys-Plus-V2.svg",
-      "tags": ["Utility", "Data Management", "Hardware"],
+      "tags": [ "Utility", "Data Management", "Hardware" ],
       "date": "Released: 02/05/2025"
     },
     "Popup-Phoenix": {
@@ -96,7 +96,7 @@
       "creator": "SharkPool",
       "url": "Popup-Phoenix.js",
       "banner": "Popup-Phoenix.svg",
-      "tags": ["Configuration", "Graphics"],
+      "tags": [ "Configuration", "Graphics" ],
       "date": "Last Updated: 10/25/2025"
     },
     "Better-Input": {
@@ -104,7 +104,7 @@
       "creator": "SharkPool",
       "url": "Better-Input.js",
       "banner": "Better-Input.svg",
-      "tags": ["Configuration", "Graphics"],
+      "tags": [ "Configuration", "Graphics" ],
       "isDeprecated": true,
       "date": "Last Updated: 11/02/2024"
     },
@@ -113,7 +113,7 @@
       "creator": "SharkPool",
       "url": "Camera-Sensing-Plus.js",
       "banner": "Camera-Sensing-Plus.svg",
-      "tags": ["Utility", "Graphics", "Hardware", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Hardware", "Category Expansion" ],
       "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
@@ -121,7 +121,7 @@
       "creator": "SharkPool",
       "url": "Particle-Engine.js",
       "banner": "Particle-Engine.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
+      "tags": [ "Utility", "Graphics", "Data Management" ],
       "date": "Last Updated: 02/01/2026"
     },
     "Particle-Tools": {
@@ -129,7 +129,7 @@
       "creator": "SharkPool",
       "url": "Particle-Tools.js",
       "banner": "Particle-Tools.svg",
-      "tags": ["Utility", "Data Management"],
+      "tags": [ "Utility", "Data Management" ],
       "isDeprecated": true,
       "date": "Last Updated: 02/04/2024"
     },
@@ -138,7 +138,7 @@
       "creator": "SharkPool, CST1229",
       "url": "Looks-Expanded.js",
       "banner": "Looks-Expanded.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Category Expansion" ],
       "date": "Last Updated: 12/16/2025"
     },
     "Sprite-Effects": {
@@ -146,7 +146,7 @@
       "creator": "SharkPool",
       "url": "Sprite-Effects-V2.js",
       "banner": "Sprite-Effects.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Category Expansion" ],
       "date": "Last Updated: 07/09/2026"
     },
     "Image-Effects": {
@@ -154,7 +154,7 @@
       "creator": "SharkPool",
       "url": "Image-Effects.js",
       "banner": "Image-Effects.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Category Expansion" ],
       "date": "Last Updated: 04/10/2025"
     },
     "Image-Editor": {
@@ -162,7 +162,7 @@
       "creator": "SharkPool",
       "url": "Image-Editor.js",
       "banner": "Image-Editor.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Hardware"],
+      "tags": [ "Utility", "Graphics", "Data Management", "Hardware" ],
       "date": "Last Updated: 04/29/2026"
     },
     "Pixel-Utilities": {
@@ -170,7 +170,7 @@
       "creator": "LittleBlueGamer",
       "url": "Pixel-Utilities.js",
       "banner": "Pixel-Utilities.svg",
-      "tags": ["Utility", "Math"],
+      "tags": [ "Utility", "Math" ],
       "date": "Last Updated: 03/07/2024"
     },
     "Recording": {
@@ -178,7 +178,7 @@
       "creator": "SharkPool",
       "url": "Recording-V2.js",
       "banner": "Recording.svg",
-      "tags": ["Utility", "Sound", "Hardware"],
+      "tags": [ "Utility", "Sound", "Hardware" ],
       "date": "Last Updated: 03/02/2026"
     },
     "Newgrounds-Audio": {
@@ -186,7 +186,7 @@
       "creator": "SharkPool",
       "url": "Newgrounds-Audio.js",
       "banner": "Newgrounds-Audio.svg",
-      "tags": ["Utility", "Sound", "Data Management", "Online"],
+      "tags": [ "Utility", "Sound", "Data Management", "Online" ],
       "date": "Last Updated: 07/09/2026"
     },
     "Sprite-Parenting": {
@@ -194,7 +194,7 @@
       "creator": "SharkPool",
       "url": "Sprite-Parenting.js",
       "banner": "Sprite-Parenting.svg",
-      "tags": ["Utility"],
+      "tags": [ "Utility" ],
       "date": "Last Updated: 05/19/2025"
     },
     "Rigidbodies": {
@@ -202,7 +202,7 @@
       "creator": "SharkPool",
       "url": "Rigidbodies.js",
       "banner": "Rigidbodies.svg",
-      "tags": ["Utility", "Graphics", "Math", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Math", "Category Expansion" ],
       "date": "Last Updated: 01/29/2026"
     },
     "Lazy-Collisions": {
@@ -210,7 +210,7 @@
       "creator": "SharkPool, Food (contributor)",
       "url": "Lazy-Collisions.js",
       "banner": "Lazy-Collisions.svg",
-      "tags": ["Utility", "Math", "Category Expansion"],
+      "tags": [ "Utility", "Math", "Category Expansion" ],
       "date": "Last Updated: 05/04/2025"
     },
     "Files-Expanded": {
@@ -218,7 +218,7 @@
       "creator": "SharkPool, Drago Cuven, 0znzw",
       "url": "Files-Expanded.js",
       "banner": "Files-Expanded.svg",
-      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware"],
+      "tags": [ "Utility", "Graphics", "Sound", "Data Management", "Hardware" ],
       "date": "Last Updated: 06/07/2025"
     },
     "Temporary-Variables": {
@@ -226,7 +226,7 @@
       "creator": "SharkPool",
       "url": "Temporary-Variables.js",
       "banner": "Temporary-Variables.svg",
-      "tags": ["Utility", "Data Management"],
+      "tags": [ "Utility", "Data Management" ],
       "date": "Last Updated: 01/07/2026"
     },
     "Variables-Expanded": {
@@ -234,7 +234,7 @@
       "creator": "SharkPool, DogeIsCut",
       "url": "Variables-Expanded.js",
       "banner": "Variables-Expanded.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
+      "tags": [ "Utility", "Data Management", "Category Expansion" ],
       "date": "Last Updated: 01/14/2026"
     },
     "Sty-Lists": {
@@ -242,7 +242,7 @@
       "creator": "SharkPool",
       "url": "Sty-Lists.js",
       "banner": "Sty-Lists.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
+      "tags": [ "Utility", "Data Management", "Category Expansion" ],
       "date": "Last Updated: 04/12/2025"
     },
     "Gamepad-Expanded": {
@@ -250,7 +250,7 @@
       "creator": "DNin01, Meehdrescher",
       "url": "Gamepad-Expanded.js",
       "banner": "Gamepad-Expanded.svg",
-      "tags": ["Hardware", "Dangerous"],
+      "tags": [ "Hardware", "Dangerous" ],
       "date": "Released: 10/03/2023"
     },
     "Tile-Grids": {
@@ -258,7 +258,7 @@
       "creator": "SharkPool",
       "url": "Tile-Grids.js",
       "banner": "Tile-Grids.svg",
-      "tags": ["Utility"],
+      "tags": [ "Utility" ],
       "date": "Released: 10/09/2023"
     },
     "Animations": {
@@ -266,7 +266,7 @@
       "creator": "SharkPool",
       "url": "Animations.js",
       "banner": "Animations.svg",
-      "tags": ["Utility", "Graphics", "Math"],
+      "tags": [ "Utility", "Graphics", "Math" ],
       "date": "Last Updated: 11/08/2025"
     },
     "Text-to-Speech": {
@@ -274,7 +274,7 @@
       "creator": "SharkPool",
       "url": "Text-to-Speech.js",
       "banner": "Text-to-Speech.svg",
-      "tags": ["Sound", "Online", "Category Expansion"],
+      "tags": [ "Sound", "Online", "Category Expansion" ],
       "isDeprecated": true,
       "date": "Last Updated: 02/14/2026"
     },
@@ -283,7 +283,7 @@
       "creator": "SharkPool, 0znzw",
       "url": "Font-Manager.js",
       "banner": "Font-Manager.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Configuration"],
+      "tags": [ "Utility", "Graphics", "Data Management", "Configuration" ],
       "date": "Last Updated: 07/16/2024"
     },
     "Pause-Utilities": {
@@ -291,7 +291,7 @@
       "creator": "SharkPool",
       "url": "Pause-Utilities.js",
       "banner": "Pause-Utilities.svg",
-      "tags": ["Utility", "Dangerous", "Configuration", "Runtime"],
+      "tags": [ "Utility", "Dangerous", "Configuration", "Runtime" ],
       "date": "Last Updated: 04/04/2025"
     },
     "Script-Control": {
@@ -299,7 +299,7 @@
       "creator": "SharkPool",
       "url": "Script-Control.js",
       "banner": "Script-Control.svg",
-      "tags": ["Utility", "Configuration", "Runtime"],
+      "tags": [ "Utility", "Configuration", "Runtime" ],
       "date": "Last Updated: 05/30/2025"
     },
     "Messages-Plus": {
@@ -307,7 +307,7 @@
       "creator": "SharkPool",
       "url": "Messages-Plus.js",
       "banner": "Messages-Plus.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion", "Runtime"],
+      "tags": [ "Utility", "Data Management", "Category Expansion", "Runtime" ],
       "date": "Last Updated: 07/01/2025"
     },
     "Advanced-Messages": {
@@ -315,7 +315,7 @@
       "creator": "SharkPool",
       "url": "Advanced-Messages.js",
       "banner": "Advanced-Messages.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
+      "tags": [ "Utility", "Data Management", "Category Expansion" ],
       "date": "Last Updated: 04/05/2025"
     },
     "Events-Plus": {
@@ -323,7 +323,7 @@
       "creator": "SharkPool",
       "url": "Events-Plus.js",
       "banner": "Events-Plus.svg",
-      "tags": ["Utility", "Category Expansion", "Configuration", "Runtime"],
+      "tags": [ "Utility", "Category Expansion", "Configuration", "Runtime" ],
       "date": "Released: 07/23/2025"
     },
     "Runtime-Events": {
@@ -331,7 +331,7 @@
       "creator": "SharkPool",
       "url": "Runtime-Events.js",
       "banner": "Runtime-Events.svg",
-      "tags": ["Utility", "Category Expansion", "Runtime"],
+      "tags": [ "Utility", "Category Expansion", "Runtime" ],
       "date": "Last Updated: 08/11/2024"
     },
     "Fetch-Plus": {
@@ -339,7 +339,7 @@
       "creator": "SharkPool",
       "url": "Fetch-Progress.js",
       "banner": "Fetch-Plus.svg",
-      "tags": ["Data Management", "Online"],
+      "tags": [ "Data Management", "Online" ],
       "date": "Last Updated: 04/04/2025"
     },
     "Geolocation": {
@@ -347,7 +347,7 @@
       "creator": "SharkPool",
       "url": "Geolocation.js",
       "banner": "Geolocation.svg",
-      "tags": ["Utility", "Hardware", "Online", "Math", "Dangerous"],
+      "tags": [ "Utility", "Hardware", "Online", "Math", "Dangerous" ],
       "date": "Last Updated: 05/11/2026"
     },
     "Spotify": {
@@ -355,7 +355,7 @@
       "creator": "SharkPool",
       "url": "Spotify.js",
       "banner": "Spotify.svg",
-      "tags": ["Sound", "Data Management", "Online"],
+      "tags": [ "Sound", "Data Management", "Online" ],
       "date": "Last Updated: 07/09/2024"
     },
     "SoundCloud-API": {
@@ -363,7 +363,7 @@
       "creator": "SharkPool",
       "url": "SoundCloud-API.js",
       "banner": "SoundCloud-API.svg",
-      "tags": ["Sound", "Data Management", "Online"],
+      "tags": [ "Sound", "Data Management", "Online" ],
       "date": "Last Updated: 07/09/2026"
     },
     "Google-Spreadsheets": {
@@ -371,7 +371,7 @@
       "creator": "SharkPool",
       "url": "Google-Spreadsheets.js",
       "banner": "Google-Spreadsheets.svg",
-      "tags": ["Utility", "Data Management", "Online"],
+      "tags": [ "Utility", "Data Management", "Online" ],
       "date": "Last Updated: 01/16/2025"
     },
     "Money-Utilities": {
@@ -379,7 +379,7 @@
       "creator": "SharkPool",
       "url": "Money-Utilities.js",
       "banner": "Money-Utilities.svg",
-      "tags": ["Math", "Online"],
+      "tags": [ "Math", "Online" ],
       "isDeprecated": true,
       "date": "Last Updated: 04/04/2025"
     },
@@ -388,7 +388,7 @@
       "creator": "SharkPool",
       "url": "Display-Text-V2.js",
       "banner": "Display-Text.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Category Expansion" ],
       "date": "Last Updated: 06/10/2026"
     },
     "Color-Master": {
@@ -396,7 +396,7 @@
       "creator": "SharkPool",
       "url": "Color-Master.js",
       "banner": "Color-Master.svg",
-      "tags": ["Utility", "Graphics", "Math", "Data Management"],
+      "tags": [ "Utility", "Graphics", "Math", "Data Management" ],
       "date": "Last Updated: 01/23/2025"
     },
     "QR-Codes": {
@@ -404,7 +404,7 @@
       "creator": "SharkPool",
       "url": "QR-Codes.js",
       "banner": "QR-Codes.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Hardware"],
+      "tags": [ "Utility", "Graphics", "Data Management", "Hardware" ],
       "date": "Last Updated: 02/14/2026"
     },
     "Speech-Bubbles": {
@@ -412,7 +412,7 @@
       "creator": "SharkPool",
       "url": "Speech-Bubbles.js",
       "banner": "Speech-Bubbles.svg",
-      "tags": ["Graphics", "Category Expansion"],
+      "tags": [ "Graphics", "Category Expansion" ],
       "date": "Last Updated: 09/14/2024"
     },
     "Layer-Control": {
@@ -420,7 +420,7 @@
       "creator": "SharkPool",
       "url": "Layer-Control.js",
       "banner": "Layer-Control.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime"],
+      "tags": [ "Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime" ],
       "date": "Last Updated: 09/24/2024"
     },
     "Renderer-Control": {
@@ -428,7 +428,7 @@
       "creator": "SharkPool",
       "url": "Renderer-Control.js",
       "banner": "Renderer-Control.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime"],
+      "tags": [ "Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime" ],
       "date": "Last Updated: 07/01/2025"
     },
     "Time-Calculation": {
@@ -436,7 +436,7 @@
       "creator": "SharkPool",
       "url": "Time-Calculation.js",
       "banner": "Time-Calculation.svg",
-      "tags": ["Utility", "Math", "Time"],
+      "tags": [ "Utility", "Math", "Time" ],
       "date": "Last Updated: 06/01/2024"
     },
     "Timezones": {
@@ -444,7 +444,7 @@
       "creator": "Ammunimium",
       "url": "Timezones.js",
       "banner": "Timezones.svg",
-      "tags": ["Utility", "Math", "Time"],
+      "tags": [ "Utility", "Math", "Time" ],
       "status": "",
       "date": "Released: 01/25/2024"
     },
@@ -454,7 +454,7 @@
       "url": "Since-2000.js",
       "banner": "Since-2000.svg",
       "status": "",
-      "tags": ["Utility", "Math", "Time"],
+      "tags": [ "Utility", "Math", "Time" ],
       "date": "Last Updated: 11/20/2025"
     },
     "Seeds": {
@@ -462,7 +462,7 @@
       "creator": "SharkPool",
       "url": "Seeds.js",
       "banner": "Seeds.svg",
-      "tags": ["Utility", "Math"],
+      "tags": [ "Utility", "Math" ],
       "date": "Last Updated: 11/29/2023"
     },
     "Perlin-Noise": {
@@ -470,7 +470,7 @@
       "creator": "SharkPool",
       "url": "Perlin-Noise.js",
       "banner": "Perlin-Noise.svg",
-      "tags": ["Utility", "Graphics", "Math"],
+      "tags": [ "Utility", "Graphics", "Math" ],
       "date": "Last Updated: 02/07/2026"
     },
     "Extra-Controls": {
@@ -478,7 +478,7 @@
       "creator": "SharkPool",
       "url": "Extra-Controls.js",
       "banner": "Extra-Controls.svg",
-      "tags": ["Utility", "Category Expansion", "Runtime"],
+      "tags": [ "Utility", "Category Expansion", "Runtime" ],
       "date": "Last Updated: 05/04/2025"
     },
     "More-Operators": {
@@ -486,7 +486,7 @@
       "creator": "SharkPool",
       "url": "More-Operators.js",
       "banner": "More-Operators.svg",
-      "tags": ["Utility", "Category Expansion", "Math"],
+      "tags": [ "Utility", "Category Expansion", "Math" ],
       "date": "Last Updated: 05/19/2025"
     },
     "Captchas": {
@@ -494,7 +494,7 @@
       "creator": "SharkPool",
       "url": "Captchas.js",
       "banner": "Captchas.svg",
-      "tags": ["Utility", "Dangerous"],
+      "tags": [ "Utility", "Dangerous" ],
       "isDeprecated": true,
       "date": "Released: 04/05/2024"
     },
@@ -503,7 +503,7 @@
       "creator": "SharkPool",
       "url": "Better-Comments.js",
       "banner": "Better-Comments.svg",
-      "tags": ["Editor Tool"],
+      "tags": [ "Editor Tool" ],
       "date": "Last Updated: 08/28/2025"
     },
     "Sprite-Panel": {
@@ -511,7 +511,7 @@
       "creator": "SharkPool, FurryR",
       "url": "Sprite-Panel.js",
       "banner": "Sprite-Panel.svg",
-      "tags": ["Utility", "Editor Tool"],
+      "tags": [ "Utility", "Editor Tool" ],
       "date": "Last Updated: 05/06/2025"
     },
     "DOM-Selector": {
@@ -519,7 +519,7 @@
       "creator": "SharkPool",
       "url": "DOM-Selector.js",
       "banner": "DOM-Selector.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Configuration"],
+      "tags": [ "Utility", "Graphics", "Data Management", "Configuration" ],
       "date": "Last Updated: 07/13/2025"
     },
     "SVG-Spritesheets": {
@@ -527,7 +527,7 @@
       "creator": "SharkPool",
       "url": "SVG-Spritesheets.js",
       "banner": "SVG-Spritesheets.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
+      "tags": [ "Utility", "Graphics", "Data Management" ],
       "date": "Last Updated: 12/20/2024"
     },
     "Community-Spotlight": {
@@ -535,7 +535,7 @@
       "creator": "SharkPool, Community Spotlight Team",
       "url": "Community-Spotlight.js",
       "banner": "Community-Spotlight.svg",
-      "tags": ["Graphics", "Sound", "Data Management", "Online"],
+      "tags": [ "Graphics", "Sound", "Data Management", "Online" ],
       "date": "Last Updated: 06/03/2026"
     },
     "GIF-Manager": {
@@ -543,7 +543,7 @@
       "creator": "SharkPool",
       "url": "GIF-Manager.js",
       "banner": "GIF-Manager.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
+      "tags": [ "Utility", "Graphics", "Data Management" ],
       "date": "Released: 08/29/2024"
     },
     "Swift-JSON": {
@@ -551,7 +551,7 @@
       "creator": "SharkPool",
       "url": "JSON-Array.js",
       "banner": "JSON-Array.svg",
-      "tags": ["Utility", "Data Management", "Math", "Category Expansion"],
+      "tags": [ "Utility", "Data Management", "Math", "Category Expansion" ],
       "date": "Last Updated: 05/01/2026"
     },
     "My-Blocks-Plus": {
@@ -559,7 +559,7 @@
       "creator": "SharkPool, CST1229, 0znzw",
       "url": "My-Blocks-Plus.js",
       "banner": "My-Blocks-Plus.svg",
-      "tags": ["Utility", "Category Expansion", "Editor Tool", "Configuration", "Runtime", "Dangerous"],
+      "tags": [ "Utility", "Category Expansion", "Editor Tool", "Configuration", "Runtime", "Dangerous" ],
       "date": "Last Updated: 05/21/2026"
     },
     "Dropdown-Maker": {
@@ -567,7 +567,7 @@
       "creator": "SharkPool, CST1229, 0znzw",
       "url": "Dropdown-Maker.js",
       "banner": "Dropdown-Maker.svg",
-      "tags": ["Utility", "Data Management", "Editor Tool", "Configuration"],
+      "tags": [ "Utility", "Data Management", "Editor Tool", "Configuration" ],
       "date": "Last Updated: 01/14/2026"
     },
     "Turbo-Skins": {
@@ -575,7 +575,7 @@
       "creator": "SharkPool",
       "url": "Turbo-Skins.js",
       "banner": "Turbo-Skins.svg",
-      "tags": ["Utility", "Graphics", "Configuration", "Runtime"],
+      "tags": [ "Utility", "Graphics", "Configuration", "Runtime" ],
       "date": "Last Updated: 05/17/2025"
     },
     "Scenes": {
@@ -583,7 +583,7 @@
       "creator": "SharkPool",
       "url": "Scenes.js",
       "banner": "Scenes.svg",
-      "tags": ["Utility", "Editor Tool", "Configuration"],
+      "tags": [ "Utility", "Editor Tool", "Configuration" ],
       "date": "Last Updated: 09/09/2025"
     },
     "Pen-Papers": {
@@ -591,7 +591,7 @@
       "creator": "SharkPool",
       "url": "Pen-Papers.js",
       "banner": "Pen-Papers.svg",
-      "tags": ["Utility", "Graphics", "Hardware", "Category Expansion"],
+      "tags": [ "Utility", "Graphics", "Hardware", "Category Expansion" ],
       "date": "Last Updated: 12/12/2025"
     },
     "MIDI-Tools": {
@@ -599,15 +599,29 @@
       "creator": "ObscuraPH",
       "url": "MIDI-Tools.js",
       "banner": "MIDI-Tools.svg",
-      "tags": ["Utility", "Sound", "Data Management", "Hardware"],
+      "tags": [ "Utility", "Sound", "Data Management", "Hardware" ],
       "date": "Released: 10/24/2025"
     },
+
+    "MenuMaster": {
+      "desc": "Create fully customizable dropdown menus from arrays, text, or Scratch Lists.",
+      "creator": "btdkhz",
+      "url": "MenuMaster.js",
+      "banner": "MenuMaster.svg",
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Category Expansion"
+      ],
+      "date": "Released: 07/12/2026"
+    },
+
     "Example": {
       "desc": "",
       "creator": "SharkPool",
       "url": "Example.js",
       "banner": "Example.svg",
-      "tags": ["All"],
+      "tags": [ "All" ],
       "status": "",
       "overrideLabeler": false,
       "isDeprecated": false,

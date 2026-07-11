@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="309.298" height="159.648" viewBox="0 0 309.298 159.648">
+  <defs>
+    <linearGradient id="borderGradient" x1="240" y1="105.675" x2="240" y2="255.323" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#B56CFF"/>
+      <stop offset="1" stop-color="#4A138B"/>
+    </linearGradient>
+
+    <linearGradient id="backgroundGradient" x1="154.649" y1="5" x2="154.649" y2="154.648" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8B35E8"/>
+      <stop offset="1" stop-color="#3D0B73"/>
+    </linearGradient>
+
+    <linearGradient id="panelGradient" x1="154.649" y1="35" x2="154.649" y2="124" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FAF4FF"/>
+      <stop offset="1" stop-color="#D8B8F4"/>
+    </linearGradient>
+
+    <linearGradient id="accentGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#DDA8FF"/>
+      <stop offset="1" stop-color="#7C24D6"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#16002D" flood-opacity="0.55"/>
+    </filter>
+
+    <clipPath id="innerClip">
+      <path d="M14.9 17.5c0-4.6 4.2-8.8 9.3-8.8h260.9c6.1 0 9.6 3.3 9.6 8.6v124.9c0 4.3-3.4 8.3-9.4 8.3H24.4c-5.2 0-9.5-3.2-9.5-8.5z"/>
+    </clipPath>
+  </defs>
+
+  <!-- 300x150 banner content -->
+  <g clip-path="url(#innerClip)">
+    <rect x="9.649" y="4.824" width="290" height="150" rx="11" fill="url(#backgroundGradient)"/>
+
+    <!-- subtle tiled UI pattern -->
+    <g opacity="0.16" fill="#FFFFFF">
+      <rect x="22" y="19" width="34" height="26" rx="6"/>
+      <rect x="63" y="19" width="34" height="26" rx="6"/>
+      <rect x="104" y="19" width="34" height="26" rx="6"/>
+      <rect x="145" y="19" width="34" height="26" rx="6"/>
+      <rect x="186" y="19" width="34" height="26" rx="6"/>
+      <rect x="227" y="19" width="34" height="26" rx="6"/>
+      <rect x="268" y="19" width="24" height="26" rx="6"/>
+
+      <rect x="22" y="51" width="34" height="26" rx="6"/>
+      <rect x="63" y="51" width="34" height="26" rx="6"/>
+      <rect x="104" y="51" width="34" height="26" rx="6"/>
+      <rect x="145" y="51" width="34" height="26" rx="6"/>
+      <rect x="186" y="51" width="34" height="26" rx="6"/>
+      <rect x="227" y="51" width="34" height="26" rx="6"/>
+      <rect x="268" y="51" width="24" height="26" rx="6"/>
+
+      <rect x="22" y="83" width="34" height="26" rx="6"/>
+      <rect x="63" y="83" width="34" height="26" rx="6"/>
+      <rect x="104" y="83" width="34" height="26" rx="6"/>
+      <rect x="145" y="83" width="34" height="26" rx="6"/>
+      <rect x="186" y="83" width="34" height="26" rx="6"/>
+      <rect x="227" y="83" width="34" height="26" rx="6"/>
+      <rect x="268" y="83" width="24" height="26" rx="6"/>
+
+      <rect x="22" y="115" width="34" height="26" rx="6"/>
+      <rect x="63" y="115" width="34" height="26" rx="6"/>
+      <rect x="104" y="115" width="34" height="26" rx="6"/>
+      <rect x="145" y="115" width="34" height="26" rx="6"/>
+      <rect x="186" y="115" width="34" height="26" rx="6"/>
+      <rect x="227" y="115" width="34" height="26" rx="6"/>
+      <rect x="268" y="115" width="24" height="26" rx="6"/>
+    </g>
+
+    <!-- large dropdown control -->
+    <g filter="url(#shadow)">
+      <rect x="57" y="31" width="195" height="58" rx="13" fill="url(#panelGradient)" stroke="#FFFFFF" stroke-width="4"/>
+      <rect x="67" y="41" width="175" height="38" rx="8" fill="#FFFFFF" opacity="0.62"/>
+
+      <rect x="78" y="49" width="92" height="8" rx="4" fill="#54208C"/>
+      <rect x="78" y="64" width="72" height="7" rx="3.5" fill="#8B48C9"/>
+
+      <path d="M208 50h23l-11.5 15z" fill="url(#accentGradient)" stroke="#32105D" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+
+    <!-- expanded themed menu -->
+    <g filter="url(#shadow)">
+      <rect x="81" y="92" width="147" height="54" rx="8" fill="#F7EEFF" stroke="#FFFFFF" stroke-width="3"/>
+      <rect x="86" y="97" width="137" height="12" rx="4" fill="#D4A8F4"/>
+      <rect x="86" y="112" width="137" height="13" rx="4" fill="#301052"/>
+      <rect x="86" y="128" width="137" height="12" rx="4" fill="#D4A8F4"/>
+
+      <rect x="95" y="100" width="61" height="5" rx="2.5" fill="#5C218F"/>
+      <rect x="95" y="116" width="83" height="5" rx="2.5" fill="#E9CBFF"/>
+      <rect x="95" y="131" width="53" height="5" rx="2.5" fill="#5C218F"/>
+
+      <path d="M204 115h11l-5.5 7z" fill="#C886FF"/>
+    </g>
+
+    <!-- decorative small menu tiles -->
+    <g filter="url(#shadow)">
+      <rect x="26" y="97" width="38" height="38" rx="9" fill="#6B1CB7" stroke="#C88AFF" stroke-width="3"/>
+      <rect x="32" y="104" width="19" height="5" rx="2.5" fill="#FFFFFF"/>
+      <rect x="32" y="114" width="14" height="5" rx="2.5" fill="#DDBBFF"/>
+      <path d="M48 113h9l-4.5 6z" fill="#FFFFFF"/>
+
+      <rect x="245" y="97" width="38" height="38" rx="9" fill="#6B1CB7" stroke="#C88AFF" stroke-width="3"/>
+      <rect x="251" y="104" width="19" height="5" rx="2.5" fill="#FFFFFF"/>
+      <rect x="251" y="114" width="14" height="5" rx="2.5" fill="#DDBBFF"/>
+      <path d="M267 113h9l-4.5 6z" fill="#FFFFFF"/>
+    </g>
+  </g>
+
+  <!-- SharkPool required border preset -->
+  <path d="M90.352 118.17c0-6.398 5.915-12.494 13.12-12.494h272.61c8.613 0 13.568 4.642 13.568 12.245v125.705c0 6.04-4.86 11.697-13.32 11.697H103.72c-7.327 0-13.368-4.523-13.368-11.947z"
+        fill="none"
+        stroke="url(#borderGradient)"
+        stroke-width="10"
+        transform="translate(-85.352 -100.675)"/>
+</svg>
