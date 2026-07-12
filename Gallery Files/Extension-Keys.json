@@ -117,7 +117,7 @@
       "date": "Last Updated: 04/10/2025"
     },
     "Particle-Engine": {
-      "desc": "Create customizable and powerful Particle Engines with NO Clones",
+      "desc": "Create customisable and powerful Particle Engines with NO Clones",
       "creator": "SharkPool",
       "url": "Particle-Engine.js",
       "banner": "Particle-Engine.svg",
@@ -408,7 +408,7 @@
       "date": "Last Updated: 02/14/2026"
     },
     "Speech-Bubbles": {
-      "desc": "Customizable Speech Bubbles",
+      "desc": "Customisable Speech Bubbles",
       "creator": "SharkPool",
       "url": "Speech-Bubbles.js",
       "banner": "Speech-Bubbles.svg",
@@ -604,7 +604,7 @@
     },
 
     "MenuMaster": {
-      "desc": "Create fully customizable dropdown menus from arrays, text, or Scratch Lists.",
+      "desc": "Create fully customisable dropdown menus from arrays, text or Scratch Lists.",
       "creator": "btdkhz",
       "url": "MenuMaster.js",
       "banner": "MenuMaster.svg",
