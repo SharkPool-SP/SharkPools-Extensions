@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT AND LGPL-3.0
 
-// Version V.3.5.24
+// Version V.3.5.25
 // Thanks to HOME for the song "Resonance" being used as the default audio url
 
 (function (Scratch) {
@@ -1820,7 +1820,7 @@
       if (sound) {
         this.handleEffect(sound, "DELAY", args, {
           time: clamp(0, 1, Cast.toNumber(args.TIME) / 100),
-          decay: Cast.toNumber(args.FEED) / 100,
+          feedback: Cast.toNumber(args.FEED) / 100,
           mix: Cast.toNumber(args.MIX) / 100,
         });
       }
