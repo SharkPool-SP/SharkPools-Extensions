@@ -1,14 +1,15 @@
-// Name: Text to Speech
+// Name: Text to Speech V2
 // ID: SPttsComm
-// Description: Text to speech
+// Description: Generate speech from text.
 // By: SharkPool
+// Commissioned by: @JoshKnowsMath
 // Licence: MIT
 
 // Version V.1.0.0
 
 (function (Scratch) {
   "use strict";
-  if (!Scratch.extensions.unsandboxed) throw new Error("Text to Speech must run unsandboxed!");
+  if (!Scratch.extensions.unsandboxed) throw new Error("Text to Speech V2 must run unsandboxed!");
 
   const vm = Scratch.vm;
   const runtime = vm.runtime;
@@ -21,15 +22,15 @@
 
   const speechCache = new Map();
 
-  class SPttsComm {
+  class SPttsV2 {
     constructor() {
       this._voices = null;
       this._services = IMPORT_MSG;
     }
     getInfo() {
       return {
-        id: "SPttsComm",
-        name: "Text to Speech",
+        id: "SPttsV2",
+        name: "Text to Speech V2",
         blocks: [
           {
             opcode: "importVoices",
@@ -216,5 +217,5 @@
     }
   }
 
-  Scratch.extensions.register(new SPttsComm());
+  Scratch.extensions.register(new SPttsV2());
 })(Scratch);
