@@ -302,7 +302,7 @@
       "date": "Last Updated: 05/30/2025"
     },
     "Messages-Plus": {
-      "desc": "Powerful Message Blocks that work with Vanilla Messages",
+      "desc": "Powerful Message Blocks that work with Vanilla Broadcasts",
       "creator": "SharkPool",
       "url": "Messages-Plus.js",
       "banner": "Messages-Plus.svg",
