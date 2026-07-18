@@ -1,5 +1,5 @@
 // Name: Text to Speech V2
-// ID: SPttsComm
+// ID: SPttsV2
 // Description: Generate speech from text.
 // By: SharkPool
 // Commissioned by: @JoshKnowsMath
@@ -11,12 +11,15 @@
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Text to Speech V2 must run unsandboxed!");
 
+  const blockIconURI =
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1vcGFjaXR5PSIuMTUiPjxwYXRoIGZpbGw9IiM0ZDRkNGQiIGQ9Ik0xNS41IDIxLjY3YzAtMS4wMTYtMS40OTQtMS41ODYtMi4zODctLjc4MmwtMi43IDIuMTYzQTUuOTYgNS45NiAwIDAgMSA2LjcgMjQuMzNoLS40Yy0xLjAzNSAwLTEuOC42OS0xLjggMS41NzN2NC4yMzVjMCAuODgzLjc2NSAxLjU3MiAxLjggMS41NzJoLjRjMS40NTggMCAyLjc1NC40MjMgMy44MiAxLjI4N2wyLjU5OCAyLjE2MWMuOTA4Ljc1IDIuMzgyLjE4OCAyLjM4Mi0uODc2eiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yNS42NDQgMjAuNWMtMS42NjcgMS45MzctNC41MzkgMy40MjktNS45NzcgMy40MjlhMS4yNSAxLjI1IDAgMCAxLS41NTctLjEzN2MtLjM3Mi0uMTg2LS42MS0uNTQyLS42MS0xLjAzcTAtLjE1Ny4wNS0uMzA4Yy4wNzYtLjIzNi42MjQtLjk4Ni43MjctMS4xNzMuMjctLjQ4NC40NjItMS4wNzUuNTY2LTEuODY1QTguNSA4LjUgMCAwIDEgMjQgMy41aDRhOC41IDguNSAwIDEgMSAwIDE3eiIvPjwvZz48L3N2Zz4=";
+
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
   const IMPORT_MSG = ["voices not imported!"];
 
-  const proxy = "https://reef-proxy.onrender.com/"; // SharkPool's proxy
+  const proxy = "https://reef-proxy.onrender.com/"; // This is my proxy, managed by me.
   const voiceServicesURL = "https://lazypy.ro/tts/assets/js/voices.json";
   const ttsAPI = "https://lazypy.ro/tts/request_tts.php";
 
@@ -31,6 +34,7 @@
       return {
         id: "SPttsV2",
         name: "Text to Speech V2",
+        blockIconURI,
         blocks: [
           {
             opcode: "importVoices",
@@ -93,7 +97,7 @@
       ) return IMPORT_MSG;
 
       const block = ScratchBlocks.selected;
-      if (block.type !== "SPttsComm_generateSpeech") return IMPORT_MSG;
+      if (block.type !== "SPttsV2_generateSpeech") return IMPORT_MSG;
 
       const serviceDetails = this._findService(block.getFieldValue("SERVICE"));
       const voiceList = this._createVoiceList(serviceDetails.voices);
@@ -102,10 +106,10 @@
 
     _updateVoiceDropdown() {
       const block = ScratchBlocks.selected;
-      if (block.type !== "SPttsComm_generateSpeech") return;
+      if (block.type !== "SPttsV2_generateSpeech") return;
 
       const voiceInput = block.getInput("VOICE").connection.targetBlock();
-      if (voiceInput.type === "SPttsComm_menu_VOICES") {
+      if (voiceInput.type === "SPttsV2_menu_VOICES") {
         const serviceDetails = this._findService(block.getFieldValue("SERVICE"));
         const defaultVoice = this._createVoiceList(serviceDetails.voices)[0];
 
@@ -154,12 +158,12 @@
       }
 
       const voiceServices = await response.json();
-      delete voiceServices["TikTok"]; // broken
+      delete voiceServices["TikTok"]; // this is broken
       this._voices = voiceServices;
       this._services = Object.keys(this._voices);
 
       if (typeof scaffolding === "undefined") {
-        vm.extensionManager.refreshBlocks("SPttsComm");
+        vm.extensionManager.refreshBlocks("SPttsV2");
         runtime.requestBlocksUpdate();
       }
     }
