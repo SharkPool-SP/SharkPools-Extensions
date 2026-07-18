@@ -213,19 +213,21 @@
   });
 
   /* GUI */
-  // Stringify raw JSON in reporters
-  const ogVisReport = runtime.visualReport;
-  runtime.visualReport = function (...args) {
-    const valueArg = isPM && !runtime.pmVersion ? 1 : 2; // Modern runtime has an extra argument
-    const value = args[valueArg];
-    if (
-      value && 
-      (value.constructor?.name === "Object" || value.constructor?.name === "Array")
-    ) {
-      args[valueArg] = JSON.stringify(resolveCircular(value));
-    }
+  if (isPM) {
+    // Stringify raw JSON in reporters
+    const ogVisReport = runtime.visualReport;
+    runtime.visualReport = function (...args) {
+      const valueArg = runtime.pmVersion ? 2 : 1; // Modern runtime has an extra argument
+      const value = args[valueArg];
+      if (
+        value && 
+        (value.constructor?.name === "Object" || value.constructor?.name === "Array")
+      ) {
+        args[valueArg] = JSON.stringify(resolveCircular(value));
+      }
 
-    return ogVisReport.call(this, ...args);
+      return ogVisReport.call(this, ...args);
+    }
   }
 
   /* Compiler */
