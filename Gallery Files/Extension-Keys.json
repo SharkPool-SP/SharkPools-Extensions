@@ -269,14 +269,13 @@
       "tags": ["Utility", "Graphics", "Math"],
       "date": "Last Updated: 11/08/2025"
     },
-    "Text-to-Speech": {
-      "desc": "Better Text to Speech using the TikTok API",
+    "Text-to-Speech-V2": {
+      "desc": "Generate speech using popular Text-to-Speech models",
       "creator": "SharkPool",
-      "url": "Text-to-Speech.js",
+      "url": "Text-to-Speech-V2.js",
       "banner": "Text-to-Speech.svg",
       "tags": ["Sound", "Online", "Category Expansion"],
-      "isDeprecated": true,
-      "date": "Last Updated: 02/14/2026"
+      "date": "Re-Released: 07/17/2026"
     },
     "Font-Manager": {
       "desc": "Manage, Create, and Delete Fonts from your Project",
