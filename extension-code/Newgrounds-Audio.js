@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.2
+// Version V.2.0.21
 
 (function (Scratch) {
   "use strict";
@@ -21,7 +21,7 @@
   const SCRAPE_DELAY_TIMEOUT = 60 * 60 * 1000; // 1 hour
   const SCOUTED_STAT_COUNT = 5; // Non-scouted users have 4 audio stats
 
-  const proxy = "https://reef-proxy.onrender.com/"; // this is my proxy, managed by me.
+  const proxy = ["https://reef-proxy.onrender.com/", "https://cors.mubilop.com/"]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
 
   const domParser = new DOMParser();
   const NewgroundsCache = new Map();
@@ -242,33 +242,40 @@
       const id = this._getAudioID(args.ID);
       if (id < 1) return;
 
-      const url = `${proxy}scrape?wait=${scraperDelay.time}&url=${NG_API}${id}`;
+      const waitTime = scraperDelay.time;
       scraperDelay.update();
 
-      try {
-        const response = await Scratch.fetch(url);
-        if (!response.ok) {
-          console.warn("Newgrounds Fetch Fail: " + response.status);
-          return;
-        }
+      // try each proxy in the array, falling back to the next one if it fails
+      for (const proxyURL of proxy) {
+        const url = `${proxyURL}scrape?wait=${waitTime}&url=${NG_API}${id}`;
 
-        const htmlText = await response.text();
-        const embedPlayerData = this._getEmbedPlayerData(htmlText);
-        const htmlDocument = domParser.parseFromString(htmlText, "text/html");
-        if (htmlDocument.querySelector("title").textContent === "NG Guard") {
-          console.warn("Newgrounds Guard Activated");
-          scraperDelay.expires = null;
-          scraperDelay.time = 10;
-          return;
-        }
+        try {
+          const response = await Scratch.fetch(url);
+          if (!response.ok) {
+            console.warn("Newgrounds Fetch Fail: " + response.status);
+            continue;
+          }
 
-        lastUsedID = id;
-        setCache(id, {
-          data: embedPlayerData,
-          html: htmlDocument
-        });
-      } catch (e) {
-        console.warn("Newgrounds Fetch Fail: " + e);
+          const htmlText = await response.text();
+          const embedPlayerData = this._getEmbedPlayerData(htmlText);
+          const htmlDocument = domParser.parseFromString(htmlText, "text/html");
+          if (htmlDocument.querySelector("title").textContent === "NG Guard") {
+            console.warn("Newgrounds Guard Activated");
+            scraperDelay.expires = null;
+            scraperDelay.time = 10;
+            continue;
+          }
+
+          lastUsedID = id;
+          setCache(id, {
+            data: embedPlayerData,
+            html: htmlDocument,
+            proxy: proxyURL
+          });
+          return;
+        } catch (e) {
+          console.warn("Newgrounds Fetch Fail: " + e);
+        }
       }
     }
 
@@ -277,7 +284,7 @@
       if (!cache) return "Fetch a track first!";
 
       const data = cache.data;
-      if (data) return `${proxy}?get=${data.url}`;
+      if (data) return `${cache.proxy}?get=${data.url}`;
       else return "Couldnt decode audio";
     }
 
@@ -285,14 +292,14 @@
       const cache = getFromCache(lastUsedID);
       if (!cache) return "Fetch a track first!";
 
-      const { data, html } = cache;
+      const { data, html, proxy: tProxy } = cache;
       let attribute = Cast.toString(args.INFO).toLowerCase();
       let element;
 
       switch (attribute) {
         case "name": return decodeURIComponent(data.params.name);
         case "author": return decodeURIComponent(data.params.artist);
-        case "cover": return `${proxy}get?url=${data.params.icon}`;
+        case "cover": return `${tProxy}get?url=${data.params.icon}`;
         case "description":
           element = html.querySelector(`div[class*="pod-body"][id="author_comments"]`);
           return element ? this._decodeDescription(element) : "";

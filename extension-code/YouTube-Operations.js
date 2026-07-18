@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.04
+// Version V.1.8.05
 
 (function (Scratch) {
   "use strict";
@@ -26,7 +26,7 @@
     To prevent server stress, we will cache fetch results.
     This is my own cors proxy.
   */
-  const proxy = "https://reef-proxy.onrender.com/get?url=";
+  const proxy = ["https://reef-proxy.onrender.com/", "https://cors.mubilop.com/"]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
 
   const YTCache_ = new Map();
 
@@ -234,13 +234,17 @@
       try {
         if (await Scratch.canFetch(url)) {
           // eslint-disable-next-line
-          if (!omitProxy) url = proxy + encodeURIComponent(url);
-          const response = await Scratch.fetch(url);
-          if (!response.ok) return null;
+          const urlsToTry = omitProxy ? [url] : proxy.map((proxyURL) => proxyURL + encodeURIComponent(url));
 
-          const value = await (response[type])();
-          if (cacheKey) setCache(cacheKey, value);
-          return value;
+          // try each proxy in the array, falling back to the next one if it fails
+          for (const fetchUrl of urlsToTry) {
+            const response = await Scratch.fetch(fetchUrl);
+            if (!response.ok) continue;
+
+            const value = await (response[type])();
+            if (cacheKey) setCache(cacheKey, value);
+            return value;
+          }
         }
 
         return null;

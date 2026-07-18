@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.01
+// Version V.1.1.02
 
 (function (Scratch) {
   "use strict";
@@ -24,7 +24,7 @@
     To prevent server stress, we will cache fetch results.
     This is my own proxy.
   */
-  const proxy = "https://reef-proxy.onrender.com/get?url="
+  const proxy = ["https://reef-proxy.onrender.com/get?url=", "https://cors.mubilop.com/get?url="]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
 
   const SoundCloudAPI = "https://api-v2.soundcloud.com/";
   const baseSoundCloudUrl = "https://soundcloud.com/";
@@ -264,22 +264,26 @@
       const cached = getCache(cacheKey);
       if (cached) return cached;
 
-      try {
-        if (await Scratch.canFetch(url)) {
-          // eslint-disable-next-line
-          const response = await fetch(proxy + encodeURIComponent(url));
-          if (!response.ok) return null;
+      if (await Scratch.canFetch(url)) {
+        // try each proxy in the array, falling back to the next one if it fails
+        for (const proxyURL of proxy) {
+          try {
+            // eslint-disable-next-line
+            const response = await fetch(proxyURL + encodeURIComponent(url));
+            if (!response.ok) continue;
 
-          const json = await response.json();
-          if (cacheKey) setCache(cacheKey, json);
-          return json;
+            const json = await response.json();
+            if (cacheKey) setCache(cacheKey, json);
+            return json;
+          } catch(e) {
+            console.warn("SoundCloud Error: " + e);
+          }
         }
 
         return null;
-      } catch(e) {
-        console.warn("SoundCloud Error: " + e);
-        return null;
       }
+
+      return null;
     }
 
     _formatDuration(milli) {
