@@ -5,7 +5,7 @@
 // Commissioned by: @JoshKnowsMath
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -19,7 +19,14 @@
 
   const IMPORT_MSG = ["voices not imported!"];
 
-  const proxy = "https://reef-proxy.onrender.com/"; // This is my proxy, managed by me.
+  /**
+   * To prevent server stress, we will cache fetch results.
+   */
+  const proxies = [
+    "https://reef-proxy.onrender.com/", // this is my proxy, managed by me.
+    "https://cors.mubilop.com/", // @cicerorph's hosted proxy
+  ];
+
   const voiceServicesURL = "https://lazypy.ro/tts/assets/js/voices.json";
   const ttsAPI = "https://lazypy.ro/tts/request_tts.php";
 
@@ -147,12 +154,32 @@
       return item ? item.id : null;
     }
 
+    async _proxyFetch(type, url, requestParams) {
+      // try each proxy in the array, falling back to the next one if it fails
+      for (const proxy of proxies) {
+        try {
+          // eslint-disable-next-line
+          const response = await Scratch.fetch(
+            `${proxy}${proxy === proxies[0] ? type : ""}?url=${encodeURIComponent(url)}`,
+            requestParams
+          );
+          if (!response.ok) continue;
+
+          return response;
+        } catch (error) {
+          console.warn(`Failed to fetch '${url}':`, error);
+        }
+      }
+
+      return null;
+    }
+
     // Block Funcs
     async importVoices() {
       if (this._voices) return;
 
-      const response = await fetch(`${proxy}get?url=${voiceServicesURL}`);
-      if (!response.ok) {
+      const response = await this._proxyFetch("get", voiceServicesURL);
+      if (!response || !response.ok) {
         console.warn("Could not fetch voice services!");
         return;
       }
@@ -197,17 +224,18 @@
       formData.append("text", text);
 
       try {
-        const response = await fetch(`${proxy}post?url=${ttsAPI}`, {
+        const response = await this._proxyFetch("post", ttsAPI, {
           method: "POST",
           body: formData
         });
-        if (!response.ok) {
+        if (!response || !response.ok) {
           return "error: " + response.status;
         }
 
         const ttsData = await response.json();
         if (ttsData.success) {
-          const url = `${proxy}get?url=${ttsData.audio_url}`;
+          const proxy = response.url.substring(0, response.url.indexOf("=") + 1);
+          const url = proxy + ttsData.audio_url;
 
           speechCache.set(cacheID, url);
           return url;

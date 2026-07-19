@@ -29,7 +29,7 @@
    * To prevent server stress, we will cache fetch results.
    */
   const proxies = [
-    //"https://reef-proxy.onrender.com/get?url=", // this is my proxy, managed by me.
+    "https://reef-proxy.onrender.com/get?url=", // this is my proxy, managed by me.
     "https://cors.mubilop.com/?url=", // @cicerorph's hosted proxy
   ];
 
