@@ -233,12 +233,12 @@
       const cached = getCache(cacheKey);
       if (cached) return cached;
 
-      try {
-        if (await Scratch.canFetch(url)) {
-          const urlsToTry = omitProxy ? [url] : proxies.map((proxy) => proxy + encodeURIComponent(url));
+      if (await Scratch.canFetch(url)) {
+        const urlsToTry = omitProxy ? [url] : proxies.map((proxy) => proxy + encodeURIComponent(url));
 
-          // try each proxy in the array, falling back to the next one if it fails
-          for (const fetchUrl of urlsToTry) {
+        // try each proxy in the array, falling back to the next one if it fails
+        for (const fetchUrl of urlsToTry) {
+          try {
             // eslint-disable-next-line
             const response = await Scratch.fetch(fetchUrl);
             if (!response.ok) continue;
@@ -246,14 +246,13 @@
             const value = await (response[type])();
             if (cacheKey) setCache(cacheKey, value);
             return value;
+          } catch(e) {
+            console.warn("YouTube Error: " + e);
           }
         }
-
-        return null;
-      } catch(e) {
-        console.warn("YouTube Error: " + e);
-        return null;
       }
+
+	    return null;
     }
 
     async extractVideoURI(vidDwnloadData) {
