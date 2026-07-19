@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.04
+// Version V.1.8.05
 
 (function (Scratch) {
   "use strict";
@@ -22,11 +22,13 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
-  /*
-    To prevent server stress, we will cache fetch results.
-    This is my own cors proxy.
-  */
-  const proxy = "https://reef-proxy.onrender.com/get?url=";
+  /**
+   * To prevent server stress, we will cache fetch results.
+   */
+  const proxies = [
+    "https://reef-proxy.onrender.com/get?url=", // this is my proxy, managed by me.
+    "https://cors.mubilop.com/?url=", // @cicerorph's hosted proxy
+  ];
 
   const YTCache_ = new Map();
 
@@ -231,23 +233,26 @@
       const cached = getCache(cacheKey);
       if (cached) return cached;
 
-      try {
-        if (await Scratch.canFetch(url)) {
-          // eslint-disable-next-line
-          if (!omitProxy) url = proxy + encodeURIComponent(url);
-          const response = await Scratch.fetch(url);
-          if (!response.ok) return null;
+      if (await Scratch.canFetch(url)) {
+        const urlsToTry = omitProxy ? [url] : proxies.map((proxy) => proxy + encodeURIComponent(url));
 
-          const value = await (response[type])();
-          if (cacheKey) setCache(cacheKey, value);
-          return value;
+        // try each proxy in the array, falling back to the next one if it fails
+        for (const fetchUrl of urlsToTry) {
+          try {
+            // eslint-disable-next-line
+            const response = await Scratch.fetch(fetchUrl);
+            if (!response.ok) continue;
+
+            const value = await (response[type])();
+            if (cacheKey) setCache(cacheKey, value);
+            return value;
+          } catch(e) {
+            console.warn("YouTube Error: " + e);
+          }
         }
-
-        return null;
-      } catch(e) {
-        console.warn("YouTube Error: " + e);
-        return null;
       }
+
+	    return null;
     }
 
     async extractVideoURI(vidDwnloadData) {
@@ -485,15 +490,15 @@
     }
 
     async getResults(args) {
-	  const queryStr = Cast.toString(args.QUERY);
-	  const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
-	  const cacheKey = "query_" + queryStr; 
+	    const queryStr = Cast.toString(args.QUERY);
+	    const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+	    const cacheKey = "query_" + queryStr; 
 
-	  const data = await this._fetch(
-		`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
-		cacheKey,
-		"json", 
-		true
+	    const data = await this._fetch(
+		    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+		    cacheKey,
+		    "json", 
+		    true
       );
       if (!data) return "[]";
 

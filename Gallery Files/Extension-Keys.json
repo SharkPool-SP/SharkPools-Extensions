@@ -14,7 +14,7 @@
       "url": "YouTube-Operations.js",
       "banner": "YouTube-Operations.svg",
       "tags": ["Utility", "Sound", "Online"],
-      "date": "Last Updated: 07/09/2026"
+      "date": "Last Updated: 07/18/2026"
     },
     "Scratch-Utilities": {
       "desc": "Blocks for fetching Scratch statistics and assets, inspired by NexusKitten's S-Grab",
@@ -147,7 +147,7 @@
       "url": "Sprite-Effects-V2.js",
       "banner": "Sprite-Effects.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 07/09/2026"
+      "date": "Last Updated: 07/18/2026"
     },
     "Image-Effects": {
       "desc": "Apply Effects and Filters to Images",
@@ -187,7 +187,7 @@
       "url": "Newgrounds-Audio.js",
       "banner": "Newgrounds-Audio.svg",
       "tags": ["Utility", "Sound", "Data Management", "Online"],
-      "date": "Last Updated: 07/09/2026"
+      "date": "Last Updated: 07/18/2026"
     },
     "Sprite-Parenting": {
       "desc": "Link Sprites together and make them follow their parent's movement",
@@ -355,7 +355,7 @@
       "url": "Spotify.js",
       "banner": "Spotify.svg",
       "tags": ["Sound", "Data Management", "Online"],
-      "date": "Last Updated: 07/09/2024"
+      "date": "Last Updated: 07/18/2024"
     },
     "SoundCloud-API": {
       "desc": "Fetch tracks, artists, and statistics from Soundcloud",
@@ -363,7 +363,7 @@
       "url": "SoundCloud-API.js",
       "banner": "SoundCloud-API.svg",
       "tags": ["Sound", "Data Management", "Online"],
-      "date": "Last Updated: 07/09/2026"
+      "date": "Last Updated: 07/18/2026"
     },
     "Google-Spreadsheets": {
       "desc": "Read and Write Google Spreadsheets",
