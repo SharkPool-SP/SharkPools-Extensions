@@ -151,7 +151,7 @@
       const voiceList = this._createVoiceList(service.voices);
       const item = voiceList.find((v) => v.value.includes(name));
 
-      return item ? item.id : null;
+      return item ? item.id : voiceList[0].id;
     }
 
     async _proxyFetch(type, url, requestParams) {
@@ -211,7 +211,6 @@
 
       const serviceDetails = this._findService(service);
       const voiceID = this._findVoiceID(serviceDetails, voice);
-      if (!voiceID) return "error: invalid voice";
       if (text.length > serviceDetails.charLimit) return "error: text too long";
 
       const cacheID = serviceDetails.name + voiceID + text;
@@ -234,7 +233,10 @@
 
         const ttsData = await response.json();
         if (ttsData.success) {
-          const proxy = response.url.substring(0, response.url.indexOf("=") + 1);
+          const proxy = response.url.substring(
+            0,
+            response.url.indexOf("=") + 1
+          ).replace("/post", "/get");
           const url = proxy + ttsData.audio_url;
 
           speechCache.set(cacheID, url);
