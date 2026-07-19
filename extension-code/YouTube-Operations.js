@@ -22,11 +22,13 @@
   const vm = Scratch.vm;
   const runtime = vm.runtime;
 
-  /*
-    To prevent server stress, we will cache fetch results.
-    This is my own cors proxy.
-  */
-  const proxy = ["https://reef-proxy.onrender.com/", "https://cors.mubilop.com/"]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
+  /**
+   * To prevent server stress, we will cache fetch results.
+   */
+  const proxies = [
+    "https://reef-proxy.onrender.com/get?url=", // this is my proxy, managed by me.
+    "https://cors.mubilop.com/?url=", // @cicerorph's hosted proxy
+  ];
 
   const YTCache_ = new Map();
 
@@ -233,11 +235,11 @@
 
       try {
         if (await Scratch.canFetch(url)) {
-          // eslint-disable-next-line
-          const urlsToTry = omitProxy ? [url] : proxy.map((proxyURL) => proxyURL + encodeURIComponent(url));
+          const urlsToTry = omitProxy ? [url] : proxies.map((proxy) => proxy + encodeURIComponent(url));
 
           // try each proxy in the array, falling back to the next one if it fails
           for (const fetchUrl of urlsToTry) {
+            // eslint-disable-next-line
             const response = await Scratch.fetch(fetchUrl);
             if (!response.ok) continue;
 
@@ -489,15 +491,15 @@
     }
 
     async getResults(args) {
-	  const queryStr = Cast.toString(args.QUERY);
-	  const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
-	  const cacheKey = "query_" + queryStr; 
+	    const queryStr = Cast.toString(args.QUERY);
+	    const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+	    const cacheKey = "query_" + queryStr; 
 
-	  const data = await this._fetch(
-		`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
-		cacheKey,
-		"json", 
-		true
+	    const data = await this._fetch(
+		    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+		    cacheKey,
+		    "json", 
+		    true
       );
       if (!data) return "[]";
 

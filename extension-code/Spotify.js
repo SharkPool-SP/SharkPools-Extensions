@@ -25,7 +25,13 @@
   const EMBED_REGEX = /<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/;
   const TOKEN_EXPIRES = 60 * 60 * 1000;
 
-  const proxy = ["https://reef-proxy.onrender.com/", "https://cors.mubilop.com/"]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
+  /**
+   * To prevent server stress, we will cache fetch results.
+   */
+  const proxies = [
+    //"https://reef-proxy.onrender.com/get?url=", // this is my proxy, managed by me.
+    "https://cors.mubilop.com/?url=", // @cicerorph's hosted proxy
+  ];
 
   const SpotifyCache = new Map();
 
@@ -378,10 +384,10 @@
       if (cached) return cached;
 
       // try each proxy in the array, falling back to the next one if it fails
-      for (const proxyURL of proxy) {
+      for (const proxy of proxies) {
         try {
           // eslint-disable-next-line
-          const response = await Scratch.fetch(`${proxyURL}get?url=${SPOTIFY_EMBED}${endpoint}`);
+          const response = await Scratch.fetch(`${proxy}${SPOTIFY_EMBED}${endpoint}`);
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }

@@ -21,7 +21,13 @@
   const SCRAPE_DELAY_TIMEOUT = 60 * 60 * 1000; // 1 hour
   const SCOUTED_STAT_COUNT = 5; // Non-scouted users have 4 audio stats
 
-  const proxy = ["https://reef-proxy.onrender.com/", "https://cors.mubilop.com/"]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
+  /**
+   * To prevent server stress, we will cache fetch results.
+   */
+  const proxies = [
+    "https://reef-proxy.onrender.com/", // this is my proxy, managed by me.
+    "https://cors.mubilop.com/", // @cicerorph's hosted proxy
+  ];
 
   const domParser = new DOMParser();
   const NewgroundsCache = new Map();
@@ -246,8 +252,8 @@
       scraperDelay.update();
 
       // try each proxy in the array, falling back to the next one if it fails
-      for (const proxyURL of proxy) {
-        const url = `${proxyURL}scrape?wait=${waitTime}&url=${NG_API}${id}`;
+      for (const proxy of proxies) {
+        const url = `${proxy}scrape?wait=${waitTime}&url=${encodeURIComponent(NG_API)}${id}`;
 
         try {
           const response = await Scratch.fetch(url);
@@ -270,7 +276,7 @@
           setCache(id, {
             data: embedPlayerData,
             html: htmlDocument,
-            proxy: proxyURL
+            proxy: proxy
           });
           return;
         } catch (e) {
@@ -284,7 +290,7 @@
       if (!cache) return "Fetch a track first!";
 
       const data = cache.data;
-      if (data) return `${cache.proxy}?get=${data.url}`;
+      if (data) return `${cache.proxy}${cache.proxy === proxies[0] ? "get" : ""}?url=${data.url}`;
       else return "Couldnt decode audio";
     }
 
@@ -299,7 +305,8 @@
       switch (attribute) {
         case "name": return decodeURIComponent(data.params.name);
         case "author": return decodeURIComponent(data.params.artist);
-        case "cover": return `${tProxy}get?url=${data.params.icon}`;
+        case "cover":
+          return `${tProxy}${tProxy === proxies[0] ? "get" : ""}?url=${data.params.icon}`;
         case "description":
           element = html.querySelector(`div[class*="pod-body"][id="author_comments"]`);
           return element ? this._decodeDescription(element) : "";

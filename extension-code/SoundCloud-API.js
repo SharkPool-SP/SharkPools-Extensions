@@ -18,13 +18,14 @@
   const Cast = Scratch.Cast;
   const vm = Scratch.vm;
 
-  /*
-    We must use a proxy since the SoundCloud API does not work outside SoundCloud origins.
-
-    To prevent server stress, we will cache fetch results.
-    This is my own proxy.
-  */
-  const proxy = ["https://reef-proxy.onrender.com/get?url=", "https://cors.mubilop.com/get?url="]; // this is my proxy, managed by me. (+ mubilop's hosted proxy)
+  /**
+   * We must use a proxy since the SoundCloud API does not work outside SoundCloud origins.
+   * To prevent server stress, we will cache fetch results.
+   */
+  const proxies = [
+    "https://reef-proxy.onrender.com/get?url=", // this is my proxy, managed by me.
+    "https://cors.mubilop.com/?url=", // @cicerorph's hosted proxy
+  ];
 
   const SoundCloudAPI = "https://api-v2.soundcloud.com/";
   const baseSoundCloudUrl = "https://soundcloud.com/";
@@ -266,10 +267,10 @@
 
       if (await Scratch.canFetch(url)) {
         // try each proxy in the array, falling back to the next one if it fails
-        for (const proxyURL of proxy) {
+        for (const proxy of proxies) {
           try {
             // eslint-disable-next-line
-            const response = await fetch(proxyURL + encodeURIComponent(url));
+            const response = await fetch(proxy + encodeURIComponent(url));
             if (!response.ok) continue;
 
             const json = await response.json();
@@ -279,8 +280,6 @@
             console.warn("SoundCloud Error: " + e);
           }
         }
-
-        return null;
       }
 
       return null;
