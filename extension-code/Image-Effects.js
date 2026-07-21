@@ -1,57 +1,94 @@
 // Name: Image Effects
 // ID: imgEffectsSP
-// Description: Apply a variety of new effects to the data URI of Images or Costumes.
+// Description: Apply a variety of visual effects to images.
 // By: SharkPool
 // Licence: MIT
 
-// Version V.2.5.11
+// Version V.3.0.0
 
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) throw new Error("Image Effects must run unsandboxed");
 
   const menuIconURI =
-"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzUuNzMxIiBoZWlnaHQ9IjEzNS43MzEiIHZpZXdCb3g9IjAgMCAxMzUuNzMxIDEzNS43MzEiPjxnIGZpbGw9IiM5NmYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTMuNzUgNjcuODY1YzAtMzUuNDEgMjguNzA1LTY0LjExNSA2NC4xMTUtNjQuMTE1czY0LjExNSAyOC43MDUgNjQuMTE1IDY0LjExNS0yOC43MDUgNjQuMTE1LTY0LjExNSA2NC4xMTVTMy43NSAxMDMuMjc1IDMuNzUgNjcuODY1eiIgc3Ryb2tlPSIjNzc0ZGNiIiBzdHJva2Utd2lkdGg9IjcuNSIvPjxwYXRoIGQ9Ik02OC4zMSA2MS4xMzNjNC4wOTUtMS42NzQgOS4zMDItMS4xOSAxMi4xMzktNS4wNTYgMi45NC00LjAwNiAzLjgyMi0xMi4zNTUgNC40NDgtMTcuMjU4LjYxLTQuNzc4IDEuNzYyLTQuNjExIDIuNjM2LjI0LjkyNSA1LjEzNSAyLjAzNSAxMy42NzggNC42NTQgMTcuMjQ3IDIuOTkzIDQuMDc4IDguOTIzIDMuODQ0IDEzLjMwNiA1LjUyMiAzLjA3NyAxLjE3OCAyLjgwMyAxLjg1My0uNTU4IDIuNTYzLTQuMzE1LjkxMy05LjkwMyAxLjY1OC0xMi45MTYgNS43NjMtMy4xNzkgNC4zMzItNC4yNjIgMTQuNjktNS4wMDYgMjAuODQzLS41MSA0LjIyLTEuOTQ5IDIuNDIyLTIuMjE2LjI3Ni0uNzctNi4xODktMS45NjYtMTYuODMxLTUuNTIyLTIxLjY3Ni0yLjUxNy0zLjQzLTYuNjk2LTQuMDQ4LTEwLjExOC01LTQuNjE2LTEuMjg2LTUuMTMyLTEuNzEzLS44NDctMy40NjR6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMTUiLz48cGF0aCBkPSJNODAuNDQ5IDU2LjA3N2MyLjk0LTQuMDA2IDIuODIyLTEyLjM1NSAzLjQ0OC0xNy4yNTguNjEtNC43NzggMy44NzMtNC42MTEgNC43NDcuMjQuOTI1IDUuMTM1LjkyNCAxMy42NzggMy41NDMgMTcuMjQ3IDIuOTkzIDQuMDc4IDguMzY3IDIuNzMzIDEyLjc1IDQuNDExIDMuMDc4IDEuMTc4IDMuMzU5IDMuODUzLS4wMDIgNC41NjMtNC4zMTUuOTEzLTkuOTAzLjc2OS0xMi45MTYgNC44NzQtMy4xNzkgNC4zMzItMy40ODQgMTQuOTEyLTQuMjI4IDIxLjA2NS0uNTEgNC4yMi0zLjcyNyAyLjItMy45OTQuMDU0LS43Ny02LjE4OS0uOTY2LTE2LjgzMS00LjUyMi0yMS42NzYtMi41MTctMy40My03LjQ3NC0zLjM4MS0xMC44OTYtNC4zMzQtNC42MTYtMS4yODUtNC4zNTQtMy4yNjgtLjA3LTUuMDIgMCAwIDkuMzAzLS4zIDEyLjE0LTQuMTY2Ii8+PHBhdGggZD0iTTQyLjAzIDQwLjJjMS40OTMtMS42NDcgMS45NC01LjA3OCAyLjI1OS03LjA5NC4zMS0xLjk2My44OTQtMS44OTUgMS4zMzguMS40NyAyLjExIDEuMDMzIDUuNjIgMi4zNjMgNy4wODggMS41MiAxLjY3NiA0LjUzIDEuNTggNi43NTYgMi4yNyAxLjU2Mi40ODQgMS40MjMuNzYtLjI4MyAxLjA1My0yLjE5MS4zNzUtNS4wMjguNjgtNi41NTggMi4zNjgtMS42MTQgMS43OC0yLjE2NCA2LjAzOC0yLjU0MiA4LjU2Ny0uMjU5IDEuNzM0LS45OS45OTUtMS4xMjUuMTEzLS4zOS0yLjU0My0uOTk4LTYuOTE3LTIuODA0LTguOTA5LTEuMjc3LTEuNDEtMy40LTEuNjYzLTUuMTM3LTIuMDU1LTIuMzQ0LS41MjgtMi42MDYtLjcwNC0uNDMtMS40MjQgMCAwIDQuNzIzLS40ODkgNi4xNjMtMi4wNzd6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMTAiLz48cGF0aCBkPSJNNDIuMDMgNDAuMmMxLjQ5My0xLjY0NyAxLjI3NC00Ljk2NyAxLjU5Mi02Ljk4Mi4zMS0xLjk2NCAyLjExNy0yLjAwNyAyLjU2LS4wMTMuNDcgMi4xMS40NzggNS42MjIgMS44MDggNy4wODkgMS41MiAxLjY3NiA0LjMwOC42MzUgNi41MzQgMS4zMjUgMS41NjIuNDg0IDEuNjQ1IDIuMjYxLS4wNjEgMi41NTMtMi4xOTEuMzc1LTUuMDI4LjEyNi02LjU1OCAxLjgxMy0xLjYxNCAxLjc4LTEuMTY0IDYuMDM4LTEuNTQyIDguNTY3LS4yNTkgMS43MzQtMi43NjcuOTk1LTIuOTAzLjExMy0uMzktMi41NDMtLjIyLTYuOTE3LTIuMDI2LTguOTA5LTEuMjc3LTEuNDEtNC4yODgtLjk5Ny02LjAyNi0xLjM4OC0yLjAwNC0uNDUyLTEuMjY0LTIuMjAxIDAtMi42OTguMjE0LS4wODQgNS4xODIuMTE4IDYuNjIyLTEuNDciLz48cGF0aCBkPSJNNDguNzIxIDkyLjY3NWMxLjU2Mi0xLjk1NyAyLjAzLTYuMDMzIDIuMzYzLTguNDI3LjMyNC0yLjMzMy45MzYtMi4yNTEgMS40LjExOC40OTIgMi41MDcgMS4wODIgNi42NzcgMi40NzMgOC40MiAxLjU5IDEuOTkxIDQuNzQgMS44NzcgNy4wNjggMi42OTYgMS42MzUuNTc2IDEuNDkuOTA1LS4yOTYgMS4yNTItMi4yOTIuNDQ1LTUuMjYuODA5LTYuODYxIDIuODE0LTEuNjg5IDIuMTE1LTIuMjY0IDcuMTcyLTIuNjYgMTAuMTc2LS4yNyAyLjA2LTEuMDM1IDEuMTgzLTEuMTc3LjEzNS0uNDA5LTMuMDIyLTEuMDQ0LTguMjE4LTIuOTMzLTEwLjU4NC0xLjMzNy0xLjY3NC0zLjU1Ny0xLjk3Ni01LjM3NS0yLjQ0MS0yLjQ1Mi0uNjI4LTIuNzI2LS44MzYtLjQ1LTEuNjkxIDAgMCA0Ljk0Mi0uNTgxIDYuNDQ4LTIuNDY4eiIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEwIi8+PHBhdGggZD0iTTQ4LjcyMSA5Mi42NzVjMS41NjItMS45NTcgMS4zNjQtNi4wMzMgMS42OTctOC40MjcuMzI0LTIuMzMzIDIuMzgtMi4yNTEgMi44NDQuMTE4LjQ5MiAyLjUwNy4zMDQgNi42NzcgMS42OTUgOC40MiAxLjU5IDEuOTkxIDQuMjk2Ljk0NyA2LjYyNCAxLjc2NiAxLjYzNS41NzUgMS45MzMgMi4zOS4xNDggMi43MzctMi4yOTIuNDQ2LTUuMjYuMjU0LTYuODYxIDIuMjU5LTEuNjg5IDIuMTE1LTEuNDg2IDcuMTcyLTEuODgyIDEwLjE3Ni0uMjcgMi4wNi0yLjU5IDEuMTgzLTIuNzMyLjEzNS0uNDEtMy4wMjItLjI2Ny04LjIxOC0yLjE1Ni0xMC41ODQtMS4zMzctMS42NzQtNC4wMDItMS41MzItNS44Mi0xLjk5Ny0yLjQ1Mi0uNjI3LTIuMjgxLTEuODM2LS4wMDUtMi42OSAwIDAgNC45NDItLjAyNiA2LjQ0OC0xLjkxNHoiLz48L2c+PC9zdmc+";
+"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDUuOTU1IiBoZWlnaHQ9IjE0NS45NTUiIHZpZXdCb3g9IjAgMCAxNDUuOTU1IDE0NS45NTUiPjxwYXRoIGQ9Ik0wIDcyLjk3N0MwIDMyLjY3MiAzMi42NzIgMCA3Mi45NzcgMHM3Mi45NzcgMzIuNjcyIDcyLjk3NyA3Mi45NzctMzIuNjcyIDcyLjk3Ny03Mi45NzcgNzIuOTc3UzAgMTEzLjI4MiAwIDcyLjk3NyIgZmlsbD0iIzc3NGRjYiIvPjxwYXRoIGQ9Ik04Ljg2MyA3Mi45NzdjMC0zNS40MSAyOC43MDUtNjQuMTE1IDY0LjExNS02NC4xMTVzNjQuMTE0IDI4LjcwNSA2NC4xMTQgNjQuMTE1LTI4LjcwNSA2NC4xMTYtNjQuMTE1IDY0LjExNlM4Ljg2MiAxMDguMzg3IDguODYyIDcyLjk3N3oiIGZpbGw9IiM5NmYiLz48cGF0aCBkPSJNMTA1LjI3OCA3NC44MDljLTIuMDQgMS4xODQtMTAuMTg2LjE4Ny0xMS42NTUgMS44NzQtNS43MjMgNi41NzItNS41NTkgMjIuNzgyLTYuMTkgMjQtLjc5MyAxLjUzLTIuNzkyIDIuMDQ1LTMuODUzIDAtLjg3LTEuNjgyLjE0Mi0xNy45ODgtNS44NzQtMjMuOTg2LTEuMzA1LTEuMzAyLTkuMzM1LS45NC0xMC45Ny0xLjg4OHMtMi4wNC0zLjE0NiAwLTQuMzNjMi4wMzktMS4xODMgOS42LS4xOSAxMS42NzktMy40MyA0LjIxNS01LjI5NSA0LjUzNy0yMS4yMzIgNS4xNjUtMjIuNDQ0Ljc5My0xLjUzIDIuNzkyLTIuMDQ2IDMuODUzIDAgLjgzOSAxLjYxOCAxLjMxOSAxNi43NDQgNi44NyAyMy4yNzggMS40NjkgMS43MyA5LjUxMyAxLjc0OCAxMC45NzUgMi41OTZzMi4wNCAzLjE0NyAwIDQuMzN6IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Ik02NS44MDMgNTIuNzY3Yy0xLjA2Ni42MTgtNS43MzMuNjMtNi44MDUgMS44OTMtNC4wNDggNC43NjUtMi41OTggNy43OTYtMy4yMSA4Ljk3NS0uNzczIDEuNDkzLTIuMjMgMS4xMTYtMi44MSAwLS40NTctLjg4NC40NTEtNC4wMi0zLjQ3NC04Ljg1NC0xLjAzLTEuMjY5LTQuMjIyLTEuMzUyLTUuNzA5LTIuMjE1cy0xLjE5Mi0yLjQ2NiAwLTMuMTU4IDQuODQ4LS4yMjcgNS44LTEuMTc2YzQuMzg3LTQuMzc0IDIuNzQ5LTcuMjY2IDMuMzg0LTguNDkyLjc3NC0xLjQ5MiAyLjIzMi0xLjExNSAyLjgxIDAgLjQ2Ljg4OC0xLjQ2IDMuNzA5IDIuNzE0IDguNTAyIDEuMDcxIDEuMjMgNS44MTIuNTAzIDcuMyAxLjM2NnMxLjA2NiAyLjU0IDAgMy4xNTl6TTQzLjU4NSA5NS4yNzZjMS4wNjYtLjYxOSA1LjczMi0uNjMyIDYuODA0LTEuODkzIDQuMDQ4LTQuNzY2IDIuNTk4LTcuNzk2IDMuMjEtOC45NzYuNzczLTEuNDkyIDIuMjMxLTEuMTE2IDIuODEgMCAuNDU4Ljg4NC0uNDUgNC4wMiAzLjQ3NCA4Ljg1NCAxLjAzIDEuMjcgNC4yMjIgMS4zNTIgNS43MSAyLjIxNSAxLjQ4Ni44NjMgMS4xOTEgMi40NjYgMCAzLjE1OC0xLjE5My42OTItNC44NDkuMjI3LTUuOCAxLjE3Ni00LjM4OCA0LjM3NC0yLjc1IDcuMjY2LTMuMzg1IDguNDkyLS43NzMgMS40OTItMi4yMzEgMS4xMTYtMi44MSAwLS40Ni0uODg3IDEuNDYtMy43MDktMi43MTMtOC41MDItMS4wNzItMS4yMy01LjgxMy0uNTAzLTcuMy0xLjM2NnMtMS4wNjctMi41NCAwLTMuMTU4eiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIvPjwvc3ZnPg==";
 
-  const cast = Scratch.Cast;
-  const hexToRgb = (hex) => {
-    if (!/^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(hex)) hex = "#000000";
-    return [
-      parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16),
-      hex.length === 9 ? parseInt(hex.slice(7, 9), 16) : 255
-    ];
-  };
-  const rgbaToHex = (r, g, b, a) => {
-    const alpha = a !== undefined ? Math.round(a).toString(16).padStart(2, "0") : "";
-    return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}${alpha}`;
-  };
-  const imageEffectMenu = [
-    "Saturation", "Contrast", "Opaque", "Glitch", "Chunk Glitch", "Clip Glitch", "Vignette",
-    "Ripple", "Displacement", "Posterize", "Blur", "Sepia", "Scanlines", "Grain", "Cubism",
+  const Cast = Scratch.Cast;
+
+  const DEFAULT_IMG_VALUE = "...";
+  const EFFECTS_MENU = [
+    { text: Scratch.translate("saturation"), value: "saturation" },
+    { text: Scratch.translate("contrast"), value: "contrast" },
+    { text: Scratch.translate("opaque"), value: "opaque" },
+    { text: Scratch.translate("glitch"), value: "glitch" },
+    { text: Scratch.translate("chunk glitch"), value: "chunk glitch" },
+    { text: Scratch.translate("clip glitch"), value: "clip glitch" },
+    { text: Scratch.translate("vignette"), value: "vignette" },
+    { text: Scratch.translate("ripple"), value: "ripple" },
+    { text: Scratch.translate("displacement"), value: "displacement" },
+    { text: Scratch.translate("posterize"), value: "posterize" },
+    { text: Scratch.translate("blur"), value: "blur" },
+    { text: Scratch.translate("sepia"), value: "sepia" },
+    { text: Scratch.translate("scanlines"), value: "scanlines" },
+    { text: Scratch.translate("grain"), value: "grain" },
+    { text: Scratch.translate("cubism"), value: "cubism" }
   ];
+
+  const makeMenuItem = ()=>{} // TODO
+
+  class ImageHelper {
+    static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
+
+    static hexToRgba(hex) {
+      hex = Cast.toString(hex);
+      if (!HEX_COLOR_REGEX.test(hex)) return [0, 0, 0, 0]; // black
+
+      return [
+        parseInt(hex.slice(1, 3), 16),
+        parseInt(hex.slice(3, 5), 16),
+        parseInt(hex.slice(5, 7), 16),
+        hex.length > 8 ? parseInt(hex.slice(7, 9), 16) : 255
+      ];
+    }
+
+    static rgbaToHex(rgba) {
+      const alpha = rgba[3] !== undefined ? Math.round(rgba[3]).toString(16).padStart(2, "0") : "";
+      const rgbHex = (1 << 24 | rgba[0] << 16 | rgba[1] << 8 | rgba[2]).toString(16).slice(1);
+
+      return `#${rgbHex}${alpha}`;
+    }
+
+    static clamp(min, max, value) {
+      return Math.min(max, Math.max(min, value));
+    }
+  }
 
   class imgEffectsSP {
     constructor() {
       this.cutPos = [0, 0];
       this.scale = [100, 100];
       this.cutoutDirection = 90;
-      this.softness = 10;
+      this.colorThreshold = 10;
       this.allShards = [];
     }
     getInfo() {
       return {
         id: "imgEffectsSP",
-        name: "Image Effects",
+        name: Scratch.translate("Image Effects"),
         menuIconURI,
         color1: "#9966FF",
         color2: "#774DCB",
         blocks: [
+          /**
+           * Excuse the poor argument/opcode naming for some blocks.
+           * They were made years ago and must remain the same for compatibility.
+           */
           {
             opcode: "applyHueEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "apply hue [COLOR] to URI [SVG]",
+            text: Scratch.translate("set tint of [SVG] to [COLOR]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               COLOR: { type: Scratch.ArgumentType.COLOR }
             }
           },
@@ -59,37 +96,37 @@
           {
             opcode: "deleteColor",
             blockType: Scratch.BlockType.REPORTER,
-            text: "remove color [COLOR] from [DATA_URI]",
+            text: Scratch.translate("remove [COLOR] from [DATA_URI]"),
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR },
-              DATA_URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" }
+              DATA_URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE }
             }
           },
           {
             opcode: "replaceColor",
             blockType: Scratch.BlockType.REPORTER,
-            text: "replace color [COLOR] with [REPLACE] in [DATA_URI]",
+            text: Scratch.translate("replace [COLOR] with [REPLACE] in [DATA_URI]"),
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR },
               REPLACE: { type: Scratch.ArgumentType.COLOR, defaultValue: "#00ff00" },
-              DATA_URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" }
+              DATA_URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE }
             }
           },
           {
             opcode: "replaceColorPattern",
             blockType: Scratch.BlockType.REPORTER,
-            text: "replace color [COLOR] with [PATTERN] scaled [SCALE] in [DATA_URI]",
+            text: Scratch.translate("replace [COLOR] with pattern [PATTERN] scale [SCALE] in [DATA_URI]"),
             arguments: {
               COLOR: { type: Scratch.ArgumentType.COLOR },
-              PATTERN: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              PATTERN: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               SCALE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
-              DATA_URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" }
+              DATA_URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE }
             }
           },
           {
             opcode: "setSoftness",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set color detection softness to [AMT]%",
+            text: Scratch.translate("set color threshold to [AMT] %"),
             arguments: {
               AMT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 }
             }
@@ -98,19 +135,19 @@
           {
             opcode: "applyEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set [EFFECT] effect of URI [SVG] to [PERCENTAGE]%",
+            text: Scratch.translate("set [EFFECT] effect of [SVG] to [PERCENTAGE] %"),
             arguments: {
               EFFECT: { type: Scratch.ArgumentType.STRING, menu: "EFFECTS" },
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               PERCENTAGE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 }
             }
           },
           {
             opcode: "applyBulgeEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set bulge effect of URI [SVG] to [STRENGTH]% at x [CENTER_X] y [CENTER_Y]",
+            text: Scratch.translate("set bulge effect of [SVG] to [STRENGTH] % at x [CENTER_X] y [CENTER_Y]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               STRENGTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               CENTER_X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               CENTER_Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
@@ -119,9 +156,9 @@
           {
             opcode: "applyWaveEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set wave effect of URI [SVG] to amplitude x [AMPX] y [AMPY] and frequency x [FREQX] y [FREQY]",
+            text: Scratch.translate("set wave effect of [SVG] to amplitude x [AMPX] y [AMPY] and frequency x [FREQX] y [FREQY]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               AMPX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               AMPY: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               FREQX: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
@@ -131,9 +168,9 @@
           {
             opcode: "applyLineGlitchEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set line glitch of URI [SVG] to [PERCENTAGE]% on [DIRECT] axis and line width [WIDTH]",
+            text: Scratch.translate("set line glitch effect of [SVG] to [PERCENTAGE]% on [DIRECT] axis and line width [WIDTH]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               PERCENTAGE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               DIRECT: { type: Scratch.ArgumentType.STRING, menu: "POSITIONS" },
               WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
@@ -142,9 +179,9 @@
           {
             opcode: "applyAbberationEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set abberation of URI [SVG] to colors [COLOR1] and [COLOR2] at [PERCENTAGE]% on [DIRECT] axis",
+            text: Scratch.translate("set abberation effect of [SVG] to [PERCENTAGE] % on [DIRECT] axis with [COLOR1] and [COLOR2]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               PERCENTAGE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 },
               COLOR1: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" },
               COLOR2: { type: Scratch.ArgumentType.COLOR, defaultValue: "#00f7ff" },
@@ -155,9 +192,9 @@
           {
             opcode: "removeTransparencyEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "remove pixels from URI [SVG] [REMOVE] [THRESHOLD]% transparency",
+            text: Scratch.translate("remove pixels from [SVG] [REMOVE] [THRESHOLD] % transparency"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               THRESHOLD: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
               REMOVE: { type: Scratch.ArgumentType.STRING, menu: "REMOVAL" }
             }
@@ -165,17 +202,18 @@
           {
             opcode: "applyEdgeOutlineEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: "add outline to URI [SVG] thickness [THICKNESS] color [COLOR]",
+            text: Scratch.translate("add outline to [SVG] thickness [THICKNESS] color [COLOR]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               THICKNESS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
-              COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: "#ff0000" }
+              COLOR: { type: Scratch.ArgumentType.COLOR }
             }
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Clipping" },
+          { blockType: Scratch.BlockType.LABEL, text: Scratch.translate("Clipping & Masking") },
           {
-            opcode: "maskImage", blockType: Scratch.BlockType.REPORTER,
-            text: "[TYPE] [MASK] from [IMG]",
+            opcode: "maskImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("[TYPE] mask [MASK] from [IMG]"),
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "MASKING" },
               IMG: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" },
@@ -186,16 +224,16 @@
           {
             opcode: "setCutout",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set clipping position to x [X] y [Y]",
+            text: Scratch.translate("set mask position to x [X] y [Y]"),
             arguments: {
-              X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
+              X: { type: Scratch.ArgumentType.NUMBER },
+              Y: { type: Scratch.ArgumentType.NUMBER }
             }
           },
           {
             opcode: "changeCutout",
             blockType: Scratch.BlockType.COMMAND,
-            text: "change clipping position by x [X] y [Y]",
+            text: Scratch.translate("change mask position by x [X] y [Y]"),
             arguments: {
               X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
               Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
@@ -204,7 +242,7 @@
           {
             opcode: "currentCut",
             blockType: Scratch.BlockType.REPORTER,
-            text: "clipping [POS]",
+            text: Scratch.translate("mask [POS]"),
             disableMonitor: true,
             arguments: {
               POS: { type: Scratch.ArgumentType.STRING, menu: "POSITIONS" }
@@ -214,7 +252,7 @@
           {
             opcode: "setScale",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set clipping size to x [SIZE] y [Y]",
+            text: Scratch.translate("set mask size to x [SIZE] y [Y]"),
             arguments: {
               SIZE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
@@ -223,7 +261,7 @@
           {
             opcode: "changeScale",
             blockType: Scratch.BlockType.COMMAND,
-            text: "change clipping size by x [SIZE] y [Y]",
+            text: Scratch.translate("change mask size by x [SIZE] y [Y]"),
             arguments: {
               SIZE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
               Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
@@ -232,7 +270,7 @@
           {
             opcode: "currentScale",
             blockType: Scratch.BlockType.REPORTER,
-            text: "clipping size [POS]",
+            text: Scratch.translate("mask size [POS]"),
             disableMonitor: true,
             arguments: {
               POS: { type: Scratch.ArgumentType.STRING, menu: "POSITIONS" }
@@ -242,7 +280,7 @@
           {
             opcode: "setDirection",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set clipping direction to [ANGLE]",
+            text: Scratch.translate("set mask direction to [ANGLE]"),
             arguments: {
               ANGLE: { type: Scratch.ArgumentType.ANGLE, defaultValue: 90 }
             }
@@ -250,7 +288,8 @@
           {
             opcode: "changeDirection",
             blockType: Scratch.BlockType.COMMAND,
-            text: "change clipping direction by [ANGLE]",
+            text: Scratch.translate("change mask direction by [ANGLE]"),
+            disableMonitor: true,
             arguments: {
               ANGLE: { type: Scratch.ArgumentType.ANGLE, defaultValue: 15 }
             }
@@ -258,61 +297,61 @@
           {
             opcode: "currentDir",
             blockType: Scratch.BlockType.REPORTER,
-            text: "clipping direction"
+            text: Scratch.translate("mask direction")
           },
           "---",
           {
             opcode: "crackImage",
             blockType: Scratch.BlockType.COMMAND,
-            text: "crack [URI] into [SHARDS] shards",
+            text: Scratch.translate("crack [URI] into [SHARDS] shards"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               SHARDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             }
           },
           {
             opcode: "getShard",
             blockType: Scratch.BlockType.REPORTER,
-            text: "get shard #[SHARD]",
+            text: Scratch.translate("shard # [SHARD]"),
             arguments: {
               SHARD: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
             }
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Pixels" },
+          { blockType: Scratch.BlockType.LABEL, text: Scratch.translate("Image Data") },
           {
             opcode: "commonCol",
             blockType: Scratch.BlockType.REPORTER,
-            text: "[TYPE] common color in [URI]",
+            text: Scratch.translate("[TYPE] common color in [URI]"),
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "DOMINANT" },
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" }
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE }
             }
           },
           "---",
           {
             opcode: "numPixels",
             blockType: Scratch.BlockType.REPORTER,
-            text: "number of pixels [TYPE] in [URI]",
+            text: Scratch.translate("[TYPE] of [URI]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "PIXELTYPE" }
             }
           },
           {
             opcode: "getPixel",
             blockType: Scratch.BlockType.REPORTER,
-            text: "get hex of pixel #[NUM] in [URI]",
+            text: Scratch.translate("pixel [NUM] of [URI]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 }
             }
           },
           {
             opcode: "setPixel",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set color of pixel #[NUM] to [COLOR] in [URI]",
+            text: Scratch.translate("set color of pixel [NUM] to [COLOR] in [URI]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               COLOR: { type: Scratch.ArgumentType.COLOR }
             }
@@ -320,21 +359,21 @@
           {
             opcode: "setPixels",
             blockType: Scratch.BlockType.REPORTER,
-            text: "set color of pixels from #[NUM] to [NUM2] to [COLOR] in [URI]",
+            text: Scratch.translate("set color of pixels from [NUM] to [NUM2] to [COLOR] in [URI]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               NUM2: { type: Scratch.ArgumentType.NUMBER, defaultValue: 10 },
               COLOR: { type: Scratch.ArgumentType.COLOR }
             }
           },
-          { blockType: Scratch.BlockType.LABEL, text: "Image Conversions" },
+          { blockType: Scratch.BlockType.LABEL, text: Scratch.translate("Image Conversions") },
           {
             opcode: "svgToBitmap",
             blockType: Scratch.BlockType.REPORTER,
-            text: "convert svg content [SVG] to bitmap with width [WIDTH] height [HEIGHT]",
+            text: Scratch.translate("convert svg [SVG] to bitmap with width [WIDTH] height [HEIGHT]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg />" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" },
               WIDTH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               HEIGHT: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
@@ -342,27 +381,27 @@
           {
             opcode: "convertImageToSVG",
             blockType: Scratch.BlockType.REPORTER,
-            text: "convert bitmap URI [URI] to svg [TYPE]",
+            text: Scratch.translate("convert image [URI] to svg [TYPE]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "fileType" }
             }
           },
           {
             opcode: "makeSVGimage",
             blockType: Scratch.BlockType.REPORTER,
-            text: "make svg with image URI [URI] to svg [TYPE]",
+            text: Scratch.translate("put image [URI] into blank svg [TYPE]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "fileType" }
             }
           },
           {
             opcode: "upscaleImage",
             blockType: Scratch.BlockType.REPORTER,
-            text: "upscale image URI [URI] by [NUM] %",
+            text: Scratch.translate("sharpen image [URI] by [NUM] %"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             }
           },
@@ -370,30 +409,19 @@
           {
             opcode: "stretchImg",
             blockType: Scratch.BlockType.REPORTER,
-            text: "stretch URI [URI] to width [W] height [H]",
+            text: Scratch.translate("stretch [URI] to width [W] height [H]"),
             arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: "svg/data-uri" },
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 200 },
-              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
-            }
-          },
-          "---",
-          {
-            opcode: "audioToImage",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "convert audio URI [AUDIO_URI] to PNG with width [W] height [H]",
-            arguments: {
-              AUDIO_URI: { type: Scratch.ArgumentType.STRING, defaultValue: "audio_uri_here" },
-              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
               H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
           },
           {
             opcode: "skewSVG",
             blockType: Scratch.BlockType.REPORTER,
-            text: "skew SVG content [SVG] at x [Y] y [X] as [TYPE]",
+            text: Scratch.translate("skew SVG [SVG] at x [Y] y [X] as [TYPE]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg>" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" },
               X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "fileType" }
@@ -402,9 +430,20 @@
           {
             opcode: "removeThorns",
             blockType: Scratch.BlockType.REPORTER,
-            text: "remove vector thorns from [SVG]",
+            text: Scratch.translate("remove vector thorns from [SVG]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg>" }
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" }
+            }
+          },
+          "---",
+          {
+            opcode: "audioToImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("convert audio URI [AUDIO_URI] to PNG with width [W] height [H]"),
+            arguments: {
+              AUDIO_URI: { type: Scratch.ArgumentType.STRING, defaultValue: "audio_uri_here" },
+              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
           },
           /* Deprecation Marker */
@@ -412,14 +451,14 @@
             opcode: "clipImage", blockType: Scratch.BlockType.REPORTER,
             text: "clip [CUTOUT] from [MAIN]", hideFromPalette: true,
             arguments: {
-              MAIN: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" }, CUTOUT: { type: Scratch.ArgumentType.STRING, defaultValue: "cutout-here" }
+              MAIN: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" }, CUTOUT: { type: Scratch.ArgumentType.STRING }
             }
           },
           {
             opcode: "overlayImage", blockType: Scratch.BlockType.REPORTER,
             text: "clip [CUTOUT] onto [MAIN]", hideFromPalette: true,
             arguments: {
-              MAIN: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" }, CUTOUT: { type: Scratch.ArgumentType.STRING, defaultValue: "cutout-here" }
+              MAIN: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" }, CUTOUT: { type: Scratch.ArgumentType.STRING }
             }
           },
           {
@@ -432,13 +471,14 @@
           /* Marker End */
         ],
         menus: {
+          // TODO
           POSITIONS: ["X", "Y"],
           MASKING: ["clip", "mask", "overlay"],
           PIXELTYPE: ["total", "per line", "per row"],
           REMOVAL: ["under", "over", "equal to"],
           DOMINANT: ["most", "least"],
           fileType: ["content", "dataURI"],
-          EFFECTS: { acceptReporters: true, items: imageEffectMenu },
+          EFFECTS: { acceptReporters: true, items: EFFECTS_MENU },
           /* Deprecation Marker */
           CHANNELS: { acceptReporters: true, items: ["R", "G", "B"] }
           /* Marker End */
@@ -447,8 +487,6 @@
     }
 
     // Helper Funcs
-    clamp(value, min, max) { return Math.min(max, Math.max(min, value)) }
-
     printImg(img, width, height) {
       const { canvas, ctx } = this.createCanvasCtx(Math.abs(width) || img.width, Math.abs(height) || img.height);
       ctx.save();
@@ -497,7 +535,7 @@
     }
 
     // Block Funcs
-    setSoftness(args) { this.softness = cast.toNumber(args.AMT) }
+    setSoftness(args) { this.colorThreshold = Cast.toNumber(args.AMT) }
 
     applyHueEffect(args) {
       return new Promise((resolve) => {
@@ -527,7 +565,7 @@
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
-          const inRange = (val, target) => val >= target - this.softness && val <= target + this.softness;
+          const inRange = (val, target) => val >= target - this.colorThreshold && val <= target + this.colorThreshold;
           const pixelData = this.printImg(img);
           for (let i = 0; i < pixelData.length; i += 4) {
             const [r, g, b] = pixelData.slice(i, i + 3);
@@ -541,7 +579,7 @@
 
     replaceColorPattern(args) {
       const colRem = hexToRgb(args.COLOR);
-      const tileSize = cast.toNumber(args.SCALE);
+      const tileSize = Cast.toNumber(args.SCALE);
       if (tileSize < 1) return args.DATA_URI;
       return new Promise((resolve) => {
         const img = new Image();
@@ -550,7 +588,7 @@
           const pattern = new Image();
           pattern.crossOrigin = "Anonymous";
           pattern.onload = () => {
-            const inRange = (val, target) => val >= target - this.softness && val <= target + this.softness;
+            const inRange = (val, target) => val >= target - this.colorThreshold && val <= target + this.colorThreshold;
             const { width, height } = img;
             const finalCanvas = document.createElement("canvas");
             finalCanvas.width = width;
@@ -608,13 +646,13 @@
 
     applyEffect(args) {
       return new Promise((resolve) => {
-        const percent = cast.toNumber(args.PERCENTAGE);
+        const percent = Cast.toNumber(args.PERCENTAGE);
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = async () => {
           const { canvas, ctx } = this.createCanvasCtx(img.width, img.height, img, 0, 0);
           let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const effectFunc = this[`apply${cast.toString(args.EFFECT).replaceAll(" ", "")}`];
+          const effectFunc = this[`apply${Cast.toString(args.EFFECT).replaceAll(" ", "")}`];
           if (effectFunc && typeof effectFunc === "function") await effectFunc(imageData, percent, ctx);
           else resolve("");
           if (imageData.isAltered === undefined) ctx.putImageData(imageData, 0, 0);
@@ -817,13 +855,13 @@
 
     applyBulgeEffect(args) {
       return new Promise((resolve) => {
-        const strength = cast.toNumber(args.STRENGTH) / 100;
+        const strength = Cast.toNumber(args.STRENGTH) / 100;
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
           const canvasSize = Math.max(img.width, img.height) * 2;
-          let centerX = cast.toNumber(args.CENTER_X) / 100;
-          let centerY = cast.toNumber(args.CENTER_Y) / -100;
+          let centerX = Cast.toNumber(args.CENTER_X) / 100;
+          let centerY = Cast.toNumber(args.CENTER_Y) / -100;
           const { canvas, ctx } = this.createCanvasCtx(canvasSize, canvasSize);
           const offsetX = (canvas.width - img.width) / 2;
           const offsetY = (canvas.height - img.height) / 2;
@@ -859,10 +897,10 @@
 
     applyWaveEffect(args) {
       return new Promise((resolve) => {
-        const ampX = cast.toNumber(args.AMPX) / 10;
-        const ampY = cast.toNumber(args.AMPY) / 10;
-        const freqX = cast.toNumber(args.FREQX) / 100;
-        const freqY = cast.toNumber(args.FREQY) / 100;
+        const ampX = Cast.toNumber(args.AMPX) / 10;
+        const ampY = Cast.toNumber(args.AMPY) / 10;
+        const freqX = Cast.toNumber(args.FREQX) / 100;
+        const freqY = Cast.toNumber(args.FREQY) / 100;
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
@@ -894,7 +932,7 @@
 
     removeTransparencyEffect(args) {
       return new Promise((resolve) => {
-        const threshold = cast.toNumber(args.THRESHOLD) / 100;
+        const threshold = Cast.toNumber(args.THRESHOLD) / 100;
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
@@ -923,8 +961,8 @@
 
     applyLineGlitchEffect(args) {
       return new Promise((resolve) => {
-        const amtIn = cast.toNumber(args.PERCENTAGE) / 100;
-        const width = cast.toNumber(args.WIDTH) / 50;
+        const amtIn = Cast.toNumber(args.PERCENTAGE) / 100;
+        const width = Cast.toNumber(args.WIDTH) / 50;
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
@@ -959,7 +997,7 @@
 
     applyEdgeOutlineEffect(args) {
       return new Promise((resolve) => {
-        const thick = Math.ceil(cast.toNumber(args.THICKNESS) / 4);
+        const thick = Math.ceil(Cast.toNumber(args.THICKNESS) / 4);
         const color = hexToRgb(args.COLOR);
         const img = new Image();
         img.crossOrigin = "Anonymous";
@@ -998,25 +1036,25 @@
       }
     }
 
-    setCutout(args) { this.cutPos = [cast.toNumber(args.X), cast.toNumber(args.Y)] }
+    setCutout(args) { this.cutPos = [Cast.toNumber(args.X), Cast.toNumber(args.Y)] }
     changeCutout(args) {
-      this.cutPos = [this.cutPos[0] + cast.toNumber(args.X),
-      this.cutPos[1] + cast.toNumber(args.Y)];
+      this.cutPos = [this.cutPos[0] + Cast.toNumber(args.X),
+      this.cutPos[1] + Cast.toNumber(args.Y)];
     }
     currentCut(args) { return this.cutPos[args.POS === "X" ? 0 : 1] }
 
-    setScale(args) { this.scale = [cast.toNumber(args.SIZE), cast.toNumber(args.Y)] }
+    setScale(args) { this.scale = [Cast.toNumber(args.SIZE), Cast.toNumber(args.Y)] }
     changeScale(args) {
-      this.scale = [this.scale[0] + cast.toNumber(args.SIZE),
-      this.scale[1] + cast.toNumber(args.Y)];
+      this.scale = [this.scale[0] + Cast.toNumber(args.SIZE),
+      this.scale[1] + Cast.toNumber(args.Y)];
     }
     currentScale(args) { return this.scale[args.POS === "X" ? 0 : 1] }
 
-    setDirection(args) { this.cutoutDirection = cast.toNumber(args.ANGLE) }
+    setDirection(args) { this.cutoutDirection = Cast.toNumber(args.ANGLE) }
     changeDirection(args) {
-      let direction = this.cutoutDirection + cast.toNumber(args.ANGLE);
-      if (direction > 180) { direction = -180 + cast.toNumber(args.ANGLE) }
-      if (direction < -180) { direction = 180 + cast.toNumber(args.ANGLE) }
+      let direction = this.cutoutDirection + Cast.toNumber(args.ANGLE);
+      if (direction > 180) { direction = -180 + Cast.toNumber(args.ANGLE) }
+      if (direction < -180) { direction = 180 + Cast.toNumber(args.ANGLE) }
       this.cutoutDirection = direction;
     }
     currentDir() { return this.cutoutDirection }
@@ -1052,7 +1090,7 @@
 
     applyAbberationEffect(args) {
       return new Promise((resolve) => {
-        const amtIn = cast.toNumber(args.PERCENTAGE);
+        const amtIn = Cast.toNumber(args.PERCENTAGE);
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
@@ -1115,10 +1153,10 @@
       });
     }
     svgToBitmap(args) {
-      return this.stretch(this.convertAsset(args.SVG, "png"),cast.toNumber(args.WIDTH), cast.toNumber(args.HEIGHT));
+      return this.stretch(this.convertAsset(args.SVG, "png"),Cast.toNumber(args.WIDTH), Cast.toNumber(args.HEIGHT));
     }
     stretchImg(args) {
-      return this.stretch(this.convertAsset(args.URI, "png"), cast.toNumber(args.W), cast.toNumber(args.H));
+      return this.stretch(this.convertAsset(args.URI, "png"), Cast.toNumber(args.W), Cast.toNumber(args.H));
     }
 
     convertImageToSVG(args) {
@@ -1195,7 +1233,7 @@
           const pixelData = this.printImg(img);
           const ctx = this.createCanvasCtx(img.width, img.height).ctx;
           ctx.putImageData(new ImageData(new Uint8ClampedArray(pixelData), img.width, img.height), 0, 0);
-          const factor = cast.toNumber(args.NUM) / 10;
+          const factor = Cast.toNumber(args.NUM) / 10;
           const weights = [0, -factor, 0, -factor, 1 + 4 * factor, -factor, 0, -factor, 0];
           this.sharpen(ctx, img.width, img.height, weights, 25);
           resolve(this.exportImg(img, ctx.getImageData(0, 0, img.width, img.height).data));
@@ -1237,8 +1275,8 @@
 
     audioToImage(args) {
       const audioURI = args.AUDIO_URI;
-      const imageWidth = Math.abs(cast.toString(args.W));
-      const { canvas, ctx } = this.createCanvasCtx(imageWidth, Math.abs(cast.toString(args.H)));
+      const imageWidth = Math.abs(Cast.toString(args.W));
+      const { canvas, ctx } = this.createCanvasCtx(imageWidth, Math.abs(Cast.toString(args.H)));
       for (let i = 0; i < audioURI.length; i++) {
         const charCode = audioURI.charCodeAt(i);
         ctx.fillStyle = `rgb(${(charCode * 2) % 256},${(charCode * 3) % 256},${(charCode * 4) % 256})`;
@@ -1275,8 +1313,8 @@
       if (translateMatch) translateValues = [parseFloat(translateMatch[1]), parseFloat(translateMatch[2])];
       values = `${viewBoxValues},${translateValues}`;
       values = values.split(",");
-      values = values.map(item => cast.toNumber(item));
-      amt = cast.toNumber(amt);
+      values = values.map(item => Cast.toNumber(item));
+      amt = Cast.toNumber(amt);
       if (values.length > 3) {
         svg = svg.replace(/viewBox="([^"]+)"/, `viewBox="${values[0]},${values[1]},${values[2] + (amt * 2)},${values[3] + (amt * 2)}"`);
         svg = svg.replace(/width="([^"]+)"/, `width="${values[2] + (amt * 2)}"`);
@@ -1287,7 +1325,7 @@
     }
 
     removeThorns(args) {
-      return cast.toString(args.SVG).replaceAll("linejoin=\"miter\"", "linejoin=\"round\"");
+      return Cast.toString(args.SVG).replaceAll("linejoin=\"miter\"", "linejoin=\"round\"");
     }
 
     commonCol(args) {
@@ -1330,8 +1368,8 @@
       return new Promise((resolve) => {
         img.crossOrigin = "Anonymous";
         img.onload = () => {
-          const startNum = cast.toNumber(args.NUM);
-          const endNum = cast.toNumber(args.NUM2) || startNum;
+          const startNum = Cast.toNumber(args.NUM);
+          const endNum = Cast.toNumber(args.NUM2) || startNum;
           const pixelData = this.printImg(img);
           for (let num = startNum; num <= endNum && num <= img.width * img.height; num++) {
             const rgb = hexToRgb(args.COLOR);
@@ -1348,7 +1386,7 @@
       return new Promise((resolve) => {
         img.crossOrigin = "Anonymous";
         img.onload = () => {
-          const targetPixel = cast.toNumber(args.NUM);
+          const targetPixel = Cast.toNumber(args.NUM);
           const pixelData = this.printImg(img);
           if (targetPixel >= 1 && targetPixel <= img.width * img.height) {
             const pixelIndex = (targetPixel - 1) * 4;
@@ -1399,8 +1437,8 @@
 
     /* Deprecation Marker */
     convertHexToRGB(args) { return hexToRgb(args.HEX)[{ R: 0, G: 1, B: 2 }[args.CHANNEL]] || "" }
-    clipImage(t){return new Promise((e,i)=>{let s=new Image;s.onload=()=>{let i=new Image;i.onload=()=>{let t=document.createElement("canvas");t.width=s.width,t.height=s.height;let a=t.getContext("2d"),h=i.width+this.scale[0],o=i.height+this.scale[1],n=this.cutPos[0]+s.width/2-h/2,r=this.cutPos[1]-s.height/2+o/2;a.drawImage(s,0,0),a.globalCompositeOperation="destination-in";let l=(this.cutoutDirection+270)*Math.PI/180;a.translate(n+h/2,-1*r+o/2),a.rotate(l),a.drawImage(i,-h/2,-o/2,h,o),a.setTransform(1,0,0,1,0,0),a.globalCompositeOperation="source-over",e(t.toDataURL("image/png"))},i.src=this.convertAsset(t.CUTOUT,"png")},s.src=this.convertAsset(t.MAIN,"png")})}
-    overlayImage(t){return new Promise((e,i)=>{let s=new Image;s.onload=()=>{let i=new Image;i.onload=()=>{let t=document.createElement("canvas");t.width=Math.max(s.width,i.width),t.height=Math.max(s.height,i.height);let a=t.getContext("2d");a.drawImage(s,0,0);let h=i.width+this.scale[0],o=i.height+this.scale[1],n=this.cutPos[0]+s.width/2-h/2,r=this.cutPos[1]-s.height/2+o/2;a.translate(n+h/2,-1*r+o/2),a.rotate((this.cutoutDirection+270)*Math.PI/180),a.drawImage(i,-h/2,-o/2,h,o),a.setTransform(1,0,0,1,0,0),e(t.toDataURL("image/png"))},i.src=this.convertAsset(t.CUTOUT,"png")},s.src=this.convertAsset(t.MAIN,"png")})}
+    clipImage(){return "use new masking block"}
+    overlayImage(){return "use new masking block"}
     /* Marker End */
   }
 
