@@ -49,13 +49,14 @@
   ];
 
   class ImageHelper {
+    // TODO willReadFrequently 
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
     static canvas = document.createElement("canvas");
     static context = ImageHelper.canvas.getContext("2d");
 
     static hexToRgba(hex) {
       hex = Cast.toString(hex);
-      if (!HEX_COLOR_REGEX.test(hex)) return [0, 0, 0, 0]; // black
+      if (!ImageHelper.HEX_COLOR_REGEX.test(hex)) return [0, 0, 0, 0]; // black
 
       return [
         parseInt(hex.slice(1, 3), 16),
@@ -80,33 +81,38 @@
       input = Cast.toString(input).trim();
       if (!input) return null;
 
-      const isURL = input.startsWith("http");
-      const isSVG = input.startsWith("<svg");
-      const isDataURI = input.startsWith("data:image/");
-      if (isURL || isDataURI || isSVG) {
-        if (type === "PNG" && isSVG) {
-          const data = typeof Base64 ? Base64.toBase64(input) : btoa(input);
-          return `data:image/svg+xml;base64,${data}`;
-        }
-
-        return input;
+      if (input.startsWith("<svg")) {
+        const data = typeof Base64 !== "undefined" ? Base64.toBase64(input) : btoa(input);
+        return `data:image/svg+xml;base64,${data}`;
       }
 
+      const isURL = input.startsWith("http");
+      const isDataURI = input.startsWith("data:image/");
+      if (isURL || isDataURI) return input;
       return null;
     }
 
     static _prepCanvas(image, opt_dontDraw) {
-      const width = image.width;
-      const height = image.height;
+      const canvas = ImageHelper.canvas;
+      const context = ImageHelper.context;
+      const width = image.naturalWidth || image.width || 300;
+      const height = image.naturalHeight || image.height || 150;
 
-      ImageHelper.canvas.width = Math.max(1, width);
-      ImageHelper.canvas.height = Math.max(1, height);
+      canvas.width = Math.max(1, Math.abs(width));
+      canvas.height = Math.max(1, Math.abs(height));
+      context.reset(); // Reset the canvas incase the width and height remain the same
 
       if (!opt_dontDraw) {
-        ImageHelper.context.save();
-        ImageHelper.context.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
-        ImageHelper.context.drawImage(image, width < 0 ? -Math.abs(width) : 0, height < 0 ? -Math.abs(height) : 0, canvas.width, canvas.height);
-        ImageHelper.context.restore();
+        context.save();
+        context.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
+        context.drawImage(
+          image,
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        );
+        context.restore();
       }
     }
 
@@ -118,42 +124,60 @@
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onerror = () => resolve(null);
-        img.onload = () => {
-          ImageHelper._prepCanvas(img);
-
-          resolve({
-            img,
-            canvas: ImageHelper.canvas,
-            ctx: ImageHelper.context,
-          });
-        };
+        img.onload = () => resolve(img);
         img.src = source;
       });
     }
 
-    static exportImg(img, pixelData, opt_width, opt_height) {
-      const width = Math.abs(opt_width) || img.width;
-      const height = Math.abs(opt_height) || img.height;
-
+    static unloadPixelData(pixelData, width, height) {
+      width = Math.abs(width);
+      height = Math.abs(height);
       ImageHelper._prepCanvas({ width, height }, true);
-      // TODO
-      ImageHelper.context.putImageData(new ImageData(new Uint8ClampedArray(pixelData), canvas.width, canvas.height), 0, 0);
 
-      return {
-        canvas: ImageHelper.canvas,
-        ctx: ImageHelper.context,
-      });
+      const imageData = new ImageData(
+        new Uint8ClampedArray(pixelData),
+        width,
+        height
+      );
+      ImageHelper.context.putImageData(imageData, 0, 0);
+
+      return ImageHelper.canvas.toDataURL("image/png");
+    }
+
+    static forEachPixel(callback) {
+      const canvas = ImageHelper.canvas;
+      const context = ImageHelper.context;
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      const pixelData = imageData.data;
+      for (let i = 0; i < pixelData.length; i += 4) {
+        const result = callback({
+          r: i,
+          g: i + 1,
+          b: i + 2,
+          a: i + 3,
+        });
+
+        pixelData[i] = result[0];
+        pixelData[i + 1] = result[1];
+        pixelData[i + 2] = result[2];
+        pixelData[i + 3] = result[3];
+      }
+
+      context.putImageData(imageData, 0, 0);
+      return canvas.toDataURL("image/png");
     }
   }
 
   class imgEffectsSP {
     constructor() {
-      // TODO
-      this.cutPos = [0, 0];
-      this.scale = [100, 100];
-      this.cutoutDirection = 90;
       this.colorThreshold = 10;
-      this.allShards = [];
+      this.mask = {
+        pos: [0, 0],
+        scale: [100, 100],
+        direction: 90
+      };
+      this.shardPieces = [];
     }
     getInfo() {
       return {
@@ -588,6 +612,7 @@
 
     // Helper Funcs
     getImageBounds(imageData) {
+      // TODO
       const { data, width, height } = imageData;
       let minX = width, minY = height, maxX = 0, maxY = 0;
       for (let y = 0; y < height; y++) {
@@ -604,28 +629,25 @@
     }
 
     // Block Funcs
-    setSoftness(args) { this.colorThreshold = Cast.toNumber(args.AMT) }
+    async applyHueEffect(args) {
+      const rgba = ImageHelper.hexToRgba(args.COLOR);
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
 
-    applyHueEffect(args) {
-      return new Promise((resolve) => {
-        const color = hexToRgb(args.COLOR);
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const data = this.printImg(img);
-          for (let i = 0; i < data.length; i += 4) {
-            data[i] = Math.min(255, (data[i] * color[0]) / 255);
-            data[i + 1] = Math.min(255, (data[i + 1] * color[1]) / 255);
-            data[i + 2] = Math.min(255, (data[i + 2] * color[2]) / 255);
-            data[i + 3] = Math.min(255, (data[i + 3] * (color[3] ?? 255)) / 255);
-          }
-          resolve(this.exportImg(img, data));
-        };
-        img.src = this.convertAsset(args.SVG, "png");
+      ImageHelper._prepCanvas(image);
+      return ImageHelper.forEachPixel((pixel) => {
+        return [
+          Math.min(255, (pixel.r * rgba[0]) / 255),
+          Math.min(255, (pixel.g * rgba[1]) / 255),
+          Math.min(255, (pixel.b * rgba[2]) / 255),
+          Math.min(255, (pixel.a * rgba[3]) / 255)
+        ];
       });
     }
 
-    deleteColor(args) { return this.replaceColor({ ...args, REPLACE : "#00000000" }) }
+    deleteColor(args) {
+      return this.replaceColor({ ...args, REPLACE: "#00000000" })
+    }
 
     replaceColor(args) {
       const colRem = hexToRgb(args.COLOR);
@@ -711,6 +733,10 @@
         };
         img.src = this.convertAsset(args.DATA_URI, "png");
       });
+    }
+
+    setSoftness(args) {
+      this.colorThreshold = Math.max(1, Cast.toNumber(args.AMT));
     }
 
     applyEffect(args) {
@@ -1505,7 +1531,7 @@
     getShard(args) { return this.allShards[args.SHARD - 1] || "" }
 
     /* Deprecation Marker */
-    convertHexToRGB(args) { return hexToRgb(args.HEX)[{ R: 0, G: 1, B: 2 }[args.CHANNEL]] || "" }
+    convertHexToRGB() {return ""}
     clipImage(){return "use new masking block"}
     overlayImage(){return "use new masking block"}
     /* Marker End */
