@@ -15,29 +15,43 @@
 
   const Cast = Scratch.Cast;
 
+  /**
+   * Generates an item for a block dropdown menu.
+   * 
+   * @param text {String} Text value of menu item
+   * @param value {String|undefined} Value of menu item, uses 'text' param if undefined
+   * @returns Menu item object
+   */
+  const genMenuItem = (text, value) => {
+    return {
+      text: Scratch.translate(text),
+      value: value ?? text
+    };
+  };
+
   const DEFAULT_IMG_VALUE = "...";
   const EFFECTS_MENU = [
-    { text: Scratch.translate("saturation"), value: "saturation" },
-    { text: Scratch.translate("contrast"), value: "contrast" },
-    { text: Scratch.translate("opaque"), value: "opaque" },
-    { text: Scratch.translate("glitch"), value: "glitch" },
-    { text: Scratch.translate("chunk glitch"), value: "chunk glitch" },
-    { text: Scratch.translate("clip glitch"), value: "clip glitch" },
-    { text: Scratch.translate("vignette"), value: "vignette" },
-    { text: Scratch.translate("ripple"), value: "ripple" },
-    { text: Scratch.translate("displacement"), value: "displacement" },
-    { text: Scratch.translate("posterize"), value: "posterize" },
-    { text: Scratch.translate("blur"), value: "blur" },
-    { text: Scratch.translate("sepia"), value: "sepia" },
-    { text: Scratch.translate("scanlines"), value: "scanlines" },
-    { text: Scratch.translate("grain"), value: "grain" },
-    { text: Scratch.translate("cubism"), value: "cubism" }
+    genMenuItem("saturation"),
+    genMenuItem("contrast"),
+    genMenuItem("opaque"),
+    genMenuItem("glitch"),
+    genMenuItem("chunk glitch"),
+    genMenuItem("clip glitch"),
+    genMenuItem("vignette"),
+    genMenuItem("ripple"),
+    genMenuItem("displacement"),
+    genMenuItem("posterize"),
+    genMenuItem("blur"),
+    genMenuItem("sepia"),
+    genMenuItem("scanlines"),
+    genMenuItem("grain"),
+    genMenuItem("cubism")
   ];
-
-  const makeMenuItem = ()=>{} // TODO
 
   class ImageHelper {
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
+    static canvas = document.createElement("canvas");
+    static context = ImageHelper.canvas.getContext("2d");
 
     static hexToRgba(hex) {
       hex = Cast.toString(hex);
@@ -61,10 +75,80 @@
     static clamp(min, max, value) {
       return Math.min(max, Math.max(min, value));
     }
+
+    static _validateSource(input) {
+      input = Cast.toString(input).trim();
+      if (!input) return null;
+
+      const isURL = input.startsWith("http");
+      const isSVG = input.startsWith("<svg");
+      const isDataURI = input.startsWith("data:image/");
+      if (isURL || isDataURI || isSVG) {
+        if (type === "PNG" && isSVG) {
+          const data = typeof Base64 ? Base64.toBase64(input) : btoa(input);
+          return `data:image/svg+xml;base64,${data}`;
+        }
+
+        return input;
+      }
+
+      return null;
+    }
+
+    static _prepCanvas(image, opt_dontDraw) {
+      const width = image.width;
+      const height = image.height;
+
+      ImageHelper.canvas.width = Math.max(1, width);
+      ImageHelper.canvas.height = Math.max(1, height);
+
+      if (!opt_dontDraw) {
+        ImageHelper.context.save();
+        ImageHelper.context.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
+        ImageHelper.context.drawImage(image, width < 0 ? -Math.abs(width) : 0, height < 0 ? -Math.abs(height) : 0, canvas.width, canvas.height);
+        ImageHelper.context.restore();
+      }
+    }
+
+    static newImage(input) {
+      const source = ImageHelper._validateSource(input);
+      if (!source) return null;
+
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onerror = () => resolve(null);
+        img.onload = () => {
+          ImageHelper._prepCanvas(img);
+
+          resolve({
+            img,
+            canvas: ImageHelper.canvas,
+            ctx: ImageHelper.context,
+          });
+        };
+        img.src = source;
+      });
+    }
+
+    static exportImg(img, pixelData, opt_width, opt_height) {
+      const width = Math.abs(opt_width) || img.width;
+      const height = Math.abs(opt_height) || img.height;
+
+      ImageHelper._prepCanvas({ width, height }, true);
+      // TODO
+      ImageHelper.context.putImageData(new ImageData(new Uint8ClampedArray(pixelData), canvas.width, canvas.height), 0, 0);
+
+      return {
+        canvas: ImageHelper.canvas,
+        ctx: ImageHelper.context,
+      });
+    }
   }
 
   class imgEffectsSP {
     constructor() {
+      // TODO
       this.cutPos = [0, 0];
       this.scale = [100, 100];
       this.cutoutDirection = 90;
@@ -192,7 +276,7 @@
           {
             opcode: "removeTransparencyEffect",
             blockType: Scratch.BlockType.REPORTER,
-            text: Scratch.translate("remove pixels from [SVG] [REMOVE] [THRESHOLD] % transparency"),
+            text: Scratch.translate("remove pixels [REMOVE] [THRESHOLD] % transparency from [SVG]"),
             arguments: {
               SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               THRESHOLD: { type: Scratch.ArgumentType.NUMBER, defaultValue: 50 },
@@ -216,8 +300,8 @@
             text: Scratch.translate("[TYPE] mask [MASK] from [IMG]"),
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "MASKING" },
-              IMG: { type: Scratch.ArgumentType.STRING, defaultValue: "source-here" },
-              MASK: { type: Scratch.ArgumentType.STRING, defaultValue: "cutout-here" }
+              IMG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
+              MASK: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE }
             }
           },
           "---",
@@ -289,7 +373,6 @@
             opcode: "changeDirection",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("change mask direction by [ANGLE]"),
-            disableMonitor: true,
             arguments: {
               ANGLE: { type: Scratch.ArgumentType.ANGLE, defaultValue: 15 }
             }
@@ -297,7 +380,8 @@
           {
             opcode: "currentDir",
             blockType: Scratch.BlockType.REPORTER,
-            text: Scratch.translate("mask direction")
+            text: Scratch.translate("mask direction"),
+            disableMonitor: true
           },
           "---",
           {
@@ -471,13 +555,29 @@
           /* Marker End */
         ],
         menus: {
-          // TODO
-          POSITIONS: ["X", "Y"],
-          MASKING: ["clip", "mask", "overlay"],
-          PIXELTYPE: ["total", "per line", "per row"],
-          REMOVAL: ["under", "over", "equal to"],
-          DOMINANT: ["most", "least"],
-          fileType: ["content", "dataURI"],
+          POSITIONS: [
+            genMenuItem("x"), 
+            genMenuItem("y")
+          ],
+          REMOVAL: [
+            genMenuItem("under"),
+            genMenuItem("over"),
+            genMenuItem("equal to")],
+          DOMINANT: [genMenuItem("most"), genMenuItem("least")],
+          MASKING: [
+            genMenuItem("clip"),
+            genMenuItem("cutout"),
+            genMenuItem("overlay")
+          ],
+          PIXELTYPE: [
+            genMenuItem("width"),
+            genMenuItem("height"),
+            genMenuItem("total")
+          ],
+          fileType: [
+            genMenuItem("content"),
+            genMenuItem("data.URI")
+          ],
           EFFECTS: { acceptReporters: true, items: EFFECTS_MENU },
           /* Deprecation Marker */
           CHANNELS: { acceptReporters: true, items: ["R", "G", "B"] }
@@ -487,29 +587,6 @@
     }
 
     // Helper Funcs
-    printImg(img, width, height) {
-      const { canvas, ctx } = this.createCanvasCtx(Math.abs(width) || img.width, Math.abs(height) || img.height);
-      ctx.save();
-      ctx.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
-      ctx.drawImage(img, width < 0 ? -Math.abs(width) : 0, height < 0 ? -Math.abs(height) : 0, canvas.width, canvas.height);
-      ctx.restore();
-      return ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    }
-
-    exportImg(img, pixelData, width, height) {
-      const { canvas, ctx } = this.createCanvasCtx(Math.abs(width) || img.width, Math.abs(height) || img.height);
-      ctx.putImageData(new ImageData(new Uint8ClampedArray(pixelData), canvas.width, canvas.height), 0, 0);
-      return canvas.toDataURL();
-    }
-
-    createCanvasCtx(w, h, img, x, y) {
-      const canvas = document.createElement("canvas");
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext("2d");
-      if (img !== undefined) ctx.drawImage(img, x, y);
-      return { canvas, ctx };
-    }
-
     getImageBounds(imageData) {
       const { data, width, height } = imageData;
       let minX = width, minY = height, maxX = 0, maxY = 0;
@@ -524,14 +601,6 @@
         }
       }
       return { width: maxX - minX + 1, height: maxY - minY + 1, offsetX: minX, offsetY: minY };
-    }
-
-    convertAsset(input, type) {
-      if (input && (input.startsWith("http") || input.startsWith("data:image/") || input.startsWith("<svg"))) {
-        if (type === "png") return input.startsWith("<svg") ? `data:image/svg+xml;base64,${btoa(input)}` : input;
-        else return input.startsWith("data:image/") ? this.makeSVGimage({ URI: input, TYPE: "content" }) : input;
-      }
-      return menuIconURI;
     }
 
     // Block Funcs
