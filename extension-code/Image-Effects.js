@@ -49,10 +49,9 @@
   ];
 
   class ImageHelper {
-    // TODO willReadFrequently 
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
     static canvas = document.createElement("canvas");
-    static context = ImageHelper.canvas.getContext("2d");
+    static context = ImageHelper.canvas.getContext("2d", { willReadFrequently: true });
 
     static hexToRgba(hex) {
       hex = Cast.toString(hex);
@@ -92,7 +91,7 @@
       return null;
     }
 
-    static _prepCanvas(image, opt_dontDraw) {
+    static prepCanvas(image, opt_dontDraw) {
       const canvas = ImageHelper.canvas;
       const context = ImageHelper.context;
       const width = image.naturalWidth || image.width || 300;
@@ -129,19 +128,23 @@
       });
     }
 
-    static unloadPixelData(pixelData, width, height) {
-      width = Math.abs(width);
-      height = Math.abs(height);
-      ImageHelper._prepCanvas({ width, height }, true);
+    static newTempCanvas(width, height) {
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      const ctx = tempCanvas.getContext("2d", { willReadFrequently: true });
 
-      const imageData = new ImageData(
-        new Uint8ClampedArray(pixelData),
-        width,
-        height
-      );
-      ImageHelper.context.putImageData(imageData, 0, 0);
+      const dispose = () => {
+        ctx.reset();
+        tempCanvas.width = 0;
+        tempCanvas.height = 0;
+      };
 
-      return ImageHelper.canvas.toDataURL("image/png");
+      return {
+        canvas: tempCanvas,
+        ctx,
+        dispose
+      };
     }
 
     static forEachPixel(callback) {
@@ -151,12 +154,15 @@
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       const pixelData = imageData.data;
       for (let i = 0; i < pixelData.length; i += 4) {
-        const result = callback({
-          r: i,
-          g: i + 1,
-          b: i + 2,
-          a: i + 3,
-        });
+        const result = callback(
+          [
+            pixelData[i],
+            pixelData[i + 1],
+            pixelData[i + 2],
+            pixelData[i + 3]
+          ],
+          i / 4,
+        );
 
         pixelData[i] = result[0];
         pixelData[i + 1] = result[1];
@@ -166,6 +172,10 @@
 
       context.putImageData(imageData, 0, 0);
       return canvas.toDataURL("image/png");
+    }
+
+    static forEachRect(width, height, sx, sy, callback) {
+      // TODO
     }
   }
 
@@ -611,6 +621,19 @@
     }
 
     // Helper Funcs
+    _valueInRange(value, target) {
+      return value >= target - this.colorThreshold &&
+        value <= target + this.colorThreshold;
+    }
+
+    _colorInRange(rgba, targetRgba) {
+      return (
+        this._valueInRange(rgba[0], targetRgba[0]) &&
+        this._valueInRange(rgba[1], targetRgba[1]) &&
+        this._valueInRange(rgba[2], targetRgba[2])
+      );
+    }
+
     getImageBounds(imageData) {
       // TODO
       const { data, width, height } = imageData;
@@ -628,326 +651,449 @@
       return { width: maxX - minX + 1, height: maxY - minY + 1, offsetX: minX, offsetY: minY };
     }
 
-    // Block Funcs
-    async applyHueEffect(args) {
-      const rgba = ImageHelper.hexToRgba(args.COLOR);
-      const image = await ImageHelper.newImage(args.SVG);
-      if (!image) return "Invalid image";
+    // EFFECTS
+    _saturate(context, value, callback) {
+      context.filter = `saturate(${Math.abs(value)}%)${value < 0 ? " invert(100%)" : ""}`;
+      return callback(false);
+    }
 
-      ImageHelper._prepCanvas(image);
+    _contrast(context, value, callback) {
+      context.filter = `contrast(${Math.max(0, value / 100) + 1})`;
+      return callback(false);
+    }
+
+    _opaque(_, value) {
+      value = Math.max((value + 100) / 100, 0);
       return ImageHelper.forEachPixel((pixel) => {
-        return [
-          Math.min(255, (pixel.r * rgba[0]) / 255),
-          Math.min(255, (pixel.g * rgba[1]) / 255),
-          Math.min(255, (pixel.b * rgba[2]) / 255),
-          Math.min(255, (pixel.a * rgba[3]) / 255)
-        ];
+        pixel[3] *= value;
+        return pixel;
       });
     }
 
-    deleteColor(args) {
-      return this.replaceColor({ ...args, REPLACE: "#00000000" })
-    }
-
-    replaceColor(args) {
-      const colRem = hexToRgb(args.COLOR);
-      const colRep = hexToRgb(args.REPLACE);
-      return new Promise(resolve => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const inRange = (val, target) => val >= target - this.colorThreshold && val <= target + this.colorThreshold;
-          const pixelData = this.printImg(img);
-          for (let i = 0; i < pixelData.length; i += 4) {
-            const [r, g, b] = pixelData.slice(i, i + 3);
-            if (inRange(r, colRem[0]) && inRange(g, colRem[1]) && inRange(b, colRem[2])) pixelData.set(colRep, i);
-          }
-          resolve(this.exportImg(img, pixelData));
-        };
-        img.src = this.convertAsset(args.DATA_URI, "png");
-      });
-    }
-
-    replaceColorPattern(args) {
-      const colRem = hexToRgb(args.COLOR);
-      const tileSize = Cast.toNumber(args.SCALE);
-      if (tileSize < 1) return args.DATA_URI;
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const pattern = new Image();
-          pattern.crossOrigin = "Anonymous";
-          pattern.onload = () => {
-            const inRange = (val, target) => val >= target - this.colorThreshold && val <= target + this.colorThreshold;
-            const { width, height } = img;
-            const finalCanvas = document.createElement("canvas");
-            finalCanvas.width = width;
-            finalCanvas.height = height;
-            const finalCtx = finalCanvas.getContext("2d");
-
-            const ctx = this.createCanvasCtx(width, height, img, 0, 0).ctx;
-            const ogData = ctx.getImageData(0, 0, width, height);
-            const moddedData = ctx.getImageData(0, 0, width, height);
-            for (let i = 0; i < moddedData.data.length; i += 4) {
-              const r = moddedData.data[i], g = moddedData.data[i + 1], b = moddedData.data[i + 2];
-              if (inRange(r, colRem[0]) && inRange(g, colRem[1]) && inRange(b, colRem[2])) moddedData.data[i + 3] = 0;
-            }
-            finalCtx.putImageData(moddedData, 0, 0);
-
-            const maskUtil = this.createCanvasCtx(width, height, img, 0, 0);
-            const maskCanvas = maskUtil.canvas;
-            const maskCtx = maskUtil.ctx;
-            const maskData = maskCtx.createImageData(width, height);
-            for (let i = 0; i < ogData.data.length; i += 4) {
-              const r = ogData.data[i], g = ogData.data[i + 1], b = ogData.data[i + 2];
-              if (inRange(r, colRem[0]) && inRange(g, colRem[1]) && inRange(b, colRem[2])) {
-                maskData.data[i] = 255;
-                maskData.data[i + 1] = 255;
-                maskData.data[i + 2] = 255;
-                maskData.data[i + 3] = 255;
-              } else {
-                maskData.data[i] = 0;
-                maskData.data[i + 1] = 0;
-                maskData.data[i + 2] = 0;
-                maskData.data[i + 3] = 0;
-              }
-            }
-            maskCtx.putImageData(maskData, 0, 0);
-
-            const pattCanvas = document.createElement("canvas");
-            pattCanvas.width = width;
-            pattCanvas.height = height;
-            const pattCtx = pattCanvas.getContext("2d");
-            for (let y = 0; y < height; y += tileSize) {
-              for (let x = 0; x < width; x += tileSize) pattCtx.drawImage(pattern, x, y, tileSize, tileSize);
-            }
-
-            pattCtx.globalCompositeOperation = "destination-in";
-            pattCtx.drawImage(maskCanvas, 0, 0);
-            pattCtx.globalCompositeOperation = "source-over";
-            finalCtx.drawImage(pattCanvas, 0, 0);
-            resolve(finalCanvas.toDataURL());
-          };
-          pattern.src = this.convertAsset(args.PATTERN, "png");
-        };
-        img.src = this.convertAsset(args.DATA_URI, "png");
-      });
-    }
-
-    setSoftness(args) {
-      this.colorThreshold = Math.max(1, Cast.toNumber(args.AMT));
-    }
-
-    applyEffect(args) {
-      return new Promise((resolve) => {
-        const percent = Cast.toNumber(args.PERCENTAGE);
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = async () => {
-          const { canvas, ctx } = this.createCanvasCtx(img.width, img.height, img, 0, 0);
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const effectFunc = this[`apply${Cast.toString(args.EFFECT).replaceAll(" ", "")}`];
-          if (effectFunc && typeof effectFunc === "function") await effectFunc(imageData, percent, ctx);
-          else resolve("");
-          if (imageData.isAltered === undefined) ctx.putImageData(imageData, 0, 0);
-          else {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            if (imageData.extraDraw) imageData.extraDraw(ctx);
-          }
-          resolve(canvas.toDataURL());
-        };
-        img.src = this.convertAsset(args.SVG, "png");
-      });
-    }
-    applySaturation(imageData, amtIn, ctx) {
-      ctx.filter = `saturate(${Math.abs(amtIn)}%)${amtIn < 0 ? " invert(100%)" : ""}`;
-      imageData.isAltered = true;
-    }
-    applyContrast(imageData, amtIn, ctx) {
-      ctx.filter = `contrast(${Math.max(0, amtIn / 100) + 1})`;
-      imageData.isAltered = true;
-    }
-    applyOpaque(imageData, amtIn) {
-      const data = imageData.data;
-      amtIn = Math.max((amtIn + 100) / 100, 0);
-      for (let i = 0; i < data.length; i += 4) data[i + 3] = data[i + 3] * amtIn;
-    }
-    applyGlitch(imageData, amtIn) {
-      const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        if (Math.random() * 100 <= amtIn) {
-          const rnd = () => (Math.random() - 0.5) * amtIn * 3;
-          for (let j = 0; j < 3; j++) data[i + j] = (data[i + j] + rnd()) % 256;
+    _glitch(_, value) {
+      return ImageHelper.forEachPixel((pixel) => {
+        if (Math.random() * 100 <= value) {
+          const rnd = () => (Math.random() - 0.5) * value * 3;
+          return [
+            (pixel[0] + rnd()) % 256,
+            (pixel[1] + rnd()) % 256,
+            (pixel[2] + rnd()) % 256,
+            pixel[3],
+          ];
         }
-      }
+
+        return pixel;
+      });
     }
-    applyChunkGlitch(imageData, amtIn) {
-      const { data, width, height} = imageData;
-      const newWidth = amtIn / 10;
-      for (let i = 0; i < Math.floor(width * 1); i++) {
+
+    _chunkGlitch(context, value, callback) {
+      const chunkSize = value / 10;
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+      const imageData = context.getImageData(0, 0, width, height);
+
+      for (let i = 0; i < Math.floor(width); i++) {
         const linePos = Math.floor(Math.random() * height);
-        const lineStart = linePos - Math.floor(newWidth / 2);
-        const lineEnd = lineStart + newWidth;
+        const lineStart = linePos - Math.floor(chunkSize / 2);
+        const lineEnd = lineStart + chunkSize;
+
         for (let y = 0; y < height; y++) {
-          const srcIndex = (y * width + linePos) * 4;
+          const index = (y * width + linePos) * 4;
           if (linePos >= 0 && linePos < width) {
             for (let x = lineStart; x < lineEnd; x++) {
-              data.copyWithin((y * width + x) * 4, srcIndex, srcIndex + 4);
+              imageData.data.copyWithin(
+                (y * width + x) * 4,
+                index,
+                index + 4
+              );
             }
           }
         }
       }
+
+      return callback(true, imageData);
     }
-    applyClipGlitch(imageData, amtIn) {
-      const { data, width, height} = imageData;
-      amtIn /= 100;
-      const numPixelsToEnlarge = Math.floor((amtIn / 100) * (width * height));
-      for (let i = 0; i < numPixelsToEnlarge; i++) {
+
+    _clipGlitch(context, value, callback) {
+      value /= 100;
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+      const imageData = context.getImageData(0, 0, width, height);
+
+      const pixelsToEnlarge = Math.floor((value / 100) * (width * height));
+      for (let i = 0; i < pixelsToEnlarge; i++) {
         const x = Math.floor(Math.random() * width);
         const y = Math.floor(Math.random() * height);
         const index = (y * width + x) * 4;
-        const enlargeFactor = 1 + Math.random() * (1.5 + amtIn / 200);
+        const enlargeFactor = 1 + Math.random() * (1.5 + value / 200);
         const blurRadius = Math.floor(enlargeFactor * 4);
+  
         for (let offsetY = -blurRadius; offsetY <= blurRadius; offsetY++) {
           for (let offsetX = -blurRadius; offsetX <= blurRadius; offsetX++) {
             const newX = x + offsetX;
             const newY = y + offsetY;
-            const bounded = newX >= 0 && newX < width && newY >= 0 && newY < height;
-            if (bounded) data.copyWithin((newY * width + newX) * 4, index, index + 4);
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+              imageData.data.copyWithin(
+                (newY * width + newX) * 4,
+                index,
+                index + 4
+              );
+            }
           }
         }
       }
+
+      return callback(true, imageData);
     }
-    applyVignette(imageData, amtIn, ctx) {
-      const { width, height} = imageData;
-      const col = amtIn > 0 ? 255 : 0;
-      amtIn = Math.abs(amtIn) / 100;
-      const grad = ctx.createRadialGradient(
-        width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height) / 1.5
-      );
-      grad.addColorStop(0, `rgba(${col}, ${col}, ${col}, 0)`);
-      grad.addColorStop(1, `rgba(${col}, ${col}, ${col}, ${amtIn})`);
-      imageData.isAltered = true;
-      imageData.extraDraw = (ctx) => {
-        ctx.globalCompositeOperation = "source-atop";
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, width, height);
+
+    _vignette(context, value, _) {
+      value /= 100;
+      const width = context.canvas.width;
+      const centerX = width / 2;
+      const centerY = context.canvas.height / 2;
+      const maxDist = Math.hypot(centerX, centerY);
+
+      const adjust = (channel, amount) => {
+        if (value >= 0) {
+          return channel * (1 - amount);
+        } else {
+          return channel + (255 - channel) * amount;
+        }
       };
+
+      return ImageHelper.forEachPixel((pixel, index) => {
+        const x = index % width;
+        const y = Math.floor(index / width);
+
+        const dist = Math.hypot(x - centerX, y - centerY);
+        const factor = dist / maxDist;
+        const amount = factor * Math.abs(value);
+
+        return [
+          ImageHelper.clamp(0, 255, adjust(pixel[0], amount)),
+          ImageHelper.clamp(0, 255, adjust(pixel[1], amount)),
+          ImageHelper.clamp(0, 255, adjust(pixel[2], amount)),
+          pixel[3],
+        ];
+      });
     }
-    applyRipple(imageData, amtIn) {
-      const { data, width, height} = imageData;
+
+    _ripple(context, value, callback) {
+      value /= 100;
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+      const imageData = context.getImageData(0, 0, width, height);
+
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
           const index = (y * width + x) * 4;
           const dx = x - (width / 2);
           const dy = y - (height / 2);
           const distance = Math.sqrt(dx * dx + dy * dy);
-          const offset = Math.sin(distance * (amtIn / 100)) * (amtIn / 100);
+          const offset = Math.sin(distance * value) * value;
           const sourceX = Math.floor(x + offset);
           const sourceY = Math.floor(y);
+
           if (sourceX >= 0 && sourceX < width && sourceY >= 0 && sourceY < height) {
-            const sourceIndex = (sourceY * width + sourceX) * 4;
-            if (data[sourceIndex + 3] > 0) data.copyWithin(index, sourceIndex, sourceIndex + 4);
-            else data[index + 3] = 0;
-          } else { data[index + 3] = 0 }
+            const srcIndex = (sourceY * width + sourceX) * 4;
+            if (imageData.data[srcIndex + 3] > 0) {
+              imageData.data.copyWithin(index, srcIndex, srcIndex + 4);
+            }
+          } else {
+            imageData.data[index + 3] = 0
+          }
         }
       }
+
+      return callback(true, imageData);
     }
-    applyDisplacement(imageData, dispAmt) {
-      const { data, width, height} = imageData;
-      const newData = new Uint8ClampedArray(data.length);
+
+    _displace(context, value, callback) {
+      const dispAmt = Math.max(0, Math.floor(value));
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+      const imageData = context.getImageData(0, 0, width, height);
+      const newData = new Uint8ClampedArray(imageData.data.length);
+
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
           const srcX = x + Math.floor(Math.random() * dispAmt * 2 - dispAmt);
           const srcY = y + Math.floor(Math.random() * dispAmt * 2 - dispAmt);
+
           if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
             const srcIndex = (srcY * width + srcX) * 4;
             const dstIndex = (y * width + x) * 4;
-            newData.set(data.subarray(srcIndex, srcIndex + 4), dstIndex);
+            newData.set(
+              imageData.data.subarray(srcIndex, srcIndex + 4),
+              dstIndex
+            );
           }
         }
       }
-      data.set(newData);
+    
+      imageData.data.set(newData);
+      return callback(true, imageData);
     }
-    applyPosterize(imageData, amtIn) {
+
+    _posterize(_, value) {
+      const numLevels = Math.max(value / 10, 1) - 1;
+      return ImageHelper.forEachPixel((pixel) => {
+        return [
+          Math.round((pixel[0] * numLevels) / 255) * (255 / numLevels),
+          Math.round((pixel[1] * numLevels) / 255) * (255 / numLevels),
+          Math.round((pixel[2] * numLevels) / 255) * (255 / numLevels),
+          pixel[3],
+        ];
+      });
+    }
+
+    _blur(context, value, callback) {
+      context.filter = `blur(${value}px)`;
+      return callback(false);
+    }
+
+    _sepia(context, value, callback) {
+      context.filter = `sepia(${value}%)`;
+      return callback(false);
+    }
+
+    _scanline(context, value) {
+      const lineBrightness = [];
+
+      return ImageHelper.forEachPixel((pixel, index) => {
+        const y = Math.floor((index * 4) / context.canvas.width);
+
+        if (lineBrightness[y] === undefined) {
+          lineBrightness[y] =
+            Math.random() < value / 100
+              ? Math.random() * (value / 2)
+              : 0;
+        }
+
+        const bright = lineBrightness[y];
+        return [
+          Math.min(pixel[0] + bright, 255),
+          Math.min(pixel[1] + bright, 255),
+          Math.min(pixel[2] + bright, 255),
+          pixel[3],
+        ];
+      });
+    }
+
+    _grain(_, value) {
+      return ImageHelper.forEachPixel((pixel) => {
+        if (Math.random() < value / 100) {
+          const grain = Math.random() * value;
+          return [
+            Math.min(pixel[0] + grain, 255),
+            Math.min(pixel[1] + grain, 255),
+            Math.min(pixel[2] + grain, 255),
+            pixel[3],
+          ];
+        }
+
+        return pixel;
+      });
+    }
+
+    _cubism(context, value, callback) {
+      const blockSize = Math.max(1, Math.floor(Math.abs(value)));
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+      const imageData = context.getImageData(0, 0, width, height);
       const data = imageData.data;
-      const numLevels = Math.max(amtIn / 10, 1);
-      for (let i = 0; i < data.length; i += 4) {
-        for (let j = 0; j < 3; j++) {
-          data[i + j] = Math.round((data[i + j] * (numLevels - 1)) / 255) * (255 / (numLevels - 1));
-        }
-      }
-    }
-    applyBlur(imageData, amtIn, ctx) {
-      ctx.filter = `blur(${amtIn}px)`;
-      imageData.isAltered = true;
-    }
-    applySepia(imageData, amtIn, ctx) {
-      ctx.filter = `sepia(${amtIn}%)`;
-      imageData.isAltered = true;
-    }
-    applyScanlines(imageData, amtIn) {
-      const { data, width, height} = imageData;
-      for (let y = 0; y < height; y++) {
-        if (Math.random() < amtIn / 100) {
-          const scanBright = Math.random() * (amtIn / 2);
-          for (let x = 0; x < width; x++) {
-            const index = (y * width + x) * 4;
-            data[index] = Math.min(data[index] + scanBright, 255);
-            data[index + 1] = Math.min(data[index + 1] + scanBright, 255);
-            data[index + 2] = Math.min(data[index + 2] + scanBright, 255);
-          }
-        }
-      }
-    }
-    applyGrain(imageData, amtIn) {
-      const { data, width, height} = imageData;
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const index = (y * width + x) * 4;
-          if (Math.random() < amtIn) {
-            const grain = Math.floor(Math.random() * amtIn);
-            data[index] += grain;
-            data[index + 1] += grain;
-            data[index + 2] += grain;
-          }
-        }
-      }
-    }
-    applyCubism(imageData, amtIn) {
-      const { data, width, height} = imageData;
-      const percent = amtIn === 0 ? 1 : Math.abs(amtIn);
-      for (let y = 0; y < height; y += percent) {
-        for (let x = 0; x < width; x += percent) {
-          const endX = Math.min(x + percent, width);
-          const endY = Math.min(y + percent, height);
-          const avgColor = [0, 0, 0];
-          for (let j = y; j < endY; j++) {
-            for (let i = x; i < endX; i++) {
-              const index = (j * width + i) * 4;
-              avgColor[0] += data[index];
-              avgColor[1] += data[index + 1];
-              avgColor[2] += data[index + 2];
+
+      for (let y = 0; y < height; y += blockSize) {
+        for (let x = 0; x < width; x += blockSize) {
+          const endX = Math.min(x + blockSize, width);
+          const endY = Math.min(y + blockSize, height);
+
+          let r = 0;
+          let g = 0;
+          let b = 0;
+          let count = 0;
+          for (let yy = y; yy < endY; yy++) {
+            for (let xx = x; xx < endX; xx++) {
+              const index = (yy * width + xx) * 4;
+              r += data[index];
+              g += data[index + 1];
+              b += data[index + 2];
+              count++;
             }
           }
-          const totalPixels = (endX - x) * (endY - y);
-          avgColor[0] /= totalPixels;
-          avgColor[1] /= totalPixels;
-          avgColor[2] /= totalPixels;
-          for (let j = y; j < endY; j++) {
-            for (let i = x; i < endX; i++) {
-              const index = (j * width + i) * 4;
-              data[index] = avgColor[0];
-              data[index + 1] = avgColor[1];
-              data[index + 2] = avgColor[2];
+
+          r /= count;
+          g /= count;
+          b /= count;
+          for (let yy = y; yy < endY; yy++) {
+            for (let xx = x; xx < endX; xx++) {
+              const index = (yy * width + xx) * 4;
+              data[index] = r;
+              data[index + 1] = g;
+              data[index + 2] = b;
             }
           }
         }
+      }
+
+      return callback(true, imageData);
+    }
+
+    // Block Funcs
+    async applyHueEffect(args) {
+      const rgba = ImageHelper.hexToRgba(args.COLOR);
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      return ImageHelper.forEachPixel((pixel) => [
+        Math.min(255, (pixel[0] * rgba[0]) / 255),
+        Math.min(255, (pixel[1] * rgba[1]) / 255),
+        Math.min(255, (pixel[2] * rgba[2]) / 255),
+        Math.min(255, (pixel[3] * rgba[3]) / 255)
+      ]);
+    }
+
+    deleteColor(args) {
+      return this.replaceColor({ ...args, REPLACE: "#00000000" })
+    }
+
+    async replaceColor(args) {
+      const targetRgba = ImageHelper.hexToRgba(args.COLOR);
+      const replaceRgba = ImageHelper.hexToRgba(args.REPLACE);
+
+      const image = await ImageHelper.newImage(args.DATA_URI);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      return ImageHelper.forEachPixel((pixel) =>
+        this._colorInRange(pixel, targetRgba) ? replaceRgba : pixel
+      );
+    }
+
+    async replaceColorPattern(args) {
+      const targetRgba = ImageHelper.hexToRgba(args.COLOR);
+      const tileSize = Math.max(1, Cast.toNumber(args.SCALE));
+
+      const image = await ImageHelper.newImage(args.DATA_URI);
+      const pattern = await ImageHelper.newImage(args.PATTERN);
+      if (!image || !pattern) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      const { width, height } = image;
+      const imageData = ImageHelper.context.getImageData(0, 0, width, height);
+      const modified = new ImageData(
+        new Uint8ClampedArray(imageData.data),
+        width,
+        height
+      );
+
+      const mask = new ImageData(width, height);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const rgb = [
+          imageData.data[i],
+          imageData.data[i + 1],
+          imageData.data[i + 2],
+        ];
+
+        if (this._colorInRange(rgb, targetRgba)) {
+          modified.data[i + 3] = 0;
+          mask.data[i] = 255;
+          mask.data[i + 1] = 255;
+          mask.data[i + 2] = 255;
+          mask.data[i + 3] = 255;
+        }
+      }
+
+      const maskContext = ImageHelper.newTempCanvas(width, height);
+      maskContext.ctx.putImageData(mask, 0, 0);
+
+      const {
+        canvas: patternCanvas,
+        ctx: patternCtx,
+        dispose: disposePatternCanvas,
+      } = ImageHelper.newTempCanvas(width, height);
+
+      const scale = tileSize / Math.max(pattern.width, pattern.height);
+      const drawWidth = Math.round(pattern.width * scale);
+      const drawHeight = Math.round(pattern.height * scale);
+      for (let y = 0; y < height; y += drawHeight) {
+        for (let x = 0; x < width; x += drawWidth) {
+          patternCtx.drawImage(pattern, x, y, drawWidth, drawHeight);
+        }
+      }
+
+      ImageHelper.context.putImageData(modified, 0, 0);
+      patternCtx.globalCompositeOperation = "destination-in";
+      patternCtx.drawImage(maskContext.canvas, 0, 0);
+      patternCtx.globalCompositeOperation = "source-over";
+      ImageHelper.context.drawImage(patternCanvas, 0, 0);
+
+      maskContext.dispose();
+      disposePatternCanvas();
+      return ImageHelper.canvas.toDataURL("image/png");
+    }
+
+    setSoftness(args) {
+      this.colorThreshold = Math.max(0, Cast.toNumber(args.AMT));
+    }
+
+    async applyEffect(args) {
+      const effect = Cast.toString(args.EFFECT).toLowerCase();
+      const value = Cast.toNumber(args.PERCENTAGE);
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      const canvas = ImageHelper.canvas;
+      const context = ImageHelper.context; 
+      const callback = (pixelsAltered, imageData) => {
+        if (pixelsAltered) context.putImageData(imageData, 0, 0);
+        else {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(image, 0, 0, image.width, image.height);
+        }
+
+        return canvas.toDataURL("image/png");
+      };
+
+      switch (effect) {
+        case "saturation":
+          return this._saturate(context, value, callback);
+        case "contrast":
+          return this._contrast(context, value, callback);
+        case "opaque":
+          return this._opaque(context, value, callback);
+        case "glitch":
+          return this._glitch(context, value, callback);
+        case "chunk glitch":
+          return this._chunkGlitch(context, value, callback);
+        case "clip glitch":
+          return this._clipGlitch(context, value, callback);
+        case "vignette":
+          return this._vignette(context, value, callback);
+        case "ripple":
+          return this._ripple(context, value, callback);
+        case "displacement":
+          return this._displace(context, value, callback);
+        case "posterize":
+          return this._posterize(context, value, callback);
+        case "blur":
+          return this._blur(context, value, callback);
+        case "sepia":
+          return this._sepia(context, value, callback);
+        case "scanlines":
+          return this._scanline(context, value, callback);
+        case "grain":
+          return this._grain(context, value, callback);
+        case "cubism":
+          return this._cubism(context, value, callback);
+        default:
+          return "";
       }
     }
 
+    // TODO
     applyBulgeEffect(args) {
       return new Promise((resolve) => {
         const strength = Cast.toNumber(args.STRENGTH) / 100;
@@ -1090,10 +1236,64 @@
       }
     }
 
+    applyAbberationEffect(args) {
+      return new Promise((resolve) => {
+        const amtIn = Cast.toNumber(args.PERCENTAGE);
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+          const { canvas, ctx } = this.createCanvasCtx(img.width + Math.abs(amtIn) * 5, img.height + Math.abs(amtIn) * 5, img, Math.abs(amtIn) * 2.5, Math.abs(amtIn) * 2.5);
+          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          this.applyChromAb(imageData, args.COLOR1, args.COLOR2, amtIn / 100, args.DIRECT);
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas.toDataURL());
+        };
+        img.src = this.convertAsset(args.SVG, "png");
+      });
+    }
+    applyChromAb(imageData, color1, color2, amtIn, dir) {
+      let { data, width, height } = imageData;
+      const copy1 = new Uint8ClampedArray(data.length);
+      const copy2 = new Uint8ClampedArray(data.length);
+      const rgb1 = ImageHelper.hexToRgba(color1);
+      const rgb2 = ImageHelper.hexToRgba(color2);
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const srcIndex = (y * width + x) * 4;
+          const r = data[srcIndex];
+          const g = data[srcIndex + 1];
+          const b = data[srcIndex + 2];
+          const a = data[srcIndex + 3];
+          let newPos1, newPos2;
+          if (dir === "X") {
+            newPos1 = [x + Math.floor((width / 2) * amtIn), y];
+            newPos2 = [x - Math.floor((width / 2) * amtIn), y];
+          } else {
+            newPos1 = [x, y + Math.floor((height / 2) * amtIn)];
+            newPos2 = [x, y - Math.floor((height / 2) * amtIn)];
+          }
+          newPos1 = [this.clamp(width - 1, 0, newPos1[0]), this.clamp(height - 1, 0, newPos1[1])];
+          newPos2 = [this.clamp(width - 1, 0, newPos2[0]), this.clamp(height - 1, 0, newPos2[1])];
+          const leftColor = [(rgb1[0] * r) / 255, (rgb1[1] * g) / 255, (rgb1[2] * b) / 255];
+          const rightColor = [(rgb2[0] * r) / 255, (rgb2[1] * g) / 255, (rgb2[2] * b) / 255];
+          const leftIndex = (newPos1[1] * width + newPos1[0]) * 4;
+          const rightIndex = (newPos2[1] * width + newPos2[0]) * 4;
+          for (let i = 0; i < 4; i++) {
+            copy1[leftIndex + i] = leftColor[i];
+            copy2[rightIndex + i] = rightColor[i];
+          }
+          copy1[leftIndex + 3] = copy2[rightIndex + 3] = a;
+        }
+      }
+      for (let i = 0; i < data.length; i++) {
+        data[i] = this.clamp((data[i] + copy1[i] + copy2[i]) / 2, 0, 255);
+      }
+    }
+
     applyEdgeOutlineEffect(args) {
       return new Promise((resolve) => {
         const thick = Math.ceil(Cast.toNumber(args.THICKNESS) / 4);
-        const color = hexToRgb(args.COLOR);
+        const color = ImageHelper.hexToRgba(args.COLOR);
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
@@ -1131,29 +1331,7 @@
       }
     }
 
-    setCutout(args) { this.cutPos = [Cast.toNumber(args.X), Cast.toNumber(args.Y)] }
-    changeCutout(args) {
-      this.cutPos = [this.cutPos[0] + Cast.toNumber(args.X),
-      this.cutPos[1] + Cast.toNumber(args.Y)];
-    }
-    currentCut(args) { return this.cutPos[args.POS === "X" ? 0 : 1] }
-
-    setScale(args) { this.scale = [Cast.toNumber(args.SIZE), Cast.toNumber(args.Y)] }
-    changeScale(args) {
-      this.scale = [this.scale[0] + Cast.toNumber(args.SIZE),
-      this.scale[1] + Cast.toNumber(args.Y)];
-    }
-    currentScale(args) { return this.scale[args.POS === "X" ? 0 : 1] }
-
-    setDirection(args) { this.cutoutDirection = Cast.toNumber(args.ANGLE) }
-    changeDirection(args) {
-      let direction = this.cutoutDirection + Cast.toNumber(args.ANGLE);
-      if (direction > 180) { direction = -180 + Cast.toNumber(args.ANGLE) }
-      if (direction < -180) { direction = 180 + Cast.toNumber(args.ANGLE) }
-      this.cutoutDirection = direction;
-    }
-    currentDir() { return this.cutoutDirection }
-
+    
     maskImage(args) {
       return new Promise((resolve) => {
         const srcImg = new Image();
@@ -1183,58 +1361,86 @@
       });
     }
 
-    applyAbberationEffect(args) {
+    setCutout(args) {
+      this.mask.pos[0] = Cast.toNumber(args.X);
+      this.mask.pos[1] = Cast.toNumber(args.Y);
+    }
+
+    changeCutout(args) {
+      this.mask.pos[0] += Cast.toNumber(args.X);
+      this.mask.pos[1] += Cast.toNumber(args.Y);
+    }
+
+    currentCut(args) {
+      const option = Cast.toString(args.POS).toLowerCase();
+      return this.mask.pos[option === "x" ? 0 : 1];
+    }
+
+    setScale(args) {
+      this.mask.scale[0] = Cast.toNumber(args.SIZE);
+      this.mask.scale[1] = Cast.toNumber(args.Y);
+    }
+
+    changeScale(args) {
+      this.mask.scale[0] += Cast.toNumber(args.SIZE);
+      this.mask.scale[1] += Cast.toNumber(args.Y);
+    }
+
+    currentScale(args) {
+      const option = Cast.toString(args.POS).toLowerCase();
+      return this.mask.scale[option === "x" ? 0 : 1];
+    }
+
+    setDirection(args) {
+      this.mask.direction = Cast.toNumber(args.ANGLE);
+    }
+
+    changeDirection(args) {
+      this.mask.direction += Cast.toNumber(args.ANGLE);
+    }
+
+    currentDir() {
+      return this.mask.direction;
+    }
+
+    crackImage(args) {
+      const cracks = Math.max(2, args.SHARDS);
+      const img = new Image();
+      img.src = this.convertAsset(args.URI, "png");
+      const newWidth = img.width * 4;
+      const newHeight = img.height * 4;
+      this.allShards = [];
       return new Promise((resolve) => {
-        const amtIn = Cast.toNumber(args.PERCENTAGE);
-        const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
-          const { canvas, ctx } = this.createCanvasCtx(img.width + Math.abs(amtIn) * 5, img.height + Math.abs(amtIn) * 5, img, Math.abs(amtIn) * 2.5, Math.abs(amtIn) * 2.5);
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.applyChromAb(imageData, args.COLOR1, args.COLOR2, amtIn / 100, args.DIRECT);
-          ctx.putImageData(imageData, 0, 0);
-          resolve(canvas.toDataURL());
+          for (let i = 0; i < cracks; i++) {
+            if (this.allShards.length >= args.SHARDS) break;
+            for (let j = 0; j < cracks; j++) {
+              if (this.allShards.length >= args.SHARDS) break;
+              const shardWidth = newWidth / cracks;
+              const shardHeight = newHeight / cracks;
+              const { canvas, ctx } = this.createCanvasCtx(shardWidth, shardHeight);
+              ctx.clearRect(0, 0, shardWidth, shardHeight);
+              ctx.beginPath();
+              ctx.moveTo(Math.random() * shardWidth, Math.random() * shardHeight);
+              for (let k = 0; k < Math.random() * 10 + 3; k++) {
+                ctx.lineTo(Math.random() * shardWidth, Math.random() * shardHeight);
+              }
+              ctx.closePath();
+              ctx.clip();
+              const offsetX = Math.random() * (newWidth - shardWidth);
+              const offsetY = Math.random() * (newHeight - shardHeight);
+              ctx.drawImage(img, -offsetX, -offsetY, newWidth, newHeight);
+              this.allShards.push(this.exportImg(canvas, this.printImg(canvas)));
+            }
+          }
+          resolve();
         };
-        img.src = this.convertAsset(args.SVG, "png");
       });
     }
-    applyChromAb(imageData, color1, color2, amtIn, dir) {
-      let { data, width, height } = imageData;
-      const copy1 = new Uint8ClampedArray(data.length);
-      const copy2 = new Uint8ClampedArray(data.length);
-      const rgb1 = hexToRgb(color1);
-      const rgb2 = hexToRgb(color2);
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const srcIndex = (y * width + x) * 4;
-          const r = data[srcIndex];
-          const g = data[srcIndex + 1];
-          const b = data[srcIndex + 2];
-          const a = data[srcIndex + 3];
-          let newPos1, newPos2;
-          if (dir === "X") {
-            newPos1 = [x + Math.floor((width / 2) * amtIn), y];
-            newPos2 = [x - Math.floor((width / 2) * amtIn), y];
-          } else {
-            newPos1 = [x, y + Math.floor((height / 2) * amtIn)];
-            newPos2 = [x, y - Math.floor((height / 2) * amtIn)];
-          }
-          newPos1 = [this.clamp(width - 1, 0, newPos1[0]), this.clamp(height - 1, 0, newPos1[1])];
-          newPos2 = [this.clamp(width - 1, 0, newPos2[0]), this.clamp(height - 1, 0, newPos2[1])];
-          const leftColor = [(rgb1[0] * r) / 255, (rgb1[1] * g) / 255, (rgb1[2] * b) / 255];
-          const rightColor = [(rgb2[0] * r) / 255, (rgb2[1] * g) / 255, (rgb2[2] * b) / 255];
-          const leftIndex = (newPos1[1] * width + newPos1[0]) * 4;
-          const rightIndex = (newPos2[1] * width + newPos2[0]) * 4;
-          for (let i = 0; i < 4; i++) {
-            copy1[leftIndex + i] = leftColor[i];
-            copy2[rightIndex + i] = rightColor[i];
-          }
-          copy1[leftIndex + 3] = copy2[rightIndex + 3] = a;
-        }
-      }
-      for (let i = 0; i < data.length; i++) {
-        data[i] = this.clamp((data[i] + copy1[i] + copy2[i]) / 2, 0, 255);
-      }
+
+    getShard(args) {
+      return this.shardPieces[Cast.toNumber(args.SHARD) - 1] || "";
     }
 
     stretch(src, w, h) {
@@ -1467,7 +1673,7 @@
           const endNum = Cast.toNumber(args.NUM2) || startNum;
           const pixelData = this.printImg(img);
           for (let num = startNum; num <= endNum && num <= img.width * img.height; num++) {
-            const rgb = hexToRgb(args.COLOR);
+            const rgb = ImageHelper.hexToRgba(args.COLOR);
             for (let i = 0; i < 4; i++) pixelData[((num - 1) * 4) + i] = rgb[i];
           }
           resolve(this.exportImg(img, pixelData));
@@ -1491,44 +1697,6 @@
         };
       });
     }
-
-    crackImage(args) {
-      const cracks = Math.max(2, args.SHARDS);
-      const img = new Image();
-      img.src = this.convertAsset(args.URI, "png");
-      const newWidth = img.width * 4;
-      const newHeight = img.height * 4;
-      this.allShards = [];
-      return new Promise((resolve) => {
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          for (let i = 0; i < cracks; i++) {
-            if (this.allShards.length >= args.SHARDS) break;
-            for (let j = 0; j < cracks; j++) {
-              if (this.allShards.length >= args.SHARDS) break;
-              const shardWidth = newWidth / cracks;
-              const shardHeight = newHeight / cracks;
-              const { canvas, ctx } = this.createCanvasCtx(shardWidth, shardHeight);
-              ctx.clearRect(0, 0, shardWidth, shardHeight);
-              ctx.beginPath();
-              ctx.moveTo(Math.random() * shardWidth, Math.random() * shardHeight);
-              for (let k = 0; k < Math.random() * 10 + 3; k++) {
-                ctx.lineTo(Math.random() * shardWidth, Math.random() * shardHeight);
-              }
-              ctx.closePath();
-              ctx.clip();
-              const offsetX = Math.random() * (newWidth - shardWidth);
-              const offsetY = Math.random() * (newHeight - shardHeight);
-              ctx.drawImage(img, -offsetX, -offsetY, newWidth, newHeight);
-              this.allShards.push(this.exportImg(canvas, this.printImg(canvas)));
-            }
-          }
-          resolve();
-        };
-      });
-    }
-
-    getShard(args) { return this.allShards[args.SHARD - 1] || "" }
 
     /* Deprecation Marker */
     convertHexToRGB() {return ""}
