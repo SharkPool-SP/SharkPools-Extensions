@@ -1094,28 +1094,31 @@
     }
 
     // TODO
-    applyBulgeEffect(args) {
-      return new Promise((resolve) => {
-        const strength = Cast.toNumber(args.STRENGTH) / 100;
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const canvasSize = Math.max(img.width, img.height) * 2;
-          let centerX = Cast.toNumber(args.CENTER_X) / 100;
-          let centerY = Cast.toNumber(args.CENTER_Y) / -100;
-          const { canvas, ctx } = this.createCanvasCtx(canvasSize, canvasSize);
-          const offsetX = (canvas.width - img.width) / 2;
-          const offsetY = (canvas.height - img.height) / 2;
-          ctx.drawImage(img, offsetX, offsetY);
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.bulgeApplier(imageData, centerX + 0.5, centerY + 0.5, strength);
-          ctx.putImageData(imageData, 0, 0);
-          const bounds = this.getImageBounds(imageData);
-          const newCanvas = this.createCanvasCtx(bounds.width, bounds.height, canvas, -bounds.offsetX, -bounds.offsetY).canvas;
-          resolve(newCanvas.toDataURL());
-        };
-        img.src = this.convertAsset(args.SVG, "png");
-      });
+    async applyBulgeEffect(args) {
+      const strength = Cast.toNumber(args.STRENGTH) / 100;
+      const centerX = Cast.toNumber(args.CENTER_X) / 100;
+      const centerY = Cast.toNumber(args.CENTER_Y) / -100;
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      const canvasSize = Math.max(image.width, image.height) * 2;
+      const canvas = ImageHelper.canvas;
+      const context = ImageHelper.context;
+      canvas.width = canvasSize;
+      canvas.height = canvasSize;
+          
+      const offsetX = (canvas.width - image.width) / 2;
+      const offsetY = (canvas.height - image.height) / 2;
+      context.drawImage(image, offsetX, offsetY);
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      this.bulgeApplier(imageData, centerX + 0.5, centerY + 0.5, strength);
+      context.putImageData(imageData, 0, 0);
+      const bounds = this.getImageBounds(imageData);
+      const newCanvas = this.createCanvasCtx(bounds.width, bounds.height, canvas, -bounds.offsetX, -bounds.offsetY).canvas;
+
+      return newCanvas.toDataURL("image/png");
     }
     bulgeApplier(imageData, centerX, centerY, strength) {
       const { data, width, height } = imageData;
@@ -1136,12 +1139,13 @@
       data.set(newData);
     }
 
-    applyWaveEffect(args) {
+    async applyWaveEffect(args) {
+      const ampX = Cast.toNumber(args.AMPX) / 10;
+      const ampY = Cast.toNumber(args.AMPY) / 10;
+      const freqX = Cast.toNumber(args.FREQX) / 100;
+      const freqY = Cast.toNumber(args.FREQY) / 100;
+
       return new Promise((resolve) => {
-        const ampX = Cast.toNumber(args.AMPX) / 10;
-        const ampY = Cast.toNumber(args.AMPY) / 10;
-        const freqX = Cast.toNumber(args.FREQX) / 100;
-        const freqY = Cast.toNumber(args.FREQY) / 100;
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
@@ -1171,33 +1175,25 @@
       data.set(newData);
     }
 
-    removeTransparencyEffect(args) {
-      return new Promise((resolve) => {
-        const threshold = Cast.toNumber(args.THRESHOLD) / 100;
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const { canvas, ctx } = this.createCanvasCtx(img.width, img.height, img, 0, 0);
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.transparncyApplier(imageData, threshold, args.REMOVE);
-          ctx.putImageData(imageData, 0, 0);
-          resolve(canvas.toDataURL());
-        };
-        img.src = this.convertAsset(args.SVG, "png");
-      });
-    }
-    transparncyApplier(imageData, threshold, removeUnder) {
-      const { data, width, height} = imageData;
-      for (let i = 0; i < width * height; i++) {
-        const alpha = data[i * 4 + 3] / 255;
+    async removeTransparencyEffect(args) {
+      const threshold = Cast.toNumber(args.THRESHOLD) / 100;
+      const type = Cast.toString(args.REMOVE).toLowerCase();
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      return ImageHelper.forEachPixel((pixel) => {
+        const alpha = pixel[3] / 255;
         if (
-          (removeUnder === "under" && alpha < threshold) || (removeUnder === "over" && alpha > threshold) ||
-          (removeUnder === "equal to" && alpha > threshold - 0.01 &&
-          alpha < threshold + 0.01)
+          (type === "under" && alpha < threshold) ||
+          (type === "over" && alpha > threshold) ||
+          (type === "equal to" && Math.abs(alpha - threshold) < 0.01)
         ) {
-          data[i * 4 + 3] = 0;
+          pixel[3] = 0;
         }
-      }
+
+        return pixel;
+      });
     }
 
     applyLineGlitchEffect(args) {
@@ -1331,7 +1327,6 @@
       }
     }
 
-    
     maskImage(args) {
       return new Promise((resolve) => {
         const srcImg = new Image();
