@@ -50,6 +50,7 @@
 
   class ImageHelper {
     // TODO cache imageData, isDirty, use clearRect
+    // TODO clamp can be replaced with clampToColor (0-255)
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
     static canvas = document.createElement("canvas");
     static context = ImageHelper.canvas.getContext("2d", { willReadFrequently: true });
@@ -1056,6 +1057,72 @@
       return imageData;
     }
 
+    _aberration(context, amount, color1, color2, axis) {
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+
+      const imageData = context.getImageData(0, 0, width, height);
+      const data = imageData.data;
+
+      const left = new Uint8ClampedArray(data.length);
+      const right = new Uint8ClampedArray(data.length);
+      const offset = Math.round(
+        (axis === "x" ? width : height) * 0.5 * amount
+      );
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const i = (y * width + x) * 4;
+
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
+
+          let lx = x;
+          let ly = y;
+          let rx = x;
+          let ry = y;
+
+          if (axis === "x") {
+            lx += offset;
+            rx -= offset;
+          } else {
+            ly += offset;
+            ry -= offset;
+          }
+
+          lx = ImageHelper.clamp(0, width - 1, lx);
+          ly = ImageHelper.clamp(0, height - 1, ly);
+          rx = ImageHelper.clamp(0, width - 1, rx);
+          ry = ImageHelper.clamp(0, height - 1, ry);
+
+          const li = (ly * width + lx) * 4;
+          const ri = (ry * width + rx) * 4;
+
+          left[li] = r * color1[0] / 255;
+          left[li + 1] = g * color1[1] / 255;
+          left[li + 2] = b * color1[2] / 255;
+          left[li + 3] = a;
+
+          right[ri] = r * color2[0] / 255;
+          right[ri + 1] = g * color2[1] / 255;
+          right[ri + 2] = b * color2[2] / 255;
+          right[ri + 3] = a;
+        }
+      }
+
+      for (let i = 0; i < data.length; i++) {
+        data[i] = ImageHelper.clamp(
+          0,
+          255,
+          (data[i] + left[i] + right[i]) / 2
+        );
+      }
+
+      return imageData;
+    }
+
     // Block Funcs
     async applyHueEffect(args) {
       const rgba = ImageHelper.hexToRgba(args.COLOR);
@@ -1268,66 +1335,35 @@
       return canvas.toDataURL("image/png");
     }
 
-    // TODO
     async applyAbberationEffect(args) {
-      return new Promise((resolve) => {
-        const amtIn = Cast.toNumber(args.PERCENTAGE);
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const { canvas, ctx } = this.createCanvasCtx(img.width + Math.abs(amtIn) * 5, img.height + Math.abs(amtIn) * 5, img, Math.abs(amtIn) * 2.5, Math.abs(amtIn) * 2.5);
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.applyChromAb(imageData, args.COLOR1, args.COLOR2, amtIn / 100, args.DIRECT);
-          ctx.putImageData(imageData, 0, 0);
-          resolve(canvas.toDataURL());
-        };
-        img.src = this.convertAsset(args.SVG, "png");
-      });
-    }
-    applyChromAb(imageData, color1, color2, amtIn, dir) {
-      let { data, width, height } = imageData;
-      const copy1 = new Uint8ClampedArray(data.length);
-      const copy2 = new Uint8ClampedArray(data.length);
-      const rgb1 = ImageHelper.hexToRgba(color1);
-      const rgb2 = ImageHelper.hexToRgba(color2);
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const srcIndex = (y * width + x) * 4;
-          const r = data[srcIndex];
-          const g = data[srcIndex + 1];
-          const b = data[srcIndex + 2];
-          const a = data[srcIndex + 3];
-          let newPos1, newPos2;
-          if (dir === "X") {
-            newPos1 = [x + Math.floor((width / 2) * amtIn), y];
-            newPos2 = [x - Math.floor((width / 2) * amtIn), y];
-          } else {
-            newPos1 = [x, y + Math.floor((height / 2) * amtIn)];
-            newPos2 = [x, y - Math.floor((height / 2) * amtIn)];
-          }
-          newPos1 = [this.clamp(width - 1, 0, newPos1[0]), this.clamp(height - 1, 0, newPos1[1])];
-          newPos2 = [this.clamp(width - 1, 0, newPos2[0]), this.clamp(height - 1, 0, newPos2[1])];
-          const leftColor = [(rgb1[0] * r) / 255, (rgb1[1] * g) / 255, (rgb1[2] * b) / 255];
-          const rightColor = [(rgb2[0] * r) / 255, (rgb2[1] * g) / 255, (rgb2[2] * b) / 255];
-          const leftIndex = (newPos1[1] * width + newPos1[0]) * 4;
-          const rightIndex = (newPos2[1] * width + newPos2[0]) * 4;
-          for (let i = 0; i < 4; i++) {
-            copy1[leftIndex + i] = leftColor[i];
-            copy2[rightIndex + i] = rightColor[i];
-          }
-          copy1[leftIndex + 3] = copy2[rightIndex + 3] = a;
-        }
-      }
-      for (let i = 0; i < data.length; i++) {
-        data[i] = this.clamp((data[i] + copy1[i] + copy2[i]) / 2, 0, 255);
-      }
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      const color1 = ImageHelper.hexToRgba(args.COLOR1);
+      const color2 = ImageHelper.hexToRgba(args.COLOR2);
+      const axis = Cast.toString(args.DIRECT).toLowerCase();
+      const amount = Cast.toNumber(args.PERCENTAGE) / 100;
+
+      const { canvas, context } = ImageHelper.getHelper();
+      ImageHelper.prepCanvas(image);
+
+      const newImageData = this._aberration(
+        context,
+        amount,
+        color1,
+        color2,
+        axis
+      );
+      context.putImageData(newImageData, 0, 0);
+      return canvas.toDataURL("image/png");
     }
 
     async removeTransparencyEffect(args) {
-      const threshold = Cast.toNumber(args.THRESHOLD) / 100;
-      const type = Cast.toString(args.REMOVE).toLowerCase();
       const image = await ImageHelper.newImage(args.SVG);
       if (!image) return "Invalid image";
+
+      const threshold = Cast.toNumber(args.THRESHOLD) / 100;
+      const type = Cast.toString(args.REMOVE).toLowerCase();
 
       ImageHelper.prepCanvas(image);
       return ImageHelper.forEachPixel((pixel) => {
@@ -1344,46 +1380,58 @@
       });
     }
 
-    // TODO
     async applyEdgeOutlineEffect(args) {
-      return new Promise((resolve) => {
-        const thick = Math.ceil(Cast.toNumber(args.THICKNESS) / 4);
-        const color = ImageHelper.hexToRgba(args.COLOR);
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const { canvas, ctx } = this.createCanvasCtx(img.width + (thick * 2), img.height + (thick * 2), img, thick, thick);
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          this.outlineApplier(imageData, thick, color);
-          ctx.putImageData(imageData, 0, 0);
-          resolve(canvas.toDataURL());
-        };
-        img.src = this.convertAsset(args.SVG, "png");
-      });
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      const rgba = ImageHelper.hexToRgba(args.COLOR);
+      const thickness = Math.ceil(Cast.toNumber(args.THICKNESS) / 4);
+
+      const { canvas, context } = ImageHelper.getHelper();
+      ImageHelper.prepCanvas(image);
+
+      const newImageData = this._outline(context, thickness, rgba);
+      context.putImageData(newImageData, 0, 0);
+      return canvas.toDataURL("image/png");
     }
-    outlineApplier(imageData, thick, rgba) {
-      let { data, width, height } = imageData;
-      const copyData = new Uint8ClampedArray(data);
+
+    _outline(context, thickness, rgba) {
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+
+      const imageData = context.getImageData(0, 0, width, height);
+      const data = imageData.data;
+      const original = new Uint8ClampedArray(data);
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
           const index = (y * width + x) * 4;
-          if (data[index + 3] < 255) {
-            for (let dy = -thick; dy <= thick; dy++) {
-              for (let dx = -thick; dx <= thick; dx++) {
-                const nx = x + dx;
-                const ny = y + dy;
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                  const neighborIndex = (ny * width + nx) * 4;
-                  if (copyData[neighborIndex + 3] === 255) {
-                    data.set(rgba, index);
-                    break;
-                  }
-                }
+          if (original[index + 3] > 150) continue; // skip pixels near full opaque
+
+          let found = false;
+          for (let dy = -thickness; dy <= thickness && !found; dy++) {
+            const ny = y + dy;
+            if (ny < 0 || ny >= height) continue;
+
+            for (let dx = -thickness; dx <= thickness; dx++) {
+              const nx = x + dx;
+              if (nx < 0 || nx >= width) continue;
+
+              const n = (ny * width + nx) * 4;
+
+              if (original[n + 3] > original[index + 3]) {
+                data[index] = rgba[0];
+                data[index + 1] = rgba[1];
+                data[index + 2] = rgba[2];
+                data[index + 3] = rgba[3];
+                found = true;
+                break;
               }
             }
           }
         }
       }
+
+      return imageData;
     }
 
     // TODO
@@ -1458,6 +1506,7 @@
       return this.mask.direction;
     }
 
+    // TODO
     async crackImage(args) {
       const cracks = Math.max(2, args.SHARDS);
       const img = new Image();
