@@ -52,6 +52,7 @@
     // TODO cache imageData, isDirty, use clearRect
     // TODO clamp can be replaced with clampToColor (0-255)
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
+    static TO_RAD = Math.PI / 180;
     static canvas = document.createElement("canvas");
     static context = ImageHelper.canvas.getContext("2d", { willReadFrequently: true });
 
@@ -100,27 +101,26 @@
       };
     }
 
-    static prepCanvas(image, opt_dontDraw) {
+    static prepCanvas(image, opt_width, opt_height) {
+      // TODO stretch width/height
       const { canvas, context } = ImageHelper.getHelper();
       const width = image.naturalWidth || image.width || 300;
       const height = image.naturalHeight || image.height || 150;
 
       canvas.width = Math.max(1, Math.abs(width));
       canvas.height = Math.max(1, Math.abs(height));
-      context.reset(); // Reset the canvas incase the width and height remain the same
+      context.reset(); // TODO make this its own method, and reliable
 
-      if (!opt_dontDraw) {
-        context.save();
-        context.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
-        context.drawImage(
-          image,
-          0,
-          0,
-          canvas.width,
-          canvas.height,
-        );
-        context.restore();
-      }
+      context.save();
+      context.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
+      context.drawImage(
+        image,
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
+      context.restore();
     }
 
     static newImage(input) {
@@ -432,10 +432,11 @@
           {
             opcode: "crackImage",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("crack [URI] into [SHARDS] shards"),
+            text: Scratch.translate("crack [URI] into [SHARDS] shards with [TEETH] teeth"),
             arguments: {
               URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
-              SHARDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
+              SHARDS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 6 },
+              TEETH: { type: Scratch.ArgumentType.NUMBER, defaultValue: 4 }
             }
           },
           {
@@ -568,11 +569,10 @@
           {
             opcode: "audioToImage",
             blockType: Scratch.BlockType.REPORTER,
-            text: Scratch.translate("convert audio URI [AUDIO_URI] to PNG with width [W] height [H]"),
+            text: Scratch.translate("convert audio URI [AUDIO_URI] to PNG with width [W]"),
             arguments: {
               AUDIO_URI: { type: Scratch.ArgumentType.STRING, defaultValue: "audio_uri_here" },
-              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
-              H: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
+              W: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 }
             }
           },
           /* Deprecation Marker */
@@ -1123,6 +1123,45 @@
       return imageData;
     }
 
+    _outline(context, thickness, rgba) {
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+
+      const imageData = context.getImageData(0, 0, width, height);
+      const data = imageData.data;
+      const original = new Uint8ClampedArray(data);
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const index = (y * width + x) * 4;
+          if (original[index + 3] > 150) continue; // skip pixels near full opaque
+
+          let found = false;
+          for (let dy = -thickness; dy <= thickness && !found; dy++) {
+            const ny = y + dy;
+            if (ny < 0 || ny >= height) continue;
+
+            for (let dx = -thickness; dx <= thickness; dx++) {
+              const nx = x + dx;
+              if (nx < 0 || nx >= width) continue;
+
+              const n = (ny * width + nx) * 4;
+
+              if (original[n + 3] > original[index + 3]) {
+                data[index] = rgba[0];
+                data[index + 1] = rgba[1];
+                data[index + 2] = rgba[2];
+                data[index + 3] = rgba[3];
+                found = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      return imageData;
+    }
+
     // Block Funcs
     async applyHueEffect(args) {
       const rgba = ImageHelper.hexToRgba(args.COLOR);
@@ -1395,73 +1434,34 @@
       return canvas.toDataURL("image/png");
     }
 
-    _outline(context, thickness, rgba) {
-      const width = context.canvas.width;
-      const height = context.canvas.height;
+    async maskImage(args) {
+      const image = await ImageHelper.newImage(args.IMG);
+      const maskImage = await ImageHelper.newImage(args.MASK);
+      if (!image || !maskImage) return "Invalid image";
 
-      const imageData = context.getImageData(0, 0, width, height);
-      const data = imageData.data;
-      const original = new Uint8ClampedArray(data);
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const index = (y * width + x) * 4;
-          if (original[index + 3] > 150) continue; // skip pixels near full opaque
+      const { canvas, context } = ImageHelper.getHelper();
+      ImageHelper.prepCanvas(image);
 
-          let found = false;
-          for (let dy = -thickness; dy <= thickness && !found; dy++) {
-            const ny = y + dy;
-            if (ny < 0 || ny >= height) continue;
+      const mask = this.mask;
+      const scaleW = maskImage.width * (mask.scale[0] / 50);
+      const scaleH = maskImage.height * (mask.scale[1] / 50);
+      const cutX = mask.pos[0] + (image.width / 2) - (scaleW / 2);
+      const cutY = mask.pos[1] - (image.height / 2) + (scaleH / 2);
 
-            for (let dx = -thickness; dx <= thickness; dx++) {
-              const nx = x + dx;
-              if (nx < 0 || nx >= width) continue;
-
-              const n = (ny * width + nx) * 4;
-
-              if (original[n + 3] > original[index + 3]) {
-                data[index] = rgba[0];
-                data[index + 1] = rgba[1];
-                data[index + 2] = rgba[2];
-                data[index + 3] = rgba[3];
-                found = true;
-                break;
-              }
-            }
-          }
-        }
+      if (args.TYPE === "clip") {
+        context.globalCompositeOperation = "destination-in";
+      } else if (args.TYPE === "overlay") {
+        context.globalCompositeOperation = "source-over";
+      } else {
+        context.globalCompositeOperation = "destination-out";
       }
 
-      return imageData;
-    }
+      context.translate(cutX + scaleW / 2, cutY * -1 + scaleH / 2);
+      context.rotate((mask.direction - 90) * ImageHelper.TO_RAD);
+      context.drawImage(maskImage, scaleW / -2, scaleH / -2, scaleW, scaleH);
+      context.setTransform(1, 0, 0, 1, 0, 0);
 
-    // TODO
-    async maskImage(args) {
-      return new Promise((resolve) => {
-        const srcImg = new Image();
-        srcImg.crossOrigin = "Anonymous";
-        srcImg.onload = () => {
-          const maskImg = new Image();
-          maskImg.crossOrigin = "Anonymous";
-          maskImg.onload = () => {
-            const scaleW = maskImg.width * (this.scale[0] / 50);
-            const scaleH = maskImg.height * (this.scale[1] / 50);
-            const cutX = this.cutPos[0] + (srcImg.width / 2) - (scaleW / 2);
-            const cutY = this.cutPos[1] - (srcImg.height / 2) + (scaleH / 2);
-            const { canvas, ctx } = this.createCanvasCtx(srcImg.width, srcImg.height);
-            ctx.drawImage(srcImg, 0, 0);
-            if (args.TYPE === "clip") ctx.globalCompositeOperation = "destination-in";
-            else if (args.TYPE === "mask") ctx.globalCompositeOperation = "destination-out";
-            ctx.translate(cutX + scaleW / 2, cutY * -1 + scaleH / 2);
-            ctx.rotate((this.cutoutDirection - 90) * (Math.PI / 180));
-            ctx.drawImage(maskImg, scaleW / -2, scaleH / -2, scaleW, scaleH);
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            if (args.TYPE === "clip") ctx.globalCompositeOperation = "source-over";
-            resolve(canvas.toDataURL("image/png"));
-          };
-          maskImg.src = this.convertAsset(args.MASK, "png");
-        };
-        srcImg.src = this.convertAsset(args.IMG, "png");
-      });
+      return canvas.toDataURL("image/png");
     }
 
     setCutout(args) {
@@ -1506,41 +1506,103 @@
       return this.mask.direction;
     }
 
-    // TODO
     async crackImage(args) {
-      const cracks = Math.max(2, args.SHARDS);
-      const img = new Image();
-      img.src = this.convertAsset(args.URI, "png");
-      const newWidth = img.width * 4;
-      const newHeight = img.height * 4;
-      this.allShards = [];
-      return new Promise((resolve) => {
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          for (let i = 0; i < cracks; i++) {
-            if (this.allShards.length >= args.SHARDS) break;
-            for (let j = 0; j < cracks; j++) {
-              if (this.allShards.length >= args.SHARDS) break;
-              const shardWidth = newWidth / cracks;
-              const shardHeight = newHeight / cracks;
-              const { canvas, ctx } = this.createCanvasCtx(shardWidth, shardHeight);
-              ctx.clearRect(0, 0, shardWidth, shardHeight);
-              ctx.beginPath();
-              ctx.moveTo(Math.random() * shardWidth, Math.random() * shardHeight);
-              for (let k = 0; k < Math.random() * 10 + 3; k++) {
-                ctx.lineTo(Math.random() * shardWidth, Math.random() * shardHeight);
-              }
-              ctx.closePath();
-              ctx.clip();
-              const offsetX = Math.random() * (newWidth - shardWidth);
-              const offsetY = Math.random() * (newHeight - shardHeight);
-              ctx.drawImage(img, -offsetX, -offsetY, newWidth, newHeight);
-              this.allShards.push(this.exportImg(canvas, this.printImg(canvas)));
-            }
+      const image = await ImageHelper.newImage(args.URI);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image);
+      const { canvas } = ImageHelper.getHelper();
+      const width = image.width;
+      const height = image.height;
+
+      const teeth = Math.max(0, Math.round(Cast.toNumber(args.TEETH)));
+      const shardCount = Math.max(2, Math.round(Cast.toNumber(args.SHARDS)));
+      const cols = Math.max(1, Math.round(Math.sqrt(shardCount * (width / height))));
+      const rows = Math.max(1, Math.round(shardCount / cols));
+
+      const cellW = width / cols;
+      const cellH = height / rows;
+      const jitterAmount = Math.min(cellW, cellH) * 0.3;
+
+      // Turns a straight line into a jagged polyline
+      const buildJaggedLine = (x1, y1, x2, y2) => {
+        const points = [{ x: x1, y: y1 }];
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const len = Math.hypot(dx, dy) || 1;
+        const nx = -dy / len;
+        const ny = dx / len;
+
+        for (let s = 1; s < teeth; s++) {
+          const t = s / teeth;
+          const baseX = x1 + dx * t;
+          const baseY = y1 + dy * t;
+          const offset = (Math.random() - 0.5) * jitterAmount;
+          points.push({ x: baseX + nx * offset, y: baseY + ny * offset });
+        }
+
+        points.push({ x: x2, y: y2 });
+        return points;
+      };
+
+      const verticalEdges = [];
+      for (let r = 0; r < rows; r++) {
+        const row = [];
+        for (let c = 0; c <= cols; c++) {
+          const x = c * cellW;
+          const y1 = r * cellH;
+          const y2 = (r + 1) * cellH;
+          if (c === 0 || c === cols) {
+            row.push([{ x, y: y1 }, { x, y: y2 }]);
+          } else {
+            row.push(buildJaggedLine(x, y1, x, y2));
           }
-          resolve();
-        };
-      });
+        }
+        verticalEdges.push(row);
+      }
+
+      const horizontalEdges = [];
+      for (let r = 0; r <= rows; r++) {
+        const row = [];
+        for (let c = 0; c < cols; c++) {
+          const y = r * cellH;
+          const x1 = c * cellW;
+          const x2 = (c + 1) * cellW;
+          if (r === 0 || r === rows) {
+            row.push([{ x: x1, y }, { x: x2, y }]);
+          } else {
+            row.push(buildJaggedLine(x1, y, x2, y));
+          }
+        }
+        horizontalEdges.push(row);
+      }
+
+      this.shardPieces = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const top = horizontalEdges[r][c];
+          const right = verticalEdges[r][c + 1];
+          const bottom = [...horizontalEdges[r + 1][c]].reverse();
+          const left = [...verticalEdges[r][c]].reverse();
+          const polygon = [...top, ...right.slice(1), ...bottom.slice(1), ...left.slice(1)];
+
+          const { canvas: shardCanvas, ctx, dispose } = ImageHelper.newTempCanvas(width, height);
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(polygon[0].x, polygon[0].y);
+          for (let i = 1; i < polygon.length; i++) {
+            ctx.lineTo(polygon[i].x, polygon[i].y);
+          }
+          ctx.closePath();
+          ctx.clip();
+          ctx.drawImage(mainCanvas, 0, 0, width, height);
+          ctx.restore();
+
+          this.shardPieces.push(canvas.toDataURL("image/png"));
+          dispose();
+        }
+      }
     }
 
     getShard(args) {
@@ -1637,11 +1699,9 @@
         img.src = src;
       });
     }
+
     svgToBitmap(args) {
       return this.stretch(this.convertAsset(args.SVG, "png"),Cast.toNumber(args.WIDTH), Cast.toNumber(args.HEIGHT));
-    }
-    stretchImg(args) {
-      return this.stretch(this.convertAsset(args.URI, "png"), Cast.toNumber(args.W), Cast.toNumber(args.H));
     }
 
     convertImageToSVG(args) {
@@ -1758,6 +1818,10 @@
       ctx.putImageData(output, 0, 0);
     }
 
+    stretchImg(args) {
+      return this.stretch(this.convertAsset(args.URI, "png"), Cast.toNumber(args.W), Cast.toNumber(args.H));
+    }
+
     skewSVG(args) {
       let svg = this.updateView(args.SVG, Math.abs(args.X) + Math.abs(args.Y));
       const widthMatch = /width="([^"]*)"/.exec(svg);
@@ -1802,15 +1866,23 @@
     }
 
     audioToImage(args) {
-      const audioURI = args.AUDIO_URI;
-      const imageWidth = Math.abs(Cast.toString(args.W));
-      const { canvas, ctx } = this.createCanvasCtx(imageWidth, Math.abs(Cast.toString(args.H)));
-      for (let i = 0; i < audioURI.length; i++) {
-        const charCode = audioURI.charCodeAt(i);
+      const uri = Cast.toString(args.AUDIO_URI);
+      const data = uri.split(",")[1];
+      if (!data) return "Invalid URI";
+
+      const width = Math.abs(Math.round(Cast.toString(args.W)));
+      const height = Math.floor(data.length / width);
+      const { canvas, ctx, dispose } = ImageHelper.newTempCanvas(width, height);
+
+      for (let i = 0; i < data.length; i++) {
+        const charCode = data.charCodeAt(i);
         ctx.fillStyle = `rgb(${(charCode * 2) % 256},${(charCode * 3) % 256},${(charCode * 4) % 256})`;
-        ctx.fillRect(i % imageWidth, Math.floor(i / imageWidth), 1, 1);
+        ctx.fillRect(i % width, Math.floor(i / width), 1, 1);
       }
-      return canvas.toDataURL("image/png");
+
+      const result = canvas.toDataURL("image/png");
+      dispose(); 
+      return result;
     }
 
     /* Deprecation Marker */
