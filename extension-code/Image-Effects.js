@@ -14,6 +14,7 @@
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDUuOTU1IiBoZWlnaHQ9IjE0NS45NTUiIHZpZXdCb3g9IjAgMCAxNDUuOTU1IDE0NS45NTUiPjxwYXRoIGQ9Ik0wIDcyLjk3N0MwIDMyLjY3MiAzMi42NzIgMCA3Mi45NzcgMHM3Mi45NzcgMzIuNjcyIDcyLjk3NyA3Mi45NzctMzIuNjcyIDcyLjk3Ny03Mi45NzcgNzIuOTc3UzAgMTEzLjI4MiAwIDcyLjk3NyIgZmlsbD0iIzc3NGRjYiIvPjxwYXRoIGQ9Ik04Ljg2MyA3Mi45NzdjMC0zNS40MSAyOC43MDUtNjQuMTE1IDY0LjExNS02NC4xMTVzNjQuMTE0IDI4LjcwNSA2NC4xMTQgNjQuMTE1LTI4LjcwNSA2NC4xMTYtNjQuMTE1IDY0LjExNlM4Ljg2MiAxMDguMzg3IDguODYyIDcyLjk3N3oiIGZpbGw9IiM5NmYiLz48cGF0aCBkPSJNMTA1LjI3OCA3NC44MDljLTIuMDQgMS4xODQtMTAuMTg2LjE4Ny0xMS42NTUgMS44NzQtNS43MjMgNi41NzItNS41NTkgMjIuNzgyLTYuMTkgMjQtLjc5MyAxLjUzLTIuNzkyIDIuMDQ1LTMuODUzIDAtLjg3LTEuNjgyLjE0Mi0xNy45ODgtNS44NzQtMjMuOTg2LTEuMzA1LTEuMzAyLTkuMzM1LS45NC0xMC45Ny0xLjg4OHMtMi4wNC0zLjE0NiAwLTQuMzNjMi4wMzktMS4xODMgOS42LS4xOSAxMS42NzktMy40MyA0LjIxNS01LjI5NSA0LjUzNy0yMS4yMzIgNS4xNjUtMjIuNDQ0Ljc5My0xLjUzIDIuNzkyLTIuMDQ2IDMuODUzIDAgLjgzOSAxLjYxOCAxLjMxOSAxNi43NDQgNi44NyAyMy4yNzggMS40NjkgMS43MyA5LjUxMyAxLjc0OCAxMC45NzUgMi41OTZzMi4wNCAzLjE0NyAwIDQuMzN6IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Ik02NS44MDMgNTIuNzY3Yy0xLjA2Ni42MTgtNS43MzMuNjMtNi44MDUgMS44OTMtNC4wNDggNC43NjUtMi41OTggNy43OTYtMy4yMSA4Ljk3NS0uNzczIDEuNDkzLTIuMjMgMS4xMTYtMi44MSAwLS40NTctLjg4NC40NTEtNC4wMi0zLjQ3NC04Ljg1NC0xLjAzLTEuMjY5LTQuMjIyLTEuMzUyLTUuNzA5LTIuMjE1cy0xLjE5Mi0yLjQ2NiAwLTMuMTU4IDQuODQ4LS4yMjcgNS44LTEuMTc2YzQuMzg3LTQuMzc0IDIuNzQ5LTcuMjY2IDMuMzg0LTguNDkyLjc3NC0xLjQ5MiAyLjIzMi0xLjExNSAyLjgxIDAgLjQ2Ljg4OC0xLjQ2IDMuNzA5IDIuNzE0IDguNTAyIDEuMDcxIDEuMjMgNS44MTIuNTAzIDcuMyAxLjM2NnMxLjA2NiAyLjU0IDAgMy4xNTl6TTQzLjU4NSA5NS4yNzZjMS4wNjYtLjYxOSA1LjczMi0uNjMyIDYuODA0LTEuODkzIDQuMDQ4LTQuNzY2IDIuNTk4LTcuNzk2IDMuMjEtOC45NzYuNzczLTEuNDkyIDIuMjMxLTEuMTE2IDIuODEgMCAuNDU4Ljg4NC0uNDUgNC4wMiAzLjQ3NCA4Ljg1NCAxLjAzIDEuMjcgNC4yMjIgMS4zNTIgNS43MSAyLjIxNSAxLjQ4Ni44NjMgMS4xOTEgMi40NjYgMCAzLjE1OC0xLjE5My42OTItNC44NDkuMjI3LTUuOCAxLjE3Ni00LjM4OCA0LjM3NC0yLjc1IDcuMjY2LTMuMzg1IDguNDkyLS43NzMgMS40OTItMi4yMzEgMS4xMTYtMi44MSAwLS40Ni0uODg3IDEuNDYtMy43MDktMi43MTMtOC41MDItMS4wNzItMS4yMy01LjgxMy0uNTAzLTcuMy0xLjM2NnMtMS4wNjctMi41NCAwLTMuMTU4eiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIvPjwvc3ZnPg==";
 
   const Cast = Scratch.Cast;
+  const runtime = Scratch.vm.runtime;
 
   /**
    * Generates an item for a block dropdown menu.
@@ -49,17 +50,14 @@
   ];
 
   class ImageHelper {
-    // TODO cache Image, imageData, isDirty
-    // TODO generalized function for:
-    /**
-     * const newImageData = this._effect(context, ...);
-     * context.putImageData(newImageData, 0, 0);
-     * return canvas.toDataURL("image/png");
-     */
+    // TODO cache getImageData, use isDirty
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
     static TO_RAD = Math.PI / 180;
     static canvas = document.createElement("canvas");
     static context = ImageHelper.canvas.getContext("2d", { willReadFrequently: true });
+
+    /** @type {Map<string, Image>} */
+    static _imageCache = new Map();
 
     static _validateSource(input) {
       input = Cast.toString(input).trim();
@@ -153,12 +151,17 @@
       const source = ImageHelper._validateSource(input);
       if (!source) return null;
 
+      const cacheKey = source.split(",")[1];
+      if (ImageHelper._imageCache.has(cacheKey)) {
+        return ImageHelper._imageCache.get(cacheKey);
+      }
+
       return new Promise((resolve) => {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onerror = () => resolve(null);
         img.onload = () => {
-          // TODO cache
+          ImageHelper._imageCache.set(cacheKey, img);
           resolve(img);
         };
         img.src = source;
@@ -214,8 +217,12 @@
       }
     }
 
-    static forEachRect(width, height, sx, sy, callback) {
-      // TODO
+    static unloadImageData(method, ...args) {
+      const { canvas, context } = ImageHelper.getHelper();
+      const imageData = method.call(null, context, ...args);
+
+      context.putImageData(imageData, 0, 0);
+      return canvas.toDataURL("image/png");
     }
   }
 
@@ -228,6 +235,9 @@
         direction: 90
       };
       this.shardPieces = [];
+
+      runtime.on("PROJECT_STOP_ALL", () => ImageHelper._imageCache.clear());
+      runtime.on("PROJECT_START", () => ImageHelper._imageCache.clear());
     }
     getInfo() {
       return {
@@ -365,6 +375,15 @@
               SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               THICKNESS: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1 },
               COLOR: { type: Scratch.ArgumentType.COLOR }
+            }
+          },
+          {
+            opcode: "upscaleImage",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("sharpen image [URI] by [NUM] %"),
+            arguments: {
+              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
+              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             }
           },
           { blockType: Scratch.BlockType.LABEL, text: Scratch.translate("Clipping & Masking") },
@@ -553,15 +572,6 @@
             arguments: {
               URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "fileType" }
-            }
-          },
-          {
-            opcode: "upscaleImage",
-            blockType: Scratch.BlockType.REPORTER,
-            text: Scratch.translate("sharpen image [URI] by [NUM] %"),
-            arguments: {
-              URI: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
-              NUM: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 }
             }
           },
           "---",
@@ -1415,9 +1425,7 @@
         (canvasSize - image.height) / 2
       );
 
-      const newImageData = this._bulge(context, strength, centerX, centerY);
-      context.putImageData(newImageData, 0, 0);
-      return canvas.toDataURL("image/png");
+      return ImageHelper.unloadImageData(this._bulge, strength, centerX, centerY);
     }
 
     async applyWaveEffect(args) {
@@ -1429,12 +1437,8 @@
       const freqX = Cast.toNumber(args.FREQX) / 100;
       const freqY = Cast.toNumber(args.FREQY) / 100;
 
-      const { canvas, context } = ImageHelper.getHelper();
       ImageHelper.prepCanvas(image);
-
-      const newImageData = this._wave(context, ampX, ampY, freqX, freqY);
-      context.putImageData(newImageData, 0, 0);
-      return canvas.toDataURL("image/png");
+      return ImageHelper.unloadImageData(this._wave, ampX, ampY, freqX, freqY);
     }
 
     async applyLineGlitchEffect(args) {
@@ -1445,12 +1449,8 @@
       const width = Math.max(1, Math.round(Cast.toNumber(args.WIDTH)));
       const axis = Cast.toString(args.DIRECT).toLowerCase();
 
-      const { canvas, context } = ImageHelper.getHelper();
       ImageHelper.prepCanvas(image);
-
-      const newImageData = this._lineGlitch(context, value, width, axis);
-      context.putImageData(newImageData, 0, 0);
-      return canvas.toDataURL("image/png");
+      return ImageHelper.unloadImageData(this._lineGlitch, value, width, axis);
     }
 
     async applyAbberationEffect(args) {
@@ -1462,18 +1462,8 @@
       const axis = Cast.toString(args.DIRECT).toLowerCase();
       const amount = Cast.toNumber(args.PERCENTAGE) / 100;
 
-      const { canvas, context } = ImageHelper.getHelper();
       ImageHelper.prepCanvas(image);
-
-      const newImageData = this._aberration(
-        context,
-        amount,
-        color1,
-        color2,
-        axis
-      );
-      context.putImageData(newImageData, 0, 0);
-      return canvas.toDataURL("image/png");
+      return ImageHelper.unloadImageData(this._aberration, amount, color1, color2, axis);
     }
 
     async removeTransparencyEffect(args) {
@@ -1505,12 +1495,18 @@
       const rgba = ImageHelper.hexToRgba(args.COLOR);
       const thickness = Math.ceil(Cast.toNumber(args.THICKNESS) / 4);
 
-      const { canvas, context } = ImageHelper.getHelper();
       ImageHelper.prepCanvas(image);
+      return ImageHelper.unloadImageData(this._outline, thickness, rgba);
+    }
 
-      const newImageData = this._outline(context, thickness, rgba);
-      context.putImageData(newImageData, 0, 0);
-      return canvas.toDataURL("image/png");
+    async upscaleImage(args) {
+      const image = await ImageHelper.newImage(args.URI);
+      if (!image) return "Invalid image";
+
+      const value = Cast.toNumber(args.NUM) / 10;
+
+      ImageHelper.prepCanvas(image);
+      return ImageHelper.unloadImageData(this._sharpen, value);
     }
 
     async maskImage(args) {
@@ -1735,12 +1731,13 @@
       if (!image) return "Invalid image";
 
       ImageHelper.prepCanvas(image);
-      const imageData = ImageHelper.context.getImageData(0, 0, image.width, image.height);
 
       const pixel = Cast.toNumber(args.NUM);
       if (pixel >= 1 && pixel <= image.width * image.height) {
-        const pixelIndex = (pixel - 1) * 4;
-        const rgba = imageData.data.slice(pixelIndex, pixelIndex + 4);
+        const x = (pixel - 1) % image.width;
+        const y = Math.floor((pixel - 1) / image.width);
+
+        const rgba = ImageHelper.context.getImageData(x, y, 1, 1).data;
         return ImageHelper.rgbaToHex(rgba);
       }
 
@@ -1885,20 +1882,6 @@
       svg += `xlink:href="${image.src}"/></g></svg>`;
 
       return args.TYPE === "content" ? svg : `data:image/svg+xml;base64,${btoa(svg)}`;
-    }
-
-    async upscaleImage(args) {
-      const image = await ImageHelper.newImage(args.URI);
-      if (!image) return "Invalid image";
-
-      const value = Cast.toNumber(args.NUM) / 10;
-
-      const { canvas, context } = ImageHelper.getHelper();
-      ImageHelper.prepCanvas(image);
-
-      const newImageData = this._sharpen(context, value);
-      context.putImageData(newImageData, 0, 0);
-      return canvas.toDataURL("image/png");
     }
 
     async stretchImg(args) {
