@@ -132,7 +132,7 @@
       const dstWidth = opt_width ?? srcWidth;
       const dstHeight = opt_height ?? srcHeight;
 
-      ImageHelper._clearStage(width, height);
+      ImageHelper._clearStage(dstWidth, dstHeight);
       context.save();
       context.scale(dstWidth < 0 ? -1 : 1, dstHeight < 0 ? -1 : 1);
       context.drawImage(
@@ -160,7 +160,7 @@
         img.onload = () => {
           // TODO cache
           resolve(img);
-        }
+        };
         img.src = source;
       });
     }
@@ -822,7 +822,7 @@
               imageData.data.copyWithin(index, srcIndex, srcIndex + 4);
             }
           } else {
-            imageData.data[index + 3] = 0
+            imageData.data[index + 3] = 0;
           }
         }
       }
@@ -1257,7 +1257,7 @@
     }
 
     deleteColor(args) {
-      return this.replaceColor({ ...args, REPLACE: "#00000000" })
+      return this.replaceColor({ ...args, REPLACE: "#00000000" });
     }
 
     async replaceColor(args) {
@@ -1589,8 +1589,6 @@
       const image = await ImageHelper.newImage(args.URI);
       if (!image) return "Invalid image";
 
-      ImageHelper.prepCanvas(image);
-      const { canvas } = ImageHelper.getHelper();
       const width = image.width;
       const height = image.height;
 
@@ -1675,10 +1673,10 @@
           }
           ctx.closePath();
           ctx.clip();
-          ctx.drawImage(mainCanvas, 0, 0, width, height);
+          ctx.drawImage(image, 0, 0, width, height);
           ctx.restore();
 
-          this.shardPieces.push(canvas.toDataURL("image/png"));
+          this.shardPieces.push(shardCanvas.toDataURL("image/png"));
           dispose();
         }
       }
@@ -1756,14 +1754,12 @@
       const image = await ImageHelper.newImage(args.URI);
       if (!image) return "Invalid image";
 
-      ImageHelper.prepCanvas(image);
-      const imageData = ImageHelper.context.getImageData(0, 0, image.width, image.height);
-
       const rgba = ImageHelper.hexToRgba(args.COLOR);
       const start = (Cast.toNumber(args.NUM) - 1) * 4;
       const end = (args.NUM2 === undefined ? start : Cast.toNumber(args.NUM2) * 4) + 4;
       const options = { start, end };
 
+      ImageHelper.prepCanvas(image);
       return ImageHelper.forEachPixel((pixel) => rgba, options);
     }
 
