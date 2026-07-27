@@ -49,8 +49,13 @@
   ];
 
   class ImageHelper {
-    // TODO cache imageData, isDirty, use clearRect
-    // TODO clamp can be replaced with clampToColor (0-255)
+    // TODO cache Image, imageData, isDirty
+    // TODO generalized function for:
+    /**
+     * const newImageData = this._effect(context, ...);
+     * context.putImageData(newImageData, 0, 0);
+     * return canvas.toDataURL("image/png");
+     */
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
     static TO_RAD = Math.PI / 180;
     static canvas = document.createElement("canvas");
@@ -69,6 +74,20 @@
       const isDataURI = input.startsWith("data:image/");
       if (isURL || isDataURI) return input;
       return null;
+    }
+
+    static _clearStage(width, height) {
+      width = Math.max(1, Math.abs(width));
+      height = Math.max(1, Math.abs(height));
+
+      const { canvas, context } = ImageHelper.getHelper();
+      if (width === canvas.width && height === canvas.height) {
+        context.resetTransform();
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        canvas.width = width;
+        canvas.height = height;
+      }
     }
 
     static hexToRgba(hex) {
@@ -94,6 +113,10 @@
       return Math.min(max, Math.max(min, value));
     }
 
+    static channel(value) {
+      return Math.min(255, Math.max(0, value));
+    }
+
     static getHelper() {
       return {
         canvas: ImageHelper.canvas,
@@ -102,21 +125,24 @@
     }
 
     static prepCanvas(image, opt_width, opt_height) {
-      // TODO stretch width/height
       const { canvas, context } = ImageHelper.getHelper();
-      const width = image.naturalWidth || image.width || 300;
-      const height = image.naturalHeight || image.height || 150;
 
-      canvas.width = Math.max(1, Math.abs(width));
-      canvas.height = Math.max(1, Math.abs(height));
-      context.reset(); // TODO make this its own method, and reliable
+      const srcWidth = image.naturalWidth || image.width || 300;
+      const srcHeight = image.naturalHeight || image.height || 150;
+      const dstWidth = opt_width ?? srcWidth;
+      const dstHeight = opt_height ?? srcHeight;
 
+      ImageHelper._clearStage(width, height);
       context.save();
-      context.scale(width < 0 ? -1 : 1, height < 0 ? -1 : 1);
+      context.scale(dstWidth < 0 ? -1 : 1, dstHeight < 0 ? -1 : 1);
       context.drawImage(
         image,
         0,
         0,
+        srcWidth,
+        srcHeight,
+        dstWidth < 0 ? -canvas.width : 0,
+        dstHeight < 0 ? -canvas.height : 0,
         canvas.width,
         canvas.height,
       );
@@ -131,7 +157,10 @@
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onerror = () => resolve(null);
-        img.onload = () => resolve(img);
+        img.onload = () => {
+          // TODO cache
+          resolve(img);
+        }
         img.src = source;
       });
     }
@@ -143,9 +172,9 @@
       const ctx = tempCanvas.getContext("2d", { willReadFrequently: true });
 
       const dispose = () => {
-        ctx.reset();
         tempCanvas.width = 0;
         tempCanvas.height = 0;
+        tempCanvas.remove();
       };
 
       return {
@@ -549,12 +578,11 @@
           {
             opcode: "skewSVG",
             blockType: Scratch.BlockType.REPORTER,
-            text: Scratch.translate("skew SVG [SVG] at x [Y] y [X] as [TYPE]"),
+            text: Scratch.translate("skew image [SVG] at x [X] y [Y]"),
             arguments: {
               SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" },
               X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
-              TYPE: { type: Scratch.ArgumentType.STRING, menu: "fileType" }
+              Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             }
           },
           {
@@ -764,9 +792,9 @@
         const amount = factor * Math.abs(value);
 
         return [
-          ImageHelper.clamp(0, 255, adjust(pixel[0], amount)),
-          ImageHelper.clamp(0, 255, adjust(pixel[1], amount)),
-          ImageHelper.clamp(0, 255, adjust(pixel[2], amount)),
+          ImageHelper.channel(adjust(pixel[0], amount)),
+          ImageHelper.channel(adjust(pixel[1], amount)),
+          ImageHelper.channel(adjust(pixel[2], amount)),
           pixel[3],
         ];
       });
@@ -1113,11 +1141,7 @@
       }
 
       for (let i = 0; i < data.length; i++) {
-        data[i] = ImageHelper.clamp(
-          0,
-          255,
-          (data[i] + left[i] + right[i]) / 2
-        );
+        data[i] = ImageHelper.channel((data[i] + left[i] + right[i]) / 2);
       }
 
       return imageData;
@@ -1160,6 +1184,61 @@
       }
 
       return imageData;
+    }
+
+    _sharpen(context, factor) {
+      const width = context.canvas.width;
+      const height = context.canvas.height;
+
+      const imageData = context.getImageData(0, 0, width, height);
+      const data = imageData.data;
+
+      const output = context.createImageData(width, height);
+      const out = output.data;
+
+      const side = 3;
+      const weights = [
+        0, -factor, 0,
+        -factor, 1 + 4 * factor, -factor,
+        0, -factor, 0
+      ];
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          let r = 0;
+          let g = 0;
+          let b = 0;
+
+          const dst = (y * width + x) * 4;
+          for (let ky = 0; ky < side; ky++) {
+            for (let kx = 0; kx < side; kx++) {
+              const weight = weights[ky * side + kx];
+
+              const sy = ImageHelper.clamp(
+                0,
+                height - 1,
+                y + ky - 1
+              );
+              const sx = ImageHelper.clamp(
+                0,
+                width - 1,
+                x + kx - 1
+              );
+
+              const index = (sy * width + sx) * 4;
+              r += data[index] * weight;
+              g += data[index + 1] * weight;
+              b += data[index + 2] * weight;
+            }
+          }
+
+          out[dst] = ImageHelper.channel(r);
+          out[dst + 1] = ImageHelper.channel(g);
+          out[dst + 2] = ImageHelper.channel(b);
+          out[dst + 3] = data[dst + 3];
+        }
+      }
+
+      return output;
     }
 
     // Block Funcs
@@ -1688,177 +1767,176 @@
       return ImageHelper.forEachPixel((pixel) => rgba, options);
     }
 
-    // TODO
-    stretch(src, w, h) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          resolve(this.exportImg(img, this.printImg(img, w, h), w, h));
-        };
-        img.src = src;
+    async svgToBitmap(args) {
+      return await this.stretchImg({
+        URI: args.SVG,
+        W: args.WIDTH,
+        H: args.HEIGHT,
       });
     }
 
-    svgToBitmap(args) {
-      return this.stretch(this.convertAsset(args.SVG, "png"),Cast.toNumber(args.WIDTH), Cast.toNumber(args.HEIGHT));
-    }
+    async convertImageToSVG(args) {
+      const image = await ImageHelper.newImage(args.URI);
+      if (!image) return "Invalid image";
 
-    convertImageToSVG(args) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.src = this.convertAsset(args.URI, "png");
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const ctx = this.createCanvasCtx(img.width, img.height, img).ctx;
-          ctx.drawImage(img, 0, 0, img.width, img.height);
-          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-          svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-          svg.setAttribute("width", img.width.toFixed(5));
-          svg.setAttribute("height", img.height.toFixed(5));
-          svg.setAttribute("viewBox", `0,0,${img.width.toFixed(5)},${img.height.toFixed(5)}`);
-          const mergedColors = new Map();
-          for (let y = 0; y < img.height; y++) {
-            for (let x = 0; x < img.width; x++) {
-              const colorData = ctx.getImageData(x, y, 1, 1).data;
-              if (colorData[3] === 0) continue;
-              const color = `rgb(${colorData[0]}, ${colorData[1]}, ${colorData[2]})`;
-              const pixelColor = ctx.getImageData(x + 1, y, 1, 1).data;
-              if (color === `rgb(${pixelColor[0]}, ${pixelColor[1]}, ${pixelColor[2]})`) {
-                const mergedPixel = mergedColors.get(color) || {x1: x, y1: y, x2: x + 1, y2: y};
-                mergedPixel.x2++;
-                mergedColors.set(color, mergedPixel);
-              } else {
-                mergedColors.forEach((mergedPixel, colorKey) => {
-                  const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                  rect.setAttribute("x", mergedPixel.x1.toFixed(5));
-                  rect.setAttribute("y", mergedPixel.y1.toFixed(5));
-                  rect.setAttribute("width", (mergedPixel.x2 - mergedPixel.x1 + 1).toFixed(5));
-                  rect.setAttribute("height", (mergedPixel.y2 - mergedPixel.y1 + 1).toFixed(5));
-                  rect.setAttribute("fill", colorKey);
-                  svg.appendChild(rect);
-                });
-                mergedColors.clear();
-              }
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svg.setAttribute("width", image.width);
+      svg.setAttribute("height", image.height);
+      svg.setAttribute("viewBox", `0 0 ${image.width} ${image.height}`);
+
+      const { context } = ImageHelper.getHelper();
+      ImageHelper.prepCanvas(image);
+
+      const { data, width, height } = context.getImageData(
+        0,
+        0,
+        image.width,
+        image.height
+      );
+
+      const rects = [];
+      let activeRuns = new Map();
+      for (let y = 0; y < height; y++) {
+        const nextRuns = new Map();
+
+        let runX = 0;
+        let runWidth = 0;
+        let runColor = null;
+        for (let x = 0; x <= width; x++) {
+          let color = null;
+
+          if (x < width) {
+            const i = (y * width + x) * 4;
+
+            if (data[i + 3] !== 0) {
+              color =
+                data[i] |
+                (data[i + 1] << 8) |
+                (data[i + 2] << 16) |
+                (data[i + 3] << 24);
             }
           }
-          let svgString = new XMLSerializer().serializeToString(svg);
-          if (args.TYPE === "dataURI") svgString = `data:image/svg+xml;base64,${btoa(svgString)}`;
-          resolve(svgString);
-        };
-      });
+
+          if (color === runColor && color !== null) {
+            runWidth++;
+            continue;
+          }
+
+          if (runColor !== null) {
+            const key = `${runX},${runWidth},${runColor}`;
+            let rect = activeRuns.get(key);
+
+            if (rect) rect.height++;
+            else {
+              rect = {
+                x: runX,
+                y,
+                width: runWidth,
+                height: 1,
+                color: runColor
+              };
+              rects.push(rect);
+            }
+
+            nextRuns.set(key, rect);
+          }
+
+          runColor = color;
+          runX = x;
+          runWidth = color !== null ? 1 : 0;
+        }
+
+        activeRuns = nextRuns;
+      }
+
+      for (const rect of rects) {
+        const rgba = rect.color >>> 0;
+        const r = rgba & 255;
+        const g = (rgba >>> 8) & 255;
+        const b = (rgba >>> 16) & 255;
+        const a = (rgba >>> 24) & 255;
+
+        const node = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        node.setAttribute("x", rect.x);
+        node.setAttribute("y", rect.y);
+        node.setAttribute("width", rect.width);
+        node.setAttribute("height", rect.height);
+        node.setAttribute("fill", `rgb(${r},${g},${b})`);
+        if (a !== 255) {
+          node.setAttribute("fill-opacity", (a / 255).toFixed(2));
+        }
+
+        svg.appendChild(node);
+      }
+
+      const svgString = new XMLSerializer().serializeToString(svg);
+      return args.TYPE === "content"
+        ? svgString
+        : `data:image/svg+xml;base64,${btoa(svgString)}`;
     }
 
     async makeSVGimage(args) {
-      if (args.URI.startsWith("data:image/")) {
-        return await new Promise((resolve) => {
-          // eslint-disable-next-line
-          const img = new Image();
-          img.crossOrigin = "Anonymous";
-          img.onload = () => {
-            const { width, height } = img;
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-              width="${width / 2}" height="${(height / 2) + 0.001}" viewBox="0,0,${width / 2},${(height / 2) + 0.001}">
-              <g transform="translate(${img.offsetLeft / -2},${img.offsetTop / -2})">
-              <image x="0" y="0" transform="scale(0.5,0.5)" width="${width}" height="${height + 0.002}" 
-              xlink:href="${img.src}"/></g></svg>`;
-            resolve(args.TYPE === "dataURI" ? `data:image/svg+xml;base64,${btoa(svg)}` : svg);
-          };
-          img.src = this.convertAsset(args.URI, "png");
-        });
-      } else { return args.URI }
+      const image = await ImageHelper.newImage(args.URI);
+      if (!image) return "Invalid image";
+
+      const { width, height, offsetLeft, offsetTop } = image;
+      let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" `;
+      svg += `width="${width / 2}" height="${height / 2}" `;
+      svg += `viewBox="0,0,${width / 2},${height / 2}">`;
+      svg += `<g transform="translate(${offsetLeft / -2},${offsetTop / -2})">`;
+      svg += `<image x="0" y="0" width="${width / 2}" height="${height / 2}" `;
+      svg += `xlink:href="${image.src}"/></g></svg>`;
+
+      return args.TYPE === "content" ? svg : `data:image/svg+xml;base64,${btoa(svg)}`;
     }
 
-    upscaleImage(args) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const pixelData = this.printImg(img);
-          const ctx = this.createCanvasCtx(img.width, img.height).ctx;
-          ctx.putImageData(new ImageData(new Uint8ClampedArray(pixelData), img.width, img.height), 0, 0);
-          const factor = Cast.toNumber(args.NUM) / 10;
-          const weights = [0, -factor, 0, -factor, 1 + 4 * factor, -factor, 0, -factor, 0];
-          this.sharpen(ctx, img.width, img.height, weights, 25);
-          resolve(this.exportImg(img, ctx.getImageData(0, 0, img.width, img.height).data));
-        };
-        img.src = this.convertAsset(args.URI, "png");
-      });
-    }
-    sharpen(ctx, width, height, weights, alphaThreshold) {
-      const data = ctx.getImageData(0, 0, width, height).data;
-      const side = Math.round(Math.sqrt(weights.length));
-      const halfSide = Math.floor(side / 2);
-      const output = ctx.createImageData(width, height);
-      const outData = output.data;
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const pixelIndex = (y * width + x) * 4;
-          let r = 0, g = 0, b = 0;
-          for (let ky = 0; ky < side; ky++) {
-            for (let kx = 0; kx < side; kx++) {
-              const weight = weights[ky * side + kx];
-              const neighborY = this.clamp(y + ky - halfSide, 0, height - 1);
-              const neighborX = this.clamp(x + kx - halfSide, 0, width - 1);
-              const neighborPixel = (neighborY * width + neighborX) * 4;
-              r += data[neighborPixel] * weight;
-              g += data[neighborPixel + 1] * weight;
-              b += data[neighborPixel + 2] * weight;
-            }
-          }
-          if (data[pixelIndex + 3] / 255 > alphaThreshold / 50) {
-            outData[pixelIndex] = this.clamp(r, 0, 255);
-            outData[pixelIndex + 1] = this.clamp(g, 0, 255);
-            outData[pixelIndex + 2] = this.clamp(b, 0, 255);
-            outData[pixelIndex + 3] = 255;
-          } else { outData[pixelIndex + 3] = 0 }
-        }
-      }
-      ctx.putImageData(output, 0, 0);
+    async upscaleImage(args) {
+      const image = await ImageHelper.newImage(args.URI);
+      if (!image) return "Invalid image";
+
+      const value = Cast.toNumber(args.NUM) / 10;
+
+      const { canvas, context } = ImageHelper.getHelper();
+      ImageHelper.prepCanvas(image);
+
+      const newImageData = this._sharpen(context, value);
+      context.putImageData(newImageData, 0, 0);
+      return canvas.toDataURL("image/png");
     }
 
-    stretchImg(args) {
-      return this.stretch(this.convertAsset(args.URI, "png"), Cast.toNumber(args.W), Cast.toNumber(args.H));
+    async stretchImg(args) {
+      const image = await ImageHelper.newImage(args.URI);
+      if (!image) return "Invalid image";
+
+      ImageHelper.prepCanvas(image, Cast.toNumber(args.W), Cast.toNumber(args.H));
+      return ImageHelper.canvas.toDataURL("image/png");
     }
 
-    skewSVG(args) {
-      let svg = this.updateView(args.SVG, Math.abs(args.X) + Math.abs(args.Y));
-      const widthMatch = /width="([^"]*)"/.exec(svg);
-      const heightMatch = /height="([^"]*)"/.exec(svg);
-      if (widthMatch && heightMatch) {
-        const width = parseFloat(widthMatch[1]);
-        const height = parseFloat(heightMatch[1]);
-        let transform = "";
-        if (svg.includes("style=\"transform-origin: center; transform:")) svg = svg.replace(/(style="[^"]*transform:[^"]*)/, `$1 skew(${args.Y}deg, ${args.X}deg)`);
-        else svg = svg.replace(`width="${width}" height="${height}"`, `width="${width}" height="${height}" style="transform-origin: center; transform: skew(${args.Y}deg, ${args.X}deg)"`);
-        const curTransform = /transform="([^"]*)"/.exec(svg);
-        const oldTransform = curTransform ? curTransform[1] : "";
-        const newTransform = oldTransform ? `${oldTransform} ${transform}` : transform;
-        svg = svg.replace(/transform="([^"]*)"/, `transform="${newTransform}"`);
-        if (args.TYPE === "dataURI") svg = `data:image/svg+xml;base64,${btoa(svg)}`;
-      }
-      return svg;
-    }
-    updateView(svg, amt) {
-      let values;
-      const viewBoxMatch = svg.match(/viewBox="([^"]+)"/);
-      let viewBoxValues = -1;
-      if (viewBoxMatch) viewBoxValues = viewBoxMatch[1].split(/\s*,\s*/).map(parseFloat);
-      const translateMatch = svg.match(/<g transform="translate\((-?[\d.]+),(-?[\d.]+)\)/);
-      let translateValues = -1;
-      if (translateMatch) translateValues = [parseFloat(translateMatch[1]), parseFloat(translateMatch[2])];
-      values = `${viewBoxValues},${translateValues}`;
-      values = values.split(",");
-      values = values.map(item => Cast.toNumber(item));
-      amt = Cast.toNumber(amt);
-      if (values.length > 3) {
-        svg = svg.replace(/viewBox="([^"]+)"/, `viewBox="${values[0]},${values[1]},${values[2] + (amt * 2)},${values[3] + (amt * 2)}"`);
-        svg = svg.replace(/width="([^"]+)"/, `width="${values[2] + (amt * 2)}"`);
-        svg = svg.replace(/height="([^"]+)"/, `height="${values[3] + (amt * 2)}"`);
-        svg = svg.replace(/<g transform="([^"]+)"/, `<g transform="translate(${values[4] + amt},${values[5] + amt})"`);
-      }
-      return svg;
+    async skewSVG(args) {
+      const image = await ImageHelper.newImage(args.SVG);
+      if (!image) return "Invalid image";
+
+      // Flip skew X and Y, looks more natural
+      const skewX = Cast.toNumber(args.Y) * ImageHelper.TO_RAD;
+      const skewY = Cast.toNumber(args.X) * ImageHelper.TO_RAD;
+      const tanX = Math.tan(skewX);
+      const tanY = Math.tan(skewY);
+
+      const newWidth  = image.width + Math.abs(image.width * tanY);
+      const newHeight = image.height + Math.abs(image.height * tanX);
+
+      const { canvas, ctx, dispose } = ImageHelper.newTempCanvas(newWidth, newHeight);
+
+      ctx.save();
+      ctx.translate(newWidth / 2, newHeight / 2);
+      ctx.setTransform(1, tanX, tanY, 1, newWidth / 2, newHeight / 2); 
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      ctx.restore();
+
+      const result = canvas.toDataURL("image/png");
+      dispose();
+      return result;
     }
 
     removeThorns(args) {
