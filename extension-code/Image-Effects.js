@@ -49,8 +49,31 @@
     genMenuItem("cubism")
   ];
 
+  // TODO cacher class to gen an ID for caching image data and elements
+  class ImageCache {
+    static sourceHash = new Map();
+    static currentID = 0;
+
+    /**
+     * @typedef {Object} ImageItem
+     * @property {HTMLImageElement} img Image element
+     * @property {ImageData} data Image data
+     */
+
+    /** @type {Map<string, ImageItem>} */
+    static cache = new Map();
+
+    static clear() {
+      ImageCache.cache.clear();
+    }
+
+    static getID(source) {
+      // TODO this is dumb
+      ImageCache.sourceHash.get(source);
+    }
+  }
+
   class ImageHelper {
-    // TODO cache getImageData, use isDirty
     static HEX_COLOR_REGEX = /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i;
     static TO_RAD = Math.PI / 180;
     static canvas = document.createElement("canvas");
@@ -151,6 +174,7 @@
       const source = ImageHelper._validateSource(input);
       if (!source) return null;
 
+      // TODO
       const cacheKey = source.split(",")[1];
       if (ImageHelper._imageCache.has(cacheKey)) {
         return ImageHelper._imageCache.get(cacheKey);
@@ -187,9 +211,16 @@
       };
     }
 
-    static forEachPixel(callback, options = {}) {
+    static getImageData() {
+      // TODO
       const { canvas, context } = ImageHelper.getHelper();
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+      return imageData;
+    }
+
+    static forEachPixel(callback, options = {}) {
+      const imageData = ImageHelper.getImageData();
       const pixelData = imageData.data;
 
       const start = Math.max(0, options.start ?? 0);
@@ -212,17 +243,16 @@
       }
 
       if (!options.dontSetCanvas) {
-        context.putImageData(imageData, 0, 0);
-        return canvas.toDataURL("image/png");
+        ImageHelper.context.putImageData(imageData, 0, 0);
+        return ImageHelper.canvas.toDataURL("image/png");
       }
     }
 
     static unloadImageData(method, ...args) {
-      const { canvas, context } = ImageHelper.getHelper();
       const imageData = method.call(null, context, ...args);
 
-      context.putImageData(imageData, 0, 0);
-      return canvas.toDataURL("image/png");
+      ImageHelper.context.putImageData(imageData, 0, 0);
+      return ImageHelper.canvas.toDataURL("image/png");
     }
   }
 
@@ -236,8 +266,8 @@
       };
       this.shardPieces = [];
 
-      runtime.on("PROJECT_STOP_ALL", () => ImageHelper._imageCache.clear());
-      runtime.on("PROJECT_START", () => ImageHelper._imageCache.clear());
+      runtime.on("PROJECT_STOP_ALL", () => ImageCache.clear());
+      runtime.on("PROJECT_START", () => ImageCache.clear());
     }
     getInfo() {
       return {
@@ -722,7 +752,7 @@
       const chunkSize = value / 10;
       const width = context.canvas.width;
       const height = context.canvas.height;
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
 
       for (let i = 0; i < Math.floor(width); i++) {
         const linePos = Math.floor(Math.random() * height);
@@ -750,7 +780,7 @@
       value /= 100;
       const width = context.canvas.width;
       const height = context.canvas.height;
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
 
       const pixelsToEnlarge = Math.floor((value / 100) * (width * height));
       for (let i = 0; i < pixelsToEnlarge; i++) {
@@ -814,7 +844,7 @@
       value /= 100;
       const width = context.canvas.width;
       const height = context.canvas.height;
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
 
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -844,7 +874,7 @@
       const dispAmt = Math.max(0, Math.floor(value));
       const width = context.canvas.width;
       const height = context.canvas.height;
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const newData = new Uint8ClampedArray(imageData.data.length);
 
       for (let y = 0; y < height; y++) {
@@ -932,7 +962,7 @@
       const blockSize = Math.max(1, Math.floor(Math.abs(value)));
       const width = context.canvas.width;
       const height = context.canvas.height;
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
 
       for (let y = 0; y < height; y += blockSize) {
@@ -974,8 +1004,7 @@
     _bulge(context, strength, centerX, centerY) {
       const width = context.canvas.width;
       const height = context.canvas.height;
-
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
       const output = new Uint8ClampedArray(data.length);
 
@@ -1022,8 +1051,7 @@
     _wave(context, ampX, ampY, freqX, freqY) {
       const width = context.canvas.width;
       const height = context.canvas.height;
-
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
       const output = new Uint8ClampedArray(data.length);
       for (let y = 0; y < height; y++) {
@@ -1056,8 +1084,7 @@
     _lineGlitch(context, amount, lineWidth, axis) {
       const width = context.canvas.width;
       const height = context.canvas.height;
-
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
 
       const horizontal = axis === "x";
@@ -1098,8 +1125,7 @@
     _aberration(context, amount, color1, color2, axis) {
       const width = context.canvas.width;
       const height = context.canvas.height;
-
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
 
       const left = new Uint8ClampedArray(data.length);
@@ -1160,9 +1186,9 @@
     _outline(context, thickness, rgba) {
       const width = context.canvas.width;
       const height = context.canvas.height;
-
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
+
       const original = new Uint8ClampedArray(data);
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -1199,8 +1225,7 @@
     _sharpen(context, factor) {
       const width = context.canvas.width;
       const height = context.canvas.height;
-
-      const imageData = context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const data = imageData.data;
 
       const output = context.createImageData(width, height);
@@ -1293,7 +1318,7 @@
 
       ImageHelper.prepCanvas(image);
       const { width, height } = image;
-      const imageData = ImageHelper.context.getImageData(0, 0, width, height);
+      const imageData = ImageHelper.getImageData();
       const modified = new ImageData(
         new Uint8ClampedArray(imageData.data),
         width,
@@ -1585,8 +1610,7 @@
       const image = await ImageHelper.newImage(args.URI);
       if (!image) return "Invalid image";
 
-      const width = image.width;
-      const height = image.height;
+      const { width, height } = image;
 
       const teeth = Math.max(0, Math.round(Cast.toNumber(args.TEETH)));
       const shardCount = Math.max(2, Math.round(Cast.toNumber(args.SHARDS)));
@@ -1774,19 +1798,13 @@
 
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-      svg.setAttribute("width", image.width);
-      svg.setAttribute("height", image.height);
-      svg.setAttribute("viewBox", `0 0 ${image.width} ${image.height}`);
+      svg.setAttribute("width", width);
+      svg.setAttribute("height", height);
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-      const { context } = ImageHelper.getHelper();
       ImageHelper.prepCanvas(image);
-
-      const { data, width, height } = context.getImageData(
-        0,
-        0,
-        image.width,
-        image.height
-      );
+      const { width, height } = image;
+      const data = ImageHelper.getImageData().data;
 
       const rects = [];
       let activeRuns = new Map();
