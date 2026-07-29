@@ -30,7 +30,7 @@
     };
   };
 
-  const DEFAULT_IMG_VALUE = "...";
+  const DEFAULT_IMG_VALUE = "..."; // TODO
   const EFFECTS_MENU = [
     genMenuItem("saturation"),
     genMenuItem("contrast"),
@@ -49,11 +49,7 @@
     genMenuItem("cubism")
   ];
 
-  // TODO cacher class to gen an ID for caching image data and elements
   class ImageCache {
-    static sourceHash = new Map();
-    static currentID = 0;
-
     /**
      * @typedef {Object} ImageItem
      * @property {HTMLImageElement} img Image element
@@ -67,9 +63,35 @@
       ImageCache.cache.clear();
     }
 
-    static getID(source) {
-      // TODO this is dumb
-      ImageCache.sourceHash.get(source);
+    static getHash(source) {
+      // Create an ID from the image source that can be used for caching.
+      // Hash the source to minimize it for cache.
+      const rawData = source.split(",")[1];
+
+      let hash = 0x811c9dc5;
+      for (let i = 0; i < rawData.length; i++) {
+        hash ^= rawData.charCodeAt(i);
+        hash = Math.imul(hash, 0x01000193);
+      }
+
+      return hash.toString(36);
+    }
+
+    static set(hash, image) {
+      const oldCache = ImageCache.get(hash);
+
+      ImageCache.cache.set(hash, {
+        img: image.src ?? oldCache.img,
+        data: image.data ?? oldCache.data,
+      });
+    }
+
+    static get(hash) {
+      if (ImageCache.cache.has(hash)) {
+        return ImageCache.cache.get(hash);
+      }
+
+      return {};
     }
   }
 
@@ -78,9 +100,7 @@
     static TO_RAD = Math.PI / 180;
     static canvas = document.createElement("canvas");
     static context = ImageHelper.canvas.getContext("2d", { willReadFrequently: true });
-
-    /** @type {Map<string, Image>} */
-    static _imageCache = new Map();
+    static currentImageHash = null;
 
     static _validateSource(input) {
       input = Cast.toString(input).trim();
@@ -102,6 +122,7 @@
       height = Math.max(1, Math.abs(height));
 
       const { canvas, context } = ImageHelper.getHelper();
+      context.globalCompositeOperation = "source-over";
       if (width === canvas.width && height === canvas.height) {
         context.resetTransform();
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,6 +130,14 @@
         canvas.width = width;
         canvas.height = height;
       }
+    }
+
+    static _cloneImageData(imageData) {
+      return new ImageData(
+        new Uint8ClampedArray(imageData.data),
+        imageData.width,
+        imageData.height
+      );
     }
 
     static hexToRgba(hex) {
@@ -153,6 +182,7 @@
       const dstWidth = opt_width ?? srcWidth;
       const dstHeight = opt_height ?? srcHeight;
 
+      ImageHelper.currentImageHash = image._spHash;
       ImageHelper._clearStage(dstWidth, dstHeight);
       context.save();
       context.scale(dstWidth < 0 ? -1 : 1, dstHeight < 0 ? -1 : 1);
@@ -174,18 +204,17 @@
       const source = ImageHelper._validateSource(input);
       if (!source) return null;
 
-      // TODO
-      const cacheKey = source.split(",")[1];
-      if (ImageHelper._imageCache.has(cacheKey)) {
-        return ImageHelper._imageCache.get(cacheKey);
-      }
+      const cacheKey = ImageCache.getHash(source);
+      const cached = ImageCache.get(cacheKey);
+      if (cached.img) return cached.img;
 
       return new Promise((resolve) => {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onerror = () => resolve(null);
         img.onload = () => {
-          ImageHelper._imageCache.set(cacheKey, img);
+          ImageCache.set(cacheKey, { src: img });
+          img._spHash = cacheKey;
           resolve(img);
         };
         img.src = source;
@@ -212,9 +241,17 @@
     }
 
     static getImageData() {
-      // TODO
+      const cacheKey = ImageHelper.currentImageHash;
+      const cached = ImageCache.get(cacheKey);
+      if (cached.data) {
+        return ImageHelper._cloneImageData(cached.data);
+      }
+
       const { canvas, context } = ImageHelper.getHelper();
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      ImageCache.set(cacheKey, {
+        data: ImageHelper._cloneImageData(imageData),
+      });
 
       return imageData;
     }
@@ -249,7 +286,11 @@
     }
 
     static unloadImageData(method, ...args) {
-      const imageData = method.call(null, context, ...args);
+      const imageData = method.call(
+        null,
+        ImageHelper.context,
+        ...args
+      );
 
       ImageHelper.context.putImageData(imageData, 0, 0);
       return ImageHelper.canvas.toDataURL("image/png");
@@ -620,7 +661,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("skew image [SVG] at x [X] y [Y]"),
             arguments: {
-              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: "<svg></svg>" },
+              SVG: { type: Scratch.ArgumentType.STRING, defaultValue: DEFAULT_IMG_VALUE },
               X: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
               Y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 }
             }
