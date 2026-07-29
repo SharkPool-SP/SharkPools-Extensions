@@ -150,19 +150,19 @@
       "date": "Last Updated: 07/18/2026"
     },
     "Image-Effects": {
-      "desc": "Apply Effects and Filters to Images",
+      "desc": "Apply a variety of visual effects to Images",
       "creator": "SharkPool",
       "url": "Image-Effects.js",
       "banner": "Image-Effects.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 04/10/2025"
+      "date": "Last Updated: 07/29/2026"
     },
     "Image-Editor": {
       "desc": "Create and modify images and their pixel data",
       "creator": "SharkPool",
       "url": "Image-Editor.js",
       "banner": "Image-Editor.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Hardware"],
+      "tags": ["Utility", "Graphics", "Data Management"],
       "date": "Last Updated: 04/29/2026"
     },
     "Pixel-Utilities": {
