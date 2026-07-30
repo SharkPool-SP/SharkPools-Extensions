@@ -206,7 +206,6 @@
       context.scale(dstWidth < 0 ? -1 : 1, dstHeight < 0 ? -1 : 1);
       ImageHelper.drawImage(image, dstWidth, dstHeight);
       context.restore();
-      console.log(context.filter);
     }
 
     static newImage(input) {
