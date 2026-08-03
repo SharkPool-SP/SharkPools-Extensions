@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.05
+// Version V.1.0.06
 
 (function (Scratch) {
   "use strict";
@@ -272,7 +272,7 @@
     createBtn() {
       openModal("New Scene name:", async (name) =>{
         if (name) {
-          scenes[name] = this.convert2Scene();
+          scenes[name] = this._stageToScene();
           sceneThumbs[name] = { isDefault: false, img: "" };
           sceneThumbs[name].img = await new Promise((resolve) => {
             render.requestSnapshot((uri) => { resolve(uri) });
@@ -294,25 +294,38 @@
 
     refreshBlocks(optSaveStorage) {
       if (isEditor) {
-        runtime.once("BEFORE_EXECUTE", () => { runtime.requestBlocksUpdate() });
+        runtime.once("BEFORE_EXECUTE", () => runtime.requestBlocksUpdate());
         if (optSaveStorage && !isPM) runtime.extensionStorage["SPscenes"] = { scenes };
       }
     }
 
-    convert2Scene() {
-      // encode scene data
+    _isSerializable(value) {
+      try {
+        structuredClone(value);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    _stageToScene() {
       const sceneData = { targets: {}, extra: {} };
+
       for (let i = 0; i < runtime.targets.length; i++) {
         const target = runtime.targets[i];
         const realId = isPM ? target.id : target.extensionStorage["SPscenes"]?.ogID || target.id;
         const cloneOrigin = target.sprite.clones[0];
 
         // Turbowarp doesnt use the same target ID every project load :(
-        if (!isPM && !target.extensionStorage["SPscenes"]) target.extensionStorage["SPscenes"] = { ogID: realId };
+        if (!isPM && !target.extensionStorage["SPscenes"]) {
+          target.extensionStorage["SPscenes"] = { ogID: realId };
+        }
 
         const safeVars = [];
         Object.values(target.variables).map((vari) => {
-          if (!vari.isCloud) safeVars.push([vari.id, vari.value]);
+          if (!vari.isCloud && this._isSerializable(vari.value)) {
+            safeVars.push([vari.id, vari.value]);
+          }
         });
         sceneData.targets[realId] = {
           x: target.x, y: target.y,
@@ -377,10 +390,11 @@
         // save to storage
         runtime.extensionStorage["SPscenes"] = { scenes };
       }
+
       return sceneData;
     }
 
-    switch2Scene(name, sceneData) {
+    _switchScene(name, sceneData) {
       // required to not delete real data
       sceneData = structuredClone(sceneData);
       thisScene = name;
@@ -393,8 +407,9 @@
 
       // decode Sprite data
       const cloneHandler = (ogID) => {
-        const cloneTarget = isPM ? runtime.getTargetById(ogID) :
-          runtime.targets.find((t) => { return t.extensionStorage["SPscenes"]?.ogID === ogID });
+        const cloneTarget = isPM
+          ? runtime.getTargetById(ogID)
+          : runtime.targets.find((t) => t.extensionStorage["SPscenes"]?.ogID === ogID);
         if (cloneTarget === undefined) return undefined;
         const clone = cloneTarget.makeClone();
         if (clone) {
@@ -455,11 +470,14 @@
             runtime.disposeTarget(target);
             runtime.stopForTarget(target);
           }
+
           continue;
         }
+
         applyData(target, data);
         delete targetData[realId];
       }
+
       Object.entries(targetData).forEach((item) => {
         const data = item[1];
         let target;
@@ -516,7 +534,7 @@
     createScene(args) {
       const name = Scratch.Cast.toString(args.NAME);
       if (scenes[name] === undefined) {
-        scenes[name] = this.convert2Scene();
+        scenes[name] = this._stageToScene();
         if (isEditor) sceneThumbs[name] = { isDefault: true, img: defaultSceneThumb };
         this.refreshBlocks();
       }
@@ -536,21 +554,25 @@
       this.refreshBlocks(true);
     }
 
-    allScenes() { return JSON.stringify(Object.keys(scenes)) }
+    allScenes() {
+      return JSON.stringify(Object.keys(scenes));
+    }
 
-    currentScene() { return thisScene }
+    currentScene() {
+      return thisScene;
+    }
 
     switchScene(args) {
       const name = Scratch.Cast.toString(args.NAME);
       if (scenes[name] === undefined) alert(`SPscenes -- Scene named: ${name} does not exist!`);
-      else this.switch2Scene(name, scenes[name]);
+      else this._switchScene(name, scenes[name]);
     }
 
     updateScene(args) {
       const name = Scratch.Cast.toString(args.NAME);
       if (scenes[name] === undefined) alert(`SPscenes -- Scene named: ${name} does not exist!`);
       else {
-        scenes[name] = this.convert2Scene();
+        scenes[name] = this._stageToScene();
         if (isEditor) {
           this.refreshBlocks(true);
           sceneThumbs[name] = { isDefault: true, img: defaultSceneThumb };
