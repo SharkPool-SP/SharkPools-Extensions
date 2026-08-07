@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.2.0.21
+// Version V.2.0.22
 
 (function (Scratch) {
   "use strict";
@@ -163,12 +163,14 @@
        * and other oddities that prevent JSON.parse from working. Fortunately, using eval
        * here is relatively safe as the user cannot change the audio data.
        */
-      const objectStart = htmlDocument.indexOf("new embedController([{") + 20;
-      const objectEnd = htmlDocument.indexOf("}],") + 2;
+      const objectStart = htmlDocument.indexOf("NgAudioPlayer.fromListenPage({") + 29;
+      const objectEnd = htmlDocument.indexOf(");   })(jQuery); })();") - 5;
 
       try {
-        const playerData = eval(htmlDocument.substring(objectStart, objectEnd));
-        return playerData[0];
+        const playerData = eval(
+          "(" + htmlDocument.substring(objectStart, objectEnd) + ")"
+        );
+        return playerData;
       } catch {
         return null;
       }
@@ -290,8 +292,18 @@
       if (!cache) return "Fetch a track first!";
 
       const data = cache.data;
-      if (data) return `${cache.proxy}${cache.proxy === proxies[0] ? "get" : ""}?url=${data.url}`;
-      else return "Couldnt decode audio";
+      if (!data) return "Couldnt decode audio";
+
+      const trackSize = this.getTrackInfo({ INFO: "raw file size" });
+      if (trackSize && trackSize > 7 * 1024 * 1024) {
+        // Newgrounds has an audio upload file size limit of 15 MB.
+        // To avoid stress on my Proxy, we'll skip to the next proxy if this song is over 7MB.
+        console.log("AHHH");
+        const proxy = cache.proxy === proxies[0] ? proxies[1] : cache.proxy;
+        return `${proxy}?url=${data.url}`;
+      }
+
+      return `${cache.proxy}${cache.proxy === proxies[0] ? "get" : ""}?url=${data.url}`;
     }
 
     getTrackInfo(args) {
@@ -299,14 +311,15 @@
       if (!cache) return "Fetch a track first!";
 
       const { data, html, proxy: tProxy } = cache;
+      console.log(cache);
       let attribute = Cast.toString(args.INFO).toLowerCase();
       let element;
 
       switch (attribute) {
-        case "name": return decodeURIComponent(data.params.name);
-        case "author": return decodeURIComponent(data.params.artist);
+        case "name": return decodeURIComponent(data.title);
+        case "author": return decodeURIComponent(data.author);
         case "cover":
-          return `${tProxy}${tProxy === proxies[0] ? "get" : ""}?url=${data.params.icon}`;
+          return `${tProxy}${tProxy === proxies[0] ? "get" : ""}?url=${data.icon_url}`;
         case "description":
           element = html.querySelector(`div[class*="pod-body"][id="author_comments"]`);
           return element ? this._decodeDescription(element) : "";
@@ -316,13 +329,23 @@
         case "release date":
           element = html.querySelectorAll(`dl[class*="sidestats"] dd[class*="multivalue"] span[class="value"]`);
           return element ? element[0].textContent : "";
-        case "length": return data.params.duration;
-        case "raw file size": return data.filesize;
-        case "file size": return `${(data.filesize / (1024 * 1024)).toFixed(2)} MB`;
+        case "length": return data.duration;
+        // TODO
+        case "raw file size": {
+          /* async function getMp3Size(url) {
+  const response = await fetch(`https://audio.ngfiles.com/1587000/1587269_Synth-Journey-V2.mp3?f1782713882`);
+  const size = response.headers.get('content-length');
+  console.log(size);
+}*/
+          return data.filesize;
+        }
+        case "file size": {
+          return `${(data.filesize / (1024 * 1024)).toFixed(2)} MB`;
+        }
         case "listens":
         case "downloads":
         case "vote count": {
-          if (attribute === "vote count") attribute = "Votes";
+          if (attribute === "vote count") attribute = "votes";
 
           const stats = html.querySelector(`dl[class*="sidestats"]`);
           if (!stats) return 0;
