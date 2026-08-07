@@ -428,9 +428,17 @@
         target.effects = data.effects;
         target.visible = data.visible;
         target.currentCostume = data.costume;
-        data.vars.forEach((item) => { target.variables[item[0]].value = item[1] });
         target.tempo = data.tempo;
         target.extensionStorage = data.extStore;
+        for (let i = data.vars.length - 1; i >= 0; i--) {
+          const item = data.vars[i];
+          if (target.variables[item[0]]) {
+            target.variables[item[0]].value = item[1];
+          } else {
+            // variable is gone! (deleted probably)
+            data.vars.splice(i, 1);
+          }
+        }
 
         target.updateAllDrawableProperties();
         if (data.penData.penDown !== undefined) penHandler(target, data.penData);
