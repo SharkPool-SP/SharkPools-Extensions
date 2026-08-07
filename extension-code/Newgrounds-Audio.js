@@ -176,6 +176,17 @@
       }
     }
 
+    async _getAudioSize(data, proxy) {
+      /**
+       * Newgrounds recently made a change to the audio player where the file size is now hidden behind
+       * the audio source. Fortunately, we can make a HEAD request to save data.
+       */
+      const response = await Scratch.fetch(`${proxy}${proxy === proxies[0] ? "post" : ""}?url=${data.url}`, { method: "HEAD" });
+      const size = response.headers.get("content-length");
+
+      data._fileSize = size ? Cast.toNumber(size) : -1;
+    }
+
     _decodeDescription(element) {
       const paragraphs = Array.from(element.children);
       const description = paragraphs.map((p) => {
@@ -274,6 +285,8 @@
             continue;
           }
 
+          await this._getAudioSize(embedPlayerData, proxy);
+
           lastUsedID = id;
           setCache(id, {
             data: embedPlayerData,
@@ -298,7 +311,6 @@
       if (trackSize && trackSize > 7 * 1024 * 1024) {
         // Newgrounds has an audio upload file size limit of 15 MB.
         // To avoid stress on my Proxy, we'll skip to the next proxy if this song is over 7MB.
-        console.log("AHHH");
         const proxy = cache.proxy === proxies[0] ? proxies[1] : cache.proxy;
         return `${proxy}?url=${data.url}`;
       }
@@ -311,7 +323,6 @@
       if (!cache) return "Fetch a track first!";
 
       const { data, html, proxy: tProxy } = cache;
-      console.log(cache);
       let attribute = Cast.toString(args.INFO).toLowerCase();
       let element;
 
@@ -330,18 +341,8 @@
           element = html.querySelectorAll(`dl[class*="sidestats"] dd[class*="multivalue"] span[class="value"]`);
           return element ? element[0].textContent : "";
         case "length": return data.duration;
-        // TODO
-        case "raw file size": {
-          /* async function getMp3Size(url) {
-  const response = await fetch(`https://audio.ngfiles.com/1587000/1587269_Synth-Journey-V2.mp3?f1782713882`);
-  const size = response.headers.get('content-length');
-  console.log(size);
-}*/
-          return data.filesize;
-        }
-        case "file size": {
-          return `${(data.filesize / (1024 * 1024)).toFixed(2)} MB`;
-        }
+        case "raw file size": return data._fileSize;
+        case "file size": return `${(data._fileSize / (1024 * 1024)).toFixed(2)} MB`;
         case "listens":
         case "downloads":
         case "vote count": {
