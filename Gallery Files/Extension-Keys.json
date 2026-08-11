@@ -187,7 +187,7 @@
       "url": "Newgrounds-Audio.js",
       "banner": "Newgrounds-Audio.svg",
       "tags": ["Utility", "Sound", "Data Management", "Online"],
-      "date": "Last Updated: 07/18/2026"
+      "date": "Last Updated: 08/08/2026"
     },
     "Sprite-Parenting": {
       "desc": "Link Sprites together and make them follow their parent's movement",
@@ -470,7 +470,7 @@
       "url": "Perlin-Noise.js",
       "banner": "Perlin-Noise.svg",
       "tags": ["Utility", "Graphics", "Math"],
-      "date": "Last Updated: 02/07/2026"
+      "date": "Last Updated: 08/10/2026"
     },
     "Extra-Controls": {
       "desc": "New Advanced Control Blocks",
@@ -583,7 +583,7 @@
       "url": "Scenes.js",
       "banner": "Scenes.svg",
       "tags": ["Utility", "Editor Tool", "Configuration"],
-      "date": "Last Updated: 09/09/2025"
+      "date": "Last Updated: 08/07/2026"
     },
     "Pen-Papers": {
       "desc": "Create Multiple Pen Layers! Inspired by ObviousAlex",
