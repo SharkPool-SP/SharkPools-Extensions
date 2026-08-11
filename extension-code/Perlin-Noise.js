@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.0
+// Version V.1.1.01
 
 (function(Scratch) {
   "use strict";
@@ -23,9 +23,14 @@
 
   let curNoise = "";
   let pixelInfo = new Uint8Array(0); 
-  
-  // [Seed, FreqX, FreqY, {w, h}]
-  let noiseInfo = [1, 5, 5, { w: 100, h: 100 }];
+
+  let noiseConfig = {
+    seed: 1,
+    freqX: 5,
+    freqY: 5,
+    w: 100,
+    h: 100
+  };
 
   class SPperlin {
     getInfo() {
@@ -93,15 +98,14 @@
     _processImage(src) {
       return new Promise((resolve) => {
         cachedImage.onload = () => {
-          const w = cachedImage.width;
-          const h = cachedImage.height;
-          if (_canvasCache.width !== w || _canvasCache.height !== h) {
-            _canvasCache.width = w;
-            _canvasCache.height = h;
-          }
+          const w = noiseConfig.w;
+          const h = noiseConfig.h;
 
-          _ctxCache.drawImage(cachedImage, 0, 0);
-          
+          _canvasCache.width = w;
+          _canvasCache.height = h;
+
+          _ctxCache.drawImage(cachedImage, 0, 0, w, h);
+
           const imageData = _ctxCache.getImageData(0, 0, w, h);
           const data = imageData.data;
           pixelInfo = new Uint8Array(data.length / 4);
@@ -117,37 +121,32 @@
 
     // Block Funcs
     genNoise(args) {
-      const w = Math.max(1, Cast.toNumber(args.W));
-      const h = Math.max(1, Cast.toNumber(args.H));
-      noiseInfo[3] = { w, h };
+      noiseConfig.w = Math.max(1, Cast.toNumber(args.W));
+      noiseConfig.h = Math.max(1, Cast.toNumber(args.H));
+      const octaves = Math.min(Cast.toNumber(args.O), 100);
 
-      const vals = [
-        w, h,
-        Math.abs(noiseInfo[1] / 100), Math.abs(noiseInfo[2] / 100),
-        Math.min(Cast.toNumber(args.O), 100)
-      ];
+      const fX = Math.abs(noiseConfig.freqX / 100);
+      const fY = Math.abs(noiseConfig.freqY / 100);
 
-      curNoise =
-      `<svg width="${vals[0]}" height="${vals[1]}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <filter id="a">
-            <feTurbulence type="fractalNoise" seed="${noiseInfo[0]}" baseFrequency="${vals[2]},${vals[3]}" numOctaves="${vals[4]}" result="turbulence"></feTurbulence>
-            <feColorMatrix type="saturate" values="0"></feColorMatrix>
-          </filter>
-          <rect width="100%" height="100%" fill="black" />
-          <rect width="100%" height="100%" style="filter: url(#a)" />
-        </svg>
-      `;
+      curNoise = `<svg width="${noiseConfig.w}" height="${noiseConfig.h}" viewBox="0 0 ${noiseConfig.w} ${noiseConfig.h}" xmlns="http://www.w3.org/2000/svg">`
+      curNoise += `<filter id="a">`
+      curNoise += `<feTurbulence type="fractalNoise" seed="${noiseConfig.seed}" baseFrequency="${fX},${fY}" numOctaves="${octaves}" result="turbulence"></feTurbulence>`
+      curNoise += `<feColorMatrix type="saturate" values="0"></feColorMatrix>`
+      curNoise += `</filter>`
+      curNoise += `<rect width="100%" height="100%" fill="black" />`
+      curNoise += `<rect width="100%" height="100%" style="filter: url(#a)" />`
+      curNoise += `</svg>`;
 
-      return this._processImage(`data:image/svg+xml;base64,${btoa(curNoise)}`);
+      return this._processImage("data:image/svg+xml;base64," + btoa(curNoise.trim()));
     }
 
     setSeed(args) { 
-      noiseInfo[0] = Cast.toNumber(args.SEED); 
+      noiseConfig.seed = Cast.toNumber(args.SEED);
     }
 
     setFreq(args) {
-      noiseInfo[1] = Cast.toNumber(args.x);
-      noiseInfo[2] = Cast.toNumber(args.y);
+      noiseConfig.freqX = Cast.toNumber(args.x);
+      noiseConfig.freqY = Cast.toNumber(args.y);
     }
 
     returnNoise(args) {
@@ -162,8 +161,9 @@
         if (pixelInfo.length === 0) return "[]";
 
         const pixelArray = Array.from(pixelInfo);
-        return vm.extensionManager._loadedExtensions.has("SPjson") ?
-          pixelArray : JSON.stringify(pixelArray);
+        return vm.extensionManager._loadedExtensions.has("SPjson")
+          ? pixelArray
+          : JSON.stringify(pixelArray);
       }
 
       return curNoise.trim();
@@ -172,10 +172,14 @@
     returnVal(args) {
       if (!curNoise || pixelInfo.length === 0) return 0;
 
-      const x = Math.round(Cast.toNumber(args.x) + (noiseInfo[3].w / 2));
-      const y = Math.round((Cast.toNumber(args.y) * -1) + (noiseInfo[3].h / 2));
+      const w = noiseConfig.w;
+      const h = noiseConfig.h;
 
-      const index = y * noiseInfo[3].w + x;
+      const x = Math.floor(Cast.toNumber(args.x) + (w / 2));
+      const y = Math.floor((Cast.toNumber(args.y) * -1) + (h / 2));
+
+      if (x < 0 || x >= w || y < 0 || y >= h) return 0;
+      const index = y * w + x;
       return pixelInfo[index] ?? 0;
     }
   }
