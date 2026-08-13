@@ -97,7 +97,7 @@
       "url": "Popup-Phoenix.js",
       "banner": "Popup-Phoenix.svg",
       "tags": ["Configuration", "Graphics"],
-      "date": "Last Updated: 10/25/2025"
+      "date": "Last Updated: 08/13/2026"
     },
     "Better-Input": {
       "desc": "Expansion of the 'Ask and Wait' Block. Deprecated, please use Popup-Phoenix",
@@ -218,7 +218,7 @@
       "creator": "SharkPool, Drago Cuven, 0znzw",
       "url": "Files-Expanded.js",
       "banner": "Files-Expanded.svg",
-      "tags": ["Utility", "Graphics", "Sound", "Data Management", "Hardware"],
+      "tags": ["Utility", "Graphics", "Sound", "Data Management"],
       "date": "Last Updated: 06/07/2025"
     },
     "Temporary-Variables": {
@@ -590,7 +590,7 @@
       "creator": "SharkPool",
       "url": "Pen-Papers.js",
       "banner": "Pen-Papers.svg",
-      "tags": ["Utility", "Graphics", "Hardware", "Category Expansion"],
+      "tags": ["Utility", "Graphics", "Category Expansion"],
       "date": "Last Updated: 12/12/2025"
     },
     "MIDI-Tools": {
