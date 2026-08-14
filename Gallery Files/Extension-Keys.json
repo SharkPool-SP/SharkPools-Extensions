@@ -285,13 +285,13 @@
       "tags": ["Utility", "Graphics", "Data Management", "Configuration"],
       "date": "Last Updated: 07/16/2024"
     },
-    "Pause-Utilities": {
+    "Pause": {
       "desc": "Pause your Project, Scripts, and Sprites",
       "creator": "SharkPool",
-      "url": "Pause-Utilities.js",
+      "url": "Pause.js",
       "banner": "Pause-Utilities.svg",
       "tags": ["Utility", "Dangerous", "Configuration", "Runtime"],
-      "date": "Last Updated: 04/04/2025"
+      "date": "Re-Released: 08/14/2026"
     },
     "Script-Control": {
       "desc": "Monitor and Control specific Scripts in your Project, inspired by 0znzw",
