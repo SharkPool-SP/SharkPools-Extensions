@@ -323,7 +323,7 @@
       "url": "Events-Plus.js",
       "banner": "Events-Plus.svg",
       "tags": ["Utility", "Category Expansion", "Configuration", "Runtime"],
-      "date": "Released: 07/23/2025"
+      "date": "Last Updated: 08/16/2026"
     },
     "Runtime-Events": {
       "desc": "Detect Events from Runtime",
