@@ -97,7 +97,7 @@
       "url": "Popup-Phoenix.js",
       "banner": "Popup-Phoenix.svg",
       "tags": ["Configuration", "Graphics"],
-      "date": "Last Updated: 08/13/2026"
+      "date": "Last Updated: 08/16/2026"
     },
     "Better-Input": {
       "desc": "Expansion of the 'Ask and Wait' Block. Deprecated, please use Popup-Phoenix",
