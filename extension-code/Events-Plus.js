@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.0.0
+// Version V.1.0.01
 
 (function (Scratch) {
   "use strict";
@@ -21,7 +21,9 @@
   const runtime = vm.runtime;
   const isPM = Scratch.extensions.isPenguinMod;
   const SPeventKey = Symbol("SPeventsPlusData")
-  const Thread = isPM ? vm.exports.Thread : vm.exports.i_will_not_ask_for_help_when_these_break().Thread;
+  const Thread = isPM
+    ? vm.exports.Thread
+    : vm.exports.i_will_not_ask_for_help_when_these_break().Thread;
 
   const regenReporters = ["SPeventsPlus_changedValue", "SPeventsPlus_focusedTarget", "SPeventsPlus_messageName"];
   if (Scratch.gui) Scratch.gui.getBlockly().then(SB => {
@@ -46,7 +48,9 @@
       thread.stackClick = false;
       thread.pushReportedValue = (value) => resolve(value);
       runtime.threads.push(thread);
-      if (!thread.stackClick && !thread.updateMonitor) runtime.threadMap.set(thread.getId(), thread);
+      if (!thread.stackClick && !thread.updateMonitor) {
+        runtime.threadMap.set(thread.getId(), thread);
+      }
     });
   }
 
@@ -54,8 +58,9 @@
   const generateExternalBlocks = (type) => {
     const manager = vm.extensionManager;
     if (type === "costumeEvent") {
-      if (manager.isExtensionLoaded("SPlooksExpanded")) return `<block type="SPlooksExpanded_whenCostumeSwitch"><field name="COSTUME">costume1</field></block>`;
-      else if (!looksPatched) {
+      if (manager.isExtensionLoaded("SPlooksExpanded")) {
+        return `<block type="SPlooksExpanded_whenCostumeSwitch"><field name="COSTUME">costume1</field></block>`;
+      } else if (!looksPatched) {
         // ripped from Looks Expanded (by me)
         looksPatched = true;
         const looksCore = runtime.ext_scratch3_looks;
@@ -67,6 +72,7 @@
             { COSTUME: args[0].getCurrentCostume()?.name || "" }
           );
         };
+
         const ogSetSpriteCostume = vm.exports.RenderedTarget.prototype.setCostume;
         vm.exports.RenderedTarget.prototype.setCostume = function (...args) {
           ogSetSpriteCostume.call(this, ...args);
@@ -76,12 +82,14 @@
           );
         };
       }
+
       return `<block type="SPeventsPlus_whenCostumeChanged"><field name="COSTUME">costume1</field></block>`;
     }
 
     if (type === "anyMessage" || type === "roundMessageHat") {
       if (manager.isExtensionLoaded("SPmessagePlus")) {
-        return type === "anyMessage" ? `<block type="SPmessagePlus_whenAnyBroadcast"></block>`
+        return type === "anyMessage"
+          ? `<block type="SPmessagePlus_whenAnyBroadcast"></block>`
           : `<block type="SPmessagePlus_whenReceived"><value name="BROADCAST_OPTION"><shadow type="event_broadcast_menu"><field name="BROADCAST_OPTION" variabletype="broadcast_msg">message1</field></shadow></value></block>`;
       } else if (!messagesPatched) {
         // ripped from Messages+ (by me)
@@ -112,12 +120,16 @@
                 }
               }
             );
+
             for (const thread of threads) thread[SPeventKey] = name;
           }
+
           return threads;
         }
       }
-      return type === "anyMessage" ? `<block type="SPeventsPlus_whenAnyMsgReceived"><value name="MSG"><shadow type="SPeventsPlus_messageName"></shadow></value></block>`
+
+      return type === "anyMessage"
+        ? `<block type="SPeventsPlus_whenAnyMsgReceived"><value name="MSG"><shadow type="SPeventsPlus_messageName"></shadow></value></block>`
         : `<block type="SPeventsPlus_whenMsgReceived"><value name="MSG"><shadow type="event_broadcast_menu"><field name="BROADCAST_OPTION" variabletype="broadcast_msg">message1</field></shadow></value></block>`;
     }
   };
@@ -155,16 +167,21 @@
         });
       });
 
-      document.addEventListener("fullscreenchange", () => {
+      const handleFullscreenChange = function () {
         const isFullscreen = Cast.toBoolean(document.fullscreenElement || document.webkitFullscreenElement);
         runtime.startHats(
           "SPeventsPlus_whenScreenChanges",
           { SCREEN: isFullscreen ? "windowFull" : "windowDefault" }
         );
-      });
-      this.lastCanvasRatio = true;
+      };
+      document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+      this.lastCanvasRatio = null;
       this.canvasObserver = new ResizeObserver((entries) => {
-        if (this.lastCanvasRatio) {
+        if (this.lastCanvasRatio === null) {
+          // Ignore initial value
           this.lastCanvasRatio = "default";
           return;
         }
@@ -497,7 +514,10 @@
     }
 
     getTargets() {
-      const spriteNames = [{ text: "this sprite", value: "_myself_" }, { text: "Stage", value: "_stage_" }];
+      const spriteNames = [
+        { text: "this sprite", value: "_myself_" },
+        { text: "Stage", value: "_stage_" }
+      ];
       const targets = runtime.targets;
       for (let i = 1; i < targets.length; i++) {
         const target = targets[i];
@@ -538,6 +558,7 @@
         }
         if (extBlock) cachedEvents[opcode] = `${extName} -- ${extBlock.info.text}`;
       }
+
       return Object.values(cachedEvents);
     }
 
@@ -576,6 +597,7 @@
       for (const vari of Object.values(variables)) {
         mapped[vari.name] = vari.value;
       }
+
       return JSON.stringify(mapped);
     }
 
