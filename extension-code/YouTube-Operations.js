@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.05
+// Version V.1.8.06
 
 (function (Scratch) {
   "use strict";
@@ -229,7 +229,7 @@
     }
 
     // Helper Funcs
-    async _fetch(url, cacheKey, type, omitProxy) {
+    async _fetch(url, cacheKey, type, omitProxy, opt_proxySkip) {
       const cached = getCache(cacheKey);
       if (cached) return cached;
 
@@ -237,7 +237,10 @@
         const urlsToTry = omitProxy ? [url] : proxies.map((proxy) => proxy + encodeURIComponent(url));
 
         // try each proxy in the array, falling back to the next one if it fails
-        for (const fetchUrl of urlsToTry) {
+        for (let i = 0; i < urlsToTry.length; i++) {
+					if (opt_proxySkip > -1 && i <= opt_proxySkip) continue;
+
+					const fetchUrl = urlsToTry[i];
           try {
             // eslint-disable-next-line
             const response = await Scratch.fetch(fetchUrl);
@@ -258,7 +261,13 @@
     async extractVideoURI(vidDwnloadData) {
       if (!vidDwnloadData || !vidDwnloadData.downloadUrl) return "";
 
-      const fileBlob = await this._fetch(vidDwnloadData.downloadUrl, false, "blob");
+      const fileBlob = await this._fetch(
+				vidDwnloadData.downloadUrl,
+				false,
+				"blob",
+				false,
+				0 // Skip Reef Proxy since theres strict file size constraints
+			);
       if (!fileBlob) return "";
 
       return new Promise((resolve) => {
