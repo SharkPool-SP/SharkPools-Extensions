@@ -240,7 +240,7 @@
         for (let i = 0; i < urlsToTry.length; i++) {
           if (opt_proxySkip > -1 && i <= opt_proxySkip) continue;
 
-					const fetchUrl = urlsToTry[i];
+          const fetchUrl = urlsToTry[i];
           try {
             // eslint-disable-next-line
             const response = await Scratch.fetch(fetchUrl);
