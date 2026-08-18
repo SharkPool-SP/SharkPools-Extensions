@@ -238,7 +238,7 @@
 
         // try each proxy in the array, falling back to the next one if it fails
         for (let i = 0; i < urlsToTry.length; i++) {
-					if (opt_proxySkip > -1 && i <= opt_proxySkip) continue;
+          if (opt_proxySkip > -1 && i <= opt_proxySkip) continue;
 
 					const fetchUrl = urlsToTry[i];
           try {
@@ -262,12 +262,12 @@
       if (!vidDwnloadData || !vidDwnloadData.downloadUrl) return "";
 
       const fileBlob = await this._fetch(
-				vidDwnloadData.downloadUrl,
-				false,
-				"blob",
-				false,
-				0 // Skip Reef Proxy since theres strict file size constraints
-			);
+        vidDwnloadData.downloadUrl,
+        false,
+        "blob",
+        false,
+        0 // Skip Reef Proxy since theres strict file size constraints
+      );
       if (!fileBlob) return "";
 
       return new Promise((resolve) => {
