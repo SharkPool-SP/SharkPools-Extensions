@@ -5,7 +5,7 @@
 // Commissioned by: @JoshKnowsMath
 // Licence: MIT
 
-// Version V.1.0.02
+// Version V.1.0.03
 
 (function (Scratch) {
   "use strict";
@@ -1570,6 +1570,22 @@
       return null;
     }
 
+    async convertSpeech2DataURI(url) {
+      try {
+        const response = await Scratch.fetch(url);
+        const blob = await response.blob();
+    
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      } catch {
+        return url;
+      }
+    }
+
     // Block Funcs
     async importVoices() {
       /**
@@ -1639,9 +1655,10 @@
             response.url.indexOf("=") + 1
           ).replace("/post", "/get");
           const url = proxy + ttsData.audio_url;
+          const dataURI = await this.convertSpeech2DataURI(url);
 
-          speechCache.set(cacheID, url);
-          return url;
+          speechCache.set(cacheID, dataURI);
+          return dataURI;
         }
 
         return "error: " + ttsData.error_msg;

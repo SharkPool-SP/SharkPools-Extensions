@@ -6,7 +6,7 @@
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
 // License: MIT
 
-// Version V.1.8.06
+// Version V.1.8.07
 
 (function (Scratch) {
   "use strict";
@@ -52,6 +52,8 @@
 
     return null;
   };
+
+  const INVALID_ID = "Invalid URL";
 
   let PLAYER_MODE = "canvas";
   let canvasPlayer = null;
@@ -218,7 +220,7 @@
           USER_STUFF: {
             acceptReporters: true,
             items: [
-              "profile", "name",
+              "avatar", "name",
               "description", "location",
               "subscriber count", "video count",
               "total view count", "joined date"
@@ -280,15 +282,18 @@
 
     // Block Funcs
     extractVideoID(args) {
-      const url = Cast.toString(args.URL);
-      if (!url.includes("http")) return "Invalid URL";
+      try {
+        const urlStr = Cast.toString(args.URL);
+        const url = new URL(urlStr);
 
-      const urlObj = new URL(url);
-      const path = urlObj.pathname;
-      if (url.includes("?v=") || url.includes("&v=")) {
-        return urlObj.searchParams.get("v") || "Invalid URL";
-      } else {
-        return path.slice(path.lastIndexOf("/") + 1, path.length) || "Invalid URL";
+        if (url.searchParams.has("v")) {
+          return url.searchParams.get("v") || INVALID_ID;
+        } else {
+          const path = url.pathname;
+          return path.slice(path.lastIndexOf("/") + 1, path.length) || INVALID_ID;
+        }
+      } catch {
+        return INVALID_ID;
       }
     }
 
@@ -297,6 +302,7 @@
       const attribute = Cast.toString(args.STAT);
       const cacheKey = "count" + id;
       const url = `https://returnyoutubedislikeapi.com/votes?videoId=${id}`;
+      if (!id || id === INVALID_ID) return "";
 
       const jsonData = await this._fetch(url, cacheKey, "json", true);
       if (!jsonData) return "";
@@ -316,6 +322,7 @@
     async fetchtitle(args) {
       const attribute = Cast.toString(args.STAT);
       if (attribute === "release date") return await this.fetchStats(args);
+
       const isSpecialAtt = (
         attribute === "description" ||
         attribute === "length" || attribute === "raw length"
@@ -326,6 +333,7 @@
       const url = isSpecialAtt ?
         `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${id}&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`
         : `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
+      if (!id || id === INVALID_ID) return "";
 
       const data = await this._fetch(url, cacheKey, "json", true);
       if (!data) return "";
@@ -371,6 +379,7 @@
       const format = args.TYPE === "mp4" ? "480" : "mp3";
       const cacheKey = format + args.VIDEO_ID;
       const url = `https://dubs.io/wp-json/tools/v1/download-video?id=${args.VIDEO_ID}&format=${format}`;
+      if (!args.VIDEO_ID || args.VIDEO_ID === INVALID_ID) return "";
 
       const cached = getCache(cacheKey);
       if (cached) return cached;
@@ -379,8 +388,6 @@
       if (!initData || !initData.progressId) return "Failed to Fetch";
 
       const statusURL = `https://dubs.io/wp-json/tools/v1/status-video?id=${initData.progressId}`;
-      let downloadData;
-
       return new Promise((resolve) => {
         let finished = false;
         let attempts = 0;
@@ -428,71 +435,34 @@
     }
     
     async fetchUserThing(args) {
-      let id = Cast.toString(args.URL);
+      const channel = Cast.toString(args.URL);
+      let channelID = this.extractVideoID({ URL: channel }); // Fortunately, these function the same.
 
-      // handle if the user submitted a profile name or url
-      let url = id;
-      const ytUrl = "https://www.youtube.com/";
-      if (!id.startsWith("https://")) {
-        if (id.includes("@")) url = ytUrl + id;
-        else url = ytUrl + "channel/" + id;
-      }
-      url += "/about";
-
-      const attribute = Cast.toString(args.THING);
-
-      const text = await this._fetch(url, "profile" + id, "text");
-      if (!text) return "";
-
-      let match;
-      switch (attribute) {
-        case "profile": {
-          match = text.match(
-            /https:\/\/yt3\.googleusercontent\.com\/([a-zA-Z0-9_.+-=]+)/
-          );
-          return match && match[1] ? "https://yt3.googleusercontent.com/" + match[1] : "";
-        }
-        case "name": {
-          match = text.match(/<meta\s+property="og:title"\s+content="([^"]+)">/);
-          return match && match[1] ? match[1] : "";
-        }
-        case "description": {
-          match = text.match(/"description":"((?:[^"\\]|\\.)*)"/);
-          return match && match[1] ? match[1].replace(/\\n/g, "\n") : "";
-        }
-        case "subscriber count": {
-          match = [
-            ...text.matchAll(/"metadataParts":\[\{"text":\{"content":"([^"]+)"/g)
-          ];
-
-          if (match && match[1]) {
-            const count = match[1][1].split(/\s+/);
-            return count.length > 2 ? `${count[0]} ${count[1]}` : count[0];
-          }
+      if (!channelID || channelID === INVALID_ID) {
+        if (channel && !channel.startsWith("https://")) {
+          // User likely passed the handle not the channel url
+          channelID = channel;
+        } else {
           return "";
         }
-        case "video count": {
-          match = text.match(
-            /\},\{"text":\{"content":"(\d+)[^"]*","styleRuns":\[\{/
-          );
-          return match && match[1] ? match[1] : "";
-        }
-        case "total view count": {
-          match = text.match(/viewCountText":"([\d\s,]+)[^"]*","joinedDateText"/);
-          if (!match || !match[1]) return "";
-          else return match[1]
-            .replaceAll(" ", "")
-            .replaceAll(" ", "") // this is a different character
-            .replace(",", "");
-        }
-        case "joined date": {
-          match = text.match(/joinedDateText":{"content":"\w+\s([^"]*)/);
-          return match && match[1] ? match[1].trim() : "";
-        }
-        case "location": {
-          match = text.match(/"country":\{"simpleText":"([^"]+)"\}/);
-          return match && match[1] ? match[1] : "Not Available";
-        }
+      }
+
+      const isHandle = channelID.startsWith("@");
+      const url = `https://banner.yt/api/channel/${encodeURIComponent(channelID)}${isHandle ? "?type=handle" : ""}`;
+
+      const data = await this._fetch(url, "profile" + channelID, "json", true);
+      if (!data) return "";
+
+      switch (Cast.toString(args.THING)) {
+        case "avatar":
+        case "profile": return `https://banner.yt/${data.channelId}/avatar?format=png`;
+        case "name": return data.name;
+        case "description": return data.description;
+        case "subscriber count": return data.subscribers;
+        case "video count": return data.videos;
+        case "total view count": return data.views;
+        case "joined date": return data.joined;
+        case "location": return data.country;
         default:
           return "Invalid Selection";
       }
@@ -501,7 +471,8 @@
     async getResults(args) {
 	    const queryStr = Cast.toString(args.QUERY);
 	    const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
-	    const cacheKey = "query_" + queryStr; 
+	    const cacheKey = "query_" + queryStr;
+      if (!queryStr) return "[]";
 
 	    const data = await this._fetch(
 		    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
