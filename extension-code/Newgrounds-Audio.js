@@ -259,7 +259,10 @@
     // Block Funcs
     async fetchID(args) {
       const id = this._getAudioID(args.ID);
-      if (id < 1) return;
+      if (id < 1 || lastUsedID === id) return;
+
+      const cache = getFromCache(id);
+      if (cache) return;
 
       const waitTime = scraperDelay.time;
       scraperDelay.update();
