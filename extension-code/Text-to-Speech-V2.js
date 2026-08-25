@@ -29,7 +29,7 @@
 
   const proxyLimits = {
     MAX: 10,
-    TIMEOUT: 1000 * 60 * 5, // 10 minutes
+    TIMEOUT: 1000 * 60 * 5, // 5 minutes
     _reqs: 0,
     _timedOut: false,
   };
