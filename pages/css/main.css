@@ -45,6 +45,114 @@ body {
   transform: scale(1.1);
 }
 
+.pack-link {
+  width: min(520px, calc(100% - 30px));
+  margin: 5px auto 15px;
+  border: solid 3px #2f2f2f;
+  border-radius: 14px;
+  background-color: #242424;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.pack-link summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-bottom: 2px solid transparent;
+  color: #b7e9ff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 300ms ease-in-out;
+}
+
+.pack-link summary::-webkit-details-marker {
+  display: none;
+}
+
+.pack-link summary::before {
+  content: "▶";
+  display: inline-block;
+  font-size: 10px;
+  transition: transform 300ms ease-in-out;
+}
+
+.pack-link[data-expanded] summary {
+  border-bottom: 2px solid #2f2f2f;
+}
+
+.pack-link[data-expanded] summary::before {
+  transform: rotate(90deg);
+}
+
+.pack-link-content {
+  display: block;
+  max-height: 0;
+  padding: 0 12px;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 300ms ease-in-out,
+    padding 300ms ease-in-out,
+    opacity 200ms ease-in-out;
+}
+
+.pack-link[data-expanded] .pack-link-content {
+  max-height: 140px;
+  padding: 12px;
+  opacity: 1;
+}
+
+.pack-link-content > span {
+  display: block;
+  margin-bottom: 9px;
+  color: #d5d5d5;
+  font-size: 14px;
+  text-align: center;
+}
+
+.pack-link-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.pack-link-controls input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 2px solid #3f3f3f;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  user-select: text;
+}
+
+.pack-link-controls button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #00b8ff;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pack-link-controls button:hover {
+  background: #007dff;
+}
+
+@media (max-width: 560px) {
+  .pack-link-controls {
+    flex-direction: column;
+  }
+}
+
 .innerNav {
   display: flex;
   justify-content: center;

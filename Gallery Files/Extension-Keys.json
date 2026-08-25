@@ -1,619 +1,1485 @@
 {
-  "extensions": {
-    "Sharktilities": {
-      "desc": "Various utility blocks for various operations",
-      "creator": "SharkPool",
-      "url": "Sharktilities.js",
-      "banner": "Sharktilities.svg",
-      "tags": ["Utility", "Dangerous", "Math"],
-      "date": "Last Updated: 07/21/2025"
-    },
-    "YouTube-Operations": {
-      "desc": "Fetch and play Youtube videos and statistics in your Project",
-      "creator": "SharkPool, Nekl300 (contributor)",
-      "url": "YouTube-Operations.js",
-      "banner": "YouTube-Operations.svg",
-      "tags": ["Utility", "Sound", "Online"],
-      "date": "Last Updated: 08/20/2026"
-    },
-    "Scratch-Utilities": {
-      "desc": "Blocks for fetching Scratch statistics and assets, inspired by NexusKitten's S-Grab",
-      "creator": "SharkPool",
-      "url": "Scratch-Utilities.js",
-      "banner": "Scratch-Utilities.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Online", "Dangerous"],
-      "isDeprecated": true,
-      "date": "Last Updated: 04/05/2024"
-    },
-    "Tune-Shark-V3": {
-      "desc": "Advanced Audio Engine with complex Sound Control, Audio Effects and more",
-      "creator": "SharkPool",
-      "url": "Tune-Shark-V3.js",
-      "banner": "Tune-Shark-V3.svg",
-      "tags": ["Utility", "Sound", "Category Expansion"],
-      "date": "Last Updated: 07/12/2026"
-    },
-    "Tune-Shark": {
-      "desc": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3",
-      "creator": "SharkPool",
-      "url": "Tune-Shark.js",
-      "banner": "Tune-Shark.svg",
-      "tags": ["Utility", "Sound", "Category Expansion"],
-      "isDeprecated": true,
-      "date": "Last Updated: 10/07/2024"
-    },
-    "Camera": {
-      "desc": "Use Cameras to move the visible part of the Stage",
-      "creator": "SharkPool",
-      "url": "Camera.js",
-      "banner": "Camera.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Released: 05/14/2026"
-    },
-    "Added-Motion": {
-      "desc": "New Motion Blocks",
-      "creator": "SharkPool",
-      "url": "Added-Motion.js",
-      "banner": "Added-Motion.svg",
-      "tags": ["Utility", "Category Expansion"],
-      "date": "Last Updated: 12/12/2023"
-    },
-    "Geometry-Dash-API": {
-      "desc": "Fetch statistics and information from Geometry Dash. Deprecated, expect incorrect values.",
-      "creator": "SharkPool, thank you RobTopGames and GD Colon",
-      "url": "Geometry-Dash-API.js",
-      "banner": "Geometry-Dash-API.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Online"],
-      "isDeprecated": true,
-      "date": "Last Updated: 04/10/2025"
-    },
-    "Sound-Waves": {
-      "desc": "Play various Oscillators in your Project",
-      "creator": "SharkPool",
-      "url": "Sound-Waves.js",
-      "banner": "Sound-Waves.svg",
-      "tags": ["Sound", "Hardware"],
-      "date": "Last Updated: 06/29/2025"
-    },
-    "Hyper-Sense": {
-      "desc": "New Sensing Blocks",
-      "creator": "SharkPool",
-      "url": "Hyper-Sense-V2.js",
-      "banner": "Hyper-Sense.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
-      "date": "Last Updated: 08/08/2025"
-    },
-    "Keys-Plus-V2": {
-      "desc": "Powerful and flexible Key detection Blocks with some additional features (No longer maintained)",
-      "creator": "StackOverflow",
-      "url": "KeysPlusV2.js",
-      "banner": "Keys-Plus-V2.svg",
-      "tags": ["Utility", "Data Management", "Hardware"],
-      "date": "Released: 02/05/2025"
-    },
-    "Popup-Phoenix": {
-      "desc": "Create and design custom Popups! A remaster of 'Better Input'",
-      "creator": "SharkPool",
-      "url": "Popup-Phoenix.js",
-      "banner": "Popup-Phoenix.svg",
-      "tags": ["Configuration", "Graphics"],
-      "date": "Last Updated: 08/16/2026"
-    },
-    "Better-Input": {
-      "desc": "Expansion of the 'Ask and Wait' Block. Deprecated, please use Popup-Phoenix",
-      "creator": "SharkPool",
-      "url": "Better-Input.js",
-      "banner": "Better-Input.svg",
-      "tags": ["Configuration", "Graphics"],
-      "isDeprecated": true,
-      "date": "Last Updated: 11/02/2024"
-    },
-    "Camera-Sensing-Plus": {
-      "desc": "Expansion of the 'Video Sensing' extension. Display the Camera on Sprites and take Photos",
-      "creator": "SharkPool",
-      "url": "Camera-Sensing-Plus.js",
-      "banner": "Camera-Sensing-Plus.svg",
-      "tags": ["Utility", "Graphics", "Hardware", "Category Expansion"],
-      "date": "Last Updated: 04/10/2025"
-    },
-    "Particle-Engine": {
-      "desc": "Create customizable and powerful Particle Engines with NO Clones",
-      "creator": "SharkPool",
-      "url": "Particle-Engine.js",
-      "banner": "Particle-Engine.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
-      "date": "Last Updated: 02/01/2026"
-    },
-    "Particle-Tools": {
-      "desc": "Tools that make creating Particle Systems easy",
-      "creator": "SharkPool",
-      "url": "Particle-Tools.js",
-      "banner": "Particle-Tools.svg",
-      "tags": ["Utility", "Data Management"],
-      "isDeprecated": true,
-      "date": "Last Updated: 02/04/2024"
-    },
-    "Looks-Expanded": {
-      "desc": "Expansion of the Looks Category",
-      "creator": "SharkPool, CST1229",
-      "url": "Looks-Expanded.js",
-      "banner": "Looks-Expanded.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 12/16/2025"
-    },
-    "Sprite-Effects": {
-      "desc": "Apply SVG Filters to Images, Sprites, and the Canvas! Faster than Image Effects",
-      "creator": "SharkPool",
-      "url": "Sprite-Effects-V2.js",
-      "banner": "Sprite-Effects.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 07/18/2026"
-    },
-    "Image-Effects": {
-      "desc": "Apply a variety of visual effects to Images",
-      "creator": "SharkPool",
-      "url": "Image-Effects.js",
-      "banner": "Image-Effects.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 07/29/2026"
-    },
-    "Image-Editor": {
-      "desc": "Create and modify images and their pixel data",
-      "creator": "SharkPool",
-      "url": "Image-Editor.js",
-      "banner": "Image-Editor.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
-      "date": "Last Updated: 04/29/2026"
-    },
-    "Pixel-Utilities": {
-      "desc": "Some Utility Blocks that Roltycore 2's Developer made for some reason",
-      "creator": "LittleBlueGamer",
-      "url": "Pixel-Utilities.js",
-      "banner": "Pixel-Utilities.svg",
-      "tags": ["Utility", "Math"],
-      "date": "Last Updated: 03/07/2024"
-    },
-    "Recording": {
-      "desc": "Blocks for Recording your Microphone while your Project runs",
-      "creator": "SharkPool",
-      "url": "Recording-V2.js",
-      "banner": "Recording.svg",
-      "tags": ["Utility", "Sound", "Hardware"],
-      "date": "Last Updated: 03/02/2026"
-    },
-    "Newgrounds-Audio": {
-      "desc": "Fetch audio and statistics from Newgrounds. Works best with Tune Shark V3",
-      "creator": "SharkPool",
-      "url": "Newgrounds-Audio.js",
-      "banner": "Newgrounds-Audio.svg",
-      "tags": ["Utility", "Sound", "Data Management", "Online"],
-      "date": "Last Updated: 08/08/2026"
-    },
-    "Sprite-Parenting": {
-      "desc": "Link Sprites together and make them follow their parent's movement",
-      "creator": "SharkPool",
-      "url": "Sprite-Parenting.js",
-      "banner": "Sprite-Parenting.svg",
-      "tags": ["Utility"],
-      "date": "Last Updated: 05/19/2025"
-    },
-    "Rigidbodies": {
-      "desc": "Fast, math-based Collision detections using Rigidbodies",
-      "creator": "SharkPool",
-      "url": "Rigidbodies.js",
-      "banner": "Rigidbodies.svg",
-      "tags": ["Utility", "Graphics", "Math", "Category Expansion"],
-      "date": "Last Updated: 01/29/2026"
-    },
-    "Lazy-Collisions": {
-      "desc": "Utility Blocks that make detecting box Collisions easy and fast",
-      "creator": "SharkPool, Food (contributor)",
-      "url": "Lazy-Collisions.js",
-      "banner": "Lazy-Collisions.svg",
-      "tags": ["Utility", "Math", "Category Expansion"],
-      "date": "Last Updated: 05/04/2025"
-    },
-    "Files-Expanded": {
-      "desc": "Expansion of GarboMuffin's File Extension",
-      "creator": "SharkPool, Drago Cuven, 0znzw",
-      "url": "Files-Expanded.js",
-      "banner": "Files-Expanded.svg",
-      "tags": ["Utility", "Graphics", "Sound", "Data Management"],
-      "date": "Last Updated: 06/07/2025"
-    },
-    "Temporary-Variables": {
-      "desc": "Create Temporary Variables for Sprites, Threads, and the Project",
-      "creator": "SharkPool",
-      "url": "Temporary-Variables.js",
-      "banner": "Temporary-Variables.svg",
-      "tags": ["Utility", "Data Management"],
-      "date": "Last Updated: 01/07/2026"
-    },
-    "Variables-Expanded": {
-      "desc": "New Variable Blocks and new Variable Monitors",
-      "creator": "SharkPool, DogeIsCut",
-      "url": "Variables-Expanded.js",
-      "banner": "Variables-Expanded.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
-      "date": "Last Updated: 01/14/2026"
-    },
-    "Sty-Lists": {
-      "desc": "Customize and Organize List Monitors",
-      "creator": "SharkPool",
-      "url": "Sty-Lists.js",
-      "banner": "Sty-Lists.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
-      "date": "Last Updated: 04/12/2025"
-    },
-    "Gamepad-Expanded": {
-      "desc": "Expansion of Garbomuffin's Gamepad Extension",
-      "creator": "DNin01, Meehdrescher",
-      "url": "Gamepad-Expanded.js",
-      "banner": "Gamepad-Expanded.svg",
-      "tags": ["Hardware", "Dangerous"],
-      "date": "Released: 10/03/2023"
-    },
-    "Tile-Grids": {
-      "desc": "Position Sprites on Tile Grids",
-      "creator": "SharkPool",
-      "url": "Tile-Grids.js",
-      "banner": "Tile-Grids.svg",
-      "tags": ["Utility"],
-      "date": "Released: 10/09/2023"
-    },
-    "Animations": {
-      "desc": "Create Animations and Keyframes in your Project",
-      "creator": "SharkPool",
-      "url": "Animations.js",
-      "banner": "Animations.svg",
-      "tags": ["Utility", "Graphics", "Math"],
-      "date": "Last Updated: 11/08/2025"
-    },
-    "Text-to-Speech-V2": {
-      "desc": "Generate speech using popular Text-to-Speech models",
-      "creator": "SharkPool",
-      "url": "Text-to-Speech-V2.js",
-      "banner": "Text-to-Speech.svg",
-      "tags": ["Sound", "Online", "Category Expansion"],
-      "date": "Last Updated: 08/20/2026"
-    },
-    "Font-Manager": {
-      "desc": "Manage, Create, and Delete Fonts from your Project",
-      "creator": "SharkPool, 0znzw",
-      "url": "Font-Manager.js",
-      "banner": "Font-Manager.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Configuration"],
-      "date": "Last Updated: 07/16/2024"
-    },
-    "Pause": {
-      "desc": "Pause your Project, Scripts, and Sprites",
-      "creator": "SharkPool",
-      "url": "Pause.js",
-      "banner": "Pause-Utilities.svg",
-      "tags": ["Utility", "Dangerous", "Configuration", "Runtime"],
-      "date": "Re-Released: 08/14/2026"
-    },
-    "Script-Control": {
-      "desc": "Monitor and Control specific Scripts in your Project, inspired by 0znzw",
-      "creator": "SharkPool",
-      "url": "Script-Control.js",
-      "banner": "Script-Control.svg",
-      "tags": ["Utility", "Configuration", "Runtime"],
-      "date": "Last Updated: 05/30/2025"
-    },
-    "Messages-Plus": {
-      "desc": "Powerful Message Blocks that work with Vanilla Broadcasts",
-      "creator": "SharkPool",
-      "url": "Messages-Plus.js",
-      "banner": "Messages-Plus.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion", "Runtime"],
-      "date": "Last Updated: 07/12/2026"
-    },
-    "Advanced-Messages": {
-      "desc": "New Message Blocks for Advanced, Non-Vanilla Purposes",
-      "creator": "SharkPool",
-      "url": "Advanced-Messages.js",
-      "banner": "Advanced-Messages.svg",
-      "tags": ["Utility", "Data Management", "Category Expansion"],
-      "date": "Last Updated: 04/05/2025"
-    },
-    "Events-Plus": {
-      "desc": "New Event Blocks",
-      "creator": "SharkPool",
-      "url": "Events-Plus.js",
-      "banner": "Events-Plus.svg",
-      "tags": ["Utility", "Category Expansion", "Configuration", "Runtime"],
-      "date": "Last Updated: 08/16/2026"
-    },
-    "Runtime-Events": {
-      "desc": "Detect Events from Runtime",
-      "creator": "SharkPool",
-      "url": "Runtime-Events.js",
-      "banner": "Runtime-Events.svg",
-      "tags": ["Utility", "Category Expansion", "Runtime"],
-      "date": "Last Updated: 08/11/2024"
-    },
-    "Fetch-Plus": {
-      "desc": "Fetch and Encode Content from URLs while viewing the Progress and Status of the Fetch",
-      "creator": "SharkPool",
-      "url": "Fetch-Progress.js",
-      "banner": "Fetch-Plus.svg",
-      "tags": ["Data Management", "Online"],
-      "date": "Last Updated: 04/04/2025"
-    },
-    "Geolocation": {
-      "desc": "Get users' Location and calculate Real-World Distances",
-      "creator": "SharkPool",
-      "url": "Geolocation.js",
-      "banner": "Geolocation.svg",
-      "tags": ["Utility", "Hardware", "Online", "Math", "Dangerous"],
-      "date": "Last Updated: 05/11/2026"
-    },
-    "Spotify": {
-      "desc": "Fetch statistics, information, and play songs from Spotify",
-      "creator": "SharkPool",
-      "url": "Spotify.js",
-      "banner": "Spotify.svg",
-      "tags": ["Sound", "Data Management", "Online"],
-      "date": "Last Updated: 07/18/2024"
-    },
-    "SoundCloud-API": {
-      "desc": "Fetch tracks, artists, and statistics from Soundcloud",
-      "creator": "SharkPool",
-      "url": "SoundCloud-API.js",
-      "banner": "SoundCloud-API.svg",
-      "tags": ["Sound", "Data Management", "Online"],
-      "date": "Last Updated: 07/18/2026"
-    },
-    "Google-Spreadsheets": {
-      "desc": "Read and Write Google Spreadsheets",
-      "creator": "SharkPool",
-      "url": "Google-Spreadsheets.js",
-      "banner": "Google-Spreadsheets.svg",
-      "tags": ["Utility", "Data Management", "Online"],
-      "date": "Last Updated: 01/16/2025"
-    },
-    "Money-Utilities": {
-      "desc": "Convert Currencies and get Currency Information",
-      "creator": "SharkPool",
-      "url": "Money-Utilities.js",
-      "banner": "Money-Utilities.svg",
-      "tags": ["Math", "Online"],
-      "isDeprecated": true,
-      "date": "Last Updated: 04/04/2025"
-    },
-    "Display-Text": {
-      "desc": "Display Text in your Projects, with Markdown Support",
-      "creator": "SharkPool",
-      "url": "Display-Text-V2.js",
-      "banner": "Display-Text.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 06/10/2026"
-    },
-    "Color-Master": {
-      "desc": "Color Utility and Conversion Blocks",
-      "creator": "SharkPool",
-      "url": "Color-Master.js",
-      "banner": "Color-Master.svg",
-      "tags": ["Utility", "Graphics", "Math", "Data Management"],
-      "date": "Last Updated: 01/23/2025"
-    },
-    "QR-Codes": {
-      "desc": "Create and Read QR Codes on the Client",
-      "creator": "SharkPool",
-      "url": "QR-Codes.js",
-      "banner": "QR-Codes.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Hardware"],
-      "date": "Last Updated: 02/14/2026"
-    },
-    "Speech-Bubbles": {
-      "desc": "Customizable Speech Bubbles",
-      "creator": "SharkPool",
-      "url": "Speech-Bubbles.js",
-      "banner": "Speech-Bubbles.svg",
-      "tags": ["Graphics", "Category Expansion"],
-      "date": "Last Updated: 09/14/2024"
-    },
-    "Layer-Control": {
-      "desc": "Relayer Pen, Video Camera, Backdrops, Sprites and more",
-      "creator": "SharkPool",
-      "url": "Layer-Control.js",
-      "banner": "Layer-Control.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime"],
-      "date": "Last Updated: 09/24/2024"
-    },
-    "Renderer-Control": {
-      "desc": "Control the visuals of Pen, Video Camera, Backdrops, Sprites and more",
-      "creator": "SharkPool",
-      "url": "Renderer-Control.js",
-      "banner": "Renderer-Control.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime"],
-      "date": "Last Updated: 07/01/2025"
-    },
-    "Time-Calculation": {
-      "desc": "Blocks for calculating Time differences",
-      "creator": "SharkPool",
-      "url": "Time-Calculation.js",
-      "banner": "Time-Calculation.svg",
-      "tags": ["Utility", "Math", "Time"],
-      "date": "Last Updated: 06/01/2024"
-    },
-    "Timezones": {
-      "desc": "Convert and get the Time in different Timezones",
-      "creator": "Ammunimium",
-      "url": "Timezones.js",
-      "banner": "Timezones.svg",
-      "tags": ["Utility", "Math", "Time"],
-      "status": "",
-      "date": "Released: 01/25/2024"
-    },
-    "Since-2000": {
-      "desc": "Expansion of the 'since 2000' Blocks",
-      "creator": "Ammunimium, 0znzw",
-      "url": "Since-2000.js",
-      "banner": "Since-2000.svg",
-      "status": "",
-      "tags": ["Utility", "Math", "Time"],
-      "date": "Last Updated: 11/20/2025"
-    },
-    "Seeds": {
-      "desc": "Generate random seeded numbers, generated terrain, and more",
-      "creator": "SharkPool",
-      "url": "Seeds.js",
-      "banner": "Seeds.svg",
-      "tags": ["Utility", "Math"],
-      "date": "Last Updated: 11/29/2023"
-    },
-    "Perlin-Noise": {
-      "desc": "Generate randomized Perlin Noise",
-      "creator": "SharkPool",
-      "url": "Perlin-Noise.js",
-      "banner": "Perlin-Noise.svg",
-      "tags": ["Utility", "Graphics", "Math"],
-      "date": "Last Updated: 08/10/2026"
-    },
-    "Extra-Controls": {
-      "desc": "New Advanced Control Blocks",
-      "creator": "SharkPool",
-      "url": "Extra-Controls.js",
-      "banner": "Extra-Controls.svg",
-      "tags": ["Utility", "Category Expansion", "Runtime"],
-      "date": "Last Updated: 05/04/2025"
-    },
-    "More-Operators": {
-      "desc": "New Powerful Operator Blocks",
-      "creator": "SharkPool",
-      "url": "More-Operators.js",
-      "banner": "More-Operators.svg",
-      "tags": ["Utility", "Category Expansion", "Math"],
-      "date": "Last Updated: 05/19/2025"
-    },
-    "Captchas": {
-      "desc": "Simple Client-Based Captchas, this does not promise 100% security",
-      "creator": "SharkPool",
-      "url": "Captchas.js",
-      "banner": "Captchas.svg",
-      "tags": ["Utility", "Dangerous"],
-      "isDeprecated": true,
-      "date": "Released: 04/05/2024"
-    },
-    "Better-Comments": {
-      "desc": "Better Comments with Color and Text Customization",
-      "creator": "SharkPool",
-      "url": "Better-Comments.js",
-      "banner": "Better-Comments.svg",
-      "tags": ["Editor Tool"],
-      "date": "Last Updated: 08/28/2025"
-    },
-    "Sprite-Panel": {
-      "desc": "Addon for viewing and managing Sprites and Clones",
-      "creator": "SharkPool, FurryR",
-      "url": "Sprite-Panel.js",
-      "banner": "Sprite-Panel.svg",
-      "tags": ["Utility", "Editor Tool"],
-      "date": "Last Updated: 05/06/2025"
-    },
-    "DOM-Selector": {
-      "desc": "Read Elements and Create Events from the website HTML",
-      "creator": "SharkPool",
-      "url": "DOM-Selector.js",
-      "banner": "DOM-Selector.svg",
-      "tags": ["Utility", "Graphics", "Data Management", "Configuration"],
-      "date": "Last Updated: 07/13/2025"
-    },
-    "SVG-Spritesheets": {
-      "desc": "Create and Export SVG Spritesheets",
-      "creator": "SharkPool",
-      "url": "SVG-Spritesheets.js",
-      "banner": "SVG-Spritesheets.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
-      "date": "Last Updated: 12/20/2024"
-    },
-    "Community-Spotlight": {
-      "desc": "Display and Promote Projects for free",
-      "creator": "SharkPool, Community Spotlight Team",
-      "url": "Community-Spotlight.js",
-      "banner": "Community-Spotlight.svg",
-      "tags": ["Graphics", "Sound", "Data Management", "Online"],
-      "date": "Last Updated: 06/03/2026"
-    },
-    "GIF-Manager": {
-      "desc": "Create and Split GIF Frames",
-      "creator": "SharkPool",
-      "url": "GIF-Manager.js",
-      "banner": "GIF-Manager.svg",
-      "tags": ["Utility", "Graphics", "Data Management"],
-      "date": "Released: 08/29/2024"
-    },
-    "Swift-JSON": {
-      "desc": "Super Fast JSON and Array extension",
-      "creator": "SharkPool",
-      "url": "JSON-Array.js",
-      "banner": "JSON-Array.svg",
-      "tags": ["Utility", "Data Management", "Math", "Category Expansion"],
-      "date": "Last Updated: 05/01/2026"
-    },
-    "My-Blocks-Plus": {
-      "desc": "Better Custom Blocks",
-      "creator": "SharkPool, CST1229, 0znzw",
-      "url": "My-Blocks-Plus.js",
-      "banner": "My-Blocks-Plus.svg",
-      "tags": ["Utility", "Category Expansion", "Editor Tool", "Configuration", "Runtime", "Dangerous"],
-      "date": "Last Updated: 05/21/2026"
-    },
-    "Dropdown-Maker": {
-      "desc": "Create Custom Dropdowns! Best paired with My Blocks+",
-      "creator": "SharkPool, CST1229, 0znzw",
-      "url": "Dropdown-Maker.js",
-      "banner": "Dropdown-Maker.svg",
-      "tags": ["Utility", "Data Management", "Editor Tool", "Configuration"],
-      "date": "Last Updated: 01/14/2026"
-    },
-    "Turbo-Skins": {
-      "desc": "Improved Skins extension, inspired by LilyMakesThings",
-      "creator": "SharkPool",
-      "url": "Turbo-Skins.js",
-      "banner": "Turbo-Skins.svg",
-      "tags": ["Utility", "Graphics", "Configuration", "Runtime"],
-      "date": "Last Updated: 05/17/2025"
-    },
-    "Scenes": {
-      "desc": "Create Scenes (savestates), like Unity, in your Project",
-      "creator": "SharkPool",
-      "url": "Scenes.js",
-      "banner": "Scenes.svg",
-      "tags": ["Utility", "Editor Tool", "Configuration"],
-      "date": "Last Updated: 08/07/2026"
-    },
-    "Pen-Papers": {
-      "desc": "Create Multiple Pen Layers! Inspired by ObviousAlex",
-      "creator": "SharkPool",
-      "url": "Pen-Papers.js",
-      "banner": "Pen-Papers.svg",
-      "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 12/12/2025"
-    },
-    "MIDI-Tools": {
-      "desc": "Utilities For Making Midi Notes Into Functions",
-      "creator": "ObscuraPH",
-      "url": "MIDI-Tools.js",
-      "banner": "MIDI-Tools.svg",
-      "tags": ["Utility", "Sound", "Data Management", "Hardware"],
-      "date": "Released: 10/24/2025"
-    },
-    "Example": {
-      "desc": "",
-      "creator": "SharkPool",
-      "url": "Example.js",
-      "banner": "Example.svg",
-      "tags": ["All"],
-      "status": "",
-      "overrideLabeler": false,
-      "isDeprecated": false,
-      "date": "XYZ: MM/DD/YYYY"
-    }
+  "information": {
+    "name": "SharkPool's Extensions",
+    "tag": "sharkpool",
+    "source": "https://sharkpools-extensions.vercel.app/"
   },
-  "extension-tags": [
+  "extensions": [
+    {
+      "slug": "extension-code/Sharktilities.js",
+      "id": "SharkPoolSharktilities",
+      "name": "Sharktilities",
+      "description": "Various utility blocks for various operations",
+      "image": "extension-thumbs/Sharktilities.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Dangerous",
+        "Math"
+      ],
+      "date": "Last Updated: 07/21/2025",
+      "galleryId": "Sharktilities"
+    },
+    {
+      "slug": "extension-code/YouTube-Operations.js",
+      "id": "SPyoutubeoperations",
+      "name": "YouTube Operations",
+      "description": "Fetch and play Youtube videos and statistics in your Project",
+      "image": "extension-thumbs/YouTube-Operations.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "Nekl300 (contributor)"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Sound",
+        "Online"
+      ],
+      "date": "Last Updated: 08/20/2026",
+      "galleryId": "YouTube-Operations"
+    },
+    {
+      "slug": "extension-code/Scratch-Utilities.js",
+      "id": "SPscratchUtilities",
+      "name": "Scratch Utilities",
+      "description": "Blocks for fetching Scratch statistics and assets, inspired by NexusKitten's S-Grab",
+      "image": "extension-thumbs/Scratch-Utilities.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management",
+        "Online",
+        "Dangerous"
+      ],
+      "date": "Last Updated: 04/05/2024",
+      "isDeprecated": true,
+      "galleryId": "Scratch-Utilities"
+    },
+    {
+      "slug": "extension-code/Tune-Shark-V3.js",
+      "id": "SPtuneShark3",
+      "name": "Tune Shark V3",
+      "description": "Advanced Audio Engine with complex Sound Control, Audio Effects and more",
+      "image": "extension-thumbs/Tune-Shark-V3.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Sound",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 07/12/2026",
+      "galleryId": "Tune-Shark-V3"
+    },
+    {
+      "slug": "extension-code/Tune-Shark.js",
+      "id": "SPtuneShark",
+      "name": "Tune Shark",
+      "description": "Outdated Sound Engine for playing sounds. Please use Tune Shark V3",
+      "image": "extension-thumbs/Tune-Shark.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Sound",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 10/07/2024",
+      "isDeprecated": true,
+      "galleryId": "Tune-Shark"
+    },
+    {
+      "slug": "extension-code/Camera.js",
+      "id": "SPcamera",
+      "name": "Camera",
+      "description": "Use Cameras to move the visible part of the Stage",
+      "image": "extension-thumbs/Camera.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Released: 05/14/2026",
+      "galleryId": "Camera"
+    },
+    {
+      "slug": "extension-code/Added-Motion.js",
+      "id": "SPaddedmotion",
+      "name": "Added Motion",
+      "description": "New Motion Blocks",
+      "image": "extension-thumbs/Added-Motion.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 12/12/2023",
+      "galleryId": "Added-Motion"
+    },
+    {
+      "slug": "extension-code/Geometry-Dash-API.js",
+      "id": "GDapiSP",
+      "name": "Geometry Dash API",
+      "description": "Fetch statistics and information from Geometry Dash. Deprecated, expect incorrect values.",
+      "image": "extension-thumbs/Geometry-Dash-API.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "thank you RobTopGames and GD Colon"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 04/10/2025",
+      "isDeprecated": true,
+      "galleryId": "Geometry-Dash-API"
+    },
+    {
+      "slug": "extension-code/Sound-Waves.js",
+      "id": "SPsoundWaves",
+      "name": "Sound Waves",
+      "description": "Play various Oscillators in your Project",
+      "image": "extension-thumbs/Sound-Waves.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Sound",
+        "Hardware"
+      ],
+      "date": "Last Updated: 06/29/2025",
+      "galleryId": "Sound-Waves"
+    },
+    {
+      "slug": "extension-code/Hyper-Sense-V2.js",
+      "id": "HyperSense2SP",
+      "name": "Hyper Sense",
+      "description": "New Sensing Blocks",
+      "image": "extension-thumbs/Hyper-Sense.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 08/08/2025",
+      "galleryId": "Hyper-Sense"
+    },
+    {
+      "slug": "extension-code/KeysPlusV2.js",
+      "id": "enderKeysPlusV2",
+      "name": "Keys Plus V2",
+      "description": "Powerful and flexible Key detection Blocks with some additional features (No longer maintained)",
+      "image": "extension-thumbs/Keys-Plus-V2.svg",
+      "by": [
+        {
+          "name": "StackOverflow"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Hardware"
+      ],
+      "date": "Released: 02/05/2025",
+      "galleryId": "Keys-Plus-V2"
+    },
+    {
+      "slug": "extension-code/Popup-Phoenix.js",
+      "id": "SPpopups",
+      "name": "Popup Phoenix",
+      "description": "Create and design custom Popups! A remaster of 'Better Input'",
+      "image": "extension-thumbs/Popup-Phoenix.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Configuration",
+        "Graphics"
+      ],
+      "date": "Last Updated: 08/16/2026",
+      "galleryId": "Popup-Phoenix"
+    },
+    {
+      "slug": "extension-code/Better-Input.js",
+      "id": "BetterInputSP",
+      "name": "Better Input",
+      "description": "Expansion of the 'Ask and Wait' Block. Deprecated, please use Popup-Phoenix",
+      "image": "extension-thumbs/Better-Input.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Configuration",
+        "Graphics"
+      ],
+      "date": "Last Updated: 11/02/2024",
+      "isDeprecated": true,
+      "galleryId": "Better-Input"
+    },
+    {
+      "slug": "extension-code/Camera-Sensing-Plus.js",
+      "id": "CameraSensingPlusSP",
+      "name": "Camera Sensing Plus",
+      "description": "Expansion of the 'Video Sensing' extension. Display the Camera on Sprites and take Photos",
+      "image": "extension-thumbs/Camera-Sensing-Plus.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Hardware",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 04/10/2025",
+      "galleryId": "Camera-Sensing-Plus"
+    },
+    {
+      "slug": "extension-code/Particle-Engine.js",
+      "id": "SPpartEngine",
+      "name": "Particle Engine",
+      "description": "Create customizable and powerful Particle Engines with NO Clones",
+      "image": "extension-thumbs/Particle-Engine.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management"
+      ],
+      "date": "Last Updated: 02/01/2026",
+      "galleryId": "Particle-Engine"
+    },
+    {
+      "slug": "extension-code/Particle-Tools.js",
+      "id": "ParticleToolsSP",
+      "name": "Particle Tools",
+      "description": "Tools that make creating Particle Systems easy",
+      "image": "extension-thumbs/Particle-Tools.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management"
+      ],
+      "date": "Last Updated: 02/04/2024",
+      "isDeprecated": true,
+      "galleryId": "Particle-Tools"
+    },
+    {
+      "slug": "extension-code/Looks-Expanded.js",
+      "id": "SPlooksExpanded",
+      "name": "Looks Expanded",
+      "description": "Expansion of the Looks Category",
+      "image": "extension-thumbs/Looks-Expanded.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "CST1229"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 12/16/2025",
+      "galleryId": "Looks-Expanded"
+    },
+    {
+      "slug": "extension-code/Sprite-Effects-V2.js",
+      "id": "SPspriteEffectsV2",
+      "name": "Sprite Effects",
+      "description": "Apply SVG Filters to Images, Sprites, and the Canvas! Faster than Image Effects",
+      "image": "extension-thumbs/Sprite-Effects.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 07/18/2026",
+      "galleryId": "Sprite-Effects"
+    },
+    {
+      "slug": "extension-code/Image-Effects.js",
+      "id": "imgEffectsSP",
+      "name": "Image Effects",
+      "description": "Apply a variety of visual effects to Images",
+      "image": "extension-thumbs/Image-Effects.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 07/29/2026",
+      "galleryId": "Image-Effects"
+    },
+    {
+      "slug": "extension-code/Image-Editor.js",
+      "id": "SPimgEditor",
+      "name": "Image Editor",
+      "description": "Create and modify images and their pixel data",
+      "image": "extension-thumbs/Image-Editor.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management"
+      ],
+      "date": "Last Updated: 04/29/2026",
+      "galleryId": "Image-Editor"
+    },
+    {
+      "slug": "extension-code/Pixel-Utilities.js",
+      "id": "lbgpixelutilities",
+      "name": "Pixel Utilities",
+      "description": "Some Utility Blocks that Roltycore 2's Developer made for some reason",
+      "image": "extension-thumbs/Pixel-Utilities.svg",
+      "by": [
+        {
+          "name": "LittleBlueGamer"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Math"
+      ],
+      "date": "Last Updated: 03/07/2024",
+      "galleryId": "Pixel-Utilities"
+    },
+    {
+      "slug": "extension-code/Recording-V2.js",
+      "id": "SPrecording2",
+      "name": "Recording",
+      "description": "Blocks for Recording your Microphone while your Project runs",
+      "image": "extension-thumbs/Recording.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Sound",
+        "Hardware"
+      ],
+      "date": "Last Updated: 03/02/2026",
+      "galleryId": "Recording"
+    },
+    {
+      "slug": "extension-code/Newgrounds-Audio.js",
+      "id": "SPaudioNG",
+      "name": "Newgrounds Audio",
+      "description": "Fetch audio and statistics from Newgrounds. Works best with Tune Shark V3",
+      "image": "extension-thumbs/Newgrounds-Audio.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Sound",
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 08/08/2026",
+      "galleryId": "Newgrounds-Audio"
+    },
+    {
+      "slug": "extension-code/Sprite-Parenting.js",
+      "id": "SPspriteParent",
+      "name": "Sprite Parenting",
+      "description": "Link Sprites together and make them follow their parent's movement",
+      "image": "extension-thumbs/Sprite-Parenting.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility"
+      ],
+      "date": "Last Updated: 05/19/2025",
+      "galleryId": "Sprite-Parenting"
+    },
+    {
+      "slug": "extension-code/Rigidbodies.js",
+      "id": "SPrigidBody",
+      "name": "Rigidbodies",
+      "description": "Fast, math-based Collision detections using Rigidbodies",
+      "image": "extension-thumbs/Rigidbodies.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Math",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 01/29/2026",
+      "galleryId": "Rigidbodies"
+    },
+    {
+      "slug": "extension-code/Lazy-Collisions.js",
+      "id": "LZcollisionsSP",
+      "name": "Lazy Collisions",
+      "description": "Utility Blocks that make detecting box Collisions easy and fast",
+      "image": "extension-thumbs/Lazy-Collisions.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "Food (contributor)"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Math",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 05/04/2025",
+      "galleryId": "Lazy-Collisions"
+    },
+    {
+      "slug": "extension-code/Files-Expanded.js",
+      "id": "filesExpanded",
+      "name": "Files Expanded",
+      "description": "Expansion of GarboMuffin's File Extension",
+      "image": "extension-thumbs/Files-Expanded.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "Drago Cuven"
+        },
+        {
+          "name": "0znzw"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Sound",
+        "Data Management"
+      ],
+      "date": "Last Updated: 06/07/2025",
+      "galleryId": "Files-Expanded"
+    },
+    {
+      "slug": "extension-code/Temporary-Variables.js",
+      "id": "SPtempVars",
+      "name": "Temporary Variables",
+      "description": "Create Temporary Variables for Sprites, Threads, and the Project",
+      "image": "extension-thumbs/Temporary-Variables.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management"
+      ],
+      "date": "Last Updated: 01/07/2026",
+      "galleryId": "Temporary-Variables"
+    },
+    {
+      "slug": "extension-code/Variables-Expanded.js",
+      "id": "DICandSPmonitorsPlus",
+      "name": "Variables Expanded",
+      "description": "New Variable Blocks and new Variable Monitors",
+      "image": "extension-thumbs/Variables-Expanded.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "DogeIsCut"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 01/14/2026",
+      "galleryId": "Variables-Expanded"
+    },
+    {
+      "slug": "extension-code/Sty-Lists.js",
+      "id": "SPlistMonitors",
+      "name": "Sty Lists",
+      "description": "Customize and Organize List Monitors",
+      "image": "extension-thumbs/Sty-Lists.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 04/12/2025",
+      "galleryId": "Sty-Lists"
+    },
+    {
+      "slug": "extension-code/Gamepad-Expanded.js",
+      "id": "Gamepad",
+      "name": "Gamepad Expanded",
+      "description": "Expansion of Garbomuffin's Gamepad Extension",
+      "image": "extension-thumbs/Gamepad-Expanded.svg",
+      "by": [
+        {
+          "name": "DNin01"
+        },
+        {
+          "name": "Meehdrescher"
+        }
+      ],
+      "tags": [
+        "Hardware",
+        "Dangerous"
+      ],
+      "date": "Released: 10/03/2023",
+      "galleryId": "Gamepad-Expanded"
+    },
+    {
+      "slug": "extension-code/Tile-Grids.js",
+      "id": "SPgrids",
+      "name": "Tile Grids",
+      "description": "Position Sprites on Tile Grids",
+      "image": "extension-thumbs/Tile-Grids.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility"
+      ],
+      "date": "Released: 10/09/2023",
+      "galleryId": "Tile-Grids"
+    },
+    {
+      "slug": "extension-code/Animations.js",
+      "id": "SPanimations",
+      "name": "Animations",
+      "description": "Create Animations and Keyframes in your Project",
+      "image": "extension-thumbs/Animations.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Math"
+      ],
+      "date": "Last Updated: 11/08/2025",
+      "galleryId": "Animations"
+    },
+    {
+      "slug": "extension-code/Text-to-Speech-V2.js",
+      "id": "SPttsV2",
+      "name": "Text to Speech V2",
+      "description": "Generate speech using popular Text-to-Speech models",
+      "image": "extension-thumbs/Text-to-Speech.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Sound",
+        "Online",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 08/20/2026",
+      "galleryId": "Text-to-Speech-V2"
+    },
+    {
+      "slug": "extension-code/Font-Manager.js",
+      "id": "SPASfontManager",
+      "name": "Font Manager",
+      "description": "Manage, Create, and Delete Fonts from your Project",
+      "image": "extension-thumbs/Font-Manager.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "0znzw"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management",
+        "Configuration"
+      ],
+      "date": "Last Updated: 07/16/2024",
+      "galleryId": "Font-Manager"
+    },
+    {
+      "slug": "extension-code/Pause.js",
+      "id": "SPpauseV2",
+      "name": "Pause",
+      "description": "Pause your Project, Scripts, and Sprites",
+      "image": "extension-thumbs/Pause-Utilities.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Dangerous",
+        "Configuration",
+        "Runtime"
+      ],
+      "date": "Re-Released: 08/14/2026",
+      "galleryId": "Pause"
+    },
+    {
+      "slug": "extension-code/Script-Control.js",
+      "id": "SPscripts",
+      "name": "Script Control",
+      "description": "Monitor and Control specific Scripts in your Project, inspired by 0znzw",
+      "image": "extension-thumbs/Script-Control.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Configuration",
+        "Runtime"
+      ],
+      "date": "Last Updated: 05/30/2025",
+      "galleryId": "Script-Control"
+    },
+    {
+      "slug": "extension-code/Messages-Plus.js",
+      "id": "SPmessagePlus",
+      "name": "Messages Plus",
+      "description": "Powerful Message Blocks that work with Vanilla Broadcasts",
+      "image": "extension-thumbs/Messages-Plus.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Category Expansion",
+        "Runtime"
+      ],
+      "date": "Last Updated: 07/12/2026",
+      "galleryId": "Messages-Plus"
+    },
+    {
+      "slug": "extension-code/Advanced-Messages.js",
+      "id": "SPmessages",
+      "name": "Advanced Messages",
+      "description": "New Message Blocks for Advanced, Non-Vanilla Purposes",
+      "image": "extension-thumbs/Advanced-Messages.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 04/05/2025",
+      "galleryId": "Advanced-Messages"
+    },
+    {
+      "slug": "extension-code/Events-Plus.js",
+      "id": "SPeventsPlus",
+      "name": "Events Plus",
+      "description": "New Event Blocks",
+      "image": "extension-thumbs/Events-Plus.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Category Expansion",
+        "Configuration",
+        "Runtime"
+      ],
+      "date": "Last Updated: 08/16/2026",
+      "galleryId": "Events-Plus"
+    },
+    {
+      "slug": "extension-code/Runtime-Events.js",
+      "id": "SPevents",
+      "name": "Runtime Events",
+      "description": "Detect Events from Runtime",
+      "image": "extension-thumbs/Runtime-Events.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Category Expansion",
+        "Runtime"
+      ],
+      "date": "Last Updated: 08/11/2024",
+      "galleryId": "Runtime-Events"
+    },
+    {
+      "slug": "extension-code/Fetch-Progress.js",
+      "id": "SPprogress",
+      "name": "Fetch Plus",
+      "description": "Fetch and Encode Content from URLs while viewing the Progress and Status of the Fetch",
+      "image": "extension-thumbs/Fetch-Plus.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 04/04/2025",
+      "galleryId": "Fetch-Plus"
+    },
+    {
+      "slug": "extension-code/Geolocation.js",
+      "id": "SPgeolocation",
+      "name": "Geolocation",
+      "description": "Get users' Location and calculate Real-World Distances",
+      "image": "extension-thumbs/Geolocation.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Hardware",
+        "Online",
+        "Math",
+        "Dangerous"
+      ],
+      "date": "Last Updated: 05/11/2026",
+      "galleryId": "Geolocation"
+    },
+    {
+      "slug": "extension-code/Spotify.js",
+      "id": "SPspotify",
+      "name": "Spotify",
+      "description": "Fetch statistics, information, and play songs from Spotify",
+      "image": "extension-thumbs/Spotify.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Sound",
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 07/18/2024",
+      "galleryId": "Spotify"
+    },
+    {
+      "slug": "extension-code/SoundCloud-API.js",
+      "id": "SPsoundCloud",
+      "name": "SoundCloud API",
+      "description": "Fetch tracks, artists, and statistics from Soundcloud",
+      "image": "extension-thumbs/SoundCloud-API.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Sound",
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 07/18/2026",
+      "galleryId": "SoundCloud-API"
+    },
+    {
+      "slug": "extension-code/Google-Spreadsheets.js",
+      "id": "SPspreads",
+      "name": "Google Spreadsheets",
+      "description": "Read and Write Google Spreadsheets",
+      "image": "extension-thumbs/Google-Spreadsheets.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 01/16/2025",
+      "galleryId": "Google-Spreadsheets"
+    },
+    {
+      "slug": "extension-code/Money-Utilities.js",
+      "id": "SPmoney",
+      "name": "Money Utilities",
+      "description": "Convert Currencies and get Currency Information",
+      "image": "extension-thumbs/Money-Utilities.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Math",
+        "Online"
+      ],
+      "date": "Last Updated: 04/04/2025",
+      "isDeprecated": true,
+      "galleryId": "Money-Utilities"
+    },
+    {
+      "slug": "extension-code/Display-Text-V2.js",
+      "id": "SPdisplayTextV2",
+      "name": "Display Text",
+      "description": "Display Text in your Projects, with Markdown Support",
+      "image": "extension-thumbs/Display-Text.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 06/10/2026",
+      "galleryId": "Display-Text"
+    },
+    {
+      "slug": "extension-code/Color-Master.js",
+      "id": "SPcolorMaster",
+      "name": "Color Master",
+      "description": "Color Utility and Conversion Blocks",
+      "image": "extension-thumbs/Color-Master.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Math",
+        "Data Management"
+      ],
+      "date": "Last Updated: 01/23/2025",
+      "galleryId": "Color-Master"
+    },
+    {
+      "slug": "extension-code/QR-Codes.js",
+      "id": "SPqrCodes",
+      "name": "QR Codes",
+      "description": "Create and Read QR Codes on the Client",
+      "image": "extension-thumbs/QR-Codes.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management",
+        "Hardware"
+      ],
+      "date": "Last Updated: 02/14/2026",
+      "galleryId": "QR-Codes"
+    },
+    {
+      "slug": "extension-code/Speech-Bubbles.js",
+      "id": "speechSP",
+      "name": "Speech Bubbles",
+      "description": "Customizable Speech Bubbles",
+      "image": "extension-thumbs/Speech-Bubbles.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 09/14/2024",
+      "galleryId": "Speech-Bubbles"
+    },
+    {
+      "slug": "extension-code/Layer-Control.js",
+      "id": "SPlayering",
+      "name": "Layer Control",
+      "description": "Relayer Pen, Video Camera, Backdrops, Sprites and more",
+      "image": "extension-thumbs/Layer-Control.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion",
+        "Dangerous",
+        "Configuration",
+        "Runtime"
+      ],
+      "date": "Last Updated: 09/24/2024",
+      "galleryId": "Layer-Control"
+    },
+    {
+      "slug": "extension-code/Renderer-Control.js",
+      "id": "SPrenderControl",
+      "name": "Renderer Control",
+      "description": "Control the visuals of Pen, Video Camera, Backdrops, Sprites and more",
+      "image": "extension-thumbs/Renderer-Control.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion",
+        "Dangerous",
+        "Configuration",
+        "Runtime"
+      ],
+      "date": "Last Updated: 07/01/2025",
+      "galleryId": "Renderer-Control"
+    },
+    {
+      "slug": "extension-code/Time-Calculation.js",
+      "id": "SPtimeCalc",
+      "name": "Time Calculation",
+      "description": "Blocks for calculating Time differences",
+      "image": "extension-thumbs/Time-Calculation.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Math",
+        "Time"
+      ],
+      "date": "Last Updated: 06/01/2024",
+      "galleryId": "Time-Calculation"
+    },
+    {
+      "slug": "extension-code/Timezones.js",
+      "id": "iStimezones",
+      "name": "Timezones",
+      "description": "Convert and get the Time in different Timezones",
+      "image": "extension-thumbs/Timezones.svg",
+      "by": [
+        {
+          "name": "Ammunimium"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Math",
+        "Time"
+      ],
+      "date": "Released: 01/25/2024",
+      "status": "",
+      "galleryId": "Timezones"
+    },
+    {
+      "slug": "extension-code/Since-2000.js",
+      "id": "since2000",
+      "name": "Since 2000",
+      "description": "Expansion of the 'since 2000' Blocks",
+      "image": "extension-thumbs/Since-2000.svg",
+      "by": [
+        {
+          "name": "Ammunimium"
+        },
+        {
+          "name": "0znzw"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Math",
+        "Time"
+      ],
+      "date": "Last Updated: 11/20/2025",
+      "status": "",
+      "galleryId": "Since-2000"
+    },
+    {
+      "slug": "extension-code/Seeds.js",
+      "id": "SeedsSP",
+      "name": "Seeds",
+      "description": "Generate random seeded numbers, generated terrain, and more",
+      "image": "extension-thumbs/Seeds.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Math"
+      ],
+      "date": "Last Updated: 11/29/2023",
+      "galleryId": "Seeds"
+    },
+    {
+      "slug": "extension-code/Perlin-Noise.js",
+      "id": "SPperlin",
+      "name": "Perlin Noise",
+      "description": "Generate randomized Perlin Noise",
+      "image": "extension-thumbs/Perlin-Noise.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Math"
+      ],
+      "date": "Last Updated: 08/10/2026",
+      "galleryId": "Perlin-Noise"
+    },
+    {
+      "slug": "extension-code/Extra-Controls.js",
+      "id": "SPadvControl",
+      "name": "Extra Controls",
+      "description": "New Advanced Control Blocks",
+      "image": "extension-thumbs/Extra-Controls.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Category Expansion",
+        "Runtime"
+      ],
+      "date": "Last Updated: 05/04/2025",
+      "galleryId": "Extra-Controls"
+    },
+    {
+      "slug": "extension-code/More-Operators.js",
+      "id": "SPmoreOPs",
+      "name": "More Operators",
+      "description": "New Powerful Operator Blocks",
+      "image": "extension-thumbs/More-Operators.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Category Expansion",
+        "Math"
+      ],
+      "date": "Last Updated: 05/19/2025",
+      "galleryId": "More-Operators"
+    },
+    {
+      "slug": "extension-code/Captchas.js",
+      "id": "SPcaptcha",
+      "name": "Captchas",
+      "description": "Simple Client-Based Captchas, this does not promise 100% security",
+      "image": "extension-thumbs/Captchas.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Dangerous"
+      ],
+      "date": "Released: 04/05/2024",
+      "isDeprecated": true,
+      "galleryId": "Captchas"
+    },
+    {
+      "slug": "extension-code/Better-Comments.js",
+      "id": "SPcomments",
+      "name": "Better Comments",
+      "description": "Better Comments with Color and Text Customization",
+      "image": "extension-thumbs/Better-Comments.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Editor Tool"
+      ],
+      "date": "Last Updated: 08/28/2025",
+      "galleryId": "Better-Comments"
+    },
+    {
+      "slug": "extension-code/Sprite-Panel.js",
+      "id": "SPspritePanel",
+      "name": "Sprite Panel",
+      "description": "Addon for viewing and managing Sprites and Clones",
+      "image": "extension-thumbs/Sprite-Panel.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "FurryR"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Editor Tool"
+      ],
+      "date": "Last Updated: 05/06/2025",
+      "galleryId": "Sprite-Panel"
+    },
+    {
+      "slug": "extension-code/DOM-Selector.js",
+      "id": "SPdomSelect",
+      "name": "DOM Selector",
+      "description": "Read Elements and Create Events from the website HTML",
+      "image": "extension-thumbs/DOM-Selector.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management",
+        "Configuration"
+      ],
+      "date": "Last Updated: 07/13/2025",
+      "galleryId": "DOM-Selector"
+    },
+    {
+      "slug": "extension-code/SVG-Spritesheets.js",
+      "id": "SPsvgSheets",
+      "name": "SVG Spritesheets",
+      "description": "Create and Export SVG Spritesheets",
+      "image": "extension-thumbs/SVG-Spritesheets.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management"
+      ],
+      "date": "Last Updated: 12/20/2024",
+      "galleryId": "SVG-Spritesheets"
+    },
+    {
+      "slug": "extension-code/Community-Spotlight.js",
+      "id": "SPspotlight",
+      "name": "Community Spotlight",
+      "description": "Display and Promote Projects for free",
+      "image": "extension-thumbs/Community-Spotlight.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "Community Spotlight Team"
+        }
+      ],
+      "tags": [
+        "Graphics",
+        "Sound",
+        "Data Management",
+        "Online"
+      ],
+      "date": "Last Updated: 06/03/2026",
+      "galleryId": "Community-Spotlight"
+    },
+    {
+      "slug": "extension-code/GIF-Manager.js",
+      "id": "SPgifManager",
+      "name": "GIF Manager",
+      "description": "Create and Split GIF Frames",
+      "image": "extension-thumbs/GIF-Manager.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Data Management"
+      ],
+      "date": "Released: 08/29/2024",
+      "galleryId": "GIF-Manager"
+    },
+    {
+      "slug": "extension-code/JSON-Array.js",
+      "id": "SPjson",
+      "name": "Swift JSON",
+      "description": "Super Fast JSON and Array extension",
+      "image": "extension-thumbs/JSON-Array.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Math",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 05/01/2026",
+      "galleryId": "Swift-JSON"
+    },
+    {
+      "slug": "extension-code/My-Blocks-Plus.js",
+      "id": "SPmbpCST",
+      "name": "My Blocks Plus",
+      "description": "Better Custom Blocks",
+      "image": "extension-thumbs/My-Blocks-Plus.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "CST1229"
+        },
+        {
+          "name": "0znzw"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Category Expansion",
+        "Editor Tool",
+        "Configuration",
+        "Runtime",
+        "Dangerous"
+      ],
+      "date": "Last Updated: 05/21/2026",
+      "galleryId": "My-Blocks-Plus"
+    },
+    {
+      "slug": "extension-code/Dropdown-Maker.js",
+      "id": "SP0zMenuMaker",
+      "name": "Dropdown Maker",
+      "description": "Create Custom Dropdowns! Best paired with My Blocks+",
+      "image": "extension-thumbs/Dropdown-Maker.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        },
+        {
+          "name": "CST1229"
+        },
+        {
+          "name": "0znzw"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Data Management",
+        "Editor Tool",
+        "Configuration"
+      ],
+      "date": "Last Updated: 01/14/2026",
+      "galleryId": "Dropdown-Maker"
+    },
+    {
+      "slug": "extension-code/Turbo-Skins.js",
+      "id": "SPturboSkins",
+      "name": "Turbo Skins",
+      "description": "Improved Skins extension, inspired by LilyMakesThings",
+      "image": "extension-thumbs/Turbo-Skins.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Configuration",
+        "Runtime"
+      ],
+      "date": "Last Updated: 05/17/2025",
+      "galleryId": "Turbo-Skins"
+    },
+    {
+      "slug": "extension-code/Scenes.js",
+      "id": "SPscenes",
+      "name": "Scenes",
+      "description": "Create Scenes (savestates), like Unity, in your Project",
+      "image": "extension-thumbs/Scenes.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Editor Tool",
+        "Configuration"
+      ],
+      "date": "Last Updated: 08/07/2026",
+      "galleryId": "Scenes"
+    },
+    {
+      "slug": "extension-code/Pen-Papers.js",
+      "id": "SPpenPapers",
+      "name": "Pen Papers",
+      "description": "Create Multiple Pen Layers! Inspired by ObviousAlex",
+      "image": "extension-thumbs/Pen-Papers.svg",
+      "by": [
+        {
+          "name": "SharkPool"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Graphics",
+        "Category Expansion"
+      ],
+      "date": "Last Updated: 12/12/2025",
+      "galleryId": "Pen-Papers"
+    },
+    {
+      "slug": "extension-code/MIDI-Tools.js",
+      "id": "ObscurasMIDITools",
+      "name": "MIDI Tools",
+      "description": "Utilities For Making Midi Notes Into Functions",
+      "image": "extension-thumbs/MIDI-Tools.svg",
+      "by": [
+        {
+          "name": "ObscuraPH"
+        }
+      ],
+      "tags": [
+        "Utility",
+        "Sound",
+        "Data Management",
+        "Hardware"
+      ],
+      "date": "Released: 10/24/2025",
+      "galleryId": "MIDI-Tools"
+    }
+  ],
+  "tags": [
     "All",
     "Utility",
     "Graphics",

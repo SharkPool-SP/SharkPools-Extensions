@@ -42,6 +42,28 @@ function updateStorage() {
 
 /* Function to make GUI Interactible */
 function initGUI() {
+  /* Extension Pack Link */
+  const packDisclosure = document.querySelector(".pack-link");
+  const packSummary = packDisclosure.querySelector("summary");
+  const packLink = document.querySelector("#packLink");
+  const copyPackLink = document.querySelector("#copyPackLink");
+  packSummary.addEventListener("click", (event) => {
+    event.preventDefault();
+    packDisclosure.toggleAttribute("data-expanded");
+  });
+  copyPackLink.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(packLink.value);
+    } catch {
+      packLink.select();
+      document.execCommand("copy");
+    }
+    copyPackLink.textContent = "Copied!";
+    setTimeout(() => {
+      copyPackLink.textContent = "Copy link";
+    }, 1500);
+  });
+
   /* Donate Button */
   const donateBtn = document.querySelector(`button[class="donateBtn"]`);
   donateBtn.addEventListener("click", (e) => {
@@ -258,6 +280,25 @@ function cleanupExtList(json) {
   }
 }
 
+/* Convert the shared pack.json schema into the shape used by the gallery UI. */
+function preparePackExtensions(extensions) {
+  if (!Array.isArray(extensions)) return extensions;
+
+  return Object.fromEntries(extensions.map((extension) => {
+    const creator = (extension.by || []).map((person) => person.name).join(", ");
+    const url = extension.slug.replace(/^extension-code\//, "");
+    const banner = extension.image?.replace(/^extension-thumbs\//, "");
+    const galleryId = extension.galleryId || extension.name.replaceAll(" ", "-");
+    return [galleryId, {
+      ...extension,
+      desc: extension.description || "",
+      creator,
+      url,
+      banner
+    }];
+  }));
+}
+
 /* Search UI */
 function openSearch() {
   const panel = document.createElement("panel-modal");
@@ -274,11 +315,12 @@ function openSearch() {
 /* Initializer */
 document.addEventListener("DOMContentLoaded", async () => {
   galleryData = await (await fetch("Gallery%20Files/Extension-Keys.json")).json();
-  if (!galleryData.site["is up"]) window.location.href = "pages/down.html";
+  galleryData.extensions = preparePackExtensions(galleryData.extensions);
+  if (galleryData.site && !galleryData.site["is up"]) window.location.href = "pages/down.html";
   else {
     allTags = [
       "Expand", // keyword
-      ...galleryData["extension-tags"], // real tags
+      ...(galleryData.tags || []), // real tags
       "Newest", "Oldest", "Deprecated", "Search" // keywords
     ];
 

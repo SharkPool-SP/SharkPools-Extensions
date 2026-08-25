@@ -47,6 +47,22 @@
       <button class="donateBtn">Donate to SharkPool</button>
       <img class="navImgBig" draggable="false" id="gitRepo" title="Gallery GitHub" src="pages/main-assets/logo-github.svg">
     </div>
+    <details class="pack-link" open>
+      <summary>Use this gallery in NitroBolt</summary>
+      <div class="pack-link-content">
+        <span>Copy this link and add it as an extension pack in NitroBolt.</span>
+        <div class="pack-link-controls">
+          <input
+            id="packLink"
+            type="text"
+            value="https://sharkpools-extensions.vercel.app/Gallery%20Files/Extension-Keys.json"
+            readonly
+            aria-label="Extension pack URL"
+          >
+          <button id="copyPackLink" type="button">Copy link</button>
+        </div>
+      </div>
+    </details>
     <div class="filters" style="display: none">
       <!-- Bloom -->
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
