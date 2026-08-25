@@ -5,7 +5,7 @@
 // Commissioned by: @JoshKnowsMath
 // Licence: MIT
 
-// Version V.1.0.03
+// Version V.1.0.04
 
 (function (Scratch) {
   "use strict";
@@ -26,6 +26,21 @@
     "https://reef-proxy.onrender.com/", // this is my proxy, managed by me.
     "https://cors.mubilop.com/", // @cicerorph's hosted proxy
   ];
+
+  const proxyLimits = {
+    MAX: 10,
+    TIMEOUT: 1000 * 60 * 5, // 10 minutes
+    _reqs: 0,
+    _timedOut: false,
+  };
+  const rateLimitReseter = setInterval(() => {
+    proxyLimits._reqs = 0;
+    proxyLimits._timedOut = false;
+  }, proxyLimits.TIMEOUT);
+
+  runtime.on("RUNTIME_DISPOSED", () => {
+    clearInterval(rateLimitReseter);
+  });
 
   const voiceServicesURL = "https://lazypy.ro/tts/assets/js/voices.json";
   const ttsAPI = "https://lazypy.ro/tts/request_tts.php";
@@ -1570,6 +1585,14 @@
       return null;
     }
 
+    _tickRateLimit() {
+      if (proxyLimits._reqs > proxyLimits.MAX) {
+        proxyLimits._timedOut = true;
+      } else {
+        proxyLimits._reqs++;
+      }
+    }
+
     async convertSpeech2DataURI(url) {
       try {
         const response = await Scratch.fetch(url);
@@ -1592,7 +1615,6 @@
        * To prevent server stress on proxies, we will hide this block and just copy & paste
        * the voice services in the extension. If it ever updates, we can re-paste it.
        */
-
       if (this._voices) return;
 
       const response = await this._proxyFetch("get", voiceServicesURL);
@@ -1634,6 +1656,10 @@
       const cachedSpeech = speechCache.get(cacheID);
       if (cachedSpeech) return cachedSpeech;
 
+      if (proxyLimits._timedOut) {
+        return "error: timed out, too many generations";
+      }
+
       const formData = new FormData();
       formData.append("service", serviceDetails.name);
       formData.append("voice", voiceID);
@@ -1657,6 +1683,7 @@
           const url = proxy + ttsData.audio_url;
           const dataURI = await this.convertSpeech2DataURI(url);
 
+          this._tickRateLimit();
           speechCache.set(cacheID, dataURI);
           return dataURI;
         }
