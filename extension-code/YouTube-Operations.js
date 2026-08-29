@@ -270,7 +270,7 @@
         false,
         0 // Skip Reef Proxy since theres strict file size constraints
       );
-      if (!fileBlob) return "";
+      if (!fileBlob) return vidDwnloadData.downloadUrl;
 
       return new Promise((resolve) => {
         const reader = new FileReader();
