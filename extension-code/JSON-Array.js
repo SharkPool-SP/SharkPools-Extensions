@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.08
+// Version V.1.2.09
 
 (function (Scratch) {
   "use strict";
@@ -213,7 +213,7 @@
   });
 
   /* GUI */
-  if (isPM) {
+  if (isPM && !runtime.pmVersion) {
     // Stringify raw JSON in reporters
     const ogVisReport = runtime.visualReport;
     runtime.visualReport = function (...args) {
