@@ -4,7 +4,7 @@
 // By: SharkPool
 // Licence: MIT
 
-// Version V.1.2.09
+// Version V.1.2.1
 
 (function (Scratch) {
   "use strict";
@@ -151,7 +151,7 @@
       });
       SB.BlockSvg.SHAPE_IN_SHAPE_PADDING[3]["custom-SPjson_objShape"] = 10;
     } else {
-      /* turbowarp support */
+      /* Turbowarp support */
       // regenerated reporters
       const regenReporters = [
         "SPjson_objKey", "SPjson_objValue", "SPjson_arrIndex",
@@ -330,22 +330,25 @@
       // handle the new compiler's 'createScriptFactory'
       currentCompiler = vm.exports.these_broke_before_and_will_break_again();
     }
-    const _ogCreateScriptFactory = currentCompiler.JSGenerator.prototype.createScriptFactory;
-    currentCompiler.JSGenerator.prototype.createScriptFactory = function (...args) {
-      let utilObj = "const " + OBJ_UTIL + " = {\n";
-      utilObj += "parse: " + insertParser(null);
-      utilObj += "parseO: " + insertParser(0);
-      utilObj += "parseA: " + insertParser(1);
-      utilObj += `safeCast: (function(val) {\nreturn typeof val === "object" ? val : (isNaN(val) || val === Infinity || val === -Infinity) ? "" + val : val;\n}),\n`;
-      utilObj += "hasOwn: (function(obj, prop) {\nreturn Object.prototype.hasOwnProperty.call(obj,prop)\n}),\n";
-      utilObj += `safeCopy: (function(obj) {\ntry { return structuredClone(obj) } catch { return obj }\n}),\n`;
-      utilObj += insertArrayFreqSort();
-      utilObj += "};\n";
 
-      this.source = utilObj + this.source;
-      return _ogCreateScriptFactory.call(this, ...args);
+    if (!vm.extensionManager.isExtensionLoaded("SPjson")) {
+      const _ogCreateScriptFactory = currentCompiler.JSGenerator.prototype.createScriptFactory;
+      currentCompiler.JSGenerator.prototype.createScriptFactory = function (...args) {
+        let utilObj = "const " + OBJ_UTIL + " = {\n";
+        utilObj += "parse: " + insertParser(null);
+        utilObj += "parseO: " + insertParser(0);
+        utilObj += "parseA: " + insertParser(1);
+        utilObj += `safeCast: (function(val) {\nreturn typeof val === "object" ? val : (isNaN(val) || val === Infinity || val === -Infinity) ? "" + val : val;\n}),\n`;
+        utilObj += "hasOwn: (function(obj, prop) {\nreturn Object.prototype.hasOwnProperty.call(obj,prop)\n}),\n";
+        utilObj += `safeCopy: (function(obj) {\ntry { return structuredClone(obj) } catch { return obj }\n}),\n`;
+        utilObj += insertArrayFreqSort();
+        utilObj += "};\n";
+
+        this.source = utilObj + this.source;
+        return _ogCreateScriptFactory.call(this, ...args);
+      }
     }
-    
+
     const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
     ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
       switch (block.opcode) {
@@ -375,7 +378,7 @@
           this.source += `let ${objVar} = ${_anyParser(obj)};\n`;
           this.source += `const ${isArray} = Array.isArray(${objVar});\n`;
           this.source += `${objVar} = Object.entries(${objVar})\n;`;
-          this.source += `for (let ${i} = 0; ${i} < ${objVar}.length; ${i}++) {;\n`;
+          this.source += `for (let ${i} = 0; ${i} < ${objVar}.length; ${i}++) {\n`;
           this.source += `let [SPobjK, SPobjV] = ${objVar}[${i}];\n`;
           this.source += `if (${isArray}) SPobjK++\n`;
           this.descendStack(node.branch, new exp.Frame(true));
