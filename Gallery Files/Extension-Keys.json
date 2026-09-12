@@ -420,7 +420,7 @@
       "url": "Layer-Control.js",
       "banner": "Layer-Control.svg",
       "tags": ["Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime"],
-      "date": "Last Updated: 09/24/2024"
+      "date": "Last Updated: 09/12/2026"
     },
     "Renderer-Control": {
       "desc": "Control the visuals of Pen, Video Camera, Backdrops, Sprites and more",
@@ -428,7 +428,7 @@
       "url": "Renderer-Control.js",
       "banner": "Renderer-Control.svg",
       "tags": ["Utility", "Graphics", "Category Expansion", "Dangerous", "Configuration", "Runtime"],
-      "date": "Last Updated: 07/01/2025"
+      "date": "Last Updated: 09/12/2026"
     },
     "Time-Calculation": {
       "desc": "Blocks for calculating Time differences",
@@ -551,7 +551,7 @@
       "url": "JSON-Array.js",
       "banner": "JSON-Array.svg",
       "tags": ["Utility", "Data Management", "Math", "Category Expansion"],
-      "date": "Last Updated: 08/30/2026"
+      "date": "Last Updated: 09/12/2026"
     },
     "My-Blocks-Plus": {
       "desc": "Better Custom Blocks",
