@@ -64,7 +64,7 @@
     }
 
     _isSPjsonLoaded() {
-      return typeof SPjson !== 'undefined' || (typeof window !== 'undefined' && window.SPjson !== undefined);
+        return vm.runtime.extensionManager.isExtensionLoaded('ObscurasMIDITools');
     }
 
     getInfo() {
