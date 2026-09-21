@@ -1,10 +1,10 @@
-// Name: Obscuras MIDI Tools v3.0
+// Name: Obscuras MIDI Tools v4.1
 // ID: ObscurasMIDITools
 // Description: Utilities For Making Midi Notes Into Functions
 // By: ObscuraPH
 // License: MIT
 
-// Version V.3
+// Version V.4.1
 
 // Tone.js: https://github.com/Tonejs/Tone.js/releases
 // Tone.js license: MIT
@@ -41,6 +41,11 @@
       this._isPaused = false;
       this._pauseTime = 0;
       this._startTime = 0;
+      this._elapsedBeforePause = 0;
+      
+      this._playbackRate = 1.0;
+      this._transposeSemintones = 0;
+      this._mutedTracks = new Set();
 
       this.toneMidiReady = loadToneMidi();
 
@@ -54,16 +59,16 @@
     getInfo() {
       return {
         id: 'ObscurasMIDITools',
-        name: 'Obscuras MIDI Tools v3.0',
+        name: 'Obscuras MIDI Tools v4.1',
         menuIconURI,
         blockIconURI,
         color1: '#310061',
         color2: '#8300FF',
         color3: '#8300FF',
         blocks: [
-					{
+          {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Importers:'
+            text: 'Importers & Storage:'
           },
           {
             opcode: 'importMidiUrl',
@@ -82,8 +87,35 @@
             text: 'import MIDI from file'
           },
           {
+            opcode: 'loadMidiFromBase64',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'load MIDI from base64 [BASE64]',
+            arguments: {
+              BASE64: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'data:audio/midi;base64,...'
+              }
+            }
+          },
+          {
+            opcode: 'getMidiAsBase64',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current MIDI as base64'
+          },
+          {
+            opcode: 'loadMidiFromList',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'load MIDI from list [LIST]',
+            arguments: {
+              LIST: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'list'
+              }
+            }
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
-            text: 'MIDI Playback:'
+            text: 'Playback & Timing Controls:'
           },
           {
             opcode: 'playMidi',
@@ -91,9 +123,89 @@
             text: 'play MIDI'
           },
           {
+            opcode: 'pauseMidi',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'pause MIDI'
+          },
+          {
+            opcode: 'resumeMidi',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'resume MIDI'
+          },
+          {
             opcode: 'stopMidi',
             blockType: Scratch.BlockType.COMMAND,
             text: 'stop MIDI'
+          },
+          {
+            opcode: 'setPlaybackRate',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set playback speed to [RATE]x',
+            arguments: {
+              RATE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1.0
+              }
+            }
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Pitch & Transposition:'
+          },
+          {
+            opcode: 'setTranspose',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set transpose to [SEMITONES] semitones',
+            arguments: {
+              SEMITONES: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              }
+            }
+          },
+          {
+            opcode: 'getTranspose',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current transpose semitones'
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Status & Reporters:'
+          },
+          {
+            opcode: 'isMidiPlaying',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: 'MIDI is playing?'
+          },
+          {
+            opcode: 'getCurrentTime',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'MIDI current time (secs)'
+          },
+          {
+            opcode: 'getDuration',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'MIDI total duration (secs)'
+          },
+          {
+            opcode: 'getCurrentMeasure',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'MIDI current measure'
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Tracks & Muting:'
+          },
+          {
+            opcode: 'toggleTrackMute',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'toggle mute track [TRACK]',
+            arguments: {
+              TRACK: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1
+              }
+            }
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -176,6 +288,10 @@
       };
     }
 
+    _getEffectiveNote(midiVal) {
+      return Math.max(0, Math.min(127, midiVal + this._transposeSemintones));
+    }
+
     async importMidiUrl(args) {
       const Midi = await this.toneMidiReady;
       const res = await Scratch.fetch(args.URL);
@@ -209,6 +325,55 @@
       });
     }
 
+    async getMidiAsBase64() {
+      if (!this.midiData) return '';
+      const uint8Array = this.midiData.toArray();
+      let binary = '';
+      const len = uint8Array.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(uint8Array[i]);
+      }
+      return btoa(binary);
+    }
+
+    async loadMidiFromBase64(args) {
+      let base64Str = Scratch.Cast.toString(args.BASE64);
+      if (base64Str.includes(',')) {
+        base64Str = base64Str.split(',')[1];
+      }
+      try {
+        const binaryString = atob(base64Str);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const Midi = await this.toneMidiReady;
+        this.midiData = new Midi(bytes.buffer);
+      } catch (err) {
+        console.error('Failed to parse Base64 MIDI:', err);
+      }
+    }
+
+    async loadMidiFromList(args) {
+      const listName = Scratch.Cast.toString(args.LIST);
+      const stage = this.runtime.getTargetForStage();
+      if (!stage) return;
+      
+      let targetList = null;
+      for (const varId in stage.variables) {
+        const v = stage.variables[varId];
+        if (v.type === 'list' && v.name.toLowerCase() === listName.toLowerCase()) {
+          targetList = v.value;
+          break;
+        }
+      }
+
+      if (!targetList || targetList.length === 0) return;
+      const fullBase64 = targetList.join('');
+      await this.loadMidiFromBase64({ BASE64: fullBase64 });
+    }
+
     playMidi() {
       if (!this.midiData) return;
       this.stopMidi();
@@ -216,42 +381,127 @@
       this._isPlaying = true;
       this._isPaused = false;
       this._startTime = performance.now() / 1000;
-      this._pauseTime = 0;
-
+      this._elapsedBeforePause = 0;
       this._triggeredNotes.clear();
 
+      this._scheduleNotes(0);
+    }
+
+    _scheduleNotes(offsetSeconds) {
+      if (!this.midiData) return;
+      let trackIndex = 0;
       for (const track of this.midiData.tracks) {
+        if (this._mutedTracks.has(trackIndex)) {
+          trackIndex++;
+          continue;
+        }
         for (const n of track.notes) {
-          const delay = n.time * 1000;
+          if (n.time + n.duration < offsetSeconds) continue;
+
+          const effectiveNote = this._getEffectiveNote(n.midi);
+          const startDelay = Math.max(0, ((n.time - offsetSeconds) * 1000) / this._playbackRate);
+          
           const startTimer = setTimeout(() => {
             if (!this._isPlaying || this._isPaused) return;
-            this._triggeredNotes.add(n.midi);
+            this._triggeredNotes.add(effectiveNote);
 
+            const remainingDuration = Math.max(10, ((n.duration - Math.max(0, offsetSeconds - n.time)) * 1000) / this._playbackRate);
             const endTimer = setTimeout(() => {
-              this._triggeredNotes.delete(n.midi);
-            }, n.duration * 1000);
+              this._triggeredNotes.delete(effectiveNote);
+            }, remainingDuration);
             this._timers.push(endTimer);
-          }, delay);
+          }, startDelay);
           this._timers.push(startTimer);
         }
+        trackIndex++;
       }
     }
 
     pauseMidi() {
       if (!this._isPlaying || this._isPaused) return;
       this._isPaused = true;
-      this._pauseTime = performance.now() / 1000;
+      this._elapsedBeforePause += ((performance.now() / 1000) - this._startTime) * this._playbackRate;
       for (const t of this._timers) clearTimeout(t);
       this._timers = [];
+    }
+
+    resumeMidi() {
+      if (!this._isPlaying || !this._isPaused) return;
+      this._isPaused = false;
+      this._startTime = performance.now() / 1000;
+      this._scheduleNotes(this._elapsedBeforePause);
     }
 
     stopMidi() {
       this._isPlaying = false;
       this._isPaused = false;
-      this._pauseTime = 0;
+      this._elapsedBeforePause = 0;
       for (const t of this._timers) clearTimeout(t);
       this._timers = [];
       this._triggeredNotes.clear();
+    }
+
+    setPlaybackRate(args) {
+      this._playbackRate = Math.max(0.1, Math.min(4.0, Scratch.Cast.toNumber(args.RATE)));
+      if (this._isPlaying && !this._isPaused) {
+        const current = this.getCurrentTime();
+        this._elapsedBeforePause = current;
+        this._startTime = performance.now() / 1000;
+        for (const t of this._timers) clearTimeout(t);
+        this._timers = [];
+        this._scheduleNotes(current);
+      }
+    }
+
+    setTranspose(args) {
+      this._transposeSemintones = Scratch.Cast.toNumber(args.SEMITONES);
+      if (this._isPlaying && !this._isPaused) {
+        const current = this.getCurrentTime();
+        this._elapsedBeforePause = current;
+        this._startTime = performance.now() / 1000;
+        for (const t of this._timers) clearTimeout(t);
+        this._timers = [];
+        this._triggeredNotes.clear();
+        this._scheduleNotes(current);
+      }
+    }
+
+    getTranspose() {
+      return this._transposeSemintones;
+    }
+
+    toggleTrackMute(args) {
+      const trackIndex = Scratch.Cast.toNumber(args.TRACK) - 1;
+      if (this._mutedTracks.has(trackIndex)) {
+        this._mutedTracks.delete(trackIndex);
+      } else {
+        this._mutedTracks.add(trackIndex);
+      }
+    }
+
+    isMidiPlaying() {
+      return this._isPlaying && !this._isPaused;
+    }
+
+    getCurrentTime() {
+      if (!this._isPlaying) return 0;
+      if (this._isPaused) return Math.round(this._elapsedBeforePause * 100) / 100;
+      const current = this._elapsedBeforePause + (((performance.now() / 1000) - this._startTime) * this._playbackRate);
+      return Math.round(current * 100) / 100;
+    }
+
+    getDuration() {
+      if (!this.midiData) return 0;
+      return Math.round(this.midiData.duration * 100) / 100;
+    }
+
+    getCurrentMeasure() {
+      if (!this.midiData || !this._isPlaying) return 1;
+      const currentTime = this.getCurrentTime();
+      const bpm = this.getBPM();
+      const secondsPerBeat = 60 / bpm;
+      const beatsElapsed = currentTime / secondsPerBeat;
+      return Math.floor(beatsElapsed / 4) + 1;
     }
 
     onNote(args) {
@@ -265,7 +515,9 @@
       const notes = [];
       for (const track of this.midiData.tracks) {
         for (const n of track.notes) {
-          if (Math.abs(n.time - time) < 0.05) notes.push(n.midi);
+          if (Math.abs(n.time - time) < 0.05) {
+            notes.push(this._getEffectiveNote(n.midi));
+          }
         }
       }
       return notes;
@@ -283,7 +535,7 @@
       const notes = [];
       for (const track of this.midiData.tracks) {
         for (const n of track.notes) {
-          notes.push(n.midi);
+          notes.push(this._getEffectiveNote(n.midi));
         }
       }
       return notes;
@@ -299,11 +551,11 @@
       if (!this._triggeredNotes.size || !this._isPlaying || !this.midiData) return 0;
 
       const triggered = [...this._triggeredNotes][0];
-      const currentTime = (performance.now() / 1000) - this._startTime;
+      const currentTime = this.getCurrentTime();
 
       for (const track of this.midiData.tracks) {
         for (const note of track.notes) {
-          if (note.midi === triggered) {
+          if (this._getEffectiveNote(note.midi) === triggered) {
             if (currentTime >= note.time && currentTime <= note.time + note.duration) {
               return Scratch.Cast.toNumber(note.duration.toFixed(3));
             }
@@ -322,13 +574,13 @@
       if (!this._isPlaying || !this.midiData) return 0;
 
       const noteNumber = Scratch.Cast.toNumber(args.NOTE);
-      const currentTime = (performance.now() / 1000) - this._startTime;
+      const currentTime = this.getCurrentTime();
 
       if (!this._triggeredNotes.has(noteNumber)) return 0;
 
       for (const track of this.midiData.tracks) {
         for (const note of track.notes) {
-          if (note.midi === noteNumber) {
+          if (this._getEffectiveNote(note.midi) === noteNumber) {
             if (currentTime >= note.time && currentTime <= note.time + note.duration) {
               return Scratch.Cast.toNumber(note.duration.toFixed(3));
             }
