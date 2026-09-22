@@ -1,10 +1,10 @@
-// Name: Obscuras MIDI Tools v3.0
+// Name: Obscuras MIDI Tools v5
 // ID: ObscurasMIDITools
 // Description: Utilities For Making Midi Notes Into Functions
 // By: ObscuraPH
 // License: MIT
 
-// Version V.3
+// Version V.5.0.0
 
 // Tone.js: https://github.com/Tonejs/Tone.js/releases
 // Tone.js license: MIT
@@ -17,7 +17,7 @@
   const menuIconURI =
     "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0Ni4zODg4OCIgaGVpZ2h0PSI0Mi41IiB2aWV3Qm94PSIwLDAsNDYuMzg4ODgsNDIuNSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIyNDAiIHkxPSIxNjEuMTQ4ODUiIHgyPSIyNDAiIHkyPSIxOTguODUxMTYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY29sb3ItMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjgwMGNjIiBzdG9wLW9wYWNpdHk9IjAuNTAxOTYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMGFmZmYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCB4MT0iMjQwIiB5MT0iMTYwIiB4Mj0iMjQwIiB5Mj0iMjAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNvbG9yLTIiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzgzMDBmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2I4MDBjYyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IHgxPSIyMjMuNzk2MyIgeTE9IjE2OS4wNzQwOCIgeDI9IjIyMy43OTYzIiB5Mj0iMTczLjcwMzcxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNvbG9yLTMiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2I0MDBmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzgzMDBmZiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IHgxPSIyNTYuMjAzNyIgeTE9IjE4Ni4yOTYzIiB4Mj0iMjU2LjIwMzciIHkyPSIxOTAuOTI1OTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY29sb3ItNCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjQwMGZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjODMwMGZmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIxNi44MDU1NiwtMTU4Ljc1KSI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMjE4LjA1NTU2LDE3My43MDM3MXYtNC42Mjk2M2g2LjA0NjY5bC0yLjYwODcsNC42Mjk2M3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48cGF0aCBkPSJNMjU0LjU5MzM5LDE5MC45MjU5M2wyLjE3MzkxLC00LjYyOTYzaDUuMTc3MTN2NC42Mjk2M3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48cGF0aCBkPSJNMjIxLjA1Nzk1LDE4MGMwLC0xMC40ODI0OSA4LjU1MDcxLC0xOC44NTExNSAxOS4wMzMyMSwtMTguODUxMTVjMTAuNDgyNSwwIDE4Ljg1MDksOC4zNjg2NiAxOC44NTA5LDE4Ljg1MTE1YzAsMTAuNDgyNSAtOC41NTA3MSwxOC44NTExNiAtMTkuMDMzMjEsMTguODUxMTZjLTEwLjQ4MjQ5LDAgLTE4Ljg1MDksLTguMzY4NjYgLTE4Ljg1MDksLTE4Ljg1MTE2eiIgZmlsbD0idXJsKCNjb2xvci0xKSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIvPjxwYXRoIGQ9Ik0yMjAsMTgwYzAsLTExLjA0NTY5IDguOTU0MzEsLTIwIDIwLC0yMGMxMS4wNDU2OSwwIDIwLDguOTU0MzEgMjAsMjBjMCwxMS4wNDU2OSAtOC45NTQzMSwyMCAtMjAsMjBjLTExLjA0NTY5LDAgLTIwLC04Ljk1NDMxIC0yMCwtMjB6TTIzOS45MDU0MywxOTcuODE0NzFjOS45NDExMywwIDE4LC03Ljg4NjQ3IDE4LC0xNy44Mjc1OWMwLC05Ljk0MTEyIC03Ljg4NjQ2LC0xNy44Mjc1OCAtMTcuODI3NTgsLTE3LjgyNzU4Yy05Ljk0MTEyLDAgLTE4LDcuODg2NDYgLTE4LDE3LjgyNzU5YzAsOS45NDExMyA3Ljg4NjQ2LDE3LjgyNzU5IDE3LjgyNzU5LDE3LjgyNzU5eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0yNDYuMzI5NzQsMTg5Ljc3NjY2di0xOS40MzQ2N2gzLjIzOTExdjE5LjQzNDY3eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjMxLjAxNzU3LDE4OS43NzY2NnYtMTkuNDM0NjdoMy4yMzkxMXYxOS40MzQ2N3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIzMS4yMjc1MSwxNzUuMDYyMzN2LTQuODQ3ODloMTguMTM0NzN2NC44NDc4OXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIyNy4wOTc4MiwxODYuMzc0MDljMCwtMS44ODQxMSAxLjUyNzM3LC0zLjQxMTQ4IDMuNDExNDgsLTMuNDExNDhjMS44ODQxMSwwIDMuNDExNDgsMS41MjczOCAzLjQxMTQ4LDMuNDExNDhjMCwxLjg4NDExIC0xLjUyNzM4LDMuNDExNDggLTMuNDExNDgsMy40MTE0OGMtMS44ODQxMSwwIC0zLjQxMTQ4LC0xLjUyNzM3IC0zLjQxMTQ4LC0zLjQxMTQ4eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjQyLjM1OTcxLDE4Ni4zNzQwOWMwLC0xLjg4NDExIDEuNTI3MzgsLTMuNDExNDggMy40MTE0OSwtMy40MTE0OGMxLjg4NDExLDAgMy40MTE0NywxLjUyNzM4IDMuNDExNDcsMy40MTE0OGMwLDEuODg0MTEgLTEuNTI3MzcsMy40MTE0OCAtMy40MTE0NywzLjQxMTQ4Yy0xLjg4NDExLDAgLTMuNDExNDksLTEuNTI3MzcgLTMuNDExNDksLTMuNDExNDh6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIvPjxwYXRoIGQ9Ik0yMjAsMTgwYzAsLTExLjA0NTY5IDguOTU0MzEsLTIwIDIwLC0yMGMxMS4wNDU2OSwwIDIwLDguOTU0MzEgMjAsMjBjMCwxMS4wNDU2OSAtOC45NTQzMSwyMCAtMjAsMjBjLTExLjA0NTY5LDAgLTIwLC04Ljk1NDMxIC0yMCwtMjB6TTIzOS45MDU0MywxOTcuODE0NzFjOS45NDExMywwIDE4LC03Ljg4NjQ3IDE4LC0xNy44Mjc1OWMwLC05Ljk0MTEyIC03Ljg4NjQ2LC0xNy44Mjc1OCAtMTcuODI3NTgsLTE3LjgyNzU4Yy05Ljk0MTEyLDAgLTE4LDcuODg2NDYgLTE4LDE3LjgyNzU5YzAsOS45NDExMyA3Ljg4NjQ2LDE3LjgyNzU5IDE3LjgyNzU5LDE3LjgyNzU5eiIgZmlsbD0idXJsKCNjb2xvci0yKSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjE4LjA1NTU2LDE3My43MDM3MXYtNC42Mjk2M2gxMS40ODE0N3Y0LjYyOTYzeiIgZmlsbD0idXJsKCNjb2xvci0zKSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9Im5vbmUiLz48cGF0aCBkPSJNMjUwLjQ2Mjk2LDE5MC45MjU5M3YtNC42Mjk2M2gxMS40ODE0OHY0LjYyOTYzeiIgZmlsbD0idXJsKCNjb2xvci00KSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9Im5vbmUiLz48L2c+PC9nPjwvc3ZnPjwhLS1yb3RhdGlvbkNlbnRlcjoyMy4xOTQ0Mzk5OTk5OTk5ODY6MjEuMjUtLT4=";
   const blockIconURI =
-    "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0Ni4zODg4OCIgaGVpZ2h0PSI0Mi41IiB2aWV3Qm94PSIwLDAsNDYuMzg4ODgsNDIuNSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIyNDAiIHkxPSIxNjEuMTQ4ODUiIHgyPSIyNDAiIHkyPSIxOTguODUxMTYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY29sb3ItMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjgwMGNjIiBzdG9wLW9wYWNpdHk9IjAuNTAxOTYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMGFmZmYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCB4MT0iMjQwIiB5MT0iMTYwIiB4Mj0iMjQwIiB5Mj0iMjAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNvbG9yLTIiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzgzMDBmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2I4MDBjYyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IHgxPSIyMjMuNzk2MyIgeTE9IjE2OS4wNzQwOCIgeDI9IjIyMy43OTYzIiB5Mj0iMTczLjcwMzcxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNvbG9yLTMiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2I0MDBmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzgzMDBmZiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IHgxPSIyNTYuMjAzNyIgeTE9IjE4Ni4yOTYzIiB4Mj0iMjU2LjIwMzciIHkyPSIxOTAuOTI1OTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY29sb3ItNCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjQwMGZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjODMwMGZmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIxNi44MDU1NiwtMTU4Ljc1KSI+PGcgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIj48cGF0aCBkPSJNMjE4LjA1NTU2LDE3My43MDM3MXYtNC42Mjk2M2g2LjA0NjY5bC0yLjYwODcsNC42Mjk2M3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48cGF0aCBkPSJNMjU0LjU5MzM5LDE5MC45MjU5M2wyLjE3MzkxLC00LjYyOTYzaDUuMTc3MTN2NC42Mjk2M3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48cGF0aCBkPSJNMjIxLjA1Nzk1LDE4MGMwLC0xMC40ODI0OSA4LjU1MDcxLC0xOC44NTExNSAxOS4wMzMyMSwtMTguODUxMTVjMTAuNDgyNSwwIDE4Ljg1MDksOC4zNjg2NiAxOC44NTA5LDE4Ljg1MTE1YzAsMTAuNDgyNSAtOC41NTA3MSwxOC44NTExNiAtMTkuMDMzMjEsMTguODUxMTZjLTEwLjQ4MjQ5LDAgLTE4Ljg1MDksLTguMzY4NjYgLTE4Ljg1MDksLTE4Ljg1MTE2eiIgZmlsbD0idXJsKCNjb2xvci0xKSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIvPjxwYXRoIGQ9Ik0yMjAsMTgwYzAsLTExLjA0NTY5IDguOTU0MzEsLTIwIDIwLC0yMGMxMS4wNDU2OSwwIDIwLDguOTU0MzEgMjAsMjBjMCwxMS4wNDU2OSAtOC45NTQzMSwyMCAtMjAsMjBjLTExLjA0NTY5LDAgLTIwLC04Ljk1NDMxIC0yMCwtMjB6TTIzOS45MDU0MywxOTcuODE0NzFjOS45NDExMywwIDE4LC03Ljg4NjQ3IDE4LC0xNy44Mjc1OWMwLC05Ljk0MTEyIC03Ljg4NjQ2LC0xNy44Mjc1OCAtMTcuODI3NTgsLTE3LjgyNzU4Yy05Ljk0MTEyLDAgLTE4LDcuODg2NDYgLTE4LDE3LjgyNzU5YzAsOS45NDExMyA3Ljg4NjQ2LDE3LjgyNzU5IDE3LjgyNzU5LDE3LjgyNzU5eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0yNDYuMzI5NzQsMTg5Ljc3NjY2di0xOS40MzQ2N2gzLjIzOTExdjE5LjQzNDY3eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjMxLjAxNzU3LDE4OS43NzY2NnYtMTkuNDM0NjdoMy4yMzkxMXYxOS40MzQ2N3oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIzMS4yMjc1MSwxNzUuMDYyMzN2LTQuODQ3ODloMTguMTM0NzN2NC44NDc4OXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIi8+PHBhdGggZD0iTTIyNy4wOTc4MiwxODYuMzc0MDljMCwtMS44ODQxMSAxLjUyNzM3LC0zLjQxMTQ4IDMuNDExNDgsLTMuNDExNDhjMS44ODQxMSwwIDMuNDExNDgsMS41MjczOCAzLjQxMTQ4LDMuNDExNDhjMCwxLjg4NDExIC0xLjUyNzM4LDMuNDExNDggLTMuNDExNDgsMy40MTE0OGMtMS44ODQxMSwwIC0zLjQxMTQ4LC0xLjUyNzM3IC0zLjQxMTQ4LC0zLjQxMTQ4eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjQyLjM1OTcxLDE4Ni4zNzQwOWMwLC0xLjg4NDExIDEuNTI3MzgsLTMuNDExNDggMy40MTE0OSwtMy40MTE0OGMxLjg4NDExLDAgMy40MTE0NywxLjUyNzM4IDMuNDExNDcsMy40MTE0OGMwLDEuODg0MTEgLTEuNTI3MzcsMy40MTE0OCAtMy40MTE0NywzLjQxMTQ4Yy0xLjg4NDExLDAgLTMuNDExNDksLTEuNTI3MzcgLTMuNDExNDksLTMuNDExNDh6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIvPjxwYXRoIGQ9Ik0yMjAsMTgwYzAsLTExLjA0NTY5IDguOTU0MzEsLTIwIDIwLC0yMGMxMS4wNDU2OSwwIDIwLDguOTU0MzEgMjAsMjBjMCwxMS4wNDU2OSAtOC45NTQzMSwyMCAtMjAsMjBjLTExLjA0NTY5LDAgLTIwLC04Ljk1NDMxIC0yMCwtMjB6TTIzOS45MDU0MywxOTcuODE0NzFjOS45NDExMywwIDE4LC03Ljg4NjQ3IDE4LC0xNy44Mjc1OWMwLC05Ljk0MTEyIC03Ljg4NjQ2LC0xNy44Mjc1OCAtMTcuODI3NTgsLTE3LjgyNzU4Yy05Ljk0MTEyLDAgLTE4LDcuODg2NDYgLTE4LDE3LjgyNzU5YzAsOS45NDExMyA3Ljg4NjQ2LDE3LjgyNzU5IDE3LjgyNzU5LDE3LjgyNzU5eiIgZmlsbD0idXJsKCNjb2xvci0yKSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjAiLz48cGF0aCBkPSJNMjE4LjA1NTU2LDE3My43MDM3MXYtNC42Mjk2M2gxMS40ODE0N3Y0LjYyOTYzeiIgZmlsbD0idXJsKCNjb2xvci0zKSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9Im5vbmUiLz48cGF0aCBkPSJNMjUwLjQ2Mjk2LDE5MC45MjU5M3YtNC42Mjk2M2gxMS40ODE0OHY0LjYyOTYzeiIgZmlsbD0idXJsKCNjb2xvci00KSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9Im5vbmUiLz48L2c+PC9nPjwvc3ZnPjwhLS1yb3RhdGlvbkNlbnRlcjoyMy4xOTQ0Mzk5OTk5OTk5ODY6MjEuMjUtLT4=";
+    "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2249.376%22%20height%3D%2247.276%22%20viewBox%3D%220%200%2049.376%2047.276%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22color-2%22%20x1%3D%22240%22%20x2%3D%22240%22%20y1%3D%22157.612%22%20y2%3D%22202.388%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%236500a2%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236500a2%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22color-4%22%20x1%3D%22222.426%22%20x2%3D%22222.426%22%20y1%3D%22171.317%22%20y2%3D%22175.644%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ae00d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ef00ff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22color-5%22%20x1%3D%22234.136%22%20x2%3D%22234.136%22%20y1%3D%22175.674%22%20y2%3D%22180.001%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ae00d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ef00ff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22color-6%22%20x1%3D%22245.864%22%20x2%3D%22245.864%22%20y1%3D%22179.999%22%20y2%3D%22184.326%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ae00d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ef00ff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22color-7%22%20x1%3D%22257.574%22%20x2%3D%22257.574%22%20y1%3D%22184.356%22%20y2%3D%22188.683%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ae00d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ef00ff%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22color-1%22%20cx%3D%22240%22%20cy%3D%22180%22%20r%3D%2219.498%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%236500a2%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23c200ff%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22color-3%22%20cx%3D%22240%22%20cy%3D%22180%22%20r%3D%2219.498%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ef00ff%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ef00ff%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22color-8%22%20cx%3D%22240.147%22%20cy%3D%22189.132%22%20r%3D%2212.077%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fff%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Cg%20stroke-miterlimit%3D%2210%22%3E%3Cpath%20fill%3D%22%23fff%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.5%22%20d%3D%22M2.3%2023.638C2.3%2011.274%2012.323%201.25%2024.688%201.25s22.388%2010.024%2022.388%2022.388-10.023%2022.388-22.388%2022.388S2.3%2036.003%202.3%2023.638z%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.5%22%20d%3D%22M1.25%2019.282v-4.327h11.729v4.327zm11.709%204.357v-4.327h11.729v4.327zm11.729%204.325v-4.326h11.729v4.326zm11.709%204.357v-4.327h11.729v4.327z%22%2F%3E%3Cpath%20fill%3D%22%236500a2%22%20d%3D%22M2.3%2023.638C2.3%2011.274%2012.323%201.25%2024.688%201.25s22.388%2010.024%2022.388%2022.388-10.023%2022.388-22.388%2022.388S2.3%2036.003%202.3%2023.638%22%2F%3E%3Cpath%20fill%3D%22%23ef00ff%22%20d%3D%22M3.552%2023.638c0-11.673%209.463-21.136%2021.136-21.136s21.136%209.463%2021.136%2021.136-9.463%2021.136-21.136%2021.136S3.552%2035.31%203.552%2023.638%22%2F%3E%3Cpath%20fill%3D%22url(%23color-1)%22%20d%3D%22M220.502%20180c0-10.768%208.73-19.498%2019.498-19.498s19.498%208.73%2019.498%2019.498-8.73%2019.498-19.498%2019.498-19.498-8.73-19.498-19.498%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22url(%23color-2)%22%20d%3D%22M217.612%20180c0-12.365%2010.023-22.388%2022.388-22.388s22.388%2010.023%2022.388%2022.388-10.023%2022.388-22.388%2022.388-22.388-10.023-22.388-22.388%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22url(%23color-3)%22%20d%3D%22M220.502%20180c0-10.768%208.73-19.498%2019.498-19.498s19.498%208.73%2019.498%2019.498-8.73%2019.498-19.498%2019.498-19.498-8.73-19.498-19.498%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-linecap%3D%22round%22%20stroke-opacity%3D%22.502%22%20stroke-width%3D%22.5%22%20d%3D%22M1.502%2019.366h11.25m.42%204.259h11.25m.515%204.446h11.25m.42%204.259h11.25%22%2F%3E%3Cpath%20fill%3D%22url(%23color-4)%22%20d%3D%22M216.562%20175.644v-4.327h11.729v4.327z%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22url(%23color-5)%22%20d%3D%22M228.271%20180v-4.326H240V180z%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22url(%23color-6)%22%20d%3D%22M240%20184.326V180h11.729v4.327z%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22url(%23color-7)%22%20d%3D%22M251.71%20188.683v-4.327h11.728v4.327z%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3Cpath%20fill%3D%22%236500a2%22%20stroke%3D%22%236500a3%22%20stroke-linecap%3D%22round%22%20stroke-opacity%3D%22.251%22%20stroke-width%3D%22.5%22%20d%3D%22M2.16%2018.165h9.72m2.054%204.411h9.72m2.063%204.418h9.72m2.055%204.411h9.72%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M28.633%2035.983%2023.948%2014.8l7.329.825-10.72-5.246%204.45%2019.947s-5.547-.887-4.772%203.707c.717%204.249%208.398%201.951%208.398%201.951%22%2F%3E%3Cpath%20fill%3D%22url(%23color-8)%22%20d%3D%22M228.07%20189.132c0-6.67%205.407-12.078%2012.077-12.078s12.077%205.407%2012.077%2012.078-5.407%2012.077-12.077%2012.077-12.077-5.407-12.077-12.077%22%20transform%3D%22translate(-215.312%20-156.362)%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E";
 
   const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -41,6 +41,19 @@
       this._isPaused = false;
       this._pauseTime = 0;
       this._startTime = 0;
+      this._elapsedBeforePause = 0;
+      
+      this._playbackRate = 1.0;
+      this._transposeSemintones = 0;
+      this._mutedTracks = new Set();
+
+      // V3.2 compatibility: optionally play only one track.
+      this.activeTrackIndex = null;
+      this._playbackEndTimer = null;
+
+      this._justEnded = false;
+      this._justPaused = false;
+      this._justResumed = false;
 
       this.toneMidiReady = loadToneMidi();
 
@@ -51,19 +64,23 @@
       document.body.appendChild(this.fileInput);
     }
 
+    _isSPjsonLoaded() {
+      return vm.runtime.extensionManager.isExtensionLoaded('SPjson');
+    }
+
     getInfo() {
       return {
         id: 'ObscurasMIDITools',
-        name: 'Obscuras MIDI Tools v3.0',
+        name: 'Obscuras MIDI Tools v5.0',
         menuIconURI,
         blockIconURI,
         color1: '#310061',
         color2: '#8300FF',
         color3: '#8300FF',
         blocks: [
-					{
+          {
             blockType: Scratch.BlockType.LABEL,
-            text: 'Importers:'
+            text: 'Importers & Storage:'
           },
           {
             opcode: 'importMidiUrl',
@@ -82,8 +99,35 @@
             text: 'import MIDI from file'
           },
           {
+            opcode: 'loadMidiFromBase64',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'load MIDI from base64 [BASE64]',
+            arguments: {
+              BASE64: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'data:audio/midi;base64,...'
+              }
+            }
+          },
+          {
+            opcode: 'getMidiAsBase64',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current MIDI as base64'
+          },
+          {
+            opcode: 'loadMidiFromList',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'load MIDI from list [LIST]',
+            arguments: {
+              LIST: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: 'list'
+              }
+            }
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
-            text: 'MIDI Playback:'
+            text: 'Playback & Timing Controls:'
           },
           {
             opcode: 'playMidi',
@@ -91,9 +135,122 @@
             text: 'play MIDI'
           },
           {
+            opcode: 'pauseMidi',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'pause MIDI'
+          },
+          {
+            opcode: 'resumeMidi',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'resume MIDI'
+          },
+          {
             opcode: 'stopMidi',
             blockType: Scratch.BlockType.COMMAND,
             text: 'stop MIDI'
+          },
+          {
+            opcode: 'setPlaybackSpeed',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set playback speed to [SPEED]x',
+            arguments: {
+              SPEED: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1.0
+              }
+            }
+          },
+          {
+            opcode: 'jumpToTime',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'jump to time [TIME] seconds',
+            arguments: {
+              TIME: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              }
+            }
+          },
+          {
+            opcode: 'setPlaybackRate',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set playback speed to [RATE]x',
+            arguments: {
+              RATE: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1.0
+              }
+            }
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Pitch & Transposition:'
+          },
+          {
+            opcode: 'setTranspose',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set transpose to [SEMITONES] semitones',
+            arguments: {
+              SEMITONES: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              }
+            }
+          },
+          {
+            opcode: 'getTranspose',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current transpose semitones'
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Status & Reporters:'
+          },
+          {
+            opcode: 'isMidiPlaying',
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: 'MIDI is playing?'
+          },
+          {
+            opcode: 'getCurrentTime',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'MIDI current time (secs)'
+          },
+          {
+            opcode: 'getDuration',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'MIDI total duration (secs)'
+          },
+          {
+            opcode: 'getCurrentMeasure',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'MIDI current measure'
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: 'Tracks & Muting:'
+          },
+          {
+            opcode: 'toggleTrackMute',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'toggle mute track [TRACK]',
+            arguments: {
+              TRACK: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 1
+              }
+            }
+          }, 
+          {
+            opcode: 'setActiveTrack',
+            blockType: Scratch.BlockType.COMMAND,
+            text: 'set active track to [INDEX]',
+            arguments: {
+              INDEX: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0
+              }
+            }
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -110,6 +267,30 @@
                 defaultValue: 60
               }
             }
+          },
+          {
+            opcode: 'onAnyNote',
+            blockType: Scratch.BlockType.HAT,
+            text: 'when any note is played',
+            isEdgeActivated: true
+          },
+          {
+            opcode: 'onPlaybackEnd',
+            blockType: Scratch.BlockType.HAT,
+            text: 'when MIDI playback ends',
+            isEdgeActivated: false
+          },
+          {
+            opcode: 'onPause',
+            blockType: Scratch.BlockType.HAT,
+            text: 'when MIDI is paused',
+            isEdgeActivated: false
+          },
+          {
+            opcode: 'onResume',
+            blockType: Scratch.BlockType.HAT,
+            text: 'when MIDI is resumed',
+            isEdgeActivated: false
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -130,6 +311,11 @@
             opcode: 'allNotes',
             blockType: Scratch.BlockType.REPORTER,
             text: 'all notes in MIDI'
+          },
+          {
+            opcode: 'notesCurrentlyPlaying',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'notes currently playing'
           },
           {
             opcode: 'getBPM',
@@ -158,6 +344,16 @@
             }
           },
           {
+            opcode: 'getActiveTrack',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'current active track'
+          },
+          {
+            opcode: 'getSongLength',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'song length (s)'
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
             text: 'For Musicians:'
           },
@@ -172,8 +368,23 @@
               }
             }
           },
+          {
+            opcode: 'noteFrequency',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'frequency of [NOTE]',
+            arguments: {
+              NOTE: {
+                type: Scratch.ArgumentType.NOTE,
+                defaultValue: 60
+              }
+            }
+          },
         ]
       };
+    }
+
+    _getEffectiveNote(midiVal) {
+      return Math.max(0, Math.min(127, midiVal + this._transposeSemintones));
     }
 
     async importMidiUrl(args) {
@@ -209,6 +420,55 @@
       });
     }
 
+    async getMidiAsBase64() {
+      if (!this.midiData) return '';
+      const uint8Array = this.midiData.toArray();
+      let binary = '';
+      const len = uint8Array.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(uint8Array[i]);
+      }
+      return btoa(binary);
+    }
+
+    async loadMidiFromBase64(args) {
+      let base64Str = Scratch.Cast.toString(args.BASE64);
+      if (base64Str.includes(',')) {
+        base64Str = base64Str.split(',')[1];
+      }
+      try {
+        const binaryString = atob(base64Str);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const Midi = await this.toneMidiReady;
+        this.midiData = new Midi(bytes.buffer);
+      } catch (err) {
+        console.error('Failed to parse Base64 MIDI:', err);
+      }
+    }
+
+    async loadMidiFromList(args) {
+      const listName = Scratch.Cast.toString(args.LIST);
+      const stage = this.runtime.getTargetForStage();
+      if (!stage) return;
+      
+      let targetList = null;
+      for (const varId in stage.variables) {
+        const v = stage.variables[varId];
+        if (v.type === 'list' && v.name.toLowerCase() === listName.toLowerCase()) {
+          targetList = v.value;
+          break;
+        }
+      }
+
+      if (!targetList || targetList.length === 0) return;
+      const fullBase64 = targetList.join('');
+      await this.loadMidiFromBase64({ BASE64: fullBase64 });
+    }
+
     playMidi() {
       if (!this.midiData) return;
       this.stopMidi();
@@ -216,42 +476,268 @@
       this._isPlaying = true;
       this._isPaused = false;
       this._startTime = performance.now() / 1000;
-      this._pauseTime = 0;
-
+      this._elapsedBeforePause = 0;
       this._triggeredNotes.clear();
 
+      this._scheduleNotes(0);
+      this._schedulePlaybackEnd(0);
+    }
+
+    _scheduleNotes(offsetSeconds) {
+      if (!this.midiData) return;
+      let trackIndex = 0;
       for (const track of this.midiData.tracks) {
+        if (this.activeTrackIndex !== null && trackIndex !== this.activeTrackIndex) {
+          trackIndex++;
+          continue;
+        }
+        if (this._mutedTracks.has(trackIndex)) {
+          trackIndex++;
+          continue;
+        }
         for (const n of track.notes) {
-          const delay = n.time * 1000;
+          if (n.time + n.duration < offsetSeconds) continue;
+
+          const effectiveNote = this._getEffectiveNote(n.midi);
+          const startDelay = Math.max(0, ((n.time - offsetSeconds) * 1000) / this._playbackRate);
+          
           const startTimer = setTimeout(() => {
             if (!this._isPlaying || this._isPaused) return;
-            this._triggeredNotes.add(n.midi);
+            this._triggeredNotes.add(effectiveNote);
 
+            const remainingDuration = Math.max(10, ((n.duration - Math.max(0, offsetSeconds - n.time)) * 1000) / this._playbackRate);
             const endTimer = setTimeout(() => {
-              this._triggeredNotes.delete(n.midi);
-            }, n.duration * 1000);
+              this._triggeredNotes.delete(effectiveNote);
+            }, remainingDuration);
             this._timers.push(endTimer);
-          }, delay);
+          }, startDelay);
           this._timers.push(startTimer);
         }
+        trackIndex++;
       }
     }
 
     pauseMidi() {
       if (!this._isPlaying || this._isPaused) return;
       this._isPaused = true;
-      this._pauseTime = performance.now() / 1000;
+      this._justPaused = true;
+      this._elapsedBeforePause += ((performance.now() / 1000) - this._startTime) * this._playbackRate;
       for (const t of this._timers) clearTimeout(t);
       this._timers = [];
+      if (this._playbackEndTimer) {
+        clearTimeout(this._playbackEndTimer);
+        this._playbackEndTimer = null;
+      }
+      if (this.runtime) {
+        this.runtime.startHats('ObscurasMIDITools_onPause');
+        this.runtime.startHats('onPause');
+      }
+    }
+
+    resumeMidi() {
+      if (!this._isPlaying || !this._isPaused) return;
+      this._isPaused = false;
+      this._justResumed = true;
+      this._startTime = performance.now() / 1000;
+      this._scheduleNotes(this._elapsedBeforePause);
+      this._schedulePlaybackEnd(this._elapsedBeforePause);
+      if (this.runtime) {
+        this.runtime.startHats('ObscurasMIDITools_onResume');
+        this.runtime.startHats('onResume');
+      }
     }
 
     stopMidi() {
       this._isPlaying = false;
       this._isPaused = false;
-      this._pauseTime = 0;
+      this._elapsedBeforePause = 0;
+      this._justEnded = false;
+      this._justPaused = false;
+      this._justResumed = false;
       for (const t of this._timers) clearTimeout(t);
       this._timers = [];
       this._triggeredNotes.clear();
+      if (this._playbackEndTimer) {
+        clearTimeout(this._playbackEndTimer);
+        this._playbackEndTimer = null;
+      }
+    }
+
+    setPlaybackRate(args) {
+      this._playbackRate = Math.max(0.1, Math.min(4.0, Scratch.Cast.toNumber(args.RATE)));
+      if (this._isPlaying && !this._isPaused) {
+        const current = this.getCurrentTime();
+        this._elapsedBeforePause = current;
+        this._startTime = performance.now() / 1000;
+        for (const t of this._timers) clearTimeout(t);
+        this._timers = [];
+        this._scheduleNotes(current);
+        this._schedulePlaybackEnd(current);
+      }
+    }
+
+    setTranspose(args) {
+      this._transposeSemintones = Scratch.Cast.toNumber(args.SEMITONES);
+      if (this._isPlaying && !this._isPaused) {
+        const current = this.getCurrentTime();
+        this._elapsedBeforePause = current;
+        this._startTime = performance.now() / 1000;
+        for (const t of this._timers) clearTimeout(t);
+        this._timers = [];
+        this._triggeredNotes.clear();
+        this._scheduleNotes(current);
+        this._schedulePlaybackEnd(current);
+      }
+    }
+
+    getTranspose() {
+      return this._transposeSemintones;
+    }
+
+    _getPlayableDuration() {
+      if (!this.midiData) return 0;
+      let duration = 0;
+      let trackIndex = 0;
+      for (const track of this.midiData.tracks) {
+        const active = this.activeTrackIndex === null || trackIndex === this.activeTrackIndex;
+        const muted = this._mutedTracks.has(trackIndex);
+        if (active && !muted) {
+          for (const note of track.notes) {
+            duration = Math.max(duration, note.time + note.duration);
+          }
+        }
+        trackIndex++;
+      }
+      return duration;
+    }
+
+    _schedulePlaybackEnd(offsetSeconds) {
+      if (this._playbackEndTimer) {
+        clearTimeout(this._playbackEndTimer);
+        this._playbackEndTimer = null;
+      }
+      if (!this.midiData || !this._isPlaying || this._isPaused) return;
+
+      const remaining = Math.max(0, this._getPlayableDuration() - offsetSeconds);
+      this._playbackEndTimer = setTimeout(() => {
+        this._playbackEndTimer = null;
+        if (this._isPlaying && !this._isPaused) {
+          this._isPlaying = false;
+          this._justEnded = true;
+          this._triggeredNotes.clear();
+          if (this.runtime) {
+            this.runtime.startHats('ObscurasMIDITools_onPlaybackEnd');
+            this.runtime.startHats('onPlaybackEnd');
+          }
+        }
+      }, (remaining * 1000) / this._playbackRate);
+    }
+
+    setPlaybackSpeed(args) {
+      this.setPlaybackRate({ RATE: args.SPEED });
+    }
+
+    jumpToTime(args) {
+      if (!this.midiData) return;
+      const time = Math.max(0, Scratch.Cast.toNumber(args.TIME));
+      this.stopMidi();
+      this._isPlaying = true;
+      this._isPaused = false;
+      this._elapsedBeforePause = Math.min(time, this.getDuration());
+      this._startTime = performance.now() / 1000;
+      this._triggeredNotes.clear();
+      this._scheduleNotes(this._elapsedBeforePause);
+      this._schedulePlaybackEnd(this._elapsedBeforePause);
+    }
+
+    setActiveTrack(args) {
+      const index = Scratch.Cast.toNumber(args.INDEX);
+      if (!this.midiData || index < 0 || index >= this.midiData.tracks.length) {
+        this.activeTrackIndex = null;
+      } else {
+        this.activeTrackIndex = Math.floor(index);
+      }
+
+      if (this._isPlaying && !this._isPaused) {
+        const current = this.getCurrentTime();
+        this._elapsedBeforePause = current;
+        this._startTime = performance.now() / 1000;
+        for (const t of this._timers) clearTimeout(t);
+        this._timers = [];
+        this._triggeredNotes.clear();
+        this._scheduleNotes(current);
+        this._schedulePlaybackEnd(current);
+      }
+    }
+
+    getActiveTrack() {
+      return this.activeTrackIndex !== null ? this.activeTrackIndex : 'all';
+    }
+
+    onAnyNote() {
+      return this._triggeredNotes.size > 0;
+    }
+
+    onPlaybackEnd() {
+      if (this._justEnded) {
+        this._justEnded = false;
+        return true;
+      }
+      return false;
+    }
+
+    onPause() {
+      if (this._justPaused) {
+        this._justPaused = false;
+        return true;
+      }
+      return false;
+    }
+
+    onResume() {
+      if (this._justResumed) {
+        this._justResumed = false;
+        return true;
+      }
+      return false;
+    }
+
+    toggleTrackMute(args) {
+      const trackIndex = Scratch.Cast.toNumber(args.TRACK) - 1;
+      if (this._mutedTracks.has(trackIndex)) {
+        this._mutedTracks.delete(trackIndex);
+      } else {
+        this._mutedTracks.add(trackIndex);
+      }
+    }
+
+    isMidiPlaying() {
+      return this._isPlaying && !this._isPaused;
+    }
+
+    getCurrentTime() {
+      if (!this._isPlaying) return 0;
+      if (this._isPaused) return Math.round(this._elapsedBeforePause * 100) / 100;
+      const current = this._elapsedBeforePause + (((performance.now() / 1000) - this._startTime) * this._playbackRate);
+      return Math.round(current * 100) / 100;
+    }
+
+    getDuration() {
+      if (!this.midiData) return 0;
+      return Math.round(this.midiData.duration * 100) / 100;
+    }
+
+    getSongLength() {
+      return this.getDuration();
+    }
+
+    getCurrentMeasure() {
+      if (!this.midiData || !this._isPlaying) return 1;
+      const currentTime = this.getCurrentTime();
+      const bpm = this.getBPM();
+      const secondsPerBeat = 60 / bpm;
+      const beatsElapsed = currentTime / secondsPerBeat;
+      return Math.floor(beatsElapsed / 4) + 1;
     }
 
     onNote(args) {
@@ -260,15 +746,17 @@
     }
 
     getNotesAtTime(args) {
-      if (!this.midiData) return [];
+      if (!this.midiData) return this._isSPjsonLoaded() ? [] : '[]';
       const time = Scratch.Cast.toNumber(args.TIME);
       const notes = [];
       for (const track of this.midiData.tracks) {
         for (const n of track.notes) {
-          if (Math.abs(n.time - time) < 0.05) notes.push(n.midi);
+          if (Math.abs(n.time - time) < 0.05) {
+            notes.push(this._getEffectiveNote(n.midi));
+          }
         }
       }
-      return notes;
+      return this._isSPjsonLoaded() ? notes : JSON.stringify(notes);
     }
 
     noteName(args) {
@@ -278,15 +766,20 @@
       return name + octave;
     }
 
+    noteFrequency(args) {
+      const midi = Scratch.Cast.toNumber(args.NOTE);
+      return 440 * Math.pow(2, (midi - 69) / 12);
+    }
+
     allNotes() {
-      if (!this.midiData) return [];
+      if (!this.midiData) return this._isSPjsonLoaded() ? [] : '[]';
       const notes = [];
       for (const track of this.midiData.tracks) {
         for (const n of track.notes) {
-          notes.push(n.midi);
+          notes.push(this._getEffectiveNote(n.midi));
         }
       }
-      return notes;
+      return this._isSPjsonLoaded() ? notes : JSON.stringify(notes);
     }
 
     getBPM() {
@@ -295,15 +788,20 @@
       return Math.round(bpm * 10) / 10;
     }
 
+    notesCurrentlyPlaying() {
+      const notes = [...this._triggeredNotes];
+      return this._isSPjsonLoaded() ? notes : JSON.stringify(notes);
+    }
+
     currentNoteLengthSeconds() {
       if (!this._triggeredNotes.size || !this._isPlaying || !this.midiData) return 0;
 
       const triggered = [...this._triggeredNotes][0];
-      const currentTime = (performance.now() / 1000) - this._startTime;
+      const currentTime = this.getCurrentTime();
 
       for (const track of this.midiData.tracks) {
         for (const note of track.notes) {
-          if (note.midi === triggered) {
+          if (this._getEffectiveNote(note.midi) === triggered) {
             if (currentTime >= note.time && currentTime <= note.time + note.duration) {
               return Scratch.Cast.toNumber(note.duration.toFixed(3));
             }
@@ -322,13 +820,13 @@
       if (!this._isPlaying || !this.midiData) return 0;
 
       const noteNumber = Scratch.Cast.toNumber(args.NOTE);
-      const currentTime = (performance.now() / 1000) - this._startTime;
+      const currentTime = this.getCurrentTime();
 
       if (!this._triggeredNotes.has(noteNumber)) return 0;
 
       for (const track of this.midiData.tracks) {
         for (const note of track.notes) {
-          if (note.midi === noteNumber) {
+          if (this._getEffectiveNote(note.midi) === noteNumber) {
             if (currentTime >= note.time && currentTime <= note.time + note.duration) {
               return Scratch.Cast.toNumber(note.duration.toFixed(3));
             }
