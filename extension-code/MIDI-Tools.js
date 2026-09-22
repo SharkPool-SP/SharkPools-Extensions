@@ -4,7 +4,7 @@
 // By: ObscuraPH
 // License: MIT
 
-// Version V.5
+// Version V.5.0.0
 
 // Tone.js: https://github.com/Tonejs/Tone.js/releases
 // Tone.js license: MIT
@@ -46,6 +46,7 @@
       this._playbackRate = 1.0;
       this._transposeSemintones = 0;
       this._mutedTracks = new Set();
+
       // V3.2 compatibility: optionally play only one track.
       this.activeTrackIndex = null;
       this._playbackEndTimer = null;
@@ -64,7 +65,7 @@
     }
 
     _isSPjsonLoaded() {
-        return vm.runtime.extensionManager.isExtensionLoaded('ObscurasMIDITools');
+      return vm.runtime.extensionManager.isExtensionLoaded('SPjson');
     }
 
     getInfo() {
