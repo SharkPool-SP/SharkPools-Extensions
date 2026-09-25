@@ -36,15 +36,12 @@
   const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
 
   const xmlEscape = function (unsafe) {
-    return Scratch.Cast.toString(unsafe).replace(/[<>&'"]/g, c => {
-      switch (c) {
-        case "<": return "&lt;";
-        case ">": return "&gt;";
-        case "&": return "&amp;";
-        case "'": return "&apos;";
-        case "\"": return "&quot;";
-      }
-    });
+    return Scratch.Cast.toString(unsafe)
+      .replace(/&/g, '&amp;')   // MUST be first to avoid double-escaping
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
   };
 
   function refreshMagic() {
@@ -56,6 +53,22 @@
     if (vm.extensionManager._loadedExtensions.has("SP0zMenuMaker")) {
       vm.extensionManager.refreshBlocks("SP0zMenuMaker").then(() => vm.refreshWorkspace());
     }
+  }
+
+  function getEscapedMenus() {
+    const escaped = {};
+    for (const menuName in customMenus) {
+      if (hasOwn(customMenus, menuName)) {
+        escaped[menuName] = {
+          items: customMenus[menuName].items.map(item => ({
+            text: xmlEscape(item.text),
+            value: xmlEscape(item.value)
+          })),
+          acceptReporters: customMenus[menuName].acceptReporters
+        };
+      }
+    }
+    return escaped;
   }
 
   function patchDivColor(container, isDark) {
@@ -438,7 +451,7 @@
           { blockType: Scratch.BlockType.LABEL, text: "My Menus" },
           { blockType: Scratch.BlockType.XML, xml: menusXML }
         ],
-        menus: customMenus,
+        menus: getEscapedMenus(),
       };
     }
 
