@@ -4,6 +4,7 @@
 // By: SharkPool
 // Contributed By: Nekl300
 // Contributed By: Clickertale2 <https://github.com/Clickertale2>
+// Contributed by: MubiLop https://github.com/cicerorph
 // License: MIT
 
 // Version V.1.8.07
@@ -257,7 +258,7 @@
         }
       }
 
-	    return null;
+      return null;
     }
 
     async extractVideoURI(vidDwnloadData) {
@@ -375,65 +376,58 @@
     }
 
     async vid2MP4(args) {
-      /* Thank you Clickertale2 */
-      const format = args.TYPE === "mp4" ? "480" : "mp3";
-      const cacheKey = format + args.VIDEO_ID;
-      const url = `https://dubs.io/wp-json/tools/v1/download-video?id=${args.VIDEO_ID}&format=${format}`;
-      if (!args.VIDEO_ID || args.VIDEO_ID === INVALID_ID) return "";
+      /* Thank you MubiLop */
+      const id = Cast.toString(args.VIDEO_ID);
+      const isMp4 = args.TYPE === "mp4";
+      if (!id || id === INVALID_ID) return "";
 
+      const cacheKey = (isMp4 ? "mp4" : "mp3") + id;
       const cached = getCache(cacheKey);
       if (cached) return cached;
 
-      const initData = await this._fetch(url, cacheKey, "json", true);
-      if (!initData || !initData.progressId) return "Failed to Fetch";
+      const query = isMp4
+        ? "quality=480p&format_type=mp4"
+        : "format_type=mp3&audio_only=true";
+      const requestURL = `https://ytapi.mubilop.com/request/${encodeURIComponent(id)}?${query}`;
 
-      const statusURL = `https://dubs.io/wp-json/tools/v1/status-video?id=${initData.progressId}`;
-      return new Promise((resolve) => {
-        let finished = false;
-        let attempts = 0;
-        const maxAttempts = 10; // 10 * 3s = 30 sec timeout
+      try {
+        if (!(await Scratch.canFetch(requestURL))) return "Failed to Fetch";
 
-        const interval = setInterval(async () => {
-          attempts++;
-          try {
-            const response = await Scratch.fetch(statusURL);
-            if (!response.ok) {
-              YTCache_.delete(cacheKey);
-              throw new Error("Failed to fetch");
-            }
+        const init = await Scratch.fetch(requestURL, { method: "POST" });
+        if (init.status === 429) return "Failed: Rate limited, try again in a moment";
+        if (!init.ok) return "Failed to Fetch";
 
-            const downloadData = await response.json();
-            if (downloadData.status === "Finished") {
-              finished = true;
-              clearInterval(interval);
+        const job = await init.json();
+        if (!job || !job.job_id) return "Failed to Fetch";
 
-              if (downloadData && downloadData.downloadUrl) {
-                const dataURL = await this.extractVideoURI(downloadData);
-                if (dataURL) {
-                  setCache(cacheKey, dataURL, true);
-                  resolve(dataURL);
-                  return;
-                }
-              }
+        const statusURL = `https://ytapi.mubilop.com/job/${job.job_id}`;
+        const maxAttempts = 60;
+        for (let i = 0; i < maxAttempts; i++) {
+          await new Promise((r) => setTimeout(r, 1500));
 
-              YTCache_.delete(cacheKey);
-              resolve("Failed to download video");
-            }
-          } catch {
-            YTCache_.delete(cacheKey);
-            clearInterval(interval);
-            resolve("Failed to download video");
+          const res = await Scratch.fetch(statusURL);
+          if (!res.ok) return "Failed to download video";
+
+          const data = await res.json();
+          if (data.status === "completed") {
+            const dataURL = await this.extractVideoURI({ downloadUrl: data.download_url });
+            if (!dataURL) return "Failed to download video";
+
+            setCache(cacheKey, dataURL, true);
+            return dataURL;
           }
-
-          if (!finished && attempts >= maxAttempts) {
-            YTCache_.delete(cacheKey);
-            clearInterval(interval);
-            resolve("Failed: Download timed out");
+          if (data.status === "failed" || data.status === "expired") {
+            return "Failed: " + (data.error || data.status);
           }
-        }, 3000);
-      });
+        }
+
+        return "Failed: Download timed out";
+      } catch (e) {
+        console.warn("YouTube Error: " + e);
+        return "Failed to download video";
+      }
     }
-    
+
     async fetchUserThing(args) {
       const channel = Cast.toString(args.URL);
       let channelID = this.extractVideoID({ URL: channel }); // Fortunately, these function the same.
@@ -469,16 +463,16 @@
     }
 
     async getResults(args) {
-	    const queryStr = Cast.toString(args.QUERY);
-	    const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
-	    const cacheKey = "query_" + queryStr;
+      const queryStr = Cast.toString(args.QUERY);
+      const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+      const cacheKey = "query_" + queryStr;
       if (!queryStr) return "[]";
 
-	    const data = await this._fetch(
-		    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
-		    cacheKey,
-		    "json", 
-		    true
+      const data = await this._fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+        cacheKey,
+        "json",
+        true
       );
       if (!data) return "[]";
 
@@ -553,6 +547,6 @@
       }
     }
   }
-  
+
   Scratch.extensions.register(new YTOperationsSP());
 })(Scratch);
