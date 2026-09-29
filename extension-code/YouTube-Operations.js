@@ -258,7 +258,7 @@
         }
       }
 
-            return null;
+      return null;
     }
 
     async extractVideoURI(vidDwnloadData) {
@@ -403,7 +403,7 @@
         const statusURL = `https://ytapi.mubilop.com/job/${job.job_id}`;
         const maxAttempts = 60;
         for (let i = 0; i < maxAttempts; i++) {
-          await new Promise((r) => setTimeout(r, 2000));
+          await new Promise((r) => setTimeout(r, 1500));
 
           const res = await Scratch.fetch(statusURL);
           if (!res.ok) return "Failed to download video";
@@ -420,6 +420,7 @@
             return "Failed: " + (data.error || data.status);
           }
         }
+
         return "Failed: Download timed out";
       } catch (e) {
         console.warn("YouTube Error: " + e);
@@ -462,16 +463,16 @@
     }
 
     async getResults(args) {
-            const queryStr = Cast.toString(args.QUERY);
-            const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
-            const cacheKey = "query_" + queryStr;
+      const queryStr = Cast.toString(args.QUERY);
+      const query = encodeURIComponent(queryStr.replace(/ /g, "+"));
+      const cacheKey = "query_" + queryStr;
       if (!queryStr) return "[]";
 
-            const data = await this._fetch(
-                    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
-                    cacheKey,
-                    "json", 
-                    true
+      const data = await this._fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=15&type=video&key=AIzaSyCyFg4jSNbDVzpHpvv73yZ89wpTFFeF_cY`,
+        cacheKey,
+        "json",
+        true
       );
       if (!data) return "[]";
 
