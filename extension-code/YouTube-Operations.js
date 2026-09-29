@@ -261,11 +261,17 @@
             return null;
     }
 
-    async extractVideoURI(downloadUrl) {
-      if (!downloadUrl) return "";
+    async extractVideoURI(vidDwnloadData) {
+      if (!vidDwnloadData || !vidDwnloadData.downloadUrl) return "";
 
-      const fileBlob = await this._fetch(downloadUrl, false, "blob", true);
-      if (!fileBlob) return downloadUrl;
+      const fileBlob = await this._fetch(
+        vidDwnloadData.downloadUrl,
+        false,
+        "blob",
+        false,
+        0 // Skip Reef Proxy since theres strict file size constraints
+      );
+      if (!fileBlob) return vidDwnloadData.downloadUrl;
 
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -404,7 +410,7 @@
 
           const data = await res.json();
           if (data.status === "completed") {
-            const dataURL = await this.extractVideoURI(data.download_url);
+            const dataURL = await this.extractVideoURI({ downloadUrl: data.download_url });
             if (!dataURL) return "Failed to download video";
 
             setCache(cacheKey, dataURL, true);
