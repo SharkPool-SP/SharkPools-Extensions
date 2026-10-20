@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.0
+// Version V.1.0.1
 
 /**
  * Rewrite of Pause Utilities
@@ -316,6 +316,17 @@
             text: Scratch.translate("all paused scripts"),
             disableMonitor: true
           },
+          "---",
+          {
+            opcode: "pauseAudioEngine",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("pause audio engine")
+          },
+          {
+            opcode: "unpauseAudioEngine",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("unpause audio engine")
+          },
         ],
         menus: {
           TARGETS: { acceptReporters: true, items: "_getTargets"},
@@ -433,6 +444,20 @@
 
     allPausedScripts() {
       return JSON.stringify(Array.from(pausedScripts));
+    }
+
+    pauseAudioEngine() {
+      const audioCtx = runtime.audioEngine.audioContext;
+      if (audioCtx.state === "running") {
+        audioCtx.suspend();
+      }
+    }
+
+    unpauseAudioEngine() {
+      const audioCtx = runtime.audioEngine.audioContext;
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
     }
   }
 
