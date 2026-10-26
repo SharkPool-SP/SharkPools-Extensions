@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.2.2
+// Version V.1.2.21
 
 (function (Scratch) {
   "use strict";
@@ -496,6 +496,15 @@
       };
     }
 
+    _getOperator(value) {
+      switch (Cast.toString(value)) {
+        case "-": return " - ";
+        case "*": return " * ";
+        case "/": return " / ";
+        default: return " + ";
+      }
+    }
+
     async tryAddSolve() {
       if (navigator.onLine) {
         try {
@@ -643,14 +652,22 @@
     }
 
     tripleOperator(args) {
-      const nums = [Cast.toNumber(args.NUM1), Cast.toNumber(args.NUM2), Cast.toNumber(args.NUM3)];
-      return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`);
+      const nums = [
+        Cast.toNumber(args.NUM1),
+        Cast.toNumber(args.NUM2),
+        Cast.toNumber(args.NUM3)
+      ];
+      return eval(`${nums[0]}${this._getOperator(args.OPERATOR1)}${nums[1]}${this._getOperator(args.OPERATOR2)}${nums[2]}`);
     }
 
     quadrupleOperator(args) {
-      const nums = [Cast.toNumber(args.NUM1), Cast.toNumber(args.NUM2),
-        Cast.toNumber(args.NUM3), Cast.toNumber(args.NUM4)];
-      return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`);
+      const nums = [
+        Cast.toNumber(args.NUM1),
+        Cast.toNumber(args.NUM2),
+        Cast.toNumber(args.NUM3),
+        Cast.toNumber(args.NUM4)
+      ];
+      return eval(`${nums[0]}${this._getOperator(args.OPERATOR1)}${nums[1]}${this._getOperator(args.OPERATOR2)}${nums[2]}${this._getOperator(args.OPERATOR3)}${nums[3]}`);
     }
 
     trim(args) {

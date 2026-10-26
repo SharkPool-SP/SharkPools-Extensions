@@ -30,6 +30,7 @@
   const render = vm.renderer;
   const isPackagedEnv = typeof scaffolding !== "undefined";
 
+  const StyleSanitizer = new Option().style;
   const DOMPurify = render.exports.SVGRenderer.DOMPurify;
   const purifySettings = {
     ADD_DATA_URI_TAGS: ["image"],
@@ -124,6 +125,12 @@
       canvas.style.filter += cssString;
     }
     canvasFilterString = cssString;
+  };
+
+  const sanitizeColor = function (value) {
+    StyleSanitizer.color = Cast.toString(value);
+
+    return StyleSanitizer.color || "#000000";
   };
 
   const genMenuItem = (itemText, itemValue) => {
@@ -1120,7 +1127,7 @@
     applyOutline(args) {
       const svg = this._handleSVG(args.SRC);
       const amt = Cast.toNumber(args.NUM);
-      const color = Cast.toString(args.COLOR);
+      const color = sanitizeColor(args.COLOR);
       const isFlood = Cast.toString(args.TYPE) === "flood";
       let filter;
       if (isFlood) {
@@ -1137,7 +1144,7 @@
       const x = Cast.toNumber(args.x);
       const y = Cast.toNumber(args.y) * -1;
       const amt = Cast.toNumber(args.NUM) / 2;
-      const color = Cast.toString(args.COLOR);
+      const color = sanitizeColor(args.COLOR);
       return this._injectFilter(
         svg, "shadow",
         `<filter><feDropShadow dx="${x}" dy="${y}" stdDeviation="${amt}" flood-color="${color}"/></filter>`
@@ -1150,9 +1157,9 @@
       const x = Cast.toNumber(args.x);
       const y = Cast.toNumber(args.y) * -1;
       const colors = [
-        Cast.toString(args.COL1),
-        Cast.toString(args.COL2),
-        Cast.toString(args.COL3)
+        sanitizeColor(args.COL1),
+        sanitizeColor(args.COL2),
+        sanitizeColor(args.COL3)
       ];
 
       switch (Cast.toString(args.TYPE)) {
@@ -1342,7 +1349,7 @@
     /* Lighting */
     applyBasicLight(args) {
       const svg = this._handleSVG(args.SRC);
-      const color = Cast.toString(args.COLOR);
+      const color = sanitizeColor(args.COLOR);
       const intensity = Cast.toNumber(args.NUM);
       let pos = [
         Cast.toNumber(args.x),
@@ -1388,7 +1395,7 @@
       if (!this._isSVG(svg)) return "";
 
       const size = Cast.toNumber(args.SIZE) / 100;
-      const color = Cast.toString(args.COLOR);
+      const color = sanitizeColor(args.COLOR);
       const pattern = Cast.toString(args.PAT);
       if (!pattern) return svg;
 

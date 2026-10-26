@@ -110,7 +110,7 @@
     getInfo() {
       return {
         id: "SPspriteEffects",
-        name: "Sprite Effects",
+        name: "Sprite Effects (Deprecated)",
         color1: "#9966FF",
         color2: "#774DCB",
         menuIconURI,

@@ -188,8 +188,8 @@
     const _ogIRdescendStack = ScriptTreeGenerator.prototype.descendStackedBlock;
     ScriptTreeGenerator.prototype.descendStackedBlock = function (block) {
       switch (block.opcode) {
-        case "SPadvControl_breakLoop": return { kind: "SPadvControl.break", id: block.id };
-        case "SPadvControl_continueLoop": return { kind: "SPadvControl.continue", id: block.id };
+        case "SPadvControl_breakLoop": return { kind: "SPadvControl.break", id: block.id.replaceAll("\"", "") };
+        case "SPadvControl_continueLoop": return { kind: "SPadvControl.continue", id: block.id.replaceAll("\"", "") };
         default: return _ogIRdescendStack.call(this, block);
       }
     };
