@@ -71,7 +71,7 @@
             const testString = txt.substring(i + 2, txt.length);
             const ind = testString.indexOf(":");
             if (testString.indexOf(code) > -1 && ind) {
-              let value = sanitizeCSS(code, testString.substring(0, ind));
+              const value = sanitizeCSS(code, testString.substring(0, ind));
               md += `<${form.replace("---", value)}>`;
               mdCache.push(form);
               i += ind + 1;
