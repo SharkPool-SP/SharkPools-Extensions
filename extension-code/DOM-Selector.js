@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function(Scratch) {
   "use strict";
@@ -405,8 +405,26 @@
     setElementAtt(args) {
       const element = this.querySelect(args.CLASS, false, true);
       if (element) {
-        const attribute = Cast.toString(args.ATT);
-        element.setAttribute(attribute, args.VALUE);
+        const attribute = Cast.toString(args.ATT).trim();
+        const value = Cast.toString(args.VALUE);
+
+        // Block event handlers (onclick, onload, onerror, etc.)
+        if (attribute.startsWith('on')) return;
+
+        // Block dangerous element/attribute combinations
+        const dangerousAttributes = ["srcdoc", "sandbox", "csp"];
+        if (dangerousAttributes.includes(attribute)) return;
+
+        // Block malicious URL schemes in URI-based attributes (href, src, data, action)
+        const uriAttributes = ["href", "src", "data", "action", "formaction"];
+        if (uriAttributes.includes(attribute)) {
+          const sanitizedValue = value.replace(/\s+/g, "").toLowerCase();
+          if (sanitizedValue.includes("javascript:") || sanitizedValue.includes("data:text/html")) {
+            return;
+          }
+        }
+
+        element.setAttribute(attribute, value);
       }
     }
 
