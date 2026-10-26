@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.7.4
+// Version V.1.7.41
 
 (function (Scratch) {
   "use strict";
@@ -22,6 +22,11 @@
   ];
   // Save some file space with this
   displaceSrCs = displaceSrCs.map(i => `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA${i}`);
+
+  const VALID_BLENDS = [
+    "normal", "multiply", "screen", "overlay", "exclusion", "color-dodge",
+    "color-burn", "hard-light", "soft-light", "difference", "luminosity"
+  ];
 
   const cast = Scratch.Cast;
   const vm = Scratch.vm;
@@ -798,8 +803,9 @@
       if (args.SPRITE === "_myself_") svg = await this.findAsset(util);
       else svg = isImage ? await this.getImage(args.SPRITE) : await this.getSVG(args.SPRITE);
       if (svg) {
-        const filter = `<filter id="blend-${args.BLEND}"><feBlend in="SourceGraphic" in2="SourceGraphic" mode="${args.BLEND}" /></filter>`;
-        return this.filterApplier(svg, filter, `blend-${args.BLEND}`);
+        const blend = Math.max(0, VALID_BLENDS.indexOf(args.BLEND));
+        const filter = `<filter id="blend-${VALID_BLENDS[blend]}"><feBlend in="SourceGraphic" in2="SourceGraphic" mode="${VALID_BLENDS[blend]}" /></filter>`;
+        return this.filterApplier(svg, filter, `blend-${VALID_BLENDS[blend]}`);
       }
       return svg;
     }

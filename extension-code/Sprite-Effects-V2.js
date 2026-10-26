@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.0.03
+// Version V.1.0.04
 
 (function (Scratch) {
   "use strict";
@@ -60,6 +60,11 @@
   };
 
   const CANVAS_SVG = "<svg>CANVAS</svg>"; // used for canvas-specific filters
+
+  const VALID_BLENDS = [
+    "normal", "multiply", "screen", "overlay", "exclusion", "color-dodge",
+    "color-burn", "hard-light", "soft-light", "difference", "luminosity"
+  ];
 
   const filterDOM = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   filterDOM.setAttribute("xmlns", "http://www.w3.org/2000/svg");
@@ -949,10 +954,11 @@
     }
 
     applyBlend(args) {
+      const blend = Math.max(0, VALID_BLENDS.indexOf(args.BLEND));
       const svg = this._handleSVG(args.SRC);
       return this._injectFilter(
-        svg, `blend-${args.BLEND}`,
-        `<filter><feBlend in="SourceGraphic" in2="SourceGraphic" mode="${args.BLEND}"/></filter>`
+        svg, `blend-${VALID_BLENDS[blend]}`,
+        `<filter><feBlend in="SourceGraphic" in2="SourceGraphic" mode="${VALID_BLENDS[blend]}"/></filter>`
       );
     }
 
