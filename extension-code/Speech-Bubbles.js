@@ -3,7 +3,7 @@
 // Description: Customizable Speech Bubbles
 // By: SharkPool
 
-// Version V.1.3.02
+// Version V.1.3.03
 
 (function (Scratch) {
   "use strict";
@@ -23,7 +23,7 @@
     "Handwriting", "Marker", "Curly", "Pixel"
   ];
 
-  let allBubbles = {};
+  let allBubbles = Object.create(null);
 
   const xmlEscape = function (unsafe) {
     unsafe = String(unsafe);
@@ -42,7 +42,11 @@
     constructor() {
       runtime.on("PROJECT_START", () => this.shutUp({ SPRITE: "_all_" }));
       runtime.on("PROJECT_STOP_ALL", () => this.shutUp({ SPRITE: "_all_" }));
-      runtime.on("targetWasRemoved", (target) => this.shutUp({ SPRITE: target.id }));
+      runtime.on("targetWasRemoved", (target) => {
+        this.shutUp({ SPRITE: target.id });
+
+        delete allBubbles[this.makeEncodedID(target.id)];
+      });
       runtime.on("AFTER_EXECUTE", () => {
         const values = Object.values(allBubbles);
         for (let i = 0; i < values.length; i++) {
