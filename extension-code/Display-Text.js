@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.5.21
+// Version V.1.5.22
 
 (function (Scratch) {
   "use strict";
@@ -41,6 +41,21 @@
     });
   };
 
+  const sanitizeCSS = function (type, value) {
+    const styles = new Option().style;
+    switch (type) {
+      case "@c": 
+        styles.color = value;
+        return styles.color;
+      case "@f": 
+        styles.fontFamily = value;
+        return styles.fontFamily;
+      case "@h": 
+        styles.backgroundColor = value;
+        return styles.backgroundColor;
+    }
+  };
+
   const txt2md = function (txt) {
     const mdCache = [];
     let md = "";
@@ -56,8 +71,8 @@
             const testString = txt.substring(i + 2, txt.length);
             const ind = testString.indexOf(":");
             if (testString.indexOf(code) > -1 && ind) {
-              const color = testString.substring(0, ind);
-              md += `<${form.replace("---", color)}>`;
+              const value = sanitizeCSS(code, testString.substring(0, ind));
+              md += `<${form.replace("---", value)}>`;
               mdCache.push(form);
               i += ind + 1;
             } else {

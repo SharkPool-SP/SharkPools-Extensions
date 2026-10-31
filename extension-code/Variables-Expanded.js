@@ -4,7 +4,7 @@
 // By: SharkPool and DogeIsCut
 // License: MIT
 
-// Version 1.5.0
+// Version 1.5.01
 
 (function (Scratch) {
   "use strict";
@@ -46,7 +46,7 @@
     }
   });
 
-  class MonitorsPlus {
+  class VariablesExpanded {
     getInfo() {
       return {
         id: "DICandSPmonitorsPlus",
@@ -87,7 +87,7 @@
             blockType: Scratch.BlockType.COMMAND,
             text: "set [VARIABLE] to [STRING]",
             arguments: {
-              STRING: { type: Scratch.ArgumentType.STRING, defaultValue: 0 },
+              STRING: { type: Scratch.ArgumentType.STRING, defaultValue: 0, exemptFromNormalization: true },
               VARIABLE: { type: Scratch.ArgumentType.STRING, menu: "variableMenu" }
             },
           },
@@ -334,7 +334,7 @@
         workspace.toolboxRefreshEnabled_ = true;
         workspace.refreshToolboxSelection_();
         workspace.toolboxRefreshEnabled_ = false;
-        setTimeout(runtime.requestBlocksUpdate, 10);
+        setTimeout(() => runtime.requestBlocksUpdate(), 10);
       }
     }
 
@@ -817,5 +817,5 @@
     }
   }
 
-  Scratch.extensions.register(new MonitorsPlus());
+  Scratch.extensions.register(new VariablesExpanded());
 })(Scratch);

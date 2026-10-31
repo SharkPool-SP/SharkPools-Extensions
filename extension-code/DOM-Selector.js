@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.2.0
+// Version V.1.2.01
 
 (function(Scratch) {
   "use strict";
@@ -16,6 +16,7 @@
   const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
+  const DomPurify = vm.renderer.exports.SVGRenderer.DOMPurify;
 
   let listeners = Object.create(null), references = Object.create(null);
 
@@ -405,8 +406,12 @@
     setElementAtt(args) {
       const element = this.querySelect(args.CLASS, false, true);
       if (element) {
-        const attribute = Cast.toString(args.ATT);
-        element.setAttribute(attribute, args.VALUE);
+        const attribute = xmlEscape(Cast.toString(args.ATT).replace(/\s+/g, "").toLowerCase());
+        const value = xmlEscape(Cast.toString(args.VALUE));
+
+        if (DomPurify.isValidAttribute(element.tagName, attribute, value)) {
+          element.setAttribute(attribute, value);
+        }
       }
     }
 
