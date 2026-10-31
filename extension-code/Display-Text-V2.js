@@ -1011,7 +1011,7 @@
       const VALID_ELEMENTS = ["linearGradient", "radialGradient", "stop"];
       const xmlElements = Array.from(gradient.matchAll(/<([a-zA-Z0-9:-]+)\s/g))
         .map(match => match[1]);
-      if (xmlElements.filter(e => !VALID_ELEMENTS.includes(e)).length) {
+      if (!xmlElements.length || xmlElements.filter(e => !VALID_ELEMENTS.includes(e)).length > 0) {
         // Illegal element.
         return "#000000";
       }

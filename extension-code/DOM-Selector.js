@@ -16,6 +16,7 @@
   const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
+  const DomPurify = vm.renderer.exports.SVGRenderer.DOMPurify;
 
   let listeners = Object.create(null), references = Object.create(null);
 
@@ -405,26 +406,12 @@
     setElementAtt(args) {
       const element = this.querySelect(args.CLASS, false, true);
       if (element) {
-        const attribute = Cast.toString(args.ATT).trim();
-        const value = Cast.toString(args.VALUE);
+        const attribute = xmlEscape(Cast.toString(args.ATT).replace(/\s+/g, "").toLowerCase());
+        const value = xmlEscape(Cast.toString(args.VALUE));
 
-        // Block event handlers (onclick, onload, onerror, etc.)
-        if (attribute.startsWith('on')) return;
-
-        // Block dangerous element/attribute combinations
-        const dangerousAttributes = ["srcdoc", "sandbox", "csp"];
-        if (dangerousAttributes.includes(attribute)) return;
-
-        // Block malicious URL schemes in URI-based attributes (href, src, data, action)
-        const uriAttributes = ["href", "src", "data", "action", "formaction"];
-        if (uriAttributes.includes(attribute)) {
-          const sanitizedValue = value.replace(/\s+/g, "").toLowerCase();
-          if (sanitizedValue.includes("javascript:") || sanitizedValue.includes("data:text/html")) {
-            return;
-          }
+        if (DomPurify.isValidAttribute(element.tagName, attribute, value)) {
+          element.setAttribute(attribute, value);
         }
-
-        element.setAttribute(attribute, value);
       }
     }
 
