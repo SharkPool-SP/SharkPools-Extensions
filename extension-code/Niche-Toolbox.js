@@ -8,8 +8,6 @@
  */
 (function (Scratch) {
   'use strict';
-  console.log('"NicheToolbox": https://surv.is-a.dev/survs-gallery/');
-  console.warn('This version of "NicheToolbox" is limited, please use the full version.', '\nhttps://surv.is-a.dev/survs-gallery/');
   if (!Scratch.extensions.unsandboxed) {
     throw new Error('"Niche Toolbox Lite" must be run unsandboxed');
   }
@@ -33,11 +31,6 @@
         name: 'Niche Toolbox Lite',
         menuIconURI,
         blocks: [
-          {
-            func: 'update',
-            blockType: Scratch.BlockType.BUTTON,
-            text: 'Outdated pls update',
-          },
           {
             opcode: 'cAxy_getColorAt',
             text: 'get [attr] of color at x: [x] y: [y] with radius [rad]',
@@ -87,12 +80,6 @@
           },
         },
       };
-    }
-
-    update() {
-      if (window.confirm('This version of "Script Manager" is out of date and should not be used.\n\nClicking ok will redirect to my extension gallery so you can get updates. -0znzw')) {
-        window.open('https://surv.is-a.dev/survs-gallery/', '_blank');
-      }
     }
 
     /* general utilitys for the extension(s) */
