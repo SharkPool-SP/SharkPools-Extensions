@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.3.4.15
+// Version V.3.4.16
 
 (function (Scratch) {
   "use strict";
@@ -13,6 +13,7 @@
   const menuIconURI =
 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzUuMzYzIiBoZWlnaHQ9IjEzNS4zNjMiIHZpZXdCb3g9IjAgMCAxMzUuMzYzIDEzNS4zNjMiPjxnIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTAgNjcuNjgxQzAgMzAuMzAxIDMwLjMwMiAwIDY3LjY4MSAwYzM3LjM4IDAgNjcuNjgyIDMwLjMwMiA2Ny42ODIgNjcuNjgxIDAgMzcuMzgtMzAuMzAzIDY3LjY4Mi02Ny42ODIgNjcuNjgyUzAgMTA1LjA2IDAgNjcuNjgxIiBmaWxsPSIjMzNiNmZmIi8+PHBhdGggZD0iTTMyLjM0OCA5NC45ODRzMTIuNTU4IDYuNDEzIDE1LjM0OS04LjQ0N2M0LjA1NC0yMS41OTItMi41NzMtNDAuMzM0LTYuMzQ0LTQ4LjcwOC0xLjM0OS0yLjk5My0uMDAyLTQuMjU4IDMuNjUtMy40MDQgOS4yMyAyLjE1NyAyNi45MDcgNy4xOSAzNi44MTYgMTUuODYgMTUuMjEzIDEzLjMxMyAxNS41NDUgMzQuMDcgMTguNTEyIDM5Ljk2OCAyLjQyNyA0LjgyNCA5LjU5NCAyLjYyIDkuNTk0IDIuNjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI3LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L3N2Zz4=";
 
+  const Cast = Scratch.Cast;
   const vm = Scratch.vm;
   const runtime = vm.runtime;
   const regenReporters = ["SharkPoolSharktilities_changeV"];
@@ -392,6 +393,15 @@
       };
     }
 
+    _getOperator(value) {
+      switch (Cast.toString(value)) {
+        case "-": return " - ";
+        case "*": return " * ";
+        case "/": return " / ";
+        default: return " + ";
+      }
+    }
+
     _getTargets(ind) {
       const spriteNames = [{ text: "myself", value: "_myself_" }];
       if (ind) spriteNames.push({ text: "Stage", value: "_stage_" });
@@ -439,7 +449,7 @@
       let target = args.SPRITE;
       target = target === "_myself_" ? util.target : target === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(target);
       if (!target) return;
-      target.setEffect(args.EFFECT, Scratch.Cast.toNumber(args.VALUE));
+      target.setEffect(args.EFFECT, Cast.toNumber(args.VALUE));
     }
 
     shuffleArray(args) {
@@ -473,8 +483,8 @@
     }
 
     hexBrightness(args) {
-      const brightness = Scratch.Cast.toNumber(args.CHANGE);
-      let rgb = Scratch.Cast.toRgbColorList(args.COLOR).map((channel) => {
+      const brightness = Cast.toNumber(args.CHANGE);
+      let rgb = Cast.toRgbColorList(args.COLOR).map((channel) => {
         return Math.min(255, channel + brightness);
       });
       return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
@@ -482,12 +492,12 @@
 
     smooth(spd, lim, type, num) {
       type = type === "sin" ? "sin" : type === "cos" ? "cos" : "tan";
-      const speed = Scratch.Cast.toNumber(spd) / 10;
-      const limit = Scratch.Cast.toNumber(lim);
+      const speed = Cast.toNumber(spd) / 10;
+      const limit = Cast.toNumber(lim);
       return Math[type](num * speed) * limit || 0;
     }
     smoothing(args, util) { return this.smooth(args.SPEED, args.LIMIT, args.MATH, util.ioQuery("clock", "projectTimer")) }
-    smoothing2(args) { return this.smooth(args.SPEED, args.LIMIT, args.MATH, Scratch.Cast.toNumber(args.NUM)) }
+    smoothing2(args) { return this.smooth(args.SPEED, args.LIMIT, args.MATH, Cast.toNumber(args.NUM)) }
 
     refresh() { vm.extensionManager.refreshBlocks() }
     async request(args) {
@@ -514,8 +524,8 @@
       if (!target) return "";
       const targetInfo = target.getCostumes();
       if (args.OVERRIDE !== undefined) return target.sprite.costumes.length;
-      let index = Math.round(Math.abs(Scratch.Cast.toString(args.NUM))) - 1;
-      if (!index || Scratch.Cast.toString(index).includes("Infinity")) index = 0;
+      let index = Math.round(Math.abs(Cast.toString(args.NUM))) - 1;
+      if (!index || Cast.toString(index).includes("Infinity")) index = 0;
       if (index > target.sprite.costumes.length - 1) index = target.sprite.costumes.length - 1;
       const costume = targetInfo[index];
       switch (args.INFO) {
@@ -538,7 +548,7 @@
     }
 
     cloudCode(args) {
-      const txt = Scratch.Cast.toString(args.TEXT);
+      const txt = Cast.toString(args.TEXT);
       return args.CODE === "encode" ? this.encodeText(txt) : this.decodeText(txt);
     }
     encodeText(txt) { return txt.split("").map(char => char.charCodeAt(0)).map(value => value.toString().padStart(3, "0")).join("") }
@@ -589,8 +599,8 @@
     }
 
     genShape(args) {
-      const width = Scratch.Cast.toString(args.WIDTH); const height = Scratch.Cast.toString(args.HEIGHT);
-      const x = Scratch.Cast.toString(args.X); const y = Scratch.Cast.toString(args.Y) * -1;
+      const width = Cast.toString(args.WIDTH); const height = Cast.toString(args.HEIGHT);
+      const x = Cast.toString(args.X); const y = Cast.toString(args.Y) * -1;
       const curNoise =
         `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
           <g transform="translate(${x},${y})"> 
@@ -619,7 +629,7 @@
       let target = args.SPRITE;
       target = target === "_myself_" ? util.target : target === "_stage_" ? runtime.getTargetForStage() : runtime.getSpriteTargetByName(target);
       if (!target) return;
-      if (args.EFFECT === "volume") return this._updateVolume(Scratch.Cast.toNumber(args.VALUE), target);
+      if (args.EFFECT === "volume") return this._updateVolume(Cast.toNumber(args.VALUE), target);
       else return this._updateEffect(args, target);
     }
     _updateEffect(args, target) {
@@ -640,24 +650,24 @@
 
     /* Deprecation Marker */
     // Found in More Operators
-    replaceKey(r){let t=RegExp(r.KEY,"g"),e=0;return Scratch.Cast.toString(r.STRING).replace(t,t=>++e===Scratch.Cast.toNumber(r.ORDER)?r.REPLACE:t)}
-    replaceKeys(r){let t=RegExp(r.KEY,"g"),e=0,n=Scratch.Cast.toNumber(r.ORDER),a=Scratch.Cast.toNumber(r.ORDER2),o=n>a?n:a;return Scratch.Cast.toString(r.STRING).replace(t,t=>++e>=n&&e<=o?r.REPLACE:t)}
+    replaceKey(r){let t=RegExp(r.KEY,"g"),e=0;return Cast.toString(r.STRING).replace(t,t=>++e===Cast.toNumber(r.ORDER)?r.REPLACE:t)}
+    replaceKeys(r){let t=RegExp(r.KEY,"g"),e=0,n=Cast.toNumber(r.ORDER),a=Cast.toNumber(r.ORDER2),o=n>a?n:a;return Cast.toString(r.STRING).replace(t,t=>++e>=n&&e<=o?r.REPLACE:t)}
     randomCharRange(r){let t=r.ONE.charCodeAt(0);return String.fromCharCode(Math.floor(Math.random()*(r.TWO.charCodeAt(0)-t+1)+t))}
     noContain(r){return!runtime.ext_scratch3_operators.contains(r)}
     tripleJoin({STRING1:r,STRING2:t,STRING3:e}){return`${r}${t}${e}`}
     quadrupleJoin({STRING1:r,STRING2:t,STRING3:e,STRING4:n}){return`${r}${t}${e}${n}`}
     fiveJoin({STRING1:r,STRING2:t,STRING3:e,STRING4:n,STRING5:a}){return`${r}${t}${e}${n}${a}`}
-    tripleOperator(args){let nums=[Scratch.Cast.toNumber(args.NUM1),Scratch.Cast.toNumber(args.NUM2),Scratch.Cast.toNumber(args.NUM3)];return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]}`)}
-    quadrupleOperator(args){let nums=[Scratch.Cast.toNumber(args.NUM1),Scratch.Cast.toNumber(args.NUM2),Scratch.Cast.toNumber(args.NUM3),Scratch.Cast.toNumber(args.NUM4)];return eval(`${nums[0]} ${args.OPERATOR1} ${nums[1]} ${args.OPERATOR2} ${nums[2]} ${args.OPERATOR3} ${nums[3]}`)}
-    simplifyFrac(r){let t=Scratch.Cast.toNumber(r.NUM),e=Scratch.Cast.toNumber(r.DENOM),n=(r,t)=>t?n(t,r%t):r,a=n(t,e),o=JSON.stringify([t/a,e/a]);return o.includes("null")?"[undefined]":o}
-    negaAbs({NUMBER:r}){return-Math.abs(Scratch.Cast.toNumber(r))}
-    roundToNearest({NUMBER:r,ROUND_TYPE:t}){let e={"whole number":0,tenths:1,hundredths:2,thousandths:3}[t]||Math.max(0,Math.round(Scratch.Cast.toNumber(t))),n=Math.pow(10,e);return Math.round(r*n)/n}
+    tripleOperator(a) {const nums = [Cast.toNumber(a.NUM1),Cast.toNumber(a.NUM2),Cast.toNumber(a.NUM3)];return eval(`${nums[0]}${this._getOperator(a.OPERATOR1)}${nums[1]}${this._getOperator(a.OPERATOR2)}${nums[2]}`);}
+    quadrupleOperator(a) {const nums = [Cast.toNumber(a.NUM1),Cast.toNumber(a.NUM2),Cast.toNumber(a.NUM3),Cast.toNumber(a.NUM4)];return eval(`${nums[0]}${this._getOperator(a.OPERATOR1)}${nums[1]}${this._getOperator(a.OPERATOR2)}${nums[2]}${this._getOperator(a.OPERATOR3)}${nums[3]}`);}
+    simplifyFrac(r){let t=Cast.toNumber(r.NUM),e=Cast.toNumber(r.DENOM),n=(r,t)=>t?n(t,r%t):r,a=n(t,e),o=JSON.stringify([t/a,e/a]);return o.includes("null")?"[undefined]":o}
+    negaAbs({NUMBER:r}){return-Math.abs(Cast.toNumber(r))}
+    roundToNearest({NUMBER:r,ROUND_TYPE:t}){let e={"whole number":0,tenths:1,hundredths:2,thousandths:3}[t]||Math.max(0,Math.round(Cast.toNumber(t))),n=Math.pow(10,e);return Math.round(r*n)/n}
     randomLetter({LETTER_TYPE:r}){let t="abcdefghijklmnopqrstuvwxyz";return"uppercase"===r&&(t=t.toUpperCase()),t.charAt(Math.floor(Math.random()*t.length))}
     rndString(r){return Math.random()>r.CHANCE/100?r.STRING2:r.STRING1}
     typeString(r){return"||"===r.TYPE?r.STRING1||r.STRING2:"undefined"===r.STRING1||"null"===r.STRING1?r.STRING2:r.STRING1}
     // Found in Extra Control
-    repeatForUntil(a,t){void 0===t.stackFrame.loopCounter&&(t.stackFrame.loopCounter=Math.round(Scratch.Cast.toNumber(a.NUM))),t.stackFrame.loopCounter--,!Scratch.Cast.toBoolean(a.CON)&&t.stackFrame.loopCounter>=0&&t.startBranch(1,!0)}
-    spayedCondition(a,t){if(void 0===t.stackFrame.index&&(t.stackFrame.index=!0),Scratch.Cast.toBoolean(a.CON1)||!t.stackFrame.index){if(Scratch.Cast.toBoolean(a.CON2)){t.stackFrame.index=!0;return}t.stackFrame.index=!1,t.startBranch(1,!0)}}
+    repeatForUntil(a,t){void 0===t.stackFrame.loopCounter&&(t.stackFrame.loopCounter=Math.round(Cast.toNumber(a.NUM))),t.stackFrame.loopCounter--,!Cast.toBoolean(a.CON)&&t.stackFrame.loopCounter>=0&&t.startBranch(1,!0)}
+    spayedCondition(a,t){if(void 0===t.stackFrame.index&&(t.stackFrame.index=!0),Cast.toBoolean(a.CON1)||!t.stackFrame.index){if(Cast.toBoolean(a.CON2)){t.stackFrame.index=!0;return}t.stackFrame.index=!1,t.startBranch(1,!0)}}
     /* Marker End */
   }
 

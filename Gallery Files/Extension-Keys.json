@@ -6,7 +6,9 @@
       "url": "Sharktilities.js",
       "banner": "Sharktilities.svg",
       "tags": ["Utility", "Dangerous", "Math"],
-      "date": "Last Updated: 07/21/2025"
+      "overrideLabeler": true,
+      "status": "",
+      "date": "Last Updated: 10/26/2026"
     },
     "YouTube-Operations": {
       "desc": "Fetch and play Youtube videos and statistics in your Project",
@@ -147,7 +149,7 @@
       "url": "Sprite-Effects-V2.js",
       "banner": "Sprite-Effects.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 07/18/2026"
+      "date": "Last Updated: 10/26/2026"
     },
     "Image-Effects": {
       "desc": "Apply a variety of visual effects to Images",
@@ -235,7 +237,7 @@
       "url": "Variables-Expanded.js",
       "banner": "Variables-Expanded.svg",
       "tags": ["Utility", "Data Management", "Category Expansion"],
-      "date": "Last Updated: 01/14/2026"
+      "date": "Last Updated: 10/26/2026"
     },
     "Sty-Lists": {
       "desc": "Customize and Organize List Monitors",
@@ -388,7 +390,7 @@
       "url": "Display-Text-V2.js",
       "banner": "Display-Text.svg",
       "tags": ["Utility", "Graphics", "Category Expansion"],
-      "date": "Last Updated: 06/10/2026"
+      "date": "Last Updated: 10/26/2026"
     },
     "Color-Master": {
       "desc": "Color Utility and Conversion Blocks",
@@ -412,7 +414,7 @@
       "url": "Speech-Bubbles.js",
       "banner": "Speech-Bubbles.svg",
       "tags": ["Graphics", "Category Expansion"],
-      "date": "Last Updated: 09/14/2024"
+      "date": "Last Updated: 10/30/2026"
     },
     "Layer-Control": {
       "desc": "Relayer Pen, Video Camera, Backdrops, Sprites and more",
@@ -478,7 +480,7 @@
       "url": "Extra-Controls.js",
       "banner": "Extra-Controls.svg",
       "tags": ["Utility", "Category Expansion", "Runtime"],
-      "date": "Last Updated: 05/04/2025"
+      "date": "Last Updated: 10/26/2026"
     },
     "More-Operators": {
       "desc": "New Powerful Operator Blocks",
@@ -486,7 +488,7 @@
       "url": "More-Operators.js",
       "banner": "More-Operators.svg",
       "tags": ["Utility", "Category Expansion", "Math"],
-      "date": "Last Updated: 05/19/2025"
+      "date": "Last Updated: 10/26/2026"
     },
     "Captchas": {
       "desc": "Simple Client-Based Captchas, this does not promise 100% security",
@@ -519,7 +521,7 @@
       "url": "DOM-Selector.js",
       "banner": "DOM-Selector.svg",
       "tags": ["Utility", "Graphics", "Data Management", "Configuration"],
-      "date": "Last Updated: 07/13/2025"
+      "date": "Last Updated: 10/26/2026"
     },
     "SVG-Spritesheets": {
       "desc": "Create and Export SVG Spritesheets",

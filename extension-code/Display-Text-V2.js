@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.17
+// Version V.1.1.18
 
 (function (Scratch) {
   "use strict";
@@ -1007,6 +1007,21 @@
       dom.appendChild(fontStyles);
     }
 
+    validateGradient(colorType, textObj, gradient) {
+      const VALID_ELEMENTS = ["linearGradient", "radialGradient", "stop"];
+      const xmlElements = Array.from(gradient.matchAll(/<([a-zA-Z0-9:-]+)\s/g))
+        .map(match => match[1]);
+      if (!xmlElements.length || xmlElements.filter(e => !VALID_ELEMENTS.includes(e)).length > 0) {
+        // Illegal element.
+        return "#000000";
+      }
+
+      const gradientID = colorType + nextGradientID++;
+      textObj.setAttribute("gradient", [gradientID, gradient], true);
+
+      return `url(#gradColor${gradientID})`;
+    }
+
     markdownTutorial() {
       alert([
         "How to use Markdown in Display Text V2",
@@ -1232,11 +1247,10 @@
         let color = Cast.toString(args.COLOR);
         let isGradient = false;
         if (color.startsWith("<") && color.endsWith("Gradient>")) {
-          const gradientID = "C" + nextGradientID++;
-          isGradient = true;
-          textObj.setAttribute("gradient", [gradientID, color], true);
-          color = `url(#gradColor${gradientID})`;
+          color = this.validateGradient("C", textObj, color);
+          isGradient = color.startsWith("url(");
         }
+
         textObj.setAttribute("fill", color);
         textObj.updateElement(true, isGradient);
       }
@@ -1265,11 +1279,10 @@
         let color = Cast.toString(args.COLOR);
         let isGradient = false;
         if (color.startsWith("<") && color.endsWith("Gradient>")) {
-          const gradientID = "O" + nextGradientID++;
-          isGradient = true;
-          textObj.setAttribute("gradient", [gradientID, color], true);
-          color = `url(#gradColor${gradientID})`;
+          color = this.validateGradient("O", textObj, color);
+          isGradient = color.startsWith("url(");
         }
+
         textObj.setAttribute("stroke", color);
         textObj.setAttribute("stroke-width", Cast.toNumber(args.THICKNESS) + "px");
         textObj.setAttribute("stroke-linejoin", "round");
