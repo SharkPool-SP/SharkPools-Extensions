@@ -3,7 +3,7 @@
 // Description: More Powerful Operator Blocks
 // By: SharkPool
 
-// Version V.1.3.0
+// Version V.1.3.01
 
 (function (Scratch) {
   "use strict";
@@ -21,7 +21,7 @@
   // Certain blocks require a library to function, the library is fetched once & saved to the project.
   const libraryBaseURL = "https://cdn.jsdelivr.net/gh/SharkPool-SP/SharkPools-Extensions/extension-utils/MO/math-";
   const libraryRoutes = ["core.js", "algebra.js", "calculus.js", "solve.js"];
-  const libraryToSerialize = [];
+  let libraryToSerialize = [];
   let isLibraryImported = false;
 
   const _btoa = (string) => {
@@ -584,7 +584,6 @@
             libraryToSerialize.push(txt);
           }
 
-          window.test = libraryToSerialize;
           isLibraryImported = true;
           initMathLibrary();
           vm.extensionManager.refreshBlocks();
