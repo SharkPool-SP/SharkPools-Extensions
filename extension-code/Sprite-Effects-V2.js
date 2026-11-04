@@ -97,8 +97,7 @@
     if (!opcode) return null;
     if (opcode.startsWith("SPspriteEffectsV2_") && !opcode.endsWith("applyCustom")) {
       // this is safe.
-      // applyCustom is the only block that has user inputted filters
-      //filterString
+      // applyCustom is the only block that has user-inputted filters
     } else {
       filterString = DOMPurify.sanitize(filterString, purifySettings);
     }
@@ -1174,7 +1173,6 @@
         sanitizeColor(args.COL2),
         sanitizeColor(args.COL3)
       ];
-      console.log(colors);
 
       switch (Cast.toString(args.TYPE)) {
         case "split":
