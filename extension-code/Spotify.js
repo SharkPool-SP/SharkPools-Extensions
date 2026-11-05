@@ -84,8 +84,8 @@
       this.gainNode = this.audioNode.context.createGain();
       this.gainNode.gain.value = 1;
       this.gainNode.connect(this.audioNode);
-      runtime.on("PROJECT_STOP_ALL", this.stopAll);
-      runtime.on("RUNTIME_DISPOSED", SpotifyCache.clear);
+      runtime.on("PROJECT_STOP_ALL", () => this.stopAll());
+      runtime.on("RUNTIME_DISPOSED", () => SpotifyCache.clear());
 
       this.playerInstances = [];
     }
