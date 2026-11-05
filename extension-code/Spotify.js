@@ -3,7 +3,7 @@
 // Description: Play songs and get metadata from Spotify.
 // By: SharkPool
 
-// Version 1.3.01
+// Version 1.3.02
 
 (function (Scratch) {
   "use strict";
