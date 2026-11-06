@@ -4,7 +4,7 @@
 // By: SharkPool
 // License: MIT
 
-// Version V.1.1.02
+// Version V.1.1.03
 
 (function (Scratch) {
   "use strict";
@@ -444,6 +444,8 @@
           const mp3Links = await this._fetch(mediaData.url + `?client_id=${clientID}`, "TS" + id);
           return mp3Links?.url ?? "";
         }
+
+        return "not availiable for download";
       }
 
       return "fetch failed";
