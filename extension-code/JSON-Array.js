@@ -2,9 +2,10 @@
 // ID: SPjson
 // Description: Super Fast JSON and Array Extension.
 // By: SharkPool
+// Credit to: LSPECTRONIZTAR for JSON Builder blocks idea
 // Licence: MIT
 
-// Version V.1.2.1
+// Version V.1.2.2
 
 (function (Scratch) {
   "use strict";
@@ -46,7 +47,7 @@
   const genRegenReporter = (opcode, text) => {
     return {
       opcode, text,
-      blockType: Scratch.BlockType.REPORTER, color1: "#677cd6",
+      blockType: Scratch.BlockType.REPORTER,
       hideFromPalette: true, allowDropAnywhere: true, canDragDuplicate: true,
     };
   };
@@ -71,9 +72,7 @@
 
     return [
       blockJSON,
-      {
-        blockType: Scratch.BlockType.XML, xml: xmlBlock
-      }
+      { blockType: Scratch.BlockType.XML, xml: xmlBlock }
     ];
   };
 
@@ -153,16 +152,14 @@
     } else {
       /* Turbowarp support */
       // regenerated reporters
-      const regenReporters = [
-        "SPjson_objKey", "SPjson_objValue", "SPjson_arrIndex",
-        "SPjson_arrValueA", "SPjson_arrValueB", "SPjson_arrAccum"
+      const REGEN_REPORTERS = [
+        "SPjson_arrValueA", "SPjson_arrValueB", "SPjson_arrAccum",
+        "SPjson_arrIndex", "SPjson_objKey", "SPjson_objValue", "SPjson_currentBuilder"
       ];
-
       const ogCheck = SB.scratchBlocksUtils.isShadowArgumentReporter;
       SB.scratchBlocksUtils.isShadowArgumentReporter = function (block) {
-        const result = ogCheck(block);
-        if (result) return true;
-        return block.isShadow() && regenReporters.includes(block.type);
+        if (ogCheck(block)) return true;
+        return block.isShadow() && REGEN_REPORTERS.includes(block.type);
       };
 
       // custom object shape
@@ -295,35 +292,6 @@
       else return value;
     };
 
-    const insertParser = (type) => {
-      const defaultVal = type === null ? "o" : type === 0 ? "{}" : "[]";
-      let script = "(function(o) {\n";
-
-      // raw values
-      const rawValue = extContext.useNewObj && extContext.alwaysTryParse ? `${OBJ_UTIL}.safeCopy(o)` : "o";
-
-      if (type === null) script += `if (typeof o === "object") return ${rawValue};`;
-      else if (type === 0) script += `if (typeof o === "object" && !Array.isArray(o)) return ${rawValue};`;
-      else script += `if (Array.isArray(o)) return ${rawValue};`;
-
-      // parser
-      script += `try{`;
-      if (type === null) script += `return JSON.parse(o);`;
-      else script += `let p;return (p = JSON.parse(o)) && ${type === 0 ? "!" : ""}Array.isArray(p) ? p : ${defaultVal};`;
-      script += `}catch{return ${defaultVal}}`;
-      script += "}),";
-      return script;
-    };
-
-    const insertArrayFreqSort = () => {
-      let script = "freqSort: (function(spA,isComm) {\n";
-      script += "const map = {};spA.forEach(i => {map[i] = (map[i] || 0) + 1});\n";
-      script += "if (isComm) return spA.sort((a, b) => map[b] - map[a] || spA.indexOf(a) - spA.indexOf(b));\n";
-      script += "else return spA.sort((a, b) => map[a] - map[b] || spA.indexOf(a) - spA.indexOf(b));\n";
-      script += "}),\n";
-      return script;
-    };
-
     // Instead of reusing the helpers, just inject them for reuse in the script
     let currentCompiler = compiler;
     if (vm.exports.these_broke_before_and_will_break_again) {
@@ -334,16 +302,7 @@
     if (!vm.extensionManager.isExtensionLoaded("SPjson")) {
       const _ogCreateScriptFactory = currentCompiler.JSGenerator.prototype.createScriptFactory;
       currentCompiler.JSGenerator.prototype.createScriptFactory = function (...args) {
-        let utilObj = "const " + OBJ_UTIL + " = {\n";
-        utilObj += "parse: " + insertParser(null);
-        utilObj += "parseO: " + insertParser(0);
-        utilObj += "parseA: " + insertParser(1);
-        utilObj += `safeCast: (function(val) {\nreturn typeof val === "object" ? val : (isNaN(val) || val === Infinity || val === -Infinity) ? "" + val : val;\n}),\n`;
-        utilObj += "hasOwn: (function(obj, prop) {\nreturn Object.prototype.hasOwnProperty.call(obj,prop)\n}),\n";
-        utilObj += `safeCopy: (function(obj) {\ntry { return structuredClone(obj) } catch { return obj }\n}),\n`;
-        utilObj += insertArrayFreqSort();
-        utilObj += "};\n";
-
+        const utilObj = "const " + OBJ_UTIL + " = runtime.SPjsonCompilerHelpers;\n";
         this.source = utilObj + this.source;
         return _ogCreateScriptFactory.call(this, ...args);
       }
@@ -948,6 +907,8 @@
 
   class SPjson {
     constructor() {
+      this.lastBuilderResult = "";
+
       this._settings = [
         { text: "always cast values", value: "alwaysCast" },
         { text: "always parse text objects", value: "alwaysParse" },
@@ -963,6 +924,7 @@
       this._preventUnsafeAce = true; // hidden option
 
       this.initParser();
+      this.initCompilerHelpers();
     }
     getInfo() {
       return {
@@ -977,6 +939,7 @@
           genRegenReporter("arrIndex", "index"),
           genRegenReporter("objKey", "key"),
           genRegenReporter("objValue", "value"),
+          genRegenReporter("currentBuilder", "current builder"),
           {
             func: "warn",
             blockType: Scratch.BlockType.BUTTON,
@@ -1450,7 +1413,7 @@
             arguments: {
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "CUST_ORDER", defaultValue: "filter" },
               OBJ: { type: Scratch.ArgumentType.STRING, defaultValue: `{"Object":"or array"}`, exemptFromNormalization: true },
-              IND: { fillIn: "objKey" }, VAL: {fillIn: "objValue" }, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
+              IND: { fillIn: "objKey" }, VAL: { fillIn: "objValue" }, BOOL: { type: Scratch.ArgumentType.BOOLEAN },
               IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI }
             },
           }),
@@ -1482,6 +1445,57 @@
               TYPE: { type: Scratch.ArgumentType.STRING, menu: "VAR_TYPE" },
               NAME: { type: Scratch.ArgumentType.STRING, defaultValue: "my variable" }
             },
+          },
+          { blockType: Scratch.BlockType.LABEL, text: "Builders" },
+          {
+            opcode: "newBuilder", blockType: Scratch.BlockType.CONDITIONAL,
+            text: "build [TYPE] [IMG] [OUTPUT]", hideFromPalette: true,
+            arguments: {
+              TYPE: { type: Scratch.ArgumentType.STRING, menu: "BUILDER_TYPES" },
+              IMG: { type: Scratch.ArgumentType.IMAGE, dataURI: arrowURI },
+              OUTPUT: { fillIn: "currentBuilder" }
+            }
+          },
+          {
+            opcode: "arrBuildAdd", blockType: Scratch.BlockType.COMMAND,
+            text: "append [VAL]", hideFromPalette: true,
+            arguments: {
+              VAL: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true }
+            }
+          },
+          {
+            opcode: "objBuildAdd", blockType: Scratch.BlockType.COMMAND,
+            text: "append key [KEY] value [VAL]", hideFromPalette: true,
+            arguments: {
+              KEY: { type: Scratch.ArgumentType.STRING },
+              VAL: { type: Scratch.ArgumentType.STRING, exemptFromNormalization: true }
+            }
+          },
+          {
+            blockType: Scratch.BlockType.XML,
+            xml: (() => {
+              const base = `<block type="SPjson_newBuilder"><value name="TYPE"><shadow type="SPjson_menu_BUILDER_TYPES"><field name="BUILDER_TYPES">BUILD_TYPE</field></shadow></value>
+                <value name="OUTPUT"><shadow type="SPjson_currentBuilder"></shadow></value><value name="SUBSTACK">INNER_BLOCK</value></block>`;
+
+              return base.replace("BUILD_TYPE", "object").replace("INNER_BLOCK", `<block type="SPjson_objBuildAdd"><value name="KEY"><shadow type="text"><field name="TEXT">foo</field></shadow></value><value name="VAL"><shadow type="text"><field name="TEXT">bar</field></shadow></value></block>`)
+                + base.replace("BUILD_TYPE", "array").replace("INNER_BLOCK", `<block type="SPjson_arrBuildAdd"><value name="VAL"><shadow type="text"><field name="TEXT">foo</field></shadow></value></block>`)
+            })()
+          },
+          "---",
+          {
+            opcode: "setBuilder",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "set builder to [JSON]",
+            arguments: {
+              JSON: { type: Scratch.ArgumentType.STRING, defaultValue: `{"Object":"or array"}`, exemptFromNormalization: true }
+            }
+          },
+          {
+            opcode: "getBuilder",
+            blockType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
+            disableMonitor: true,
+            text: "last builder result",
           },
           { blockType: Scratch.BlockType.LABEL, text: "Optimization Settings" },
           {
@@ -1536,6 +1550,7 @@
           CUST_ORDER: ["filter", "order"],
           ARRAY_CHECK: ["every", "some"],
           VAR_TYPE: ["variable", "list"],
+          BUILDER_TYPES: { acceptReporters: true, items: ["object", "array"] },
           OBJ_EXTRACT: { acceptReporters: true, items: ["keys", "values", "entries"] },
           CONVERTS: {
             acceptReporters: true,
@@ -1554,7 +1569,7 @@
               "ascending by length", "descending by length",
               "A-z", "z-A", "most common", "least common"
             ]
-          }
+          },
         },
       };
     }
@@ -1731,6 +1746,52 @@
         util.thread.isCompiled = outerFrame.SPwasCompiled;
         return onResult(stackFrame, outerFrame);
       }
+    }
+
+    initCompilerHelpers() {
+      if (!runtime.SPjsonCompilerHelpers) {
+        runtime.SPjsonCompilerHelpers = {
+          safeCast: ((val) => typeof val === "object" ? val : (isNaN(val) || val === Infinity || val === -Infinity) ? "" + val : val),
+          hasOwn: ((obj, prop) => Object.prototype.hasOwnProperty.call(obj,prop)),
+          safeCopy: ((obj) => {
+            try {
+              return structuredClone(obj)
+            } catch {
+              return obj
+            }
+          }),
+          freqSort: (function(spA,isComm) {
+            const map = {};
+            spA.forEach(i => map[i] = (map[i] || 0) + 1);
+            if (isComm) return spA.sort((a, b) => map[b] - map[a] || spA.indexOf(a) - spA.indexOf(b));
+            else return spA.sort((a, b) => map[a] - map[b] || spA.indexOf(a) - spA.indexOf(b));
+          })
+        };
+      }
+
+      const insertParser = (type) => {
+        const defaultVal = type === null ? "o" : type === 0 ? "{}" : "[]";
+        let script = "";
+
+        // raw values
+        const rawValue = this.useNewObj && this.alwaysTryParse ? `this.safeCopy(o)` : "o";
+
+        if (type === null) script += `if (typeof o === "object") return ${rawValue};`;
+        else if (type === 0) script += `if (typeof o === "object" && !Array.isArray(o)) return ${rawValue};`;
+        else script += `if (Array.isArray(o)) return ${rawValue};`;
+
+        // parser
+        script += `try{`;
+        if (type === null) script += `return JSON.parse(o);`;
+        else script += `let p;return (p = JSON.parse(o)) && ${type === 0 ? "!" : ""}Array.isArray(p) ? p : ${defaultVal};`;
+        script += `}catch{return ${defaultVal}}`;
+
+        return new Function("o", script).bind(runtime.SPjsonCompilerHelpers);
+      };
+
+      runtime.SPjsonCompilerHelpers.parse = insertParser(null);
+      runtime.SPjsonCompilerHelpers.parseO = insertParser(0);
+      runtime.SPjsonCompilerHelpers.parseA = insertParser(1);
     }
 
     // Buttons and Settings
@@ -2248,11 +2309,67 @@
       return variable ? variable.value : "";
     }
 
+    newBuilder(args, util) {
+      const frame = util.thread.stackFrames[0];
+      if (util.stackFrame.executed) {
+        this.lastBuilderResult = frame.SPbuilderStack[frame.SPbuilderStack.length - 1].value;
+        frame.SPbuilderStack.pop();
+      } else {
+        const isArray = args.TYPE === "array";
+        if (frame.SPbuilderStack) {
+          frame.SPbuilderStack.push({ isArray, value: isArray ? [] : {} });
+        } else {
+          frame.SPbuilderStack = [{ isArray, value: isArray ? [] : {} }];
+        }
+
+        util.stackFrame.executed = true;
+        util.startBranch(1, true); 
+      }
+    }
+
+    objBuildAdd(args, util) {
+      const frame = util.thread.stackFrames[0];
+      const builderObj = frame.SPbuilderStack ? frame.SPbuilderStack[frame.SPbuilderStack.length - 1] : null;
+      if (builderObj && !builderObj.isArray) {
+        builderObj.value[Cast.toString(args.KEY)] = this.toSafe(args.VAL);
+      }
+    }
+
+    arrBuildAdd(args, util) {
+      const frame = util.thread.stackFrames[0];
+      const builderObj = frame.SPbuilderStack ? frame.SPbuilderStack[frame.SPbuilderStack.length - 1] : null;
+      if (builderObj && builderObj.isArray) {
+        builderObj.value.push(this.toSafe(args.VAL));
+      }
+    }
+
+    setBuilder(args, util) {
+      const frame = util.thread.stackFrames[0];
+      const builderObj = frame.SPbuilderStack ? frame.SPbuilderStack[frame.SPbuilderStack.length - 1] : null;
+      if (builderObj) {
+        builderObj.value = this.tryParse(args.JSON, builderObj.isArray ? 1 : 0);
+      }
+    }
+
+    currentBuilder(_, util) {
+      const frame = util.thread.stackFrames[0];
+      const builderObj = frame.SPbuilderStack ? frame.SPbuilderStack[frame.SPbuilderStack.length - 1] : null;
+      if (!builderObj) return "";
+
+      // Create a copy of the built value to prevent infinite recursion.
+      return builderObj.isArray ? [...builderObj.value] : {...builderObj.value};
+    }
+
+    getBuilder() {
+      return this.lastBuilderResult;
+    }
+
     toggleSetting(args) {
       const opt = this._settings.find(item => item.value === args.THING)?.value;
       if (opt) {
         this[opt] = args.TYPE === "enabled";
         this.initParser();
+        this.initCompilerHelpers();
       }
     }
 
