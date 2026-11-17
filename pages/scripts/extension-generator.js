@@ -66,11 +66,11 @@ async function downloadExt(name, url) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
     messager.postMessage({
-      loadExt: `https://sharkpools-extensions.vercel.app/${url}`
+      loadExt: window.location.href + url
     }, "https://studio.penguinmod.com/editor.html");
     messager.postMessage({
-      loadExt: `https://sharkpools-extensions.vercel.app/${url}`
-    }, "https://penguinmod-port.github.io/scratch-gui/editor.html"); // For development purposes
+      loadExt: window.location.href + url
+    }, "https://dev-studio.penguinmod.com/"); // For development purposes
 
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     genText(
