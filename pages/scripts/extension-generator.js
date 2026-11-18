@@ -66,10 +66,10 @@ async function downloadExt(name, url) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
     messager.postMessage({
-      loadExt: window.location.href + url
+      loadExt: window.location.origin + "/" + url
     }, "https://studio.penguinmod.com/editor.html");
     messager.postMessage({
-      loadExt: window.location.href + url
+      loadExt: window.location.origin + "/" + url
     }, "https://dev-studio.penguinmod.com/"); // For development purposes
 
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
