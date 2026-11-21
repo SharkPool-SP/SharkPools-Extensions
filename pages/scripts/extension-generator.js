@@ -61,15 +61,22 @@ function displayExts(json, optFadeIn) {
 }
 
 async function downloadExt(name, url) {
-  url = "extension-code/" + url;
+  url = "/extension-code/" + url;
+
   if (isPenguinMod) {
     const messager = window.opener || window.parent;
     if (!messager) return alert("Failed to request to PenguinMod!");
+
+    let baseURL = window.location.origin;
+    if (window.location.host === "sharkpool-sp.github.io") {
+      baseURL = "https://cdn.jsdelivr.net/gh/SharkPool-SP/SharkPools-Extensions";
+    }
+
     messager.postMessage({
-      loadExt: window.location.origin + "/" + url
+      loadExt: baseURL + url
     }, "https://studio.penguinmod.com/editor.html");
     messager.postMessage({
-      loadExt: window.location.origin + "/" + url
+      loadExt: baseURL + url
     }, "https://dev-studio.penguinmod.com/"); // For development purposes
 
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -90,6 +97,7 @@ async function downloadExt(name, url) {
     const regex = new RegExp(`\\s*/\\* Deprecation Marker \\*/[\\s\\S]*?/\\* Marker End \\*/`, "g");
     extCode = extCode.replace(regex, "").replace(/\n{3,}/g, "\n\n");
   }
+
   if (compress) {
     // compress extCode
     name += "-minified";
