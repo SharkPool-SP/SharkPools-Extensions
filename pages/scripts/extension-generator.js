@@ -62,14 +62,14 @@ function displayExts(json, optFadeIn) {
 
 async function downloadExt(name, url) {
   url = "/extension-code/" + url;
+  if (window.location.host === "sharkpool-sp.github.io") {
+    url = "/SharkPools-Extensions" + url;
+  }
+
   if (isPenguinMod) {
     const messager = window.opener || window.parent;
+    const baseURL = window.location.origin;
     if (!messager) return alert("Failed to request to PenguinMod!");
-
-    let baseURL = window.location.origin;
-    if (window.location.host === "sharkpool-sp.github.io") {
-      baseURL += "/SharkPools-Extensions";
-    }
 
     messager.postMessage({
       loadExt: baseURL + url
