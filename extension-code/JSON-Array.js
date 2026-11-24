@@ -5,7 +5,7 @@
 // Credit to: LSPECTRONIZTAR for JSON Builder blocks idea
 // Licence: MIT
 
-// Version V.1.2.2
+// Version V.1.2.21
 
 (function (Scratch) {
   "use strict";
@@ -299,7 +299,7 @@
       currentCompiler = vm.exports.these_broke_before_and_will_break_again();
     }
 
-    if (!vm.extensionManager.isExtensionLoaded("SPjson")) {
+    if (!runtime.SPjsonCompilerHelpers) {
       const _ogCreateScriptFactory = currentCompiler.JSGenerator.prototype.createScriptFactory;
       currentCompiler.JSGenerator.prototype.createScriptFactory = function (...args) {
         const utilObj = "const " + OBJ_UTIL + " = runtime.SPjsonCompilerHelpers;\n";
